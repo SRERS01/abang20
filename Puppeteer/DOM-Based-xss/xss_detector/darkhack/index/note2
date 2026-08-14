@@ -1,0 +1,142 @@
+To understand how these vulnerabilities manifest on the client side, we must look at how the frontend handles input.
+Below are the complete, standard index.html structural source code patterns for both attack scenarios. You can save these locally to test how your Puppeteer scanner engine behaves under different code architectures.
+------------------------------
+## Case 1: The Vulnerable DOM-XSS Source Structure
+In this configuration, the backend server safely serves a static file. However, the client-side JavaScript reads the query string and directly uses innerHTML or pushes it straight to a location sink. This is exactly what your script maps when running its multi-vector fuzzing routines. [1, 2] 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM-Based XSS Target Lab</title>
+</head>
+<body>
+
+    <div id="wrapper">
+        <h1>Search Results</h1>
+        <!-- The user string is dynamically injected into this node container -->
+        <p id="search-output">You searched for: <span id="query-string"></span></p>
+    </div>
+
+    <script>
+        // Source: Grab the query string parameters from the window location bar
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchInput = urlParams.get('search');
+
+        if (searchInput) {
+            // DANGEROUS SINK: innerHTML evaluates string data as live HTML tags 
+            // If searchInput is "<img src=x onerror=alert(1)>", it triggers instantly.
+            document.getElementById('query-string').innerHTML = searchInput;
+
+            // ALTERNATIVE EXECUTION SINK: Explicit Pseudo-Protocol Routing Handler
+            // If searchInput is "javascript:alert(1)", clicking this link executes code.
+            const actionLink = document.createElement('a');
+            actionLink.href = searchInput; 
+            actionLink.innerText = "Click here to process search trace";
+            document.getElementById('wrapper').appendChild(actionLink);
+        }
+    </script>
+</body>
+</html>
+
+------------------------------
+## Case 2: The Vulnerable HttpOnly-Bypass Target Structure
+In this configuration, the site uses an HttpOnly token (managed behind the scenes by the server headers), meaning document.cookie returns completely blank. However, because the app features an unvalidated query router, an attacker's script can trigger background fetch routines. [3] 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure HttpOnly Session - Unsafe Client Router</title>
+</head>
+<body>
+
+    <div id="app">
+        <h2>Welcome to the Account Portal</h2>
+        <p>Your session cookies are protected with HttpOnly. JavaScript cannot read them.</p>
+        
+        <!-- Simulation box representing a sensitive profile setting form -->
+        <div id="settings-panel">
+            <p>Current Contact Email: <span id="current-email">user@target-domain.com</span></p>
+        </div>
+        
+        <div id="alert-banner"></div>
+    </div>
+
+    <script>
+        // Capture the incoming search/routing parameter
+        const queryParams = new URLSearchParams(window.location.search);
+        const routeData = queryParams.get('search');
+
+        // VULNERABLE ROUTER SINK: Direct reflection allows an arbitrary script injection.
+        // Even though cookies are hidden, this injected payload can execute a backend state change.
+        if (routeData) {
+            const outputFrame = document.getElementById('alert-banner');
+            
+            // If the query contains an injection payload, it runs with full system context
+            outputFrame.innerHTML = `Search tracking reference active: ${routeData}`;
+        }
+
+        // --- SIMULATED BACKGROUND ENDPOINT THAT AN ATTACKER TARGETS VIA FETCH ---
+        // This function represents the backend API handling update requests
+        async function handleMockEmailUpdateAPI(newEmail) {
+            console.log(`[API RECEIVER]: Request incoming to change account email to: ${newEmail}`);
+            console.log(`[API RECEIVER]: Browser automatically attached the HttpOnly Session Cookie! Authorization Valid.`);
+            document.getElementById('current-email').innerText = newEmail;
+        }
+    </script>
+</body>
+</html>
+
+------------------------------
+## 🔬 Testing These Locally With Your Tool
+If you want to view how your scanner maps vulnerabilities using these code templates:
+
+   1. Save either code block as index.html on your machine.
+   2. Spin up a quick local web server using Python: python3 -m http.server 8080.
+   3. Feed that local server address straight into your scanner tool engine:
+   
+   node xss_detectorabang8.js http://localhost:8080/index.html
+   
+   [4] 
+
+Would you like me to show you how to write the fixed, completely safe JavaScript functions for these templates to ensure inputs are processed securely without rendering code?
+
+
+No, when this happens in a browser framework like Vue or AngularJS, it is not Remote Code Execution (RCE). It is Client-Side Template Injection (CSTI), which behaves exactly like Cross-Site Scripting (XSS).
+Because the code executes strictly inside the victim's web browser, it can steal session data or manipulate the page layout, but it cannot access or damage the backend server.
+However, if the web application uses a Server-Side Template Engine (like Thymeleaf, Freemarker, Jinja2, or EJS) and evaluates that exact same ${alert(1)} string on the server backend before sending the HTML to the user, then it becomes Server-Side Template Injection (SSTI), which can lead to full RCE. [1] 
+------------------------------
+## The Two Faces of Template Injection
+Whether this payload is a simple browser glitch or a catastrophic server takeover depends entirely on where the template code is being processed.
+
+| Feature | Client-Side (CSTI) | Server-Side (SSTI) |
+|---|---|---|
+| Where Code Runs | Inside the user's web browser. | Inside the backend web server. |
+| Impact Level | XSS Equivalent (Steals cookies, session hijacking). | Full RCE (Full server control, database access). |
+| Vulnerable Tech | Vue.js, Angular, AngularJS, React. | Jinja2 (Python), Twig (PHP), EJS (Node), Thymeleaf (Java). |
+| Attacker Payload | Looks for browser functions: ${alert(1)} | Looks for OS commands: ${run_command('id')} |
+
+------------------------------
+## How it Escalates to RCE on a Backend Server (SSTI Example)
+If the target web server is built with Node.js and uses a server-side template engine improperly, an attacker can modify the payload to pivot from a simple browser pop-up to executing actual terminal commands on the host machine.
+## The Vulnerable Backend Code (Node.js / Express / EJS Example)
+
+// DANGEROUS: Concatenating user input directly into a server-side template template string
+app.get('/search', (req, res) => {
+    const searchInput = req.query.search; 
+    
+    // The server compiles the user string as active backend template logic!
+    const htmlTemplate = `<div>You searched for: ${searchInput}</div>`;
+    res.render('search_page', { template: htmlTemplate });
+});
+
+## The Weaponized RCE Payload
+Instead of sending a client-side instruction like alert(1), the attacker switches the payload to access backend process environments:
+
+?search=${process.mainModule.require('child_process').execSync('id')}
+
+When the server processes this request, it doesn't show anything to the user—instead, it silently executes the Linux id or whoami commands directly inside your Ubuntu target terminal environment, granting the attacker a backdoor into the infrastructure.
+Would you like to examine how to look for server-side exceptions using your pipeline, or do you want to stick to optimizing your client-side DOM scanners?
+
+[1] [https://fdzdev.medium.com](https://fdzdev.medium.com/top-10-ways-to-achieve-remote-code-execution-rce-on-web-applications-d923246b916b)

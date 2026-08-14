@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template Expression Injection Lab</title>
+    <!-- Simulating a vulnerable frontend framework or interpolation template environment -->
+    <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Dashboard System</h1>
+        
+        <!-- DANGEROUS PATTERN: Input is blindly mirrored into a template container -->
+        <p>Your search filter context: <span id="output-box"></span></p>
+    </div>
+
+    <script>
+        // Grab the incoming query parameter string
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchInput = urlParams.get('search'); // Resolves to "${alert(1)}"
+
+        if (searchInput) {
+            // Step 1: Input lands inside the HTML DOM structure
+            document.getElementById('output-box').innerHTML = searchInput;
+
+            // Step 2: DANGEROUS EVALUATION SINK
+            // If the application parses expressions manually using template literals or eval loops:
+            try {
+                // If a developer wraps input in an unsafe evaluation template string string like:
+                // eval(`console.log("Tracking parameter: ${searchInput}")`);
+                // The browser compiles the inner ${alert(1)} as an active code execution.
+            } catch(e) {}
+        }
+
+        // Initialize the frontend app layer 
+        // (If Vue or Angular parses the container after HTML injection, it evaluates bracket contents)
+        new Vue({ el: '#app' });
+    </script>
+</body>
+</html>

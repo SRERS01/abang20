@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Target Lab - Onboarding Registration Panel</title>
+    <!-- Loading an expression-parsing framework engine to simulate CSTI vulnerability -->
+    <script src="https://googleapis.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; padding: 40px; text-align: center; }
+        .reg-box { background: white; padding: 40px; border-radius: 10px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; }
+        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #28a745; padding-bottom: 10px; }
+        label { font-weight: bold; color: #555; display: block; margin-top: 15px; }
+        input { width: 100%; padding: 12px; margin: 6px 0 15px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #218838; }
+        .debug-notice { background: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body ng-app="">
+
+    <div class="reg-box">
+        <h2>Create Account</h2>
+        
+        <!-- VULNERABLE ELEMENT: Reflects the URL query context directly inside the active framework scope template -->
+        <div class="debug-notice" id="vulnerable-node">
+            System initialization active...
+        </div>
+
+        <form id="registrationForm" action="#" method="POST" onsubmit="event.preventDefault(); alert('Registration processed natively!');">
+            <label>Choose Username or Phone:</label>
+            <input type="text" name="username" id="username" placeholder="e.g. abang123" required>
+            
+            <label>Set Access Password:</label>
+            <input type="password" name="password" id="password" placeholder="Enter secure password" required>
+            
+            <button type="submit">Complete Registration</button>
+        </form>
+    </div>
+
+    <script>
+        // Extract the parameters from the URL address bar
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPasswordInput = urlParams.get('password');
+
+        if (urlPasswordInput) {
+            // Unsafely pushes raw parameter into the template container.
+            // If the query is "${alert(1)}", the template framework processes it upon rendering.
+            document.getElementById('vulnerable-node').innerHTML = "Verifying preset parameter trace: " + urlPasswordInput;
+            document.getElementById('password').value = urlPasswordInput;
+        }
+    </script>
+</body>
+</html>

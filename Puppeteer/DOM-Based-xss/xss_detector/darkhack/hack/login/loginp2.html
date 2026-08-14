@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentication Portal - Validation Error Lab</title>
+    <!-- Simulating an older responsive framework engine prone to expressions parsing -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #eec; padding: 50px; }
+        .login-box { background: white; padding: 30px; border-radius: 8px; max-width: 400px; margin: 0 auto; }
+        .error-banner { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="login-box">
+        <h2>System Authentication</h2>
+        
+        <!-- DANGEROUS REFLECTION CONTAINER: Input is echoed inside a framework template node -->
+        <div v-if="errorActive" class="error-banner">
+            ❌ Verification Failed for parameter context: <span id="error-output"></span>
+        </div>
+
+        <form @submit.prevent>
+            <input type="password" placeholder="Enter account credentials" style="width:100%; padding:10px; margin-bottom:10px;">
+            <button style="width:100%; padding:10px; background:#007bff; color:white; border:none;">Proceed</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorContext = urlParams.get('password'); // Resolves to "${alert(1)}"
+
+        // Instantiate the frontend tracking app
+        const app = new Vue({
+            el: '#app',
+            data: {
+                errorActive: false
+            }
+        });
+
+        if (errorContext) {
+            app.errorActive = true;
+            // The input string lands inside the DOM right before Vue compiles the layout wrapper
+            document.getElementById('error-output').innerHTML = errorContext;
+        }
+    </script>
+</body>
+</html>

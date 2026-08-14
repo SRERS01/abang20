@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentication parameter Validation Lab</title>
+    <!-- Simulating a responsive client framework engine prone to expression compilation -->
+    <script src="https://googleapis.com"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f9fa; padding: 40px; text-align: center; }
+        .auth-container { background: white; padding: 30px; border-radius: 8px; max-width: 380px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left; }
+        .status-box { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #dc3545; }
+    </style>
+</head>
+<body ng-app="">
+
+    <div class="auth-container">
+        <h3>Portal Verification</h3>
+        
+        <!-- VULNERABLE STRUCTURAL NODE: Reflects the input inside an active framework scope template container -->
+        <div class="status-box" id="auth-status-panel">
+            Awaiting session context...
+        </div>
+
+        <form onsubmit="event.preventDefault();">
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Authentication Token ID:</label>
+            <input type="text" id="auth-input-box" style="width:100%; padding:10px; box-sizing:border-box; border-radius:4px; border:1px solid #ccc; margin-bottom:15px;">
+            <button style="width:100%; padding:10px; background:#007bff; color:white; border:none; border-radius:4px; font-weight:bold;">Validate Access</button>
+        </form>
+    </div>
+
+    <script>
+        // Extract the parameters from the URL address string query
+        const urlAddressParams = new URLSearchParams(window.location.search);
+        const incomingAuthToken = urlAddressParams.get('auth'); // Resolves to "${alert(1)}"
+
+        if (incomingAuthToken) {
+            // UNSAFE SINK: Passing raw values into innerHTML inside an active framework compilation tag layer
+            document.getElementById('auth-status-panel').innerHTML = "Invalid authentication signature context: " + incomingAuthToken;
+            document.getElementById('auth-input-box').value = incomingAuthToken;
+        }
+    </script>
+</body>
+</html>

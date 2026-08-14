@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise Login Gateway</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; text-align: center; }
+        .form-container { display: inline-block; text-align: left; padding: 20px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h3>Corporate SSO Sign-In</h3>
+        
+            <input type="text" name="user" placeholder="Employee ID" style="display:block; margin-bottom:10px; padding:5px;">
+            <input type="password" name="pass" placeholder="Password" style="display:block; margin-bottom:10px; padding:5px;">
+            <button type="submit">Authorize Session</button>
+        </form>
+    </div>
+
+    <script>
+        const queryParams = new URLSearchParams(window.location.search);
+        const trackingRef = queryParams.get('password');
+
+        if (trackingRef) {
+            // HIGHLY VULNERABLE STRUCTURAL SINK: Appending raw inputs directly into a script evaluation loop
+            // An attacker can exploit this logic to break out of string borders and rewrite elements globally.
+            try {
+                const debugSession = {};
+                eval(`debugSession.reference = "${trackingRef}";`);
+            } catch(e) {
+                // Prevent crash notifications from showing to the user
+            }
+        }
+    </script>
+</body>
+</html>
