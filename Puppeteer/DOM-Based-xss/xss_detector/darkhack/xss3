@@ -1,0 +1,63 @@
+If an XSS vulnerability exists on a website but the HttpOnly flag is enabled, an attacker cannot read the session cookies directly using document.cookie. However, an account takeover can still happen. [1, 2, 3, 4] 
+Because the malicious JavaScript is running directly inside the victim’s authenticated browser session, the attacker does not actually need to steal the cookie. They can simply use the browser to execute actions on the victim's behalf. [3] 
+The full, step-by-step process of how an attacker executes an account takeover despite HttpOnly protection follows:
+------------------------------
+## Step 1: Weaponizing the Injection (The XHR/Fetch Pivot)
+Instead of writing a script that searches for document.cookie (which returns empty for HttpOnly values), the attacker builds a payload that utilizes asynchronous JavaScript (fetch or XMLHttpRequest). [2, 5] 
+
+* Whenever JavaScript sends an internal request back to the website's backend server, the browser automatically attaches the HttpOnly cookie to the request headers.
+* The attacker writes a background script to perform a critical state change—such as updating the account's registered email address. [5, 6, 7] 
+
+// This script runs silently in the victim's browser session
+fetch('https://vulnerable-bet-site.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: 'attacker@evil-mail.com' })
+});
+
+------------------------------
+## Step 2: Extracting the Anti-CSRF Tokens
+Many modern applications protect their email update forms using a hidden security value called an Anti-CSRF (Cross-Site Request Forgery) Token. Since this token is explicitly passed to prevent external forms from submitting data, the attacker's script must capture it before triggering the update. [6, 7, 8, 9, 10] 
+
+   1. The script first makes a hidden background request to the user profile page: fetch('/settings').
+   2. It parses the incoming HTML text stream to find the anti-CSRF token key:
+   
+   const html = await response.text();const csrfToken = html.match(/name="csrf_token" value="([^"]+)"/)[1];
+   
+   3. The script extracts the token value from the page memory layer. [6, 11] 
+
+------------------------------
+## Step 3: Triggering the Background State Change
+With the CSRF token in hand, the script executes the target request. [12] 
+
+   1. The script dispatches a POST request to the account endpoint, attaching the token along with the attacker's target email address:
+   
+   fetch('/api/account/update-email', {
+       method: 'POST',
+       body: `email=attacker@evil-mail.com&csrf_token=${csrfToken}`
+   });
+   
+   2. The victim's browser transmits this data to the web server. Because it is an internal request, the browser attaches the HttpOnly login cookie automatically.
+   3. The server validates the cookie, matches the valid CSRF token, and updates the profile's main email address to attacker@evil-mail.com. [5, 6, 7, 13, 14] 
+
+------------------------------
+## Step 4: Intercepting the Account Access (The Password Reset)
+Once the email has been switched, the attacker completes the hijacking loop from their own machine:
+
+   1. The attacker visits the website's public login interface and clicks "Forgot Password".
+   2. They enter the victim's original username or the newly swapped email address (attacker@evil-mail.com).
+   3. The server generates a password reset link and forwards it straight to the attacker's inbox.
+   4. The attacker opens the link, sets a new password, and logs in. The victim is permanently locked out of their account. [15, 16, 17, 18, 19] 
+
+------------------------------
+## 🛡️ Summary of the Bypass Mechanics
+
+| Attack Objective | With HttpOnly Disabled | With HttpOnly Enabled |
+|---|---|---|
+| Target Data Source | document.cookie string array | API request headers (fetch / XHR) |
+| Attacker Actions | Steal the token and log in from another PC | Use the victim's own browser to run background actions |
+| Ultimate Outcome | Immediate Account Hijacking | Email modification followed by Password Reset |
+
+Would you like to learn how developers implement Re-Authentication Prompts (like requiring the current password to change an email) to break this entire attack chain?
+
+

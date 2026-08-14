@@ -1,0 +1,238 @@
+ 42
+Kruidvat
+www.kruidvat.nl
+URL
+Tier 1
+www.kruidvat.be
+URL
+Tier 1
+Kruidvat BE iOS
+iOS
+Tier 1
+Kruidvat NL iOS
+iOS
+Tier 1
+Kruidvat BE Android
+Android
+Tier 1
+Kruidvat NL Android
+Android
+Tier 1
+api.kruidvat.nl
+URL
+Tier 1
+api.kruidvat.be
+URL
+Tier 1
+app.kruidvat.nl
+URL
+Tier 1
+app.kruidvat.be
+URL
+Tier 1
+media.kruidvat.nl
+URL
+Tier 1
+media.kruidvat.be
+URL
+Tier 1
+www.kruidvatkids.nl
+URL
+Tier 4
+speelgoedfolder.kruidvat.nl
+URL
+Tier 4
+depliantdejouets.kruidvat.be
+URL
+Tier 4
+folder.kruidvat.be
+URL
+Tier 4
+folder.kruidvat.nl
+URL
+Tier 4
+speelgoedfolder.kruidvat.be
+URL
+Tier 4
+ecom-static.kruidvat.be
+URL
+Tier 4
+ecom-static.kruidvat.nl
+URL
+Tier 4
+ecom-data.kruidvat.be
+URL
+Tier 4
+magazine.kruidvat.be
+URL
+Tier 4
+ecom-data.kruidvat.nl
+URL
+Tier 4
+campaign.kruidvat.nl
+URL
+Tier 4
+campaign.kruidvat.be
+URL
+Tier 4
+cewe.kruidvat.nl
+URL
+Tier 4
+cewe.kruidvat.be
+URL
+Tier 4
+digital.kruidvat.be
+URL
+Tier 4
+digital.kruidvat.nl
+URL
+Tier 4
+foto.kruidvat.be
+URL
+Tier 4
+foto.kruidvat.nl
+URL
+Tier 4
+fotoservice.kruidvat.nl
+URL
+Tier 4
+fotoservice.kruidvat.be
+URL
+Tier 4
+photo.kruidvat.be
+URL
+Tier 4
+service.kruidvat.be
+URL
+Tier 4
+service.kruidvat.nl
+URL
+Tier 4
+servicefr.kruidvat.be
+URL
+Tier 4
+www.cewe.kruidvat.be
+URL
+Tier 4
+www.cewe.kruidvat.nl
+URL
+Tier 4
+*.kruidvatkids.nl
+Wildcard
+Tier 5
+*.kruidvat.nl
+Wildcard
+Tier 5
+*.kruidvat.be
+Wildcard
+Tier 5
+6
+Trekpleister
+www.trekpleister.nl
+URL
+Tier 1
+campaign.trekpleister.nl
+URL
+Tier 4
+ecom-data.trekpleister.nl
+URL
+Tier 4
+service.trekpleister.nl
+URL
+Tier 4
+folder.trekpleister.nl
+URL
+Tier 4
+*.trekpleister.nl
+Wildcard
+Tier 5
+2
+Prijsmepper
+www.prijsmepper.nl
+URL
+Tier 4
+*.prijsmepper.nl
+Wildcard
+Tier 5
+In scope
+
+Introduction
+
+We are happy to announce our program! We've done our best to clean up our known issues and now would like to request your help to spot the ones we missed!
+
+Focus Areas
+
+    E-commerce Payment & order flows
+    Authorization flaws in API & Microservices in the e-commerce environment
+    Any e-commerce functionality which processes customer data
+
+Critical Scenarios
+
+    Mass customer data exposure: emails, addresses, phone numbers, order history, etc.
+    Zero-click mass customer account takeover
+    Remote Code Execution
+    Unauthorized access to important infrastructure, databases, or backend systems
+    Checkout/order process abuse (e.g. free or discounted products)
+
+Leaked Credentials
+
+We welcome security researchers to responsibly report any discovered publicly leaked credentials that could allow unauthorized access or exposure of sensitive information. 
+
+Below is a list of generic guidelines on which credentials will or won't accept in reports:
+Cases with impact:
+
+    Credentials providing administrative or high-privileged access to network infrastructure, servers, or critical applications
+    Credentials providing admin access to high-priority web applications within AS Watson’s attack surface.
+    Credentials exposing sensitive data of a large number of employees or customers
+    Credentials belonging to service accounts with broad access
+
+Cases without significant impact:
+
+    Personal user credentials for non-critical applications (e.g. training platforms, corporate social media)
+    Credentials external to AS Watson’s domains/infrastructure (ex. personal Gmail account for AS Watson applications)
+    Credentials that cannot be accessed due to multi-factor authentication (MFA)
+    Individual customer credentials (we can only advice customers to be careful with their passwords)
+
+⚠️ Please note that we will evaluate the impact of credential-related reports and reserve the right to make final determinations on bounty eligibility and awards. Private or paid for leaked credentials are strictly out of scope. 
+
+Feedback
+Would you like to help us improve our program or have some feedback to share, please send your anonymous feedback here:
+
+    Program feedback link
+    Please note this form will be checked periodically and should not be used for submission or support queries.
+
+Out of scope
+Application
+
+    Wordpress usernames disclosure
+    Pre-Auth Account takeover/OAuth squatting
+    Self-XSS that can't be used to exploit other users
+    Verbose messages/files/directory listings without disclosing any sensitive information
+    CORS misconfiguration on non-sensitive endpoints
+    Missing cookie flags
+    Missing security headers
+    Cross-site Request Forgery with no or low impact
+    Presence of autocomplete attribute on web forms
+    Reverse tabnabbing
+    Bypassing rate-limits or the non-existence of rate-limits.
+    Best practices violations (password complexity, expiration, re-use, etc.)
+    Clickjacking without proven impact/unrealistic user interaction
+    CSV Injection
+    Sessions not being invalidated (logout, enabling 2FA, etc.)
+    Tokens leaked to third parties
+    Anything related to email spoofing, SPF, DMARC or DKIM
+    Content injection without being able to modify the HTML
+    Username/email enumeration
+    Email bombing
+    HTTP Request smuggling without any proven impact
+    Homograph attacks
+    XMLRPC enabled
+    Banner grabbing/Version disclosure
+    Not stripping metadata of files
+    Same-site scripting
+    Subdomain takeover without taking over the subdomain
+    Arbitrary file upload without proof of the existence of the uploaded file
+    Blind SSRF without proven business impact (pingbacks aren't sufficient)
+    Disclosed/misconfigured Google Maps API keys
+    Host header injection without proven business impact
+    CSRF for non-sensitive actions (example: adding or removing a product to a shopping cart or wishlist)

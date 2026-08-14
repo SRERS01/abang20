@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure HttpOnly Session - Unsafe Client Router</title>
+</head>
+<body>
+
+    <div id="app">
+        <h2>Welcome to the Account Portal</h2>
+        <p>Your session cookies are protected with HttpOnly. JavaScript cannot read them.</p>
+        
+        <!-- Simulation box representing a sensitive profile setting form -->
+        <div id="settings-panel">
+            <p>Current Contact Email: <span id="current-email">user@target-domain.com</span></p>
+        </div>
+        
+        <div id="alert-banner"></div>
+    </div>
+
+    <script>
+        // Capture the incoming search/routing parameter
+        const queryParams = new URLSearchParams(window.location.search);
+        const routeData = queryParams.get('search');
+
+        // VULNERABLE ROUTER SINK: Direct reflection allows an arbitrary script injection.
+        // Even though cookies are hidden, this injected payload can execute a backend state change.
+        if (routeData) {
+            const outputFrame = document.getElementById('alert-banner');
+            
+            // If the query contains an injection payload, it runs with full system context
+            outputFrame.innerHTML = `Search tracking reference active: ${routeData}`;
+        }
+
+        // --- SIMULATED BACKGROUND ENDPOINT THAT AN ATTACKER TARGETS VIA FETCH ---
+        // This function represents the backend API handling update requests
+        async function handleMockEmailUpdateAPI(newEmail) {
+            console.log(`[API RECEIVER]: Request incoming to change account email to: ${newEmail}`);
+            console.log(`[API RECEIVER]: Browser automatically attached the HttpOnly Session Cookie! Authorization Valid.`);
+            document.getElementById('current-email').innerText = newEmail;
+        }
+    </script>
+</body>
+</html>

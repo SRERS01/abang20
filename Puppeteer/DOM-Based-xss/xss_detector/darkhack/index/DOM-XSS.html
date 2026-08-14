@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM-Based XSS Target Lab</title>
+</head>
+<body>
+
+    <div id="wrapper">
+        <h1>Search Results</h1>
+        <!-- The user string is dynamically injected into this node container -->
+        <p id="search-output">You searched for: <span id="query-string"></span></p>
+    </div>
+
+    <script>
+        // Source: Grab the query string parameters from the window location bar
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchInput = urlParams.get('search');
+
+        if (searchInput) {
+            // DANGEROUS SINK: innerHTML evaluates string data as live HTML tags 
+            // If searchInput is "<img src=x onerror=alert(1)>", it triggers instantly.
+            document.getElementById('query-string').innerHTML = searchInput;
+
+            // ALTERNATIVE EXECUTION SINK: Explicit Pseudo-Protocol Routing Handler
+            // If searchInput is "javascript:alert(1)", clicking this link executes code.
+            const actionLink = document.createElement('a');
+            actionLink.href = searchInput; 
+            actionLink.innerText = "Click here to process search trace";
+            document.getElementById('wrapper').appendChild(actionLink);
+        }
+    </script>
+</body>
+</html>
