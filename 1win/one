@@ -1,0 +1,57 @@
+Yes, you will need to install the AWS CLI (Amazon Web Services Command Line Interface) on your Ubuntu machine to run those tests. [1, 2] 
+Open your terminal and run the following commands to install it securely: [3] 
+## 1. Update your system packages
+
+sudo apt update
+
+## 2. Install the AWS CLI tool
+The file you downloaded is only 134 bytes, which means you downloaded an error page or a XML redirect, not the actual AWS CLI installer. The URL you used is incorrect.
+## 🛠️ The Fix
+The correct download URL requires awscli.amazonaws.com. Run these commands in your terminal to download and install the official AWS CLI: [1, 2] 
+
+# 1. Download the correct zip file
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# 2. Unzip the installer
+unzip awscliv2.zip
+# 3. Run the installation script
+sudo ./aws/install
+
+## 🔍 Why it failed
+The address amazonaws.com is a root domain for AWS services, not the hosting location for the CLI tool. Because the URL didn't point to a real file, the server returned a tiny text-based error message (134 bytes) and saved it as a .zip file. [3, 4] 
+If you run into issues with the unzip command, let me know if you get a "command not found" error or an "end of central directory signature not found" error so we can fix it.
+
+## 3. Verify the installation
+Check if the tool was installed correctly by printing its version number: [6] 
+
+aws --version
+
+If you see an output like aws-cli/1.x.x or aws-cli/2.x.x, the installation was successful.
+------------------------------
+## Running the Tests
+Once verified, copy and paste these two commands exactly as they are to test the 1win S3 bucket:
+
+* Test 1 (Read Access Check):
+
+aws s3 ls s3://web-k8s-forum-prod --no-sign-request --region eu-central-1
+
+* Test 2 (Write Access Check):
+
+touch bounty_test.txt
+aws s3 cp bounty_test.txt s3://web-k8s-forum-prod/uploads/bounty_test.txt --no-sign-request --region eu-central-1
+
+
+Please run these commands and paste the exact output or error message your terminal returns so we can see if the bucket is vulnerable!
+
+
+That worked perfectly. You have successfully downloaded the full 69.8 MB installer file.
+You can now proceed with unzipping and installing it by running these next two commands in your terminal:
+
+# 1. Unzip the installer
+unzip awscliv2.zip
+# 2. Run the installation script
+sudo ./aws/install
+
+Once the installation finishes, you can verify it works by running aws --version. [1] 
+Let me know if you run into any permission errors during the installation or if the unzip command is missing from your system.
+
+

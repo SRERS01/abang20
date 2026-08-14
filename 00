@@ -1,0 +1,6 @@
+cd source myvenv/bin/activate
+cd ~/school/genius/abangtobiasbake
+ls
+python3  php.py  
+python3  PHP.py
+tocheckforphpserverversion

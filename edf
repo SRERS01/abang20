@@ -1,0 +1,30 @@
+To find vulnerabilities that earn high payouts, you must look at a website not as a collection of pages, but as a system of data exchanges.
+Every single time a user, browser, or server interacts with a website, data moves across boundaries. If that data is handled incorrectly, a bug exists.
+The following table comprehensively maps every core interaction path on a modern application layer along with the exact, critical vulnerabilities you should hunt for within each:
+## Comprehensive Application Layer Interaction & Vulnerability Matrix
+
+| Interaction Channel | Technical Action | Potential Vulnerability / Bug |
+|---|---|---|
+| User to Form Field | Typing data into text boxes, registration forms, search bars, or contact modules. | SQL Injection (SQLi): Malformed text inputs break database queries, leaking or altering internal tables. Cross-Site Scripting (XSS): Malicious JavaScript entered into fields (like profile names) saves to the database and executes inside another user's browser. |
+| User to File System | Uploading images, avatars, identity verification documents, or attachments. | Insecure Arbitrary File Upload: Tricking the server into accepting a backend execution script (like a .php web shell) disguised as an avatar image, granting full command-line access to the host server. |
+| Browser to Application URL | Navigating structural directory links or manipulating trailing URL query variables. | Insecure Direct Object Reference (IDOR): Changing an identifier parameter in the address line (e.g., ?id=1005 to ?id=1006) to illegitimately access another user's private data. Path Traversal: Using input strings like ../../config.php inside resource retrieval parameters to read sensitive backend system files. |
+| Browser to Authentication State | Submitting login credentials, maintaining active sessions, or running automated requests. | Credential Stuffing / Broken Rate Limiting: Bypassing security checks to run thousands of rapid authentication loops without encountering a CAPTCHA wall or account lockouts. Session Fixation: Hijacking access states due to insecurely handled browser cookies that lack HttpOnly or Secure protective flags. |
+| Browser to Frontend Rendering | Interacting with client-side framework scripts (like Nuxt.js or React). | DOM-Based XSS: Frontend execution engines read unsafe data parameters straight from the browser URL window and write them directly into the current page layout without cleansing. Open Redirect: Altering a post-login trajectory link parameter to instantly bounce a visiting user to a external malicious phishing domain. |
+| Backend to Internal Business Logic | Modifying multi-step transactions, shopping carts, checkout states, or coupon fields. | Parameter Tampering: Intercepting a package request via a proxy to alter critical numeric parameters (such as changing an item price from 100.00 to 0.01 or flipping a quantity count to a negative value) to fool programmatic checks. Privilege Escalation: Injecting hidden roll parameters (like role=admin or is_admin=true) into basic account profile updates to secure illegal management access levels. |
+| Third-Party Server to Platform API | Processing transactional message redirects or incoming status updates (Webhooks). | Faked Payment Callbacks: Crafting artificial server status signals to simulate successful payment handshakes or biometric verifications, convincing a backend platform to credit user balances or bypass security checkpoints without real processing ever occurring. |
+
+------------------------------
+## 🚀 Proactive Strategy for Bug Hunting
+To jump from mapping concepts to actively hunting bugs, you need to transition into looking closely at traffic data:
+
+   1. Look at your previous 1w.cash target scan data, which successfully pinpointed the exact, critical account routing path: /api/v1/user/forgot/password/recover.
+   2. This path falls squarely under the Browser to Authentication State interaction criteria.
+   3. Open this specific recovery feature inside your web browser interface, activate F12, and click on the Network tab.
+
+If you want to map out your first manual test case, let me know:
+
+* What exact JSON input fields appear inside the Payload section when you submit a test entry to that endpoint? (e.g., email, token, step)
+* What Server Response message does the API return?
+
+I can show you exactly how to manipulate those fields inside Burp Suite to safely test for real business logic flaws.
+

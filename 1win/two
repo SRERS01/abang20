@@ -1,0 +1,27 @@
+To verify if this S3 bucket is public or misconfigured, you can test it using the AWS CLI tool we just installed. Bug bounty platforms generally require a Proof of Concept (PoC) demonstrating listing, reading, or writing capabilities before accepting a submission.
+Here are the standard, non-destructive commands to test the permissions safely:
+## 1. Test for Public Listing
+Check if anyone on the internet can list the contents of the bucket without using any AWS credentials:
+
+aws s3 ls s3://web-k8s-forum-prod --no-sign-request --region eu-central-1
+
+## 2. Test for Authenticated Listing (Any AWS Account)
+Sometimes buckets are misconfigured to allow access to "Any Authenticated AWS User" (which means anyone with a valid AWS account, not just users inside the target organization). You can test this using your own local AWS credentials (after running aws configure):
+
+aws s3 ls s3://web-k8s-forum-prod --region eu-central-1
+
+## 3. Safe Write Testing (If authorized by the policy)
+According to the program policy you provided, you should never modify existing files or perform post-exploitation activity. To test for unauthorized write permissions safely, try to upload a benign text file and delete it immediately if it succeeds:
+
+# Create a harmless test file
+echo "test" > poc.txt
+# Attempt to upload it to a path in the bucket
+aws s3 cp poc.txt s3://web-k8s-forum-prod/uploads/css_built_3/poc.txt --no-sign-request --region eu-central-1
+
+## 🔍 Evaluating Severity
+
+* List / Read Only: If you can only list files, this is typically closed as Informational or Low severity unless sensitive personal data or source code is exposed (CSS files are publicly viewable by design).
+* Write Permissions: If you can upload or overwrite files (like the existing .css.gz files), this constitutes a Critical / High vulnerability (Stored XSS / Defacement potential) and qualifies for a significant bounty according to the rules table.
+
+Would you like help drafting the bug bounty report structure for HackerOne if any of these checks return a success message?
+

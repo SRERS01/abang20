@@ -1,0 +1,25 @@
+Your scanner output for 1w.cash has flagged something very important, but it is highly likely a false positive that would be rejected by a bug bounty triage team if submitted as-is.
+Look closely at the "admin_hits_head" section: Every single common admin path (/admin/, /wp-admin/, /cpanel, /manager/html) returned a status of 200 OK.
+## Why this is likely a False Positive
+When a website returns a 200 OK status for completely contradictory technologies on the same domain (like WordPress's /wp-admin/ and Apache Tomcat's /manager/html at the same time), it usually means the server uses a catch-all routing rule.
+Instead of showing a 404 Not Found error page for folders that do not exist, the server handles unknown URLs by redirecting the user back to the main homepage or a standard landing page with a 200 OK status. Your scanner sees the 200 OK and falsely flags it as a "hit."
+------------------------------
+## How to Manually Verify if They are Real
+To determine if you found a valid exposure or a false positive, you must check them manually in your web browser:
+
+   1. Open your browser and navigate directly to https://1w.cash/wp-admin/ or https://1w.cash/cpanel.
+   2. If it loads a real login panel for cPanel or WordPress, you have found an exposed administrative interface.
+   3. If it just redirects you to the standard 1win landing page or a general portal homepage, it is a false positive and not a bug.
+
+------------------------------
+## The Real Target: The Extracted Endpoint 🎯
+The most valuable piece of real data in this JSON file is inside the "extracted_endpoints" array:
+/api/v1/user/forgot/password/recover
+This is an active backend API route handling Account Recovery. Since the 1win program scope explicitly covers account settings and logins, testing this specific endpoint manually is a great path forward.
+You can test this endpoint using a proxy tool like Burp Suite to look for Business Logic Flaws:
+
+* Username/Email Enumeration: Does the endpoint respond differently if you submit a registered email versus an unregistered one? (e.g., does it reveal if an account exists?)
+* Rate Limiting: Does the endpoint allow you to request a password reset email hundreds of times in a row without blocking your IP address or requiring a CAPTCHA? (Remember to keep your testing under their limit of 5 requests per second).
+
+Would you like to walk through how to manually inspect the /api/v1/user/forgot/password/recover endpoint using your browser's Developer Tools or Burp Suite to see how it responds to data?
+

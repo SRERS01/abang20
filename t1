@@ -1,0 +1,33 @@
+Your recon.json and pages.csv files provide a clean, organized map of the public asset. However, as you can see from the automated output, the findings here are completely out of scope or invalid for a bug bounty submission.
+The script extracted partners@1w.run and security.partners@1w.run. These are intentional, public-facing communication addresses used by the platform to accept business deals and vulnerability reports. They are expected to be public.
+Your recon files do, however, give you the exact technical landscape of the target, allowing you to stop guessing and start hunting manually.
+------------------------------
+## What Your Recon Data Tells You (The Tech Stack)
+Your pages.csv reveals two critical pieces of information about how the application handles data:
+
+* Technologies Identified: Nuxt (a modern JavaScript framework) and Magento (a powerful PHP-based e-commerce/retail engine).
+* Active Sub-paths: The application is hosting a marketing dynamic backend under /blog/posts/ and /blog/categories/.
+
+Because the backend utilizes Magento, the system likely connects to a database to fetch blog content, handle user accounts, or process forms. This means your best chance of finding a valid bug is to test how those input boxes handle data.
+------------------------------
+## How to Manually Hunt on This Tech Stack
+Since automated scanners cannot find business logic or deep application flaws, you should pivot to testing the live pages you discovered in pages.csv:
+## 1. Test for SQL Injection (SQLi) on Categories/Posts
+The URLs you found look like this: https://1w.run/blog/categories/1winpromo.
+
+* What to look for: The word 1winpromo or ed is a parameter being sent to the backend database to fetch specific posts.
+* How to test: Using your web browser or Burp Suite, try appending common database characters to the end of the URL path (e.g., 1winpromo' or 1winpromo") to see if the page breaks gracefully or prints a raw database query error.
+
+## 2. Test for Broken Authentication on the Partner Sign-Up Form
+Navigate manually to the main login or registration page of the affiliate portal.
+
+* What to look for: Look closely at how the application registers a new partner account.
+* How to test: Open your browser's Developer Tools (F12) and watch the Network tab when you hit submit. Check if the frontend sends extra fields (like role or is_admin) that you can manipulate to gain unauthorized access privileges.
+
+------------------------------
+If you want to continue, let me know:
+
+* Have you set up Burp Suite to intercept traffic from your browser yet?
+* Would you like a step-by-step guide on how to manually analyze the parameters of a registration request?
+
+

