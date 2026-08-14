@@ -1,0 +1,58 @@
+To string your subdomain discovery tools straight into your scanner, you can wrap your workflow in a Bash script.
+This automated pipeline orchestrates the entire bug bounty recon loop: it takes a domain (like example.com), pulls all live subdomains dynamically using tools like subfinder and httpx, and pipes the clean results straight into your xss_final_engine.js script.
+## 1. The Automation Wrapper (hunter_pipeline.sh)
+Create a new file named hunter_pipeline.sh in your project folder:
+
+#!/bin/bash
+# Ensure a target domain argument is providedif [ -z "$1" ]; then
+    echo "❌ Error: Target domain missing."
+    echo "💡 Usage: ./hunter_pipeline.sh targetdomain.com"
+    exit 1fi
+
+DOMAIN=$1
+TARGET_FILE="targets.txt"
+
+echo "================================================================="
+echo "🥷  LAUNCHING RECON & SCAN PIPELINE FOR: $DOMAIN"
+echo "================================================================="
+# Step 1: Subdomain Discovery# Checks if subfinder is installed. If not, falls back to a clean single URL target.if command -v subfinder &> /dev/null; then
+    echo "[🔍] Phase A: Enumerating subdomains via Subfinder..."
+    subfinder -d "$DOMAIN" -silent > raw_subs.txtelse
+    echo "[⚠️] Warning: 'subfinder' tool not found on system. Creating single domain list..."
+    echo "$DOMAIN" > raw_subs.txtfi
+# Step 2: Live Protocol Validation# Checks if httpx is installed to clean up HTTP/HTTPS access points.if command -v httpx &> /dev/null; then
+    echo "[⚡] Phase B: Checking live web assets via HTTPX..."
+    cat raw_subs.txt | httpx -silent -title -status-code | awk '{print $1}' > "$TARGET_FILE"else
+    echo "[⚠️] Warning: 'httpx' tool not found. Pre-pending default protocol structure..."
+    sed 's/^/https:\/\//' raw_subs.txt > "$TARGET_FILE"fi
+# Clean up raw artifacts
+rm -f raw_subs.txt
+# Count discovered scope assets
+NUM_TARGETS=$(wc -l < "$TARGET_FILE")
+echo "[+] Pipeline Recon Complete: $NUM_TARGETS live endpoints gathered inside $TARGET_FILE."
+# Step 3: Run the XSS Fuzzer Matrixif [ "$NUM_TARGETS" -gt 0 ]; then
+    echo "[🚀] Phase C: Launching multi-vector Puppeteer cluster scan..."
+    node xss_detectorabang5.js
+ "$TARGET_FILE"else
+    echo "❌ Error: No viable target vectors found for scanning."fi
+
+echo "================================================================="
+echo "🏁 Pipeline Finished. Check 'loot/findings.json' for bugs!"
+echo "================================================================="
+
+## 2. Set Execution Permissions
+Before you run the script on your machine, you must authorize Linux to execute it as a local program binary:
+
+chmod +x hunter_pipeline.sh
+
+## 3. Run Your Engine
+Now you can fire up your automated bug bounty hunting loop targeting any scope domain with a single line:
+
+./hunter_pipeline.sh 1w.run
+
+If you ever want to check what your script found across your network runs, you can cleanly parse your loot cache file via cat:
+
+cat loot/findings.json
+
+Would you like help installing subfinder and httpx on your machine using standard Go or Ubuntu command strings, or should we talk about adding Slack/Discord alert integration to text your phone the moment your tool spots a bug?
+
