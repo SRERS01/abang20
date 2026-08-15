@@ -1,0 +1,85 @@
+In the world of security auditing and bug bounty hunting, when we talk about "bypassing a status code," we mean tricking the web application or intermediate proxy layers (like a reverse proxy, WAF, or CDN) into turning a restriction status code into a successful access state (200 OK). [1] 
+The primary status codes targeted for bypasses are authentication and authorization flags: 403 Forbidden, 401 Unauthorized, and 404 Not Found (when used to hide administrative portals). [2, 3, 4] 
+Below is the complete, advanced blueprint of how these status codes are bypassed using specific HTTP input manipulations.
+------------------------------
+## 1. Bypassing 403 Forbidden & 401 Unauthorized
+These codes mean the server or proxy is explicitly blocking you from accessing a path (like /admin). Attackers target the communication gap between the proxy (which handles routing) and the backend server (which processes the code). [5] 
+## Technique A: HTTP Header Override (Tricking the Proxy) [6] 
+Reverse proxies often check the URL path to enforce blocks, but they allow custom headers to override the destination. If the proxy only inspects the main URL block but passes custom headers straight through, the backend will route you to the restricted page. [7, 8, 9] 
+
+* The Target Link: https://example.local (Returns 200)
+* The Injection Headers: Add headers specifying the administrative directory location:
+
+X-Original-URL: /admin
+X-Override-URL: /admin
+X-Rewrite-URL: /admin
+
+* The Result: The proxy allows the request because it thinks you are visiting the root path /, but the backend processes the header and serves the /admin console. [10, 11, 12, 13] 
+
+## Technique B: IP Whitelist Spoofing (Tricking Location Controls)
+Some administrative folders throw a 403 Forbidden unless the request comes from an internal company IP address (like 127.0.0.1 or a private local subnet). You can spoof your origin address by adding routing metadata headers. [14, 15, 16, 17] 
+
+* The Headers to Inject:
+
+X-Forwarded-For: 127.0.0.1
+X-Originating-IP: 127.0.0.1
+X-Remote-IP: 127.0.0.1
+Client-IP: 127.0.0.1
+True-Client-IP: 127.0.0.1
+
+[18, 19, 20, 21] 
+
+## Technique C: Path Traversal and Obfuscation
+If a firewall blocks access to /admin, you can alter the path syntax using special characters. If the proxy evaluates the string literally but the backend server normalizes the directory dots, you bypass the block. [22] 
+
+* URL Variations to Test:
+* https://example.local (Semicolon trick common in Java/Tomcat apps)
+   * https://example.local
+   * https://example.local
+   * https://example.local.
+   * https://example.local (URL-encoding the dot character)
+
+## Technique D: HTTP Method Toggling (Verb Tampering) [23] 
+A application might protect /admin by strictly blocking GET requests, but forget to block alternative request methods. [24] 
+
+* The Fix: Swap the HTTP verb in your terminal request tool or Burp Suite to options like POST, PUT, PATCH, or HEAD while keeping the path identical. [25, 26, 27, 28] 
+
+------------------------------
+## 2. Bypassing 404 Not Found (Revealing Hidden Files)
+Developers often intentionally configure their apps to return a 404 Not Found status code instead of a 403 Forbidden on administrative paths to hide their existence from scanners. [29] 
+## Technique A: Null Byte and Extension Spoofing [30] 
+If a framework hides a private script page (like config.php), adding termination characters or secondary extension markers can force the server wrapper to locate the binary while ignoring the security routing rule.
+
+* URL Variations to Test:
+* https://example.local
+   * https://example.local
+   * https://example.local.
+   * https://example.local (Changing formats)
+
+------------------------------
+## 🚀 How to Practice Status Code Bypasses via curl
+To automate or manually test these header and path bypass tricks inside your laboratory terminal, you pass the custom configurations directly using the -H (header) and -X (method) flags.
+
+* Testing Header Overrides:
+
+curl -i -s -H "X-Original-URL: /admin" "http://localhost:8080/"
+
+* Testing Localhost Whitelist Spoofing:
+
+curl -i -s -H "X-Forwarded-For: 127.0.0.1" "http://localhost:8080/admin"
+
+* Testing Verb Tampering (HEAD method bypass):
+
+curl -i -X HEAD "http://localhost:8080/admin"
+
+[31, 32] 
+
+## 🛡️ How Developers Secure This (The Patch)
+To completely eliminate proxy-bypass vulnerabilities, security engineers implement Strict Normalization Rules and enforce Zero-Trust Access:
+
+* Uniform Path Normalization: Ensure that both the front-facing proxy network and the backend server process and decode URL strings using the exact same standard engine. If a path is stripped or normalized, it must happen before security routing rules evaluate the page block. [33] 
+* Ignore Trusted Routing Headers: Backend web applications should never trust headers like X-Forwarded-For or X-Original-URL for security decisions unless they come from a verified, strictly authenticated proxy source. [34, 35] 
+
+Would you like to modify your local rce_server.js workspace architecture to simulate a proxy environment, so you can practice testing these specific header bypass commands locally?
+
+

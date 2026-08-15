@@ -1,0 +1,63 @@
+In software engineering and security auditing, "user input" refers to any data that originates outside the application's trusted boundary.
+Inputs are categorized by how they travel from the user (or client) to the backend server. Every entry point below can theoretically lead to vulnerabilities (like XSS, SQLi, or RCE) if the backend code handles the data unsafely. [1] 
+------------------------------
+## 1. HTTP Request Inputs (The Web Layer)
+These are the most common entry points monitored by bug bounty hunters and automated scanners.
+
+* URL Query Parameters (GET Parameters): Data appended directly to the URL structure following a question mark.
+* Example: https://example.com [2] 
+* URL Path / Routing Parameters: Input built directly into the folder directory paths of the URL, commonly handled by modern API routers.
+* Example: https://example.com
+* URL Hash / Fragments (window.location.hash): Data following a # symbol. This stays in the browser and never reaches the backend server, making it a primary source for DOM-Based XSS.
+* Example: https://example.com
+* Request Bodies (POST, PUT, PATCH): Data sent hidden inside the HTTP body packet. This can take several formats:
+* JSON / XML Payload Objects: String structures commonly utilized by REST or GraphQL APIs (e.g., {"username": "test"}).
+   * Form Data (URL-Encoded): Standard key-value pairs submitted by legacy HTML form boxes (e.g., username=test&pass=secret).
+   * Multipart Form Data: Used when forms send binary chunks alongside text (like uploading a file and writing a comment simultaneously). [3, 4] 
+
+------------------------------
+## 2. HTTP Protocol Headers (The Metadata Layer)
+Every web browser automatically transmits dozens of hidden text parameters with every single request. If a server saves, processes, or logs these headers, they act as raw user input.
+
+* User-Agent: The string identifying the user's browser version and operating system.
+* Cookies (Cookie Header): Session tokens, tracking IDs, or language preferences stored inside the browser memory layers.
+* Referer: The URL of the previous webpage the user clicked on to arrive at the current site.
+* Client IP Routing Headers (X-Forwarded-For, True-Client-IP): Proxy headers that report the user's internet routing address. Attackers fake these to bypass geographic or administrative IP access walls. [5, 6] 
+
+------------------------------
+## 3. File and Content Uploads (The Binary Layer)
+When a server accepts a file, it reads and processes multiple hidden layers of information within that file structure.
+
+* File Name / Extension: The literal text title string of the file (e.g., invoice_99.pdf).
+* File Content / MIME Type: The raw byte array data or structural script code contained inside the document package.
+* File Metadata (EXIF Data): Hidden internal descriptions embedded inside images, audio files, or PDFs, such as the GPS location coordinates, camera software tags, or author details.
+
+------------------------------
+## 4. Interactive and Protocol Interfaces (The Socket Layer)
+Modern platforms keep long-running, real-time data connections open to stream notifications, games, or live chats.
+
+* WebSockets / gRPC Channels: Persistent, bidirectional communication pathways that stream inputs and updates back and forth in real-time (e.g., live live sports bet tickets or multi-user chat panels).
+* Network Sockets (TCP/UDP Raw Streams): Direct connections to server ports handling alternative services like mail delivery (SMTP), file transfers (FTP), or remote terminal sessions (SSH).
+
+------------------------------
+## 5. Persistent and Indirect Inputs (The Secondary Storage Layer)
+An input does not have to come straight from a browser to cause a vulnerability. It can sit hidden inside a database or a file network for days before triggering an exploit. This is known as Second-Order Injection.
+
+* Database Content Records: Data that was saved to a database in the past (like a user profile nickname) that is pulled out later and rendered onto an administrative dashboard panel unsafely.
+* External API Integration Feeds: Third-party datasets that your server automatically downloads and processes (e.g., importing currency values, stock tickers, weather metrics, or social media profile info from outside sources).
+
+------------------------------
+## 🎯 Summary Checklist for Security Mapping
+
+| Input Category | Core Example | Primary Scan Target | Critical Vulnerability Risks |
+|---|---|---|---|
+| Web UI Parameter | URL Parameter | ?search=input | Reflected XSS, SQL Injection |
+| API Objects | Request Body | {"id": "input"} | Broken Object Level Auth (BOLA) |
+| Browser State | URL Fragment | #dashboard/input | DOM-Based XSS, Client Routing Errors |
+| Browser Profile | User-Agent | HTTP Header metadata | Log Injection, Shellshock RCE |
+| File Elements | Uploaded Metadata | Image EXIF text blocks | Command Injection via Image Processors |
+| Asynchronous Stream | WebSocket Data | Chat message packet text | Stored XSS, Logic Exploits |
+
+Would you like to explore how to update your xss_detector scripts to automatically parse and monitor POST request bodies alongside query string tracking parameters, or should we review how to test HTTP Header inputs using curl?
+
+
