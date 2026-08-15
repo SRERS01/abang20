@@ -1,0 +1,35 @@
+Yes, you are exactly right. There are no spaces around the equal sign (=) in those specific payloads (8821=8821 and 8821=8822).
+When an automated scanner or an analyst tests a URL, keeping blocks like 8821=8821 tight and without spaces is a deliberate choice.
+------------------------------
+## 🔍 Why the Numbers with = Have No Spaces## 1. URL Formatting and Stability
+Spaces are not naturally allowed in a web browser's URL address bar. If you type a space, the browser has to convert it into URL-encoded characters like %20 or a plus sign (+). [1] 
+
+* Writing it tightly as AND 8821=8821 instead of AND 8821 = 8821 keeps the URL cleaner and prevents encoding issues from mangling the test string before it reaches the backend.
+
+## 2. SQL Syntax Flexibility
+The database engine ignores spaces around operators. To a SQL database (like MySQL, PostgreSQL, or Oracle), both of these statements mean the exact same thing:
+
+* SELECT * FROM users WHERE id=1 AND 8821=8821;
+* SELECT * FROM users WHERE id = 1 AND 8821 = 8821;
+
+Because the database handles the missing spaces easily, keeping the expression compact is more efficient.
+## 3. Bypassing Basic Security Filters
+Many simple Web Application Firewalls (WAFs) or security filters use regular expressions (regex) to look for common attack patterns like id = 1 or space-heavy keywords. Removing spaces around the equals sign is one of the simplest ways to bypass poorly written filters that specifically search for a space followed by an equal sign.
+------------------------------
+## 🧪 What the Database Sees on a Vulnerable Target
+If a local lab parameter is vulnerable to SQL injection because user inputs are directly glued into the code string, here is what the internal database compiles behind the scenes:
+
+* When you send the True Query (?id=1 AND 8821=8821):
+
+SELECT * FROM items WHERE id = 1 AND 8821=8821;
+
+Since 8821 is always equal to 8821, the logical condition is True. The database runs the query normally, and the website displays the correct information. [2] 
+* When you send the False Query (?id=1 AND 8821=8822):
+
+SELECT * FROM items WHERE id = 1 AND 8821=8822;
+
+Since 8821 is never equal to 8822, the logical condition becomes False. The database evaluates the entire query as invalid and returns zero rows, causing the webpage to go completely blank, change sizes, or throw an error. [3] 
+
+Would you like to analyze how sqlmap uses tamper scripts to automatically strip spaces or swap characters to test databases without setting off simple security flags?
+
+

