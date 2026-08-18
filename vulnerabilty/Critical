@@ -1,0 +1,4 @@
+A SQL injection vulnerability
+Access to all customer personal data or access to a targeted user
+A numeric IDOR that allows mass write/read actions on critical features
+Path traversal leading to the disclosure of local files

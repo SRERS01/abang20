@@ -1,0 +1,5 @@
+A DOM XSS vulnerability
+Reflected XSS
+An IDOR leading to the disclosure of non-critical data
+A CSRF with a significant impact
+Lateral authentication bypass

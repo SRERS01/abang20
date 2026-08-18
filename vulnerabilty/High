@@ -1,0 +1,3 @@
+Access to random users' data (sensitive PII)
+A stored XSS vulnerability (excluding unexploitable self-XSS)
+Vertical authentication bypass

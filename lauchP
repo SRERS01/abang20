@@ -1,0 +1,5 @@
+# 1. Create a symlink mapping the hardcoded target path to your fresh browser instance
+sudo ln -sf /home/user/.cache/puppeteer/chrome/linux-151.0.7922.71/chrome-linux64/chrome /usr/bin/chromium-browser
+
+# 2. Run your scanner again
+./xss_detectorabang6i.sh allegro.cz.allegrosandbox.pl

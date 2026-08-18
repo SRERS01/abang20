@@ -1,0 +1,136 @@
+To integrate automated form submission into your Graph/FSM crawler, the script must parse the DOM for forms, identify user-input vectors, safely inject payloads, and execute the correct submission sequence (either by clicking the submit element or triggering the programmatic form submit event). [1, 2] 
+This update extends the exploreNode functionality to map form structures dynamically as unique FSM state variables and submit them safely.
+## 💻 Updated FSM Puppeteer Script with Automated Form Submission
+Replace your previous exploreNode function with this updated orchestration layer. It detects input parameters, matches field types with payload sets, and dynamically fires submissions.
+
+/**
+ * Explores a specific state node, automatically extracts forms, fuzzes inputs, and submits them.
+ */async function exploreNode(browser, stateNode) {
+    const { url, depth, actionsHistory } = stateNode;
+    
+    if (depth > MAX_DEPTH) return;
+
+    console.log(`\n[🔍 Graph Exploration] Depth: ${depth} | Visiting Node: ${url}`);
+    
+    const page = await browser.newPage();
+    
+    // Banco Plata standard header requirements compliance
+    await page.setExtraHTTPHeaders({
+        'X-HackerOne-Research': 'your_h1_username' 
+    });
+
+    try {
+        await setupSecurityListeners(page);
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 10000 });
+
+        // 1. Replay previous FSM actions if dealing with deep state tracking
+        for (const action of actionsHistory) {
+            // Replay execution sequence if navigating nested SPAs
+        }
+
+        // 2. Automated Form Submission Subsystem
+        const formsCount = await page.evaluate(() => document.querySelectorAll('form').length);
+        if (formsCount > 0) {
+            console.log(`[📝 Form Discovery] Found ${formsCount} HTML form structures on this state node.`);
+            
+            for (let formIndex = 0; formIndex < formsCount; formIndex++) {
+                for (const payload of XSS_PAYLOADS) {
+                    
+                    // Evaluate structure, fill fields, and submit safely inside the DOM context
+                    const formSubmitted = await page.evaluate((fIdx, currentPayload) => {
+                        const form = document.querySelectorAll('form')[fIdx];
+                        if (!form) return false;
+
+                        // Target text, search, email, and textarea elements
+                        const inputs = form.querySelectorAll('input[type="text"], input[type="search"], input[type="email"], textarea');
+                        if (inputs.length === 0) return false;
+
+                        inputs.forEach(input => {
+                            input.value = currentPayload;
+                            // Fire standard DOM events to trick complex UI frameworks (React/Vue/Angular)
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                        });
+
+                        // Attempt to locate a specific submit button first, or call programmatic submit execution
+                        const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.click();
+                        } else {
+                            form.submit();
+                        }
+                        return true;
+                    }, formIndex, payload);
+
+                    if (formSubmitted) {
+                        console.log(`[🚀 Form Injected] Submitted Form [Index ${formIndex}] using payload: ${payload.substring(0, 20)}...`);
+                        
+                        // FSM State Verification: Give the application state time to settle or reload
+                        await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1500)));
+                        
+                        // Check if submission landed the agent onto a new structural layout state
+                        const postSubmitFingerprint = await getPageFingerprint(page);
+                        if (!visitedStates.has(postSubmitFingerprint.hash)) {
+                            visitedStates.add(postSubmitFingerprint.hash);
+                            const currentUrl = await page.url();
+                            
+                            // Queue the post-submit landing state for deeper exploration
+                            stateQueue.push({
+                                url: currentUrl,
+                                depth: depth + 1,
+                                actionsHistory: [...actionsHistory, { edgeDescription: `FormSubmit_${formIndex}_Payload` }]
+                            });
+                        }
+                        
+                        // Reload or re-navigate to the base node to reset the state machine for the next payload mutation
+                        await page.goto(url, { waitUntil: 'networkidle2', timeout: 10000 });
+                    }
+                }
+            }
+        }
+
+        // 3. Structural Graph Fingerprinting & Edge Processing
+        const currentFingerprint = await getPageFingerprint(page);
+        if (visitedStates.has(currentFingerprint.hash)) {
+            await page.close();
+            return;
+        }
+        visitedStates.add(currentFingerprint.hash);
+
+        const edges = await discoverEdges(page);
+        for (const edge of edges) {
+            if (edge.tagName === 'A') {
+                const href = await page.evaluate((idx) => document.querySelectorAll('a')[idx].href, edge.index);
+                if (href && href.startsWith(START_URL) && !visitedStates.has(href)) {
+                    stateQueue.push({
+                        url: href,
+                        depth: depth + 1,
+                        actionsHistory: [...actionsHistory, { selectorIndex: edge.index, edgeDescription: `${edge.tagName} -> "${edge.text}"` }]
+                    });
+                }
+            }
+        }
+
+    } catch (err) {
+        console.error(`[❌ Node Processing Error] Error parsing state machine parameters: ${err.message}`);
+    } finally {
+        await page.close();
+    }
+}
+
+------------------------------
+## 🧠 Strategic Enhancements Included
+
+   1. Framework-Safe Event Dispatching: Modern frontend applications (React, Angular, Vue) maintain an internal virtual DOM state. Modifying an input element's raw .value directly using standard scripts will often cause form submissions to skip fields because the underlying JavaScript framework doesn't recognize the changes. Dispatching manual global input and change bubbling events ensures framework state compliance.
+   2. Post-Submission Graph Capture: When a form is successfully fired, the browser captures the destination layout state footprint (postSubmitFingerprint). If the action routes to a completely new zone (e.g., an invoice view or error breakdown screen), that system node is parsed and added straight into the BFS pathing structure.
+   3. State Engine Resets: After parsing a single form mutation sequence, the crawler enforces a complete application reset loop back to the base target route node string (page.goto(url)). This ensures subsequent test variations execute within an identical clean state structure environment.
+
+------------------------------
+If you want to refine this code structure further, tell me:
+
+* Does the target app use CSRF tokens hidden in fields that require specific preservation?
+* Do you need to bypass CAPTCHAs or multi-step input validation constraints?
+* Would you like to introduce screenshot capture routines whenever an XSS alert flag pops up?
+
+
+

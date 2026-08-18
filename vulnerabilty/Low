@@ -1,0 +1,3 @@
+A reflected XSS vulnerability that requires significant user interaction
+A CSRF vulnerability in a non-critical feature
+Open redirect

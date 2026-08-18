@@ -1,0 +1,41 @@
+To get critical (P1/P2) bugs consistently, you must change your approach from a general scanner to a specialized hunter. Finding critical bugs daily is the holy grail of bug hunting, but it requires extreme focus, custom automation, and looking where 99% of hunters don’t look. [1] 
+Here is the exact roadmap to transition into a high-end critical bug hunter.
+------------------------------
+## 1. Stop Using Public Bug Scanners
+If you are running standard public tools (like basic Nuclei templates, Amass, or public XSS payloads), you are competing with tens of thousands of hunters and automated corporate scanners. By the time your scan finishes, the bug is already found. [2] 
+
+* The Rule: If a tool is free, public, and requires only one click to run, it will not find critical bugs on hardened programs.
+
+## 2. Hunt for High-Impact Bug Classes
+Critical payouts come from vulnerabilities that completely compromise a business. Focus 100% of your learning and hunting on these four areas: [3] 
+
+* Server-Side Request Forgery (SSRF): Specifically targeting cloud metadata endpoints (169.254.169.254) or internal infrastructure.
+* Remote Code Execution (RCE): Look for exposed development panels, deserialization flaws, and vulnerable file upload workflows.
+* Broken Object Level Authorization (BOLA/IDOR): Manipulating API IDs to view or edit administrative data or other users' private accounts.
+* Critical Business Logic Flaws: Bypassing payment gateways, manipulating cart totals, or taking over OAuth login flows. [4, 5, 6, 7] 
+
+## 3. Move from "Subdomain Hunting" to "API Logic Hunting"
+Subdomain takeover and basic XSS bugs are dying out due to modern cloud infrastructure. The critical bugs today are hidden inside deep API logic.
+
+* Deep Feature Analysis: Pick one complex feature on a website (like an invoice generator, a team invite system, or an upgraded premium checkout).
+* Map the API: Spend hours mapping out every single API endpoint used by that specific feature.
+* Test the Boundaries: What happens if you invite an admin to a basic user account? What happens if you change an integer to an array in the API call?
+
+## 4. Build Proprietary Automation
+Since you are already working with custom Puppeteer tooling (like your DOM-XSS detector script), you have the right mindset. You need to expand this into custom automation that nobody else has. [8] 
+
+* Write Custom Middleware Parsers: Don't just scan for XSS. Write scripts that monitor JavaScript files on target sites daily for changes. When a target updates their JS code, analyze the exact differences immediately. New code almost always introduces new bugs.
+* Automate the Pre-Auth Recon: Build tools that find hidden parameters (using tools like Arjun) or look for leaked API keys in exposed frontend frameworks (React/Vue source maps). [9] 
+
+## 5. Target the Right Programs
+Do not spend your time on massive, highly-secured main domains (like *.google.com or *.facebook.com) if you want daily success. [10] 
+
+* Look for "VDP to BBP" Transitions: Watch out for programs that just transitioned from a Vulnerability Disclosure Program (no rewards) to a Bug Bounty Program (cash rewards). Their assets are often unpatched. [11, 12, 13] 
+* Target Huge Scopes: Look for corporate programs with acquisition scopes (e.g., "any asset owned by Company X"). Newly acquired companies often have terrible security compared to the parent company. [14] 
+
+------------------------------
+## Realistic Expectation Setting
+Even top-tier hacker elites do not get a critical bug every single day on public programs because security defenses are continuously improving. However, if you treat bug hunting like software engineering—building custom tools, analyzing source code, and understanding complex API structures—your critical finding rate will skyrocket. [15, 16] 
+To help you optimize your setup, tell me what type of target scope (e.g., wildcards, specific APIs, or mobile apps) you are currently hacking on, or share the main logic behind your custom Puppeteer script so we can maximize its critical bug detection! [17, 18] 
+
+

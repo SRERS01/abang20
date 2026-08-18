@@ -1,0 +1,37 @@
+## ⚠️ CRITICAL FINDING DETECTED
+The scanner has successfully mined 1 active Google Cloud Platform (GCP) Service Account / API Key from the target infrastructure.
+Exposed cloud infrastructure keys carry an immediate risk of infrastructure takeover, data exfiltration, and resource abuse.
+------------------------------
+## 🔍 IMMEDIATE ACTION STEPS
+To secure the environment before proceeding with further automated fuzzing, execute these manual triage steps:
+## 1. Locate the Leaked Secret
+Check the tool's raw output folder or JavaScript analysis logs (-js output files) to extract the actual key string. It will typically appear as a JSON block or a string starting with AIzaSy....
+## 2. Verify Key Permissions (Safely)
+Use the official Google Cloud CLI (gcloud) or a standard API request to determine the scope of the exposure without altering data.
+
+# Check what identity the key belongs to
+gcloud auth activate-service-account --key-file=secret_key.json
+gcloud auth list
+
+## 3. Revoke and Rotate
+
+* Navigate immediately to the GCP Console → IAM & Admin → Service Accounts / Credentials.
+* Locate the matching key ID and click Delete or Disable.
+* Generate a replacement key and inject it securely via environment variables rather than hardcoding it in front-end files.
+
+------------------------------
+## ➡️ NEXT SCAN STEPS
+If you want to isolate where this secret was found or investigate how deeply the system is exposed, run these specific flags inside your terminal:
+
+* Isolate the source file:
+
+bug -d <domain> -js
+
+This will show you the exact JavaScript endpoints or source maps leaking the GCP credential.
+* Check for related access controls:
+
+bug -d <domain> -oauth
+
+
+Let me know if you want a Python script to automate searching your log directory for the exact file containing that AIzaSy string, or if you need to generate a remediation snippet for your configuration files.
+

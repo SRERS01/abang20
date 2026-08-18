@@ -1,0 +1,29 @@
+That terminal interface displays a custom automated bug bounty and vulnerability scanning tool named BUG FRAMEWORK. The output shows the built-in help menu and available execution flags inside your local directory.
+To run a scan targeting the specific command injection and vulnerability types from your previous logs, you can use the following command combinations directly from your shell prompt:
+## Recommended Commands
+
+* To run a comprehensive detection scan without auto-exploitation:
+
+bug -d example.com --no-exploit
+
+* To focus strictly on Command Injection (CMDi) and Parameter Mutation Fuzzing:
+
+bug -d example.com -pmf
+
+* To include authenticated session testing (if your WhatsApp endpoints require a login state):
+
+bug -d example.com -vuln --cookie "session=your_cookie_here"
+
+* To safely check for vulnerabilities at a lower traffic speed to avoid getting blocked:
+
+bug -d example.com --rate 5 --threads 2
+
+
+------------------------------
+If you are setting up this scan right now, let me know:
+
+* What domain or target file are you preparing to scan?
+* Do you need to configure a custom header (like --header "Authorization: Bearer Token") for the targets?
+* Would you like assistance saving the scan output straight to a specific markdown file?
+
+
