@@ -1,0 +1,27 @@
+While code-based bugs like SQL Injection can be completely prevented using the right code frameworks, certain vulnerabilities cannot be permanently prevented by code alone. This is because they exploit human behavior, business workflows, or the unavoidable reality of relying on third-party software supply chains. [1, 2, 3, 4, 5] 
+The top three web vulnerabilities that cannot be completely code-prevented, only managed and mitigated, are outlined below:
+## 1. Business Logic Flaws
+Business logic flaws occur when an application's legal workflows are manipulated to achieve an unintended outcome, such as completing a checkout with a negative balance. [6, 7, 8, 9] 
+
+* Why it cannot be prevented: There is no standard patch, firewall rule, or automated scanner that can understand unique business rules. The code itself is technically valid, but the workflow logic is flawed. [6, 10, 11, 12, 13] 
+* How it is mitigated: Organizations rely on extensive manual threat modeling and dual-authorization mechanisms for high-value business thresholds.
+
+## 2. Software Supply Chain Failures
+This vulnerability occurs when a website relies on third-party libraries, open-source packages, or external APIs that are suddenly compromised or hijacked by malicious maintainers. [1, 14, 15, 16, 17] 
+
+* Why it cannot be prevented: Modern applications cannot reasonably be written entirely from scratch; they naturally rely on hundreds of external dependencies. A library that is completely safe today can be updated with malicious logic by a compromised developer tomorrow. [1, 18, 19, 20, 21] 
+* How it is mitigated: Engineering teams use continuous Software Bill of Materials (SBOM) tracking, automated dependency scanning tools, and strict version pinning. [1, 22, 23, 24] 
+
+## 3. Social Engineering & Phishing
+This flaw targets the human elements interacting with the website (such as session hijacking via social manipulation or credential harvesting clones). [25, 26, 27, 28] 
+
+* Why it cannot be prevented: An application can have perfect perimeter security, but it cannot prevent a legitimate administrator or user from voluntarily giving away their valid session token or password on a lookalike phishing site. [6, 25, 29] 
+* How it is mitigated: Platforms enforce phishing-resistant Multi-Factor Authentication (MFA), strict session timeouts, and continuous security awareness training. [29, 30] 
+
+If you are mapping out a systemic review layout for your reports, let me know:
+
+* Would you like to review how Threat Modeling identifies business logic flaws before deployment?
+* Are you interested in the security metrics of Software Bill of Materials (SBOM) tracking?
+
+
+

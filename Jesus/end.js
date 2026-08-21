@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import fs from 'fs';
 import path from 'path';
 

@@ -1,0 +1,40 @@
+The warning means you tried to install a package called crypto from npm, but Node.js has its own powerful built-in crypto engine that requires zero installation. [1, 2, 3] 
+The Error Code 13 usually means the installation failed due to an operating system permission conflict or a configuration crash caused by attempting to overwrite core modules.
+Here is exactly how to fix your script and resolve the npm environment crash.
+------------------------------
+## 🛠️ Step 1: Remove the Broken Dependency Reference
+Since crypto is native to Node.js, you must remove the explicit dependency reference from your package.json manifest file to stop npm from crashing. Run this in your terminal: [4] 
+
+npm uninstall crypto
+
+------------------------------
+## 💻 Step 2: Clean the Script Imports
+Open your xss_fsm_crawler.js and xss_fsm_crawler2.js files. Look at the top line where dependencies are requested.
+If you are using modern JavaScript ES Modules (import), update your import statements to target Node's native module paths: [5] 
+
+// Change this line:import crypto from 'crypto';
+// To this (explicitly targets Node's built-in namespace):import crypto from 'node:crypto';
+
+If your scripts are written using CommonJS (require), update the declaration line like this:
+
+// Change this line:const crypto = require('crypto');
+// To this:const crypto = require('node:crypto');
+
+------------------------------
+## ⚡ Step 3: Clear and Reinstall Clean Dependencies
+To resolve the lingering Error Code 13 workspace lock, wipe your temporary cache registries and re-run your clean Puppeteer engine setup:
+
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install puppeteer
+
+This ensures your directory tree stays clean and your automated FSM graph scanner executes without environment conflicts.
+------------------------------
+Let me know if you would like to:
+
+* Run a syntax check on your crawler scripts to ensure the new node:crypto library maps the states correctly.
+* Troubleshoot further if npm error code 13 continues to throw directory lock permissions on your Ubuntu system.
+* Build out a package.json launcher script script to initiate the scanner with single-word macro shortcuts.
+
+
+

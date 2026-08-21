@@ -1,0 +1,124 @@
+To give you a complete map for bug bounty research, here is how each API type structures its web requests (the exact raw HTTP headers and data sent by the browser) and the precise vulnerability patterns that target them. [1] 
+------------------------------
+## 1. REST API## Standard Web Request Structure
+
+POST /api/v1/orders/new HTTP/1.1
+Host: ://target.com
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1Ni...
+
+{
+  "item_id": 730,
+  "quantity": 1,
+  "price": "50.00"
+}
+
+## Vulnerabilities & How to Check Them
+
+* BOLA / IDOR (Broken Object Level Authorization):
+* The Vulnerability: The backend checks if you are logged in, but doesn't check if you own the resource inside the URL.
+   * How to Test: Change identifiers in the path or payload. If your account is user 101, change the request to GET /api/v1/orders/102. If you see user 102's order details, a severe bug exists. [2, 3, 4, 5] 
+* Mass Assignment:
+* The Vulnerability: The backend takes a whole JSON data structure and automatically updates a database record without checking for restricted fields.
+   * How to Test: Manually guess and append administrative parameters to your profile update payload, such as adding "is_admin": true or "role": "premium". [6, 7, 8, 9] 
+* SQL Injection (SQLi):
+* The Vulnerability: Parameter strings are glued directly into database query lines.
+   * How to Test: Inject database syntax characters into text input fields, such as 730' OR 1=1-- or 730; WAITFOR DELAY '0:0:5'--. [10, 11, 12, 13, 14] 
+
+------------------------------
+## 2. GraphQL API## Standard Web Request Structure
+
+POST /graphql HTTP/1.1
+Host: ://target.com
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1Ni...
+
+{
+  "query": "mutation CreateNewOrder($qty: Int!, $cost: String!) { order_new(quantity: $qty, price: $cost) { status message } }",
+  "variables": {
+    "qty": 1,
+    "cost": "50.00"
+  }
+}
+
+## Vulnerabilities & How to Check Them
+
+* Batching Attacks (Bypassing Rate Limits):
+* The Vulnerability: Because GraphQL allows multiple queries inside a single HTTP packet, developers often forget to rate-limit inside the execution engine.
+   * How to Test: Send an array containing 100 identical mutations or queries wrapped inside one single POST request to see if the server processes all 100 actions at once. [15, 16, 17, 18] 
+* Field-Level Authorization Bypass:
+* The Vulnerability: The main query entrance is locked down, but individual data relationships nested deep in the schema lack validation checks.
+   * How to Test: If a direct query to an administrative field is blocked, try running a public query (like searching for an item) but request sensitive internal sub-fields (like owner { email backup_codes }) nested within it. [19] 
+* Query Depth Denial of Service (DoS):
+* The Vulnerability: The engine attempts to fulfill deep, recursive object loops, running out of RAM.
+   * How to Test: Request circular links: query { item { owner { items { owner { id } } } } }.
+
+------------------------------
+## 3. SOAP API## Standard Web Request Structure
+
+POST /ws/OrderService.asmx HTTP/1.1
+Host: ://target.com
+Content-Type: text/xml; charset=utf-8
+SOAPAction: "http://tempuri.org"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://xmlsoap.org">
+  <soap:Body>
+    <CreateOrder xmlns="http://tempuri.org">
+      <ItemID>730</ItemID>
+      <Quantity>1</Quantity>
+    </CreateOrder>
+  </soap:Body>
+</soap:Envelope>
+
+## Vulnerabilities & How to Check Them
+
+* XXE (XML External Entity Injection):
+* The Vulnerability: The XML handling software engine on the backend processes external reference files blindly.
+   * How to Test: Define a custom entity pointing to an internal file or a controlled server layout at the very top of the XML body:
+   
+   <!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+   
+   Then reference it inside a text field: <ItemID>&xxe;</ItemID>. If the file contents print out in the server error or response, XXE is confirmed. [20, 21, 22, 23] 
+* WSDL Information Disclosure:
+* The Vulnerability: Leaving the map of the entire API structure publicly readable.
+   * How to Test: Append ?wsdl or ?singleWsdl to the end of the endpoint URL path. This exposes a massive configuration layout mapping every hidden feature name available. [24] 
+
+------------------------------
+## 4. gRPC / RPC API## Standard Web Request Structure
+
+POST /skins.OrderService/CreateOrder HTTP/1.1
+Host: ://target.com
+Content-Type: application/grpc-web
+User-Agent: Mozilla/5.0
+
+[Raw Binary Compressed Bytes / Non-Printable Text Symbols]
+
+## Vulnerabilities & How to Check Them
+
+* Insecure Deserialization:
+* The Vulnerability: The server converts incoming byte data streams directly back into live execution code objects before checking permission flags.
+   * How to Test: Alter encoded byte streams using localized protocol buffer maps to check if changing variable properties alters execution boundaries or privilege structures.
+* Improper Input Validation / Buffer Overflows:
+* The Vulnerability: Because gRPC relies heavily on compiled languages like C++ or Go for raw speed, malformed or oversized byte fields can corrupt system memory handlers.
+   * How to Test: Send variable field sizes that heavily exceed defined string parameters to evaluate if the endpoint crashes or experiences memory leaks.
+
+------------------------------
+## Summary Table for Bug Bounty Submissions
+When writing up bugs on platforms like HackenProof, use this quick checklist to categorize your findings accurately:
+
+| If You Discover This Condition | Categorize Your Report As |
+|---|---|
+| Swapping user IDs in a REST path loads someone else's data | BOLA / IDOR |
+| Accessing internal data fields via nested GraphQL paths | Broken Field-Level Authorization |
+| Injecting dynamic references (<!ENTITY>) into a SOAP body | XML External Entity (XXE) |
+| Forcing a memory or script execution via gRPC streams | Insecure Deserialization / Buffer Overflow |
+
+If you are looking over your saved notes or files, let me know:
+
+* Which of these four request types match the layout of the site you are currently reviewing?
+* Are you checking a specific input text box or an HTTP header field?
+
+I can explain the precise security properties required to fix that exact flaw.
+
+

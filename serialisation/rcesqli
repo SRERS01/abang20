@@ -1,0 +1,57 @@
+Yes, both Remote Code Execution (RCE) and SQL Injection (SQLi) can occur inside any type of API. [1] 
+It is a common misconception that certain modern API styles (like GraphQL or gRPC) are inherently safe from classic vulnerabilities. The truth is that APIs are just transport pipes. No matter how modern or secure the pipe is, if the data coming out of that pipe is handed directly to a vulnerable database query or system command on the backend, RCE or SQLi will happen [OWASP]. [2] 
+Here is how RCE and SQLi manifest inside each specific API architecture.
+------------------------------
+## 1. In REST APIs
+Because REST uses traditional HTTP parameters and standard JSON structures, it is the most well-documented vehicle for these flaws.
+
+* SQLi Context: An application accepts a search string via a URL parameter or a POST body field and glues it directly into a database string.
+* Example Payload: GET /api/v1/items?search=knife' UNION SELECT username, password FROM users-- [OWASP].
+* RCE Context: The REST API handles a feature like image resizing or document conversion. If it passes a user-supplied filename directly to an underlying system command line, an attacker can append system commands.
+* Example Payload: POST /api/v1/avatar with data {"filename": "image.jpg; id; rm -rf /"}. [3, 4] 
+
+------------------------------
+## 2. In GraphQL APIs
+GraphQL uses unique syntax structures, but the data parsed out of a query is eventually fed into the exact same backend databases and servers as REST. [5] 
+
+* SQLi Context: An attacker inputs a classic SQL injection string inside a GraphQL argument field (like a search filter or an item name string). If the GraphQL backend resolver functions take that string argument and concatenate it into an unsafe SQL string, SQLi occurs [OWASP].
+* Example Payload:
+   
+   query { items(nameHash: "AK-47' OR 1=1--") { id price } }
+   
+   * RCE Context: GraphQL mutations often handle backend tasks like triggering automated data lookups or processing webhooks. If an argument string is parsed by the resolver and passed directly into a server-side execution function (like Python's eval() or a shell execution block), RCE is achieved.
+
+------------------------------
+## 3. In SOAP APIs
+Since SOAP relies entirely on parsing XML text blocks, it is highly prone to data injection techniques.
+
+* SQLi Context: The attacker places the SQL injection payload cleanly inside the target XML tags. When the XML parser extracts the node value, it hands the malicious string over to the database layer [OWASP].
+* Example Payload:
+   
+   <soap:Body>
+     <ItemID>101 OR 1=1</ItemID>
+   </soap:Body>
+   
+   * RCE Context: SOAP APIs are notoriously vulnerable to RCE via Insecure Deserialization. Because SOAP platforms (especially legacy Java or .NET enterprise setups) frequently unpack complete object states directly out of the XML structure, an attacker can craft a malformed XML structure that triggers system code compilation the moment it is deserialized.
+
+------------------------------
+## 4. In RPC / gRPC APIs
+Even though gRPC compresses data into binary streams that are unreadable on a wire, the server must still decompress and interpret those fields on the backend.
+
+* SQLi Context: Once the gRPC server translates the binary payload back into readable programming variables (like a string variable inside a Go or C++ microservice), that variable might still be handled unsafely. If that variable is passed into a raw SQL database connector without parameterization, SQLi will trigger [OWASP].
+* RCE Context: Because gRPC services are highly optimized for direct speed, developers sometimes write custom C/C++ or Go memory parsers to handle incoming byte vectors. If an attacker crafts a highly precise, malformed binary sequence that induces a buffer overflow or corrupts application memory management during the decompression phase, it can lead to arbitrary code execution directly in server memory.
+
+------------------------------
+## The Fundamental Rule of API Security
+The type of API never protects against RCE or SQLi. Protection happens entirely at the application and database code layer:
+
+* To stop SQLi: The backend developers must use Parameterized Queries (Prepared Statements) or a secure ORM layer [OWASP]. This forces the database engine to treat user input strictly as literal data, never as executable code, regardless of whether it came from a REST JSON string or a GraphQL argument. [6, 7] 
+* To stop RCE: The backend developers must completely avoid passing user-supplied input strings directly to operating system shells (like os.system or exec), using safe native language libraries and rigorous input white-listing instead. [8] 
+
+If you are currently researching standard vulnerabilities for a defensive audit, let me know:
+
+* What database engine (e.g., PostgreSQL, MySQL, MongoDB) does your system run?
+* Would you like to see the difference between a vulnerable raw SQL query and a secure parameterized query in backend code?
+
+
+

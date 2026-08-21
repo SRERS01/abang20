@@ -1,0 +1,103 @@
+To understand how each API is used, look at how a client (like a browser or mobile app) actually talks to a server to get data.
+Here is a practical, real-world scenario showing exactly how each type of API is used under the hood to perform the same task: fetching a user's profile information.
+------------------------------
+## 1. How REST is Used
+REST uses multiple unique URLs and matches them with standard HTTP actions (verbs). If you want user data, you go to the user URL. If you want order data, you go to the order URL. [1] 
+
+* The Action: The browser sends a GET request to a specific resource path.
+* The Request:
+
+GET /api/v1/users/456 HTTP/1.1
+Host: ://example.com
+Authorization: Bearer KEY_HERE
+
+* The Response: The server sends back a fixed JSON file with all user details:
+
+{
+  "user_id": 456,
+  "username": "trader_bob",
+  "email": "bob@mail.com",
+  "balance": 150.00
+}
+
+
+------------------------------
+## 2. How GraphQL is Used
+GraphQL sends all requests to a single endpoint. Instead of the server deciding what data to give you, the client writes a precise request specifying exactly which fields it needs.
+
+* The Action: The browser sends a POST request to the single /graphql endpoint, containing a specific query.
+* The Request: (Notice we only ask for the username and balance, omitting the email)
+
+POST /graphql HTTP/1.1
+Host: ://example.com
+Content-Type: application/json
+
+{
+  "query": "query { user(id: 456) { username balance } }"
+}
+
+* The Response: The server filters the database and returns only the fields requested:
+
+{
+  "data": {
+    "user": {
+      "username": "trader_bob",
+      "balance": 150.00
+    }
+  }
+}
+
+
+------------------------------
+## 3. How SOAP is Used
+SOAP wraps every request in a strict, heavy XML "envelope." It requires a highly structured format and is used via formal agreements between enterprise systems.
+
+* The Action: The client sends an XML block containing clear definitions of the request functions.
+* The Request:
+
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://w3.org">
+  <soap:Body>
+    <GetUserRequest xmlns="http://example.com">
+      <UserID>456</UserID>
+    </GetUserRequest>
+  </soap:Body>
+</soap:Envelope>
+
+* The Response: The server replies with a similarly structured XML envelope containing the data:
+
+<soap:Envelope xmlns:soap="http://w3.org">
+  <soap:Body>
+    <GetUserResponse xmlns="http://example.com">
+      <Username>trader_bob</Username>
+      <Balance>150.00</Balance>
+    </GetUserResponse>
+  </soap:Body>
+</soap:Envelope>
+
+[2] 
+
+------------------------------
+## 4. How RPC / gRPC is Used
+gRPC behaves like internal computer code. Instead of sending text over the internet, a client directly triggers a function compiled on the server. The connection stays constantly open, and data is streamed instantly in a compact binary format. [3] 
+
+* The Action: The client code calls a local-looking method like stub.GetUser(). Behind the scenes, the tool turns this into binary bytes.
+* The Request (What it looks like on the network wire): Completely unreadable to humans (compressed binary streams).
+* The Response: Binary data that the client software automatically unpacks back into standard code variables.
+
+------------------------------
+## Summary of Usage Patterns
+
+* REST is used when you want a simple, clean, separate URL for every task.
+* GraphQL is used when building complex dashboards where the frontend needs to request highly customized combinations of data in one go.
+* SOAP is used in banking and high-security enterprise environments that demand strict validation contracts.
+* gRPC is used behind the scenes for ultra-fast communication between internal servers (microservices). [4, 5] 
+
+If you are looking at a new target web application, let me know:
+
+* What tool are you using to inspect the web traffic (e.g., Burp Suite, Zap, or standard DevTools)?
+* Are you seeing JSON blocks, XML tags, or individual resource paths in your request logs?
+
+I can walk you through how to analyze those specific structures.
+
+
