@@ -1,0 +1,47 @@
+To find a logic bug in this specific payout validation system using discrete mathematics, you need to look at how the code handles conditional predicates and boundary values.
+The system validates an input value (x) against two bounds: a minimum (min = 105) and a maximum (max = 500,000).
+------------------------------
+## 1. Modeling the Logic (The Correct Implementation)
+For a payout request to be valid, the amount x must satisfy both conditions simultaneously. In propositional logic, this is a conjunction ($\land$): [1] 
+$$P(x) = (x \ge 105) \land (x \le 500000)$$ 
+If P(x) is True, the system allows the payout. If it is False, it triggers an error.
+------------------------------
+## 2. Hunting for Common Logic Bugs
+Developers often make mistakes when implementing these boundaries in code. You can use discrete math concepts to look for the following vulnerabilities in their API: [2] 
+## Bug A: Strict vs. Non-Strict Inequalities (Boundary Errors)
+
+* The Math: Did the developer use strict inequalities (>, <) instead of non-strict ones (≥, ≤)? [3] 
+* How to test in Postman:
+* Send a request with exactly 105. If it returns PAYOUT_MIN_LIMIT, the code incorrectly checks x > 105 instead of x >= 105.
+   * Send a request with exactly 500000. If it returns PAYOUT_MAX_LIMIT, the code incorrectly checks x < 500000.
+
+## Bug B: De Morgan's Law Misimplementation (The Disjunction Error)
+When throwing errors, developers have to negate the success condition. According to De Morgan's Laws, the negation of a conjunction is a disjunction ($\lor$):
+$$\neg(A \land B) \equiv \neg A \lor \neg B$$ 
+The system should trigger an error if:
+$$(x < 105) \lor (x > 500000)$$ 
+
+* The Bug: If the developer accidentally used an "AND" ($\land$) operator in the error validation line (e.g., if (amount < 105 && amount > 500000)), the statement becomes a contradiction. It is mathematically impossible for a number to be less than 105 and greater than 500,000 at the same time.
+* How to exploit this: If this bug exists, the entire validation check collapses into a logical False, meaning every single amount bypasses the error filter and goes through. (Since you already successfully triggered the errors, this specific bug is not present here).
+
+## Bug C: Domain and Type Confusion (Negative & Zero Values)
+
+* The Math: The domain of financial payouts must belong to the set of strictly positive real numbers or integers ($\mathbb{R}^+$ or $\mathbb{Z}^+$).
+* The Bug: If the code only checks the upper bound first, or uses poor absolute value comparisons, negative numbers might bypass the logic. [4] 
+* How to test in Postman:
+* Try sending a negative number: {"amount": -200}.
+   * The Logic Flaw: If the code calculates x < 105, it should trigger PAYOUT_MIN_LIMIT. However, if the system maps a negative number to an unsigned integer format or handles it poorly in the database, it might accidentally bypass validation or credit/debit your balance inversely.
+
+------------------------------
+## Recommended Testing Plan in Postman
+To map out their exact mathematical logic, send these specific values for your amount payload and observe the results:
+
+* 104.99 (Confirms if floats are accepted or if it rounds down)
+* 105 (Tests the exact lower bound inclusion)
+* 500000 (Tests the exact upper bound inclusion)
+* 500000.01 (Tests if the upper bound trips immediately)
+* 0 and -1 (Tests if the domain is locked properly to positive numbers)
+
+Which of these inputs have you already tested, and did any of them return a 200 OK instead of an error?
+
+

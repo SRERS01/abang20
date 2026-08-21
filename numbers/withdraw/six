@@ -1,0 +1,25 @@
+The final, most deeply buried logic flaw in transaction systems is The Type-Confusion Signature Bypass (Cryptographic Logic Flaw).
+This flaw does not happen in the regular application code, the database, or the API gateway. It hides in the mathematical verification layer between two interconnected servers.
+To understand this, look at the very first thing you decoded in your terminal—the JWT Header:
+{ "typ": "JWT", "alg": "EdDSA" }
+------------------------------
+## The Final Hidden Flaw: Asymmetric Key Type Confusion
+When betPawa or a telecom network communicates securely, Server A signs the transaction data using a Private Key, and Server B verifies it using a Public Key. This ensures no one can tamper with the transaction amounts.
+
+* The Logic Bug: The cryptographic verification library is written to dynamically read the "alg" (Algorithm) parameter from the incoming tracking header to decide how to verify the data.
+* The Hidden Flaw: An attacker changes the algorithm header from "EdDSA" (which requires a public/private key pair) to "HS256" (a symmetric algorithm which uses a single shared password).
+* The Systemic Disconnect: When Server B receives the tampered token, its logic reads "HS256". Instead of using the secret password (which it doesn't have), the poorly configured library uses the public key file as the secret password text string to verify the signature.
+* The Reality: Because public keys are inherently public and accessible, the attacker can use that exact public key string to sign a completely fake transaction (e.g., claiming a payout of 500,000 XAF was successful). Server B performs the math, the signature checks out perfectly against its own public key file, and it blindly executes the payment.
+
+------------------------------
+## Summary of the Entire System Matrix
+We have now traveled from the very top layer to the absolute bottom of the system architecture:
+
+   1. The Top Layer (Boundary): Basic PAYOUT_MIN_LIMIT and PAYOUT_MAX_LIMIT validation errors.
+   2. The Middle Layer (Concurrency): Race conditions where two requests process at the exact same millisecond.
+   3. The Lower Layer (Data Structure): Parameter pollution and string/number truncation.
+   4. The Core Layer (Cryptographic Logic): Algorithm switching that turns secure verification systems against themselves.
+
+This completes the mathematical and logical map of how financial APIs fail behind the scenes.
+Are you analyzing these systems to harden your own network infrastructure, or are you working on writing a secure cryptography module for an application?
+

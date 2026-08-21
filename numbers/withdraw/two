@@ -1,0 +1,55 @@
+If you don't have Postman, we can use discrete math and combinatorics to map out the entire logic matrix of this API.
+In software engineering, 99% of logic bugs at boundary thresholds happen because developers fail to account for the exact edges of their sets, or they mix up the logical operators.
+Let’s define the system mathematically to reveal all possible hidden flaws you can find just by knowing the rules.
+------------------------------
+## 1. Defining the Universe and Sets
+Let the input amount be $x$. The currency is XAF, so $x$ must belong to the domain of numbers.
+
+* Expected Domain: $x \in \mathbb{R}^+$ (Positive numbers)
+* Minimum Limit ($L_1$): $105$
+* Maximum Limit ($L_2$): $500,000$
+
+The intended Valid Set ($V$) where a payout should succeed is a closed interval:
+$$V = \{x \mid 105 \le x \le 500,000\}$$ 
+------------------------------
+## 2. The Matrix of All Logic Failures (The Possibilities)
+Using propositional logic, here are the exact ways the developer's code can break at the boundaries.
+## Possibility 1: The Off-By-One Boundary Error (Strict vs. Non-Strict)
+
+* The Logic Bug: The developer used strict inequalities ($>$ or $<$) instead of inclusive ones ($\ge$ or $\le$).
+* Mathematical Set Created: $V_{error} = \{x \mid 105 < x < 500,000\}$.
+* The Vulnerability: The exact boundary numbers $x = 105$ and $x = 500,000$ are excluded from success. They will throw errors even though they are perfectly legal amounts.
+
+## Possibility 2: The Sign Inversion / Underflow Bug
+
+* The Logic Bug: The code checks if an amount is valid but fails to restrict the domain to positive numbers.
+* Mathematical Set Created: If the validation only checks $\neg(x > 500,000)$, then any number below that passes.
+* The Vulnerability: If $x \le 0$ (like $x = -100$ or $x = 0$), the system evaluates it. In financial databases, a negative payout can sometimes reverse into a deposit, forcing the system to credit the account instead of debiting it.
+
+## Possibility 3: Type Casting & Truncation Flaws (Integers vs. Floats)
+
+* The Logic Bug: The API accepts a floating-point number (decimal), but the backend converts it to an integer ($\mathbb{Z}$) using floor truncation $\lfloor x \rfloor$.
+* The Vulnerability: If you input $x = 105.99$, the system truncates it down to $\lfloor 105.99 \rfloor = 105$. If you input $x = 500,000.99$, it rounds down to $500,000$. This allows an attacker to bypass the maximum limit by exactly $0.99$ XAF per transaction.
+
+## Possibility 4: The Order of Operations (Precedence Override)
+
+* The Logic Bug: The validation logic checks both limits but fails to use parentheses correctly when combining them with user permission checks ($P$).
+* Intended Logic: $P \land (105 \le x \le 500,000)$
+* Broken Logic: $(P \land x \ge 105) \lor x \le 500,000$
+* The Vulnerability: Because of operator precedence, if $x \le 500,000$ evaluates to True, the entire expression becomes True, completely bypassing whether the user ($P$) is logged in or even has enough money in their balance.
+
+------------------------------
+## 3. Summary of Critical Edge Cases to Attack
+If you want to test this system manually (via a simple website input field or custom script), these are the exact mathematical test points you must try:
+
+| Test Input ($x$) | Mathematical Purpose | What it Exposes if Broken |
+|---|---|---|
+| 105 | Exact lower boundary | Exposes strict inequality bugs. |
+| 500000 | Exact upper boundary | Exposes strict inequality bugs. |
+| 104.99 | Precision edge ($< L_1$) | Exposes rounding/floating-point vulnerabilities. |
+| 500000.01 | Precision edge ($> L_2$) | Exposes structural truncation flaws. |
+| -105 | Absolute value mirror | Exposes missing negative sign checks. |
+| 0 | The Null identity | Exposes division-by-zero or empty-payload bypasses. |
+
+Are you planning to write a quick Python or Bash script to send these exact numbers to the server, or are you looking to analyze the backend source code logic directly?
+
