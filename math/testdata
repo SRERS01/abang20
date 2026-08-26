@@ -1,0 +1,86 @@
+To test a web application using number theory, you need to target endpoints that process, generate, or validate numerical data, cryptographic identifiers, or sequential identifiers. These endpoints often use mathematical shortcuts or weak random number generators, making them vulnerable to precise logic-based testing.
+Here are the seven primary categories of endpoints where you can gather numerical data to test using number theory concepts like prime factorization, modular arithmetic, and entropy analysis:
+------------------------------
+## 🗺️ The Endpoint Map for Number Theory Testing
+
+[Target Web Architecture]
+  │
+  ├── 1. Cryptographic Gates  ──► Test: Prime Factorization (Duplicate Primes)
+  ├── 2. Session Identifiers  ──► Test: LCG and MT19937 State Reconstruction
+  ├── 3. Data Pagination      ──► Test: Divisibility, Common Factors, and Multiples
+  ├── 4. Identifier / UUIDs   ──► Test: Sequential Gaps and Timestamp Correlation
+  ├── 5. E-Commerce & Billing ──► Test: Luhn's Algorithm & Integer Overflows
+  └── 6. Verification Flows   ──► Test: Code Spaces and Brute-force Probabilities
+
+------------------------------
+## 1. Cryptographic and Signature Handshake Endpoints
+These endpoints are where the server exchanges public keys or cryptographic signatures to establish a secure session or verify data integrity.
+
+* The Endpoints:
+* GET /well-known/jwks.json (Exposes public keys for JSON Web Tokens)
+   * GET /api/v1/auth/handshake
+   * POST /api/v1/certificates/verify
+* What Data to Gather: Collect the public modulus (N) and exponent (e) values from the JWKS or SSL certificate strings.
+* The Number Theory Test: Collect these values across multiple target servers or devices. Use Euclid's Greatest Common Divisor (GCD) algorithm to see if any two servers share a prime factor. If $\gcd(N_1, N_2) > 1$, you instantly extract the private key component, shattering the encryption.
+
+## 2. Authentication and Password Reset Tokens
+Endpoints that generate stateful strings to authorize highly sensitive actions like account recovery or session updates.
+
+* The Endpoints:
+* POST /api/v1/users/forgot-password (Inspect the resulting token sent to your email or URL link)
+   * POST /api/v1/auth/refresh-token
+   * GET /api/v1/users/activate?token=XYZ
+* What Data to Gather: Request 650+ tokens in rapid succession. Convert the string from Hex or Base64 into raw base-10 integers.
+* The Number Theory Test: Feed these integers into a Linear Congruential Generator (LCG) crack script or a Mersenne Twister (MT19937) predictor. If the integers exhibit linear relationships or low entropy, you can perfectly calculate the exact token that will be generated for the next target user.
+
+## 3. Database Pagination and Query Offsets
+Endpoints used to slice large chunks of database records into viewable pages.
+
+* The Endpoints:
+* GET /api/v1/products?limit=50&offset=100
+   * GET /api/v1/admin/logs?page=2&per_page=20
+* What Data to Gather: Collect the numerical inputs accepted by the application parameters.
+* The Number Theory Test: Break the assumed divisibility rules. If the server assumes the offset parameter will always be a multiple of the limit (e.g., 50, 100, 150), input a non-multiple prime number or unaligned integer (like offset=97). Observe if the application throws database structure exceptions, shifts its memory boundaries, or bypasses access filters due to uneven structural alignment.
+
+## 4. Sequential and Temporal Object Identifiers
+Endpoints that track users, invoices, or uploaded media files using numerical references.
+
+* The Endpoints:
+* GET /api/v1/invoices/100245
+   * GET /api/v1/user/profile?id=503
+   * GET /assets/images/upload_1714523829.jpg
+* What Data to Gather: Trigger identical events sequentially (e.g., upload 10 images or create 5 test profiles) and document the exact numeric IDs returned.
+* The Number Theory Test: Analyze the intervals (gaps) between the numbers. If the numbers are strictly sequential (n+1) or correlate perfectly with the Unix epoch timestamp (the number of seconds/milliseconds since 1970), the state-space is entirely predictable. You can use this mathematical predictability to systematically enumerate historical data or predict future file locations (Insecure Direct Object References).
+
+## 5. Financial Checkout and Payment Gateways
+Endpoints processing card transactions, gift cards, or numeric voucher balances.
+
+* The Endpoints:
+* POST /api/v1/checkout/pay
+   * POST /api/v1/coupons/validate
+* What Data to Gather: Collect gift card codes or numeric vouchers.
+* The Number Theory Test:
+* Check for Luhn's Algorithm (Mod 10) congruence, which is used to validate credit cards and card identifiers. If the codes follow a strict modular equation, you can mathematically generate valid digits instead of guessing randomly.
+   * Test for Integer Overflows / Wrap-arounds. If a system tracks your balance using a signed 32-bit integer, its maximum limit is exactly 2,147,483,647. By supplying a value of 2,147,483,648, the mathematical state-space circles back into negative numbers (-2,147,483,648), which can completely invert payment logic to add money to your account rather than deducting it.
+
+## 6. Multi-Factor Authentication (MFA) Verification Screens
+The operational interface that validates short-duration numerical validation codes.
+
+* The Endpoints:
+* POST /api/v1/auth/mfa/verify
+   * POST /api/v1/otp/validate
+* What Data to Gather: The required numeric code configuration (e.g., 4-digit vs. 6-digit codes).
+* The Number Theory Test: Apply basic combinatorics. A 4-digit PIN has exactly 10⁴ = 10,000 total possibilities. A 6-digit PIN has exactly 10⁶ = 1,000,000 combinations. If the endpoint does not limit the rate of incoming connections, the total combination space is small enough to be fully exhausted via automated brute-force scripts within a matter of minutes.
+
+------------------------------
+## 📊 Tactical Math Reference Sheet
+
+| Endpoint Category | Mathematical Concept | Expected Security Behavior |
+|---|---|---|
+| JWKS / Handshakes | Prime Factorization ($\gcd$) | Value of $\gcd(N_1, N_2)$ must equal exactly 1. |
+| Reset Tokens | PRNG Entropy Analysis | Values must be independent, non-linear, and non-cyclical. |
+| API Pagination | Relational Multiples & Divisibility | Backend must safely isolate non-aligned offset bounds. |
+| Payment Parameters | Modular Checksums & Integer Bounds | System must reject values exceeding 2³¹-1 or 2⁶³-1. |
+
+Would you like to examine how to write an automated script to calculate the entropy of gathered session tokens to see if they use weak math, or should we look at how to test JSON Web Tokens (JWT) for signature verification bypasses?
+
