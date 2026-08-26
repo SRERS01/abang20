@@ -1,0 +1,59 @@
+To identify a weak password reset token during a bug bounty or web application audit, you must look for structural predictability, algorithmic shortcuts, or structural flaws left by developers.
+When a website sends you a link like https://target.com, you need to analyze XYZ to figure out if it was generated using secure mathematics or an insecure shortcut.
+Here is the exact step-by-step methodology to analyze and identify weak tokens.
+------------------------------
+## 🔍 1. Identify the Encoding (Strip the Mask)
+Before analyzing the underlying math, you must reverse any string formatting used to display the token.
+
+* Hexadecimal (Base16): Character strings limited to numbers 0-9 and letters a-f (e.g., 4a8fbc12).
+* Action: Convert the string to a base-10 integer or inspect its raw byte array.
+* Base64: Alphanumeric strings that contain uppercase, lowercase, numbers, and often end with padding characters like = or == (e.g., MTIzNDU=).
+* Action: Decode it to see the raw text or bytes hiding underneath.
+* URL Encoding: Tokens containing symbols like %3D or %2F.
+* Action: URL-decode them back to standard characters (e.g., %3D becomes =).
+
+------------------------------
+## 🚨 2. Look for the 4 Common Flaws of Weak Tokens
+Once you decode the token, check for these specific structural patterns:
+## A. The Timestamp Flaw (Time-Based Determinism)
+Many developers try to create unique tokens by feeding the server's current clock time into a hashing function like MD5 or SHA-1.
+
+* How to spot it: Request two password reset tokens precisely 10 seconds apart. Take the tokens and check their MD5/SHA-1 hashes against the Unix epoch timestamp (the number of seconds or milliseconds since 1970) of the exact moment you clicked the button.
+* The Vulnerability: If the token is just md5(current_timestamp), an attacker can guess the reset token of any victim simply by knowing the approximate minute they triggered the request and brute-forcing the few thousand possible millisecond timestamps within that window.
+
+## B. The User-Data Leak (Static Identifiers)
+Sometimes, tokens are just hashed versions of public information tied to your account.
+
+* How to spot it: Hash your email address, your user ID (e.g., 1042), or your username using MD5, SHA-1, or SHA-256. Compare those hashes to the token you received.
+* The Vulnerability: If a token is just md5(user_email), it never changes and requires zero calculation to predict. You can instantly forge a reset link for any user on the platform.
+
+## C. The State-Tracking Vulnerability (PRNG Sequencing)
+As we proved mathematically with the Mersenne Twister, standard language functions like Python's random.randint() or PHP's rand() are fully predictable if you see enough outputs.
+
+* How to spot it: Trigger 650 password reset requests sequentially using an automation script. Extract the raw tokens. If the application is using a basic PRNG, you can run the values through a state-recovery script to calculate the exact internal state of the generator.
+* The Vulnerability: Once the state is cloned, you can accurately predict what the next token will be before the server even generates it.
+
+## D. Short Length / Low Entropy
+If a token is too short, its mathematical state-space is tiny.
+
+* How to spot it: If a password reset token is just a 4-digit or 6-digit numeric PIN, the entire combination space is only 10,000 to 1,000,000 possibilities.
+* The Vulnerability: An attacker can easily brute-force the entire token space within a few minutes using parallel network threads, provided the application lacks strict rate-limiting defenses.
+
+------------------------------
+## 🛠️ How to Automate the Test via Burp Suite Sequencer
+You do not have to perform these mathematical distribution tests manually. You can use Burp Suite Sequencer to analyze token randomness for you:
+
+   1. Intercept a password reset request in Burp Suite.
+   2. Right-click the request and select Send to Sequencer.
+   3. In the Sequencer tab, configure the tool to isolate the specific token parameter within the server's response.
+   4. Click Start Capture. Burp will automatically repeat the request thousands of times, harvesting tokens sequentially.
+   5. Once it reaches at least 100 to 1,000 tokens, click Analyze Due.
+
+## Reading the Results:
+Burp Sequencer performs complex mathematical randomness tests (like the FIPS 140-2 statistical tests, spectral analysis, and correlation tests) on a bit-by-bit level.
+
+* Secure Token Output: The report will state "The overall quality of randomness is excellent" with an effective entropy of close to 128 or 256 bits.
+* Weak Token Output: The report will show low entropy, distinct cyclical patterns, or a high degree of correlation between consecutive bits. This confirms the token is mathematically predictable and vulnerable to exploitation.
+
+Would you like to see how to write a script that tests if a token is built from an obscured timestamp, or should we look at how to properly construct a secure cryptographic token that passes all entropy tests?
+
