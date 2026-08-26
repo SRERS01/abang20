@@ -1,0 +1,22 @@
+There are many ways to prove a mathematical statement, but logicians generally group them into 4 primary categories, along with a handful of specialized sub-types.
+Here is a breakdown of the main types of mathematical proofs.
+## 🏛️ The 4 Primary Types of Proof
+
+| Type of Proof | How It Works | Simple Analogy |
+|---|---|---|
+| Direct Proof | Starts with known facts and uses logical steps to reach a conclusion. (A → B) | Following a straight line on a map from start to finish. |
+| Proof by Contradiction | Assumes the statement is false, then shows this assumption leads to an impossible mistake. | Proving you didn't steal the cookie by showing you weren't even in the house. |
+| Proof by Contraposition | Proves "If A is true, then B is true" by proving "If B is false, then A must be false." | Proving "If it is raining, the grass is wet" by showing "The grass is dry, so it isn't raining." |
+| Proof by Induction | Proves a base case is true, then proves that if any step is true, the next step must be true. | Knocking over the first domino to make an infinite chain of dominoes fall. |
+
+------------------------------
+## 🛠️ Specialized Methods of Proof
+Beyond the primary four, mathematicians often use these specific techniques depending on the problem:
+
+* Proof by Counterexample: Used to disprove a statement. If someone says "all prime numbers are odd," you only need to show the number 2 to prove them wrong.
+* Proof by Exhaustion (Case Analysis): Breaking a problem down into a finite number of scenarios and testing every single one individually.
+* Non-Constructive Proof (Existence Proof): Proving that a certain mathematical object must exist, without actually finding or drawing it.
+* Visual / Geometric Proof: Using shapes, diagrams, and areas to show why a formula works (very common for the Pythagorean theorem).
+
+Would you like to see a quick, one-line example of a proof by induction, or would you prefer to see a visual proof using geometry?
+
