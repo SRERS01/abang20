@@ -1,0 +1,36 @@
+Here is a classic, elegant mathematical proof: the proof that the product of any two consecutive even numbers is always a multiple of 8. [1] 
+## 📐 The Statement
+If you pick any two even numbers that are right next to each other (like 4 and 6, or 10 and 12) and multiply them together, the result can always be divided perfectly by 8.
+------------------------------
+## 📝 The Algebraic Proof
+
+   1. Define the numbers:
+   An even number can always be written as 2n, where n is any whole integer. The very next consecutive even number will be 2n + 2. [1, 2] 
+   2. Multiply them together:
+   $$\text{Product} = 2n \times (2n + 2)$$ 
+   3. Distribute and expand:
+   $$\text{Product} = 4n^2 + 4n$$ 
+   4. Factor out the 4:
+   $$\text{Product} = 4(n^2 + n)$$ 
+   5. Factor the inside expression:
+   Notice that n² + n can be factored further into n(n + 1):
+   $$\text{Product} = 4 \times [n(n + 1)]$$ 
+   6. The final logical step:
+   Look closely at n(n + 1). These are two consecutive integers (like 2 and 3, or 7 and 8). Out of any two consecutive numbers, one of them must be even.
+   * Because one of them is even, multiplying them together (n × (n+1)) will always result in an even number, which means it is a multiple of 2.
+      * We can rewrite n(n+1) as 2k (where k is another integer).
+   7. Conclusion:
+   Substitute 2k back into our equation:
+   $$\text{Product} = 4 \times (2k) = 8k$$ 
+
+Since the final answer is 8k, the result is guaranteed to be a multiple of 8. [1] 
+------------------------------
+## 🔍 See It In Action
+
+* Try 4 and 6: 4 × 6 = 24 (which is 8 × 3)
+* Try 10 and 12: 10 × 12 = 120 (which is 8 × 15)
+* Try 14 and 16: 14 × 16 = 224 (which is 8 × 28)
+
+Would you like to see a different kind of proof, such as why the square root of 2 is irrational or why any number to the power of 0 equals 1?
+
+

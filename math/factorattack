@@ -1,0 +1,55 @@
+## 🎯 The Duplicate Primes Attack (Breaking RSA with Common Factors)
+If you have a massive, secure public key N, finding its factors using brute force is computationally impossible. However, an elite hacker can bypass the entire mathematical protection of RSA if two different servers on the internet generate public keys that accidentally share a common factor. [1, 2] 
+This is not a theoretical attack—real-world global scans have discovered that hundreds of thousands of active cryptographic keys on the internet suffer from this vulnerability due to low-entropy initializations on headless embedded hardware and IoT routers. [2, 3] 
+------------------------------
+## 🧮 The Mathematics: The Shortcut via Euclid's Algorithm
+Normally, to break an RSA key, an attacker must solve:
+$$N_1 = p \times q_1$$ 
+Factoring N₁ to find p is the hard part. [1] 
+However, suppose another router on the internet sets up its encryption at boot time and, due to a weak pseudo-random number generator, reuses that exact same prime number p. Its public key becomes:
+$$N_2 = p \times q_2$$ 
+Now, a hacker has two public keys: N₁ and N₂. Instead of spending millions of years factoring them individually, the hacker uses a 2,300-year-old mathematical tool called Euclid’s Algorithm to calculate the Greatest Common Factor (GCD). [1, 2, 4] 
+Calculating the $\gcd(N_1, N_2)$ takes a computer a fraction of a millisecond, even if the numbers are thousands of digits long.
+$$\gcd(N_1, N_2) = p$$ 
+The moment the algorithm outputs p, the hacker can immediately calculate the other hidden prime factors using simple division:
+$$q_1 = \frac{N_1}{p} \quad \text{and} \quad q_2 = \frac{N_2}{p}$$ 
+The hacker now possesses the hidden prime factors for both keys. They can reconstruct the private keys and decrypt all secure traffic passing through both servers without ever needing a password. [4, 5] 
+------------------------------
+## 🐍 Python Attack Simulation: Factoring Two Vulnerable Public Keys
+This script simulates how an attacker extracts a shared prime factor from two distinct cryptographic keys in microseconds using math.gcd.
+
+import math
+# --- STAGE 1: SYSTEM SETUP (THE VULNERABILITY) ---# The target keys are generated. Due to a low-entropy boot sequence,# Server 1 and Server 2 accidentally share the exact same prime factor 'p'.p  = 340282366920938463463374607431768211507  # Shared Secret Prime Factorq1 = 590403750012351234908713490817349081237  # Server 1 Secret Primeq2 = 812374981237489123748912347891234789123  # Server 2 Secret Prime
+# These are the resulting Public Keys made available to the worldN1 = p * q1N2 = p * q2
+
+print(f"[*] Intercepted Public Key N1: {N1}")
+print(f"[*] Intercepted Public Key N2: {N2}\n")
+
+# --- STAGE 2: THE EUCLIDEAN ATTACK ---
+print("[!] Executing Euclidean Greatest Common Factor Attack...")
+# The hacker checks for a shared factor between the two keys instantlyextracted_p = math.gcd(N1, N2)
+if extracted_p > 1:
+    print(f"[+] Shared Factor Exploited! Found p: {extracted_p}")
+    
+    # Calculate the remaining private factors via trivial division
+    extracted_q1 = N1 // extracted_p
+    extracted_q2 = N2 // extracted_p
+    
+    print(f"[+] Decrypted Server 1 Private Key Component (q1): {extracted_q1}")
+    print(f"[+] Decrypted Server 2 Private Key Component (q2): {extracted_q2}")
+    print("\n[!] SUCCESS: Critical cryptographic bypass achieved.")else:
+    print("[-] Keys do not share a common factor.")
+
+------------------------------
+## 🍪 Web Security: The Mechanics of Padding Oracle Attacks
+While the duplicate primes attack breaks the asymmetric keys, hackers use a different factoring structure when dealing with symmetric encryption inside web cookies—known as a Padding Oracle Attack.
+When a website encrypts a session token using an algorithm like AES in CBC Mode, the data must be a strict multiple of the block size (e.g., exactly 16 bytes). If the data is short, the system adds padding bytes to fill out the block (e.g., if it needs 3 bytes of padding, it appends 03 03 03).
+
+* 
+* The Vulnerability: When you submit a modified cookie to the website, the server decrypts it and verifies the padding structure. If the padding is malformed, a poorly written backend might leak a specific error message, such as "Invalid Padding".
+* The Factor Attack: An attacker systematically alters the very last byte of the encrypted ciphertext block (looping through values from 00 to FF) and monitors the server's response. By isolating the exact input variation that does not return a padding error, the hacker reverse-engineers the intermediate state of the cryptographic engine byte-by-byte, eventually decrypting session data without knowing the master encryption key.
+* 
+
+Would you like to look at how to properly implement secure crypto-padding (like OAEP) to prevent oracle leaks, or do you want to explore how to map cryptographic bugs in JWT web tokens?
+
+

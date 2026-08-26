@@ -1,0 +1,46 @@
+To prove that a number A is a multiple of another number B, you must demonstrate that A can be divided by B exactly, leaving a remainder of zero.
+In discrete mathematics, the definition states that an integer A is a multiple of an integer B if there exists a third whole integer k such that:
+$$A = B \times k$$ 
+------------------------------
+## 📝 The Direct Proof (Example: Is 45 a multiple of 9?)
+
+   1. Set up the mathematical definition:
+   We want to find if there is a whole integer k that satisfies:
+   $$45 = 9 \times k$$ 
+   2. Isolate k by rearranging the equation:
+   Divide both sides by 9:
+   $$k = \frac{45}{9}$$ 
+   $$k = 5$$ 
+   3. Verify the constraint:
+   The number 5 is a clean, whole integer.
+   4. Conclusion:
+   Because 45 can be written as 9 × 5, where 5 is an integer, 45 is mathematically proven to be a multiple of 9. $\blacksquare$
+
+------------------------------
+## 🖥️ How it Looks in Code (The Remainder Method)
+If you are writing a script to automate checking if a number is a multiple, you use Modular Arithmetic via the modulo (%) operator. The computer divides the numbers and checks if the remainder is exactly zero.
+
+def check_multiple(a, b):
+    # If a divided by b leaves a remainder of 0, it is a multiple
+    if a % b == 0:
+        return True
+    return False
+
+print(check_multiple(45, 9))  # Output: True
+print(check_multiple(45, 8))  # Output: False
+
+------------------------------
+## 🔐 Why This Math Matters in Elite Bug Bounties
+Understanding how to identify multiples is a critical skill when hunting for IDOR (Insecure Direct Object Reference) and Rate Limiting flaws in API designs.
+Developers often break massive files, databases, or search queries into small chunks using pagination (e.g., ?limit=50&offset=100).
+
+* The Vulnerability: The server's backend logic is often hardcoded to assume that the offset parameter will always be a clean multiple of the limit parameter (e.g., page 1 is offset 0, page 2 is offset 50, page 3 is offset 100).
+* The Hunt: As a hacker, you deliberately break this rule by supplying a number that is not a multiple (such as ?limit=50&offset=93).
+* The Result: If the database engine isn't built to handle an unaligned offset, the query can crash, leak raw internal SQL errors, expose memory boundaries, or bypass pagination blocks to dump data it wasn't supposed to show.
+
+If you are ready to expand on this, let me know:
+
+* Do you want to see how to use multiples and divisibility to predict memory chunk offsets in low-level memory exploitation?
+* Or should we look at how multiples are used to calculate hash collisions?
+
+

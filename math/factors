@@ -1,0 +1,46 @@
+To prove that a number $B$ is a factor of a number $A$, you are essentially doing the exact same mathematical operations used to prove a multiple, just looked at from the opposite direction.
+In discrete mathematics, a non-zero integer $B$ is a factor (or divisor) of an integer $A$ if there exists a third whole integer $k$ such that:
+$$A = B \times k$$ 
+If you can divide $A$ by $B$ and get a clean, whole number with exactly zero remainder, then $B$ is proven to be a factor of $A$. This is written notationally as $B \mid A$ (read as "$B$ divides $A$").
+------------------------------
+## 📝 The Direct Proof (Example: Is 6 a factor of 42?)
+
+   1. Set up the mathematical definition:
+   We want to find if there is a whole integer $k$ that satisfies:
+   $$42 = 6 \times k$$ 
+   2. Isolate $k$:
+   Divide both sides of the equation by 6:
+   $$k = \frac{42}{6}$$ 
+   $$k = 7$$ 
+   3. Verify the constraint:
+   The number 7 is a whole integer.
+   4. Conclusion:
+   Because 42 can be divided by 6 to yield the whole integer 7 with no remainder, 6 is mathematically proven to be a factor of 42. $\blacksquare$
+
+------------------------------
+## 🖥️ How it Looks in Code
+In automation scripts and software development, testing for a factor relies on checking for a zero remainder using the modulo (%) operator.
+
+def is_factor(b, a):
+    # Returns True if b divides a perfectly with 0 remainder
+    if b == 0: 
+        return False # Division by zero is mathematically undefined
+    return a % b == 0
+
+print(is_factor(6, 42))  # Output: True
+print(is_factor(5, 42))  # Output: False
+
+------------------------------
+## 🔐 Why Factoring Matters to an Elite Hacker
+While finding simple factors like 6 and 42 is elementary math, the concept of integer factorization of extremely massive numbers is the single most important mathematical barrier keeping the internet secure.
+As we discussed briefly before, RSA encryption relies entirely on the difficulty of finding the factors of a massive number $N$:
+
+   1. A server generates two massive, hidden prime numbers, $p$ and $q$.
+   2. It multiplies them together to create a public key value: $N = p \times q$.
+   3. Because $p$ and $q$ are prime, they are the only two prime factors that exist for $N$.
+
+## The Hacking Catch (General Number Field Sieve)
+If an elite hacker can find a fast mathematical algorithm to find the factors $p$ and $q$ from the public value $N$, the encryption breaks instantly.
+For small implementations (like weak, outdated 512-bit RSA keys), hackers use a highly optimized mathematical algorithm called the General Number Field Sieve (GNFS). GNFS doesn't just guess numbers randomly; it uses advanced algebraic ring theory to map out complex polynomial chains, pinpointing the exact prime factors of $N$ millions of times faster than trial division. Once those two factors are found, the attacker can recalculate the private key locally and decrypt all the server's traffic.
+Would you like to see how a hacker checks for factor patterns when attacking padding oracle vulnerabilities in web applications, or should we look at how common factors can be used to break poorly generated keys on the internet (the Duplicate Primes attack)?
+

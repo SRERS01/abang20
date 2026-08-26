@@ -1,0 +1,33 @@
+To prove that 6 is an even number, we use the formal mathematical definition of an even number.
+## 📐 The Mathematical Definition
+An integer n is defined as even if it can be written in the form:
+$$n = 2k$$ 
+where k is any whole integer. In simple terms, a number is even if it can be divided by 2 with absolutely no remainder.
+------------------------------
+## 📝 The Direct Proof
+
+   1. Set up the equation:
+   We want to find if there is a whole integer k that satisfies:
+   $$6 = 2k$$ 
+   2. Solve for k:
+   Divide both sides of the equation by 2:
+   $$k = \frac{6}{2}$$ 
+   $$k = 3$$ 
+   3. Check the condition:
+   The number 3 is a whole integer.
+   4. Conclusion:
+   Because 6 can be expressed exactly as 2 × 3 (where 3 is an integer), 6 fits the definition perfectly and is proven to be an even number. $\blacksquare$
+
+------------------------------
+## 🖥️ The Hacker / Computer Logic Proof
+If you were writing a script to verify this automatically, a CPU checks for even numbers using Modular Arithmetic (the remainder of a division).
+In code, the modulo operator is %.
+
+* If N % 2 == 0, the number is even.
+* If N % 2 == 1, the number is odd.
+
+Let's evaluate 6:
+$$6 \pmod 2 = 0$$ 
+Because 2 goes into 6 exactly three times with a remainder of 0, the system confirms the bit representation ends in a 0, proving it is even.
+Would you like to see how computers handle even and odd numbers at the binary/bitwise level (which is a critical concept for low-level exploit development), or should we prove something more complex?
+

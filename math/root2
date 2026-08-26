@@ -1,0 +1,38 @@
+Here are two classic mathematical proofs that reveal beautiful patterns in numbers.
+## 💡 Proof 1: Why any non-zero number to the power of 0 equals 1
+It seems strange that raising a huge number like 1,000,000⁰ results in 1, but the proof relies on maintaining the rules of basic exponent division.
+1. The Division Rule of Exponents
+The mathematical law for dividing exponents with the same base states that you subtract the exponents:
+$$\frac{x^a}{x^b} = x^{a - b}$$ 
+2. Substitute Equal Numbers
+Let's see what happens if we divide a number by itself, meaning a and b are the same number (a = b):
+$$\frac{x^a}{x^a} = x^{a - a} = x^0$$ 
+3. The Logical Conclusion
+We know that any non-zero number divided by itself is always 1 (for example, $\frac{5}{5} = 1$).
+Therefore, because $\frac{x^a}{x^a}$ equals both 1 and x⁰, they must equal each other:
+$$x^0 = 1$$ 
+------------------------------
+## 📐 Proof 2: Why the square root of 2 ($\sqrt{2}$) is irrational
+An irrational number is a number that cannot be written as a clean fraction of two whole numbers. This is a famous proof by contradiction, meaning we start by assuming it can be a fraction, and show that it leads to an impossible logical breakdown.
+1. The Initial Assumption
+Assume $\sqrt{2}$ is rational. That means it can be written as a fraction:
+$$\sqrt{2} = \frac{a}{b}$$ 
+Note: We assume this fraction is fully simplified to its lowest terms, meaning a and b share no common factors.
+2. Square both sides
+$$2 = \frac{a^2}{b^2}$$ 
+3. Rearrange the equation
+$$2b^2 = a^2$$ 
+Because a² is equal to 2 times something, a² must be an even number. If a square is even, the number itself (a) must also be even.
+4. Rewrite a
+Since a is even, we can write it as 2k (where k is just some whole number). Let's plug 2k back into our equation:
+$$2b^2 = (2k)^2$$ 
+$$2b^2 = 4k^2$$ 
+5. Divide both sides by 2
+$$b^2 = 2k^2$$ 
+Now, by the exact same logic, b² is equal to 2 times something. This means b² is even, which means b must also be even.
+6. The Contradiction
+Look at what we just discovered: both a and b must be even numbers.
+If they are both even numbers, they can both be divided by 2. But at the very beginning, we stated that the fraction was fully simplified and shared no common factors!
+Because this assumption broke math, the assumption must be wrong. Therefore, $\sqrt{2}$ cannot be written as a fraction, making it irrational.
+Would you like to explore visual geometric proofs (like the Pythagorean theorem), or would you prefer a proof related to prime numbers?
+
