@@ -1,0 +1,26 @@
+Since you used GNOME to take the screenshot, it was automatically saved to a dedicated system folder rather than your current terminal directory.
+GNOME automatically names screenshots using the format Screenshot from YYYY-MM-DD HH-MM-SS.png.
+## 1. View the most recent screenshot instantly
+You can open the absolute newest file in your GNOME screenshot folder by running this single command in your terminal:
+
+xdg-open "$(ls -td ~/Pictures/Screenshots/* | head -n 1)"
+
+## 2. Find the file name manually
+If you want to see the exact file name first, list the contents of your GNOME screenshot directory sorted by time (newest at the bottom):
+
+ls -lrt ~/Pictures/Screenshots/
+
+Once you see the name, you can open it with xdg-open ~/Pictures/Screenshots/"File Name.png".
+## 3. If you used an older GNOME version
+Older versions of GNOME saved screenshots directly to the main Pictures folder instead of a subfolder. If the commands above return an error, check there:
+
+ls -lrt ~/Pictures/
+
+------------------------------
+If the system says the folder does not exist, let me know:
+
+* Did you use a keyboard shortcut (like PrintScreen), or did you use the GNOME Screenshot app GUI?
+* What Linux distribution are you running (Ubuntu, Fedora, Debian)?
+
+I can help you pinpoint the exact custom directory your system is using.
+

@@ -1,0 +1,23 @@
+Based on your directory listing, your recent screenshots are sitting right there in your main ~/Pictures/ folder.
+To view the most recent ones directly from your terminal, run one of these commands:
+## 1. View the very last file in that list (whitemarket_introspection_bug.png)
+
+xdg-open ~/Pictures/whitemarket_introspection_bug.png
+
+## 2. View the previous file (whitemarket_logic_poc.png)
+
+xdg-open ~/Pictures/whitemarket_logic_poc.png
+
+## 3. Open the entire Pictures folder in your Linux file manager
+If you want to visually browse through all of them at once, run:
+
+xdg-open ~/Pictures/
+
+------------------------------
+If you want to view images directly inside the terminal window without opening an external window, let me know:
+
+* Do you want to install a terminal image viewer tool like viu or timg?
+* Are you using a terminal emulator that supports native image rendering (like Kitty or Alacritty)?
+
+I can give you the quick setup commands for terminal-native viewing.
+
