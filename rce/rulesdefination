@@ -1,0 +1,32 @@
+Yes, exactly. Every single software vulnerability on earth follows precise definition frameworks and strict, predictable technical rules.
+In cybersecurity, hacking isn't magic or random guesswork. It is a science of rules. Vulnerabilities only exist because computers are rigid machines that execute instructions exactly as programmed. When a developer accidentally sets up a flawed rule, an attacker uses the laws of computer science to exploit it.
+Here is how the entire cybersecurity industry categorizes, defines, and maps the rules for every vulnerability on earth.
+------------------------------
+## 1. 📖 The Universal Definitions: CWE & CVE
+To make sure every engineer on earth speaks the same language, the cybersecurity industry uses two massive, standardized dictionary databases to define flaws:
+
+* CWE (Common Weakness Enumeration): This is the dictionary of the vulnerability type itself (the root cause) [mitre.org]. For example, SQL Injection is defined globally as CWE-89 [mitre.org], and Path Traversal is CWE-22 [mitre.org].
+* CVE (Common Vulnerabilities and Exposures): This defines a specific, real-world instance of a flaw found in a real piece of software [cve.org]. For example, if a researcher finds a path traversal bug in a specific version of WordPress, it gets assigned a unique tracker id like CVE-2026-XXXX.
+
+------------------------------
+## 2. 🎛️ The "Complete Rules" Model: Input vs. Execution
+While there are thousands of individual vulnerabilities, they almost all boil down to two fundamental rule sets regarding how computers handle data:
+## Rule Set A: Context Confusion (Data treated as Code)
+This rule governs SQL Injection, Command Injection, XSS, and SSTI.
+
+* The Rule: The application takes user input (data) and glues it directly into an execution engine (code).
+* The Exploit Law: The attacker figures out the specific character needed to close the developer's data boundary (like a ' or a ;), shifts the context, and types their own instructions.
+
+## Rule Set B: Broken Access Control (Trusting the Client)
+This rule governs IDOR, Path Traversal, Privilege Escalation, and Cache Poisoning.
+
+* The Rule: The application trusts parameters sent by the user's browser to locate files or identify permissions, without verifying them on the backend.
+* The Exploit Law: The attacker tampers with the parameter (changing an account ID number or walking backward with ../) to access assets they shouldn't see.
+
+------------------------------
+## 🧠 The Secret to Becoming a Great Bug Bounty Hunter
+Bad hackers try to memorize random exploit payloads they copy off the internet. Great bug bounty hunters master the underlying architectural rules.
+When you understand the exact laws of how a Linux terminal handles a newline character (\n), or how a database columns layout must match during a UNION statement, you don't need a cheat sheet. You can look at a target web application, figure out how the developer structured their backend code rules, and craft a completely unique payload to break it.
+------------------------------
+Since you now understand that vulnerabilities are bound by strict logical rules, would you like to pick a completely new bug class to dissect? We can break down the absolute rules of SSRF (Server-Side Request Forgery) or look at how IDOR (Insecure Direct Object References) rules work!
+

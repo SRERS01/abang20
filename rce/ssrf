@@ -1,0 +1,38 @@
+## What is SSRF?
+Server-Side Request Forgery (SSRF) is a critical web security vulnerability that occurs when a backend application fetches a remote web resource based on user-supplied input without proper validation [portswigger.net]. This allows an attacker to force the vulnerable server to send crafted HTTP, FTP, or custom protocol requests to unintended destinations—frequently targeting internal networks, loopback interfaces (127.0.0.1), or cloud metadata endpoints.
+------------------------------
+## 📏 The Core Rules and Behaviors of SSRF
+To hunt for, exploit, or defend against SSRF, you must understand the four distinct architectural rules that govern it:
+## 1. The Internal Trust Boundary Rule
+Many organizations protect their internal tools, databases, and administrative consoles by putting them behind private networks or firewalls, assuming they are safe from the public internet. However, an SSRF vulnerability turns the target company's own server into a proxy. Because the server resides inside the private network, it bypasses the firewall completely, letting the attacker map out internal tools like Redis, Memcached, or Jenkins.
+## 2. The Cloud Metadata Rule
+If the target application is hosted on a cloud platform (like Amazon Web Services, Google Cloud Platform, or Microsoft Azure), the hosting servers have access to a special, unauthenticated internal IP address (169.254.169.254) used to fetch machine configuration details.
+
+* The Rule: If an attacker can force the server to look up this metadata IP, they can leak highly sensitive cloud environment details, infrastructure configurations, or temporary IAM security access keys to completely compromise the entire cloud network infrastructure.
+
+## 3. The Content-Delivery Rule (Full vs. Blind SSRF)
+Like SQLi, SSRF behavior depends heavily on how the backend returns information:
+
+* Full SSRF: The server fetches the target URL and directly displays the response data (HTML, image, or text) back to the attacker's browser. This makes mapping internal systems effortless.
+* Blind SSRF: The server triggers the backend request, but completely hides the response text. The attacker must monitor out-of-band traffic (using a tool like Burp Collaborator or their own public server) to look for incoming connections from the target server to verify the bug exists.
+
+## 4. The Protocol Smuggling Rule
+SSRF isn't strictly limited to HTTP request strings. If the backend library (like curl or native code fetch hooks) supports alternative URI handlers, an attacker can shift protocols:
+
+* file:// — Used to read local server configuration files directly from disk.
+* gopher:// — A raw TCP stream protocol used to smuggle complex, multi-line payloads into internal, non-HTTP software like Redis or database instances.
+
+------------------------------
+## 🥷 Common Filter Bypasses for SSRF
+When developers attempt to remediate SSRF by blocking keywords like localhost, 127.0.0.1, or 169.254.169.254, bounty hunters use specific parsing quirks to bypass them:
+
+* Decimal or Hexadecimal Encoding: Computers interpret alternative numeric variants of IP addresses perfectly.
+* http://127.0.0 translates directly to http://127.0.0.
+   * http://127.0.0 also translates directly to http://127.0.0.
+* The @ Credential Parsing Trick: URL structures accept credentials before the domain name. If a filter checks if a string starts with a trusted domain, you can inject an @ symbol.
+* Payload: https://trusted-site.com@127.0.0.1 (The server ignores the trusted site and requests 127.0.0.1).
+* DNS Rebinding: The attacker sets up a custom domain name (e.g., evil-rebind.com) that changes its IP resolution dynamically. On the first lookup (when the server checks if the domain is safe), it resolves to a harmless public IP. On the second lookup (when the server actually fetches the webpage a millisecond later), it resolves to 127.0.0.1, tricking the validation script entirely.
+
+------------------------------
+Would you like to build a quick Local SSRF Lab using two Python servers to practice sneaking past security filters, or should we look into the rules of IDOR (Insecure Direct Object References) next?
+
