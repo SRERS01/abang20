@@ -1,0 +1,54 @@
+When passing a negative number or a value like -amount inside a JSON payload, standard JSON rules require a literal minus sign for numbers (e.g., -100). If a Web Application Firewall (WAF) or a validation layer blocks that character, you can exploit how different JSON parsers decode, normalize, or interpret data.
+Here are the primary methods to sneak a negative value or a dash into a JSON payload:
+## 1. Unicode Hex Escaping (String Fields)
+If the backend application receives the JSON as a string field and decodes it later, you can use standard JSON Unicode escaping. The hex code for a dash (-) is 002d.
+
+* Syntax: \u002d
+* Payload Example:
+
+{
+  "item": "discount",
+  "amount": "\u002d100"
+}
+
+* Why it works: The WAF sees the literal characters \, u, 0, 0, 2, d. It does not see a dash. When the application's native JSON parser decodes the string, it translates \u002d back into -100.
+
+## 2. Large Number Integer Overflow (Numeric Fields)
+If the target field strictly expects a number type (no quotes) and your validation filter blocks the minus sign, you cannot use Unicode escaping (e.g., {"amount": \u002d100} is invalid JSON syntax). Instead, you can use Integer Overflow.
+Most backend environments (like Java, C++, or Go) process integers using standard 32-bit or 64-bit bounds. If you pass an exceptionally large number, the binary bits flip in memory and wrap around into a negative value.
+
+* To get -1 (32-bit): Pass 4294967295
+* To get -100 (32-bit): Pass 4294967196
+* To get -1 (64-bit): Pass 18446744073709551615
+* Payload Example:
+
+{
+  "amount": 4294967196
+}
+
+
+## 3. Scientific Notation Exponent Trick
+Some relaxed JSON parsers allow scientific notation for numeric values. If the application rejects a negative number but allows a negative exponent (or if you can trigger decimal underflow), you can manipulate the total value.
+
+* Payload Example:
+
+{
+  "amount": 100e-1
+}
+
+(Note: This only works if the filter allows the dash inside the exponent but blocks it at the start of the number).
+
+## 4. Exponential Parsing Discrepancies (JSON vs JavaScript)
+In numbers, extremely large exponents can cause a number to lose precision or flip to infinity/underflow depending on whether the parser handles it as a floating-point number (Float64) or a BigInt.
+
+* Passing a number like 9e999 evaluates to Infinity in JavaScript. If subtracting values from infinity is processed elsewhere in logic, it can break math checks.
+
+------------------------------
+## How to Proactively Proceed
+To determine which trick will work, we need to know how the server responds. Could you let me know:
+
+* Is the amount field expected to be a number (e.g., 100) or a string (e.g., "100")?
+* What HTTP status code or error message does the client receive when you try to send a normal dash?
+
+This will tell us whether a Unicode bypass or an Integer overflow is the right path forward.
+
