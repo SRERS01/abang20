@@ -1,0 +1,35 @@
+## What is SQL Injection (SQLi)?
+SQL Injection (SQLi) is a critical web security vulnerability that occurs when user-supplied input is directly concatenated or interpolated into a database query string instead of being handled as a separate parameter [portswigger.net]. This allows an attacker to manipulate the query's structural logic, tricking the Database Management System (DBMS) into executing arbitrary SQL commands.
+------------------------------
+## 📏 The Core Rules and Behaviors of SQLi
+Successfully hunting, exploiting, or patching SQL injection relies on a strict set of architectural and database rules:
+## 1. The Context Breakout Rule (Quote Matching)
+Before an attacker can change a query's logic, they must break out of the data container defined by the developer. If the application wraps input in single quotes (') or double quotes ("), the attacker's payload must start with a matching quote to close the data string early, allowing any text following it to be parsed as executable SQL keywords.
+## 2. The Comment Abstraction Rule (Query Termination)
+Any original SQL code written by the developer that sits after the attacker's injection point will usually break the syntax and cause an error. To prevent this, the attacker must use the database's specific comment characters to truncate the query.
+
+* Linux/Windows Standard: -- (Double dash followed by a literal space).
+* MySQL Specific: # or URL-encoded %23.
+* Multi-line Standard: /* (Starts a comment block that ignores trailing code).
+
+## 3. The Union Column-Matching Rule
+When executing a UNION-Based SQLi to pull hidden data, the attacker's injected SELECT statement must perfectly match the original query on two conditions:
+
+* It must return the exact same number of columns as the original query.
+* The columns must have compatible data types (e.g., if column 2 is an integer, you cannot inject a text string into it on certain strict databases like Oracle or PostgreSQL).
+
+## 4. The Blind Oracle Rule (Boolean & Time Logic)
+If an application is vulnerable but does not print any database data to the screen, the attacker is bound by binary logic constraints. They must ask the database True/False questions.
+
+* Boolean-Based: If a condition is True (e.g., 1=1), the page loads normally. If False (1=2), the page alters or returns an error.
+* Time-Based: If a condition is True, the database executes a sleep command (e.g., pg_sleep(5) or WAITFOR DELAY '0:0:5'), forcing the server to pause before responding, confirming a successful query execution.
+
+## 5. The Environment Dependency Rule
+SQL commands are not universally portable. The rules of exploitation vary drastically based on the specific DBMS flavor (MySQL, MSSQL, PostgreSQL, Oracle, SQLite). Each uses different syntax rules for system functions, string concatenation, tracking metadata tables (like information_schema), and allowing stacked queries via semicolons (;).
+------------------------------
+## 🛡️ The Definitive Fix: The Parameterization Rule
+There is only one universal rule to completely immunize an application against SQL injection: Separation of Code and Data.
+Applications must use Prepared Statements (Parameterized Queries) or Object-Relational Mappers (ORMs). Under this rule, the database engine compiles the SQL query structure first, and then slots the user input into designated placeholders (like ? or :variable). Even if the input contains quotes, semicolons, or malicious SQL commands, the database treats it strictly as a literal text string value, never as executable code.
+------------------------------
+Would you like to build a local lab to practice Error-Based SQLi specifically, or should we look at how to map out a target database using automated tools like SQLMap safely?
+
