@@ -1,0 +1,34 @@
+## What is Return-Oriented Programming (ROP)?
+Return-Oriented Programming (ROP) is an advanced binary exploitation technique used by attackers to execute arbitrary code without injecting any new code into memory [ctf-101.org].
+Instead, ROP works by hijacking the application's control flow and chaining together tiny snippets of legitimate, pre-existing machine instructions already resident inside the application's binary memory or loaded libraries (like libc). These snippets are called gadgets, and they always end with a ret (return) instruction [ctf-101.org].
+------------------------------
+## 🎨 Visualizing the Architecture of a ROP Chain
+When a standard buffer overflow occurs on a modern CPU, Data Execution Prevention (DEP / NX bit) stops code execution on the stack. A ROP attack circumvents this security rule by keeping execution strictly within code-approved memory pages, but using an attacker-controlled stack layout to jump from gadget to gadget.
+------------------------------
+## 📏 The 4 Operational Rules of an ROP Exploit
+To successfully craft and execute an ROP chain, the attack must perfectly manipulate low-level CPU operations according to these technical rules:
+## 1. The Stack Pointer Hijack Rule (rsp)
+The CPU uses a specific register called the Stack Pointer (rsp on 64-bit systems) to keep track of where it is in memory. During an ROP attack, the attacker triggers a memory corruption (like a buffer overflow) to overwrite the stack data, filling it with a custom sequence of memory addresses rather than variables. The attacker forces the rsp to point directly to this malicious sequence of code pointers.
+## 2. The Gadget Termination Rule (ret)
+Every single gadget chosen by the attacker must end with the ret (Return) machine instruction.
+
+* The Rule: When the CPU hits a ret instruction, it automatically looks at whatever address is sitting at the very top of the stack pointer (rsp), pops that address out, and jumps the Instruction Pointer (rip) straight to it.
+* By chaining gadgets that end in ret, the attacker creates a domino effect: Gadget 1 executes → hits ret → pops the address of Gadget 2 → Gadget 2 executes → hits ret → pops the address of Gadget 3.
+
+## 3. The Register Loading Rule (pop)
+Before calling a major system function (like system("/bin/sh") to open a command terminal), the CPU expects the function's arguments to be pre-loaded into specific hardware registers (such as rdi or rsi in x86_64 architecture). Attackers find gadgets that contain pop instructions (e.g., pop rdi; ret). This lets them place text data directly onto the stack, execute the pop gadget to pull that data off the stack into the processor register, and immediately transition to the next execution step.
+## 4. The ASLR Boundary Rule (Address Space Layout Randomization)
+Modern operating systems protect memory spaces using ASLR, which randomly shifts the starting address of all libraries and binaries every single time an application restarts. Because of this rule, hardcoded gadget memory addresses will change constantly. To bypass ASLR, an attacker must first execute a Memory Leak exploit to find the base layout address of a running function, calculate the randomized offset, and dynamically adjust their ROP chain addresses in real-time.
+------------------------------
+## 🛠️ How Security Researchers Find Gadgets (The Toolkit)
+Because complex binaries contain millions of lines of machine instructions, researchers do not hunt for individual gadgets manually. They use specialized local automated command-line utilities to scan compiled binaries:
+
+# Example: Using the 'ROPgadget' tool to automatically scan an executable file # This looks for snippets that let you control the 'rdi' register
+ROPgadget --binary ./vulnerable_binary --only "pop|ret"
+
+The tool returns exact hexadecimal memory locations mapping directly to found sequences like:
+0x0000000000400683 : pop rdi ; ret
+An attacker copies that exact location address into their Python struct.pack() exploit delivery payload script, chaining it alongside other functional blocks until they have built an automated blueprint that tricks the system into spawning a shell.
+------------------------------
+Since ROP operates inside compiled machine code rather than web browsers, are you interested in exploring how to build a local practice lab for a simple binary buffer overflow in C, or would you prefer to look at how modern operating systems try to mitigate ROP using technologies like Control Flow Integrity (CFI)?
+
