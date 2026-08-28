@@ -1,0 +1,43 @@
+In operating system command lines (like Bash on Linux/macOS and CMD/PowerShell on Windows), shell separators are special characters used to chain multiple commands together in a single line.
+In bug bounty hunting, understanding these separators is critical because they are the exact characters used to break out of a vulnerable input field and force Command Injection.
+Here is the complete list of shell separators and the execution rules that govern them.
+------------------------------
+## 🐧 Linux & macOS Shell Separators (Bash / Sh / Zsh)
+
+| Separator | Name | Execution Rule |
+|---|---|---|
+| ; | Semicolon | Unconditional sequential execution. Command 2 runs immediately after Command 1 finishes, regardless of whether Command 1 succeeded or crashed. |
+| && | Logical AND | Conditional success execution. Command 2 executes only if Command 1 finishes successfully (returns an exit code of 0). |
+| || | Logical OR | Conditional failure execution. Command 2 executes only if Command 1 fails or crashes (returns a non-zero exit code). |
+| | | Pipe | Data redirection stream. It passes the standard output text of Command 1 directly as the input text for Command 2. |
+| & | Background | Asynchronous execution. Command 1 is pushed to run silently in the background, and Command 2 starts running immediately at the same time. |
+| \n (New Line) | Line Feed | Clean break execution. Pressing Enter or injecting a hex newline character (%0a) acts as a hard break, executing Command 2 as a brand new line. |
+
+## 💡 Inline Execution Operators (Linux/macOS)
+These are not separators, but they are highly prized in bug bounty hunting because they allow you to embed an entire command inside an existing argument:
+
+* `command` (Backticks): Executes the inner command first, then passes the text output directly into the main command string.
+* $(command) (Command Substitution): Modern, nestable version of backticks. It runs the inner command first and replaces itself with the text output.
+
+------------------------------
+## 🪟 Windows Shell Separators (CMD & PowerShell)
+Windows environments share similar logic but have slight syntax variations depending on whether the target backend is running standard Command Prompt (cmd.exe) or PowerShell.
+
+| Separator | Name | Execution Rule |
+|---|---|---|
+| & | Sequential AND | Unconditional execution (CMD only). In Windows CMD, a single & acts like Linux's semicolon (;). Command 2 runs immediately after Command 1 finishes. |
+| ; | Semicolon | Unconditional execution (PowerShell only). Standard semicolon chaining works in PowerShell exactly like Linux, but fails in native CMD. |
+| && | Logical AND | Works exactly like Linux. Command 2 only runs if Command 1 succeeds. |
+| || | Logical OR | Works exactly like Linux. Command 2 only runs if Command 1 fails. |
+| | | Pipe | Works exactly like Linux. Streams output text from left to right. |
+
+------------------------------
+## 🎯 How to Use These Rules to Bypass Security Filters
+When developers try to stop command injection, they often block the most common separator: the semicolon (;). You can use the rules of other separators to bypass their bad defenses:
+
+   1. The Fail-Open Bypass (||): If a web app runs a command that you know will fail (like looking up a fake domain), you can inject || whoami. Because Command 1 fails, the server is forced to run your injected whoami command.
+   2. The URL Newline Bypass (%0a): If a developer strips out ;, &, and |, they almost always forget to strip out the actual Newline character. Sending %0a whoami in a URL parameter forces the server's shell to hit "Enter" and run your line.
+
+------------------------------
+Would you like to see a quick Python example code demonstrating how a developer's filter blocks a semicolon but fails against a Newline or an AND operator?
+
