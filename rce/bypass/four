@@ -1,0 +1,53 @@
+In Linux and Unix-like operating systems (such as macOS), the shell relies on special environment variables and built-in features to split words and parse arguments.
+If standard spaces are blocked by a filter, developers and penetration testers leverage all available internal separators to instruct the shell where a command ends and an argument begins.
+Here are all the internal separators, special variables, and structural constructs used to bypass space restrictions in command injection:
+## 1. The IFS (Internal Field Separator) Variations
+The $IFS variable defines the characters that the shell uses to split text into words. By default, it contains a space, tab, and newline.
+
+* $IFS: Uses the default shell separator.
+* Example: cat$IFS/etc/passwd
+* $IFS$9: The most reliable way to use IFS. The $9 acts as a placeholder for the 9th positional argument (which is empty), forcing the shell to clearly separate $IFS from the path that follows it.
+* Example: cat$IFS$9/etc/passwd
+* ${IFS}: Explicitly wraps the variable name in curly braces so the shell doesn't mistake following characters as part of the variable name.
+* Example: cat${IFS}/etc/passwd
+
+## 2. Hexadecimal and URL-Encoded Whitespace Separators
+If the backend shell interprets raw bytes or URL-decoded characters, several non-space whitespace characters can act as delimiters.
+
+* Horizontal Tab (%09): In almost all shells, a tab separates commands just like a space.
+* Example: cat%09/etc/passwd
+* Vertical Tab (%0b): A less common whitespace character that some shell interpreters process as a delimiter.
+* Example: cat%0b/etc/passwd
+* Form Feed (%0c): Moves to a new page context but forces word splitting in many Unix environments.
+* Example: cat%0c/etc/passwd
+* Carriage Return (%0d): Often forces a clean separation of arguments.
+* Example: cat%0d/etc/passwd
+
+## 3. Native Shell Input/Output Redirection (No Variables Needed)
+You can completely avoid using any variables or whitespace by using the shell’s native data redirection operators to feed files directly into commands.
+
+* Input Redirection (<): Forces the command to read the file directly without requiring a space.
+* Example: cat</etc/passwd
+* Here-String (<<<): In Bash, this passes a string directly as standard input.
+* Example: sh<<</bin/id
+
+## 4. Structural Substitutes (Brace & Path Expansion)
+Instead of searching for a character that mimics a space, you can alter the structure of the syntax so the shell generates the spaces automatically during execution.
+
+* Brace Expansion ({,}): Commas inside curly braces automatically expand into spaces when processed by Bash.
+* Example: {cat,/etc/passwd}
+* Path Globbing / Wildcards (* or ?): If a specific file path or folder name is blocked or requires spaces, wildcards allow the OS to find the path dynamically.
+* Example: /usr/bin/id can be written as /???/???/id
+
+------------------------------
+## Comparison of Separator Compatibility
+
+| Separator | Works in Bash? | Works in Dash (/bin/sh)? | Works in Windows (CMD/PS)? |
+|---|---|---|---|
+| $IFS$9 / ${IFS} | Yes | Yes | No (Linux/Unix only) |
+| %09 (Tab) | Yes | Yes | Yes |
+| < (Redirection) | Yes | Yes | Yes (CMD only) |
+| {cmd,arg} | Yes | No | No |
+
+Are you trying to find a separator that works specifically on a Windows-based server (PowerShell/CMD), or are you analyzing a Linux environment?
+

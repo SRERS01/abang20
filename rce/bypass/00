@@ -1,0 +1,25 @@
+To fix the client error, we need to look at how the system handles your input before sending it to the server.
+When you use characters like %0a (newline) or & in a URL or a text input, the client (like your web browser, Postman, or a Python script) can crash, throw a malformed URI error, or break the application's front-end logic.
+Here is how to fix common client-side issues when injecting commands:
+## 1. The URL is Breaking (Malformed URI Error)
+If you paste raw spaces or special characters directly into a browser address bar, the client might fail to parse it.
+
+* The Fix: Ensure the entire string is properly URL-encoded so the client handles it as text, not as structural URL characters.
+* Example: login?redirect=%2F%20%0A%20whoami (where spaces become %20 and the newline is %0A).
+
+## 2. The Form / Input Validation is Blocking It
+If you are typing this into an input box on a web page, client-side JavaScript might be intercepting the text, seeing characters like & or |, and throwing a front-end validation framework error.
+
+* The Fix: Bypass the client entirely. Instead of using the browser interface, intercept the request using a proxy tool like Burp Suite or send the request directly via the command line using cURL.
+* cURL Example:
+
+curl -G --data-urlencode "redirect=/ \n whoami" http://target-app.local
+
+
+## 3. Application-Specific Client Crash
+If the web application expects a clean URL string (like /dashboard) and suddenly receives system commands, the JavaScript code running on the client side might try to parse it, fail, and crash the page interface.
+
+* The Fix: Look at the exact error message in your browser's Developer Tools Console (F12). If it is a JavaScript routing error, you must modify your payload so that it remains a valid URL string while still containing the hidden injection character.
+
+Could you share the exact error message or code showing up on your client? If you can also specify what tool you are using to send the request (Browser, Postman, Burp, Python), I can give you the exact formatting fix.
+

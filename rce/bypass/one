@@ -1,0 +1,27 @@
+Yes, spaces are highly recommended between the operators and the commands, but exactly how you handle them depends on how you are sending the request.
+Here is how spaces affect the command and how you should format them:
+## 1. Why Spaces Matter to the Terminal
+In a standard command-line terminal, spaces are required to separate the command from its arguments.
+
+* If you run &&whoami (without a space), the system looks for a single command named &&whoami and will fail.
+* If you run && whoami (with a space), the system properly recognizes && as the separator and whoami as the next command.
+
+## 2. The Problem with Spaces in URLs
+If you are typing login?redirect=/ && whoami directly into a browser URL or a tool like Postman, a raw space will break the request because spaces are illegal characters in standard URLs. The browser might cut off the request at the first space, meaning the server only sees login?redirect=/.
+## 3. How to Safely Format the Spaces
+To ensure the space reaches the backend terminal without breaking the web request, you must encode the spaces. You can use either a plus sign (+) or the hex code (%20).
+
+* Using URL Hex Encoding (Recommended):
+login?redirect=/%20&&%20whoami
+* Using Plus Signs:
+login?redirect=/+&&+whoami
+
+## Alternative: What if Spaces are Completely Blocked?
+If the server's security filter detects and blocks spaces (or %20), attackers and penetration testers bypass this restriction on Linux systems by using the Internal Field Separator ($IFS) variable instead of a space:
+
+* login?redirect=/&&whoami (If redirect doesn't require arguments, this might work depending on the shell).
+* login?redirect=/&&whoami$IFS
+* login?redirect=/&&{whoami}
+
+Are you executing this command via a web browser address bar, a tool like Burp Suite, or a cURL command? Sharing your execution method will help determine the correct encoding.
+

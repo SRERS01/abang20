@@ -1,0 +1,32 @@
+If a security filter or Web Application Firewall (WAF) blocks the semicolon (;), attackers and penetration testers bypass it by using alternative command separators or newline characters to trigger a new execution context.
+To insert a next line or chain commands when the semicolon is blocked, you can try the following encoding techniques and alternative operators:
+## 1. Newline Encodings
+Web servers interpret specific hexadecimal or URL-encoded characters as a literal newline, forcing the system shell to execute the subsequent text as a brand-new command.
+
+* URL-Encoded Newline (%0a): This is the most common bypass for Linux systems (representing \n).
+* login?redirect=/ %0awhoami
+* Carriage Return (%0d): Sometimes used alongside or instead of the newline character.
+* login?redirect=/ %0dwhoami
+* Alternative Hex Encoding: If the input accepts raw hex format or is decoded downstream.
+* 0x0a or 0x0d
+
+## 2. Alternative Command Separators
+If the application specifically targets the semicolon but fails to sanitize other shell control operators, you can substitute it with these standard terminal symbols:
+
+* Logical OR (||): Executes the second command only if the first command fails (returns a non-zero exit code).
+* login?redirect=/ || whoami
+* Logical AND (&&): Executes the second command only if the first command succeeds.
+* login?redirect=/ && whoami
+* Background Operator (&): Runs the first command in the background and immediately starts the next command.
+* login?redirect=/ & whoami
+* The Pipe (|): Passes the output of the first command as input to the second command.
+* login?redirect=/ | whoami
+
+## 3. Inline Command Substitution (Linux)
+Instead of starting a new line, you can embed the command directly inside the existing parameter using backticks or shell expansion symbols. The system executes the inner command first.
+
+* Backticks: login?redirect=`whoami`
+* POSIX Substitution: login?redirect=$(whoami)
+
+Are you attempting to bypass a specific filter during a authorized test, or are you trying to write a robust regex rule to block these alternative characters?
+

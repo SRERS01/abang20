@@ -1,0 +1,24 @@
+Yes, using ../ (Path Traversal) is likely what caused the application to behave this way.
+When you input ../, the server interprets it as an instruction to move up one directory level. If the application handles this improperly, it can break the routing logic, causing the application to fail or forcefully redirect you back to a safe default page, such as /login?redirect=/.
+Here is exactly what is happening under the hood:
+## 1. The Server is Safe-Routing You (Fallback Mechanism)
+Many modern web frameworks detect unexpected path navigation (like ../). Instead of crashing, the server's security framework intercepts the request and says: "This path is invalid or unauthorized. Force the client back to the login page." It appends ?redirect=/ so that once you authenticate, you are sent back to the home directory.
+## 2. Double-Encoding is Required
+If you are trying to test a legitimate path traversal vulnerability, the client or a front-end reverse proxy (like Nginx) might be cleaning up the ../ before it even reaches the backend code. This is called URL normalization.
+
+* The Problem: The browser turns ://site.com into ://site.com automatically.
+* The Bypass: You must encode the forward slashes or dots so the client sends them as literal text, and only the backend application decodes and executes them.
+
+| Payload Type | Standard Syntax | Encoded Syntax |
+|---|---|---|
+| Standard URL Encode | ../ | %2e%2e%2f |
+| Double URL Encode | ../ | %252e%252e%252f |
+| Unicode / 16-bit Encode | ../ | ..%c0%af or ..%255c |
+
+## 3. Open Redirect Vulnerability
+If the application is now showing login?redirect=/, the parameter redirect= itself might be vulnerable to an Open Redirect flaw.
+
+* If you change it to login?redirect=https://evil.com, does the site take you to the external page after you log in? If so, the application is failing to validate return URLs.
+
+To narrow this down, what happened right before the redirect? Did you see a specific HTTP status code (like a 302 Redirect or a 403 Forbidden), or did the page layout completely break?
+

@@ -1,0 +1,64 @@
+In Linux shells (like Bash, Dash, and Zsh), certain characters, symbols, and structural features are completely ignored during execution, or they are stripped out before the final command runs.
+Security professionals and penetration testers leverage these ignored elements to break up keywords (like whoami or cat) so that Web Application Firewalls (WAFs) fail to detect them, while the backend Linux terminal still runs them seamlessly.
+Here is the complete list of elements ignored by Linux shells that can be used for obfuscation:
+------------------------------
+## 1. Escape Characters (The Backslash)
+The backslash (\) tells the shell to treat the very next character literally. If you place a backslash in front of a standard letter, the shell simply ignores the backslash and processes the letter normally.
+
+* Behavior: w\h\o\a\m\i becomes whoami.
+* WAF View: The WAF sees the literal string w\h\o\a\m\i.
+* Linux View: The shell removes the backslashes and executes whoami.
+
+## 2. Empty Quotation Pairs
+You can insert pairs of single (' ') or double (" ") quotes anywhere inside a command name. If there is nothing between them, the shell ignores them entirely and glues the surrounding letters back together.
+
+* Behavior: wh''oa""mi becomes whoami.
+* Rules to remember:
+* They must be straight programming quotes (', "), never smart/curved quotes (’, “).
+   * They must be in closed pairs. If you leave one open, you get the > prompt.
+
+## 3. Unset Environment Variables
+If you call an environment variable that does not exist or has no value assigned to it, the Linux shell resolves it to nothing. It silently ignores the variable and leaves no blank space behind.
+
+* Behavior: whoam$SECRETi or cat$u /etc/passwd
+* Why it works: Since $SECRET and $u are empty, the shell deletes them during parsing. The final executed commands are whoami and cat /etc/passwd.
+
+## 4. Inline Comments
+In Linux, the hash symbol (#) turns everything after it on that specific line into a comment, meaning the shell ignores the entire rest of the line. This is useful if a web application appends unexpected characters or strings to the end of your injection payload.
+
+* Behavior: whoami # unexpected_backend_string
+* Why it works: The server runs whoami and completely drops everything following the #.
+
+## 5. Wildcards and Globbing (Path Expansion)
+When dealing with file paths or system binaries, the shell will expand wildcards (* and ?) to match actual files on the system. It ignores the specific letters you replaced.
+
+* Behavior: /u?r/b?n/w*o*m* or /e??/p?s??d
+* Why it works: The shell replaces the question marks and asterisks with matching paths dynamically, executing /usr/bin/whoami or opening /etc/passwd.
+
+## 6. Multiple Consecutive Forward Slashes
+In Linux file paths, the operating system treats multiple forward slashes (//) exactly the same as a single forward slash (/). The extra slashes are ignored by the file system.
+
+* Behavior: cat ////etc//////passwd
+* Why it works: The OS normalizes the path to /etc/passwd automatically, effectively bypassing simple string checks for the standard path.
+
+## 7. Current Directory Reference Dot
+In Linux paths, a single dot (.) represents "the current directory." Inserting /./ into a path does not change where the path points, meaning the dot context is ignored for navigation.
+
+* Behavior: cat /etc/./passwd or /usr/bin/./id
+* Why it works: The system reads it seamlessly as /etc/passwd or /usr/bin/id.
+
+------------------------------
+## Quick Obfuscation Matrix
+If you want to hide the command cat /etc/passwd from a basic keyword filter, you can mix and match these ignored elements:
+
+| Technique Used | Obfuscated Payload | Final Linux Execution |
+|---|---|---|
+| Backslashes | c\a\t /etc/passwd | cat /etc/passwd |
+| Empty Quotes | ca""t /etc/passwd | cat /etc/passwd |
+| Unset Variables | cat$xyz /etc/passwd | cat /etc/passwd |
+| Path Slashes | cat /etc////passwd | cat /etc/passwd |
+| Path Dots | cat /etc/./passwd | cat /etc/passwd |
+| All Combined | c\a""t$u /etc/././///passwd | cat /etc/passwd |
+
+Are you trying to apply these bypass techniques to read a specific configuration file on your target, or are you trying to get a reverse shell connection? Let me know your current objective so we can craft the precise syntax.
+

