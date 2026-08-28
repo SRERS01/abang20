@@ -1,0 +1,35 @@
+Vulnerabilities that interact directly with the operating system command line are among the most critical in cybersecurity. They allow an attacker to bypass application boundaries and execute native OS commands (like bash on Linux/macOS or cmd.exe on Windows).
+Here is a comprehensive breakdown of every major vulnerability type that leverages or abuses operating system commands, grouped by how the execution happens.
+------------------------------
+## 1. ⚙️ Direct Command Injection
+This occurs when an application passes user-supplied input directly into an operating system shell call (such as Python’s os.system(), Node’s child_process.exec(), or PHP’s shell_exec()) without proper sanitization or parameterization.
+
+* OS Command Injection (Classic): An attacker uses shell separators (like ;, &&, ||, or |) to append their own malicious commands to a legitimate system function (e.g., injecting ; whoami into a network ping utility field).
+* Blind OS Command Injection: The server executes the malicious command, but the output is completely hidden from the HTTP response. Attackers must use time delays (e.g., appending && sleep 10) or out-of-band data exfiltration (e.g., forcing the server to ping a server they control) to verify the vulnerability.
+* Argument Injection: The attacker cannot inject new commands via shell separators, but they can pass unexpected flags/arguments into the intended command line tool. For example, injecting arguments like --config or -output into a system utility can trick it into overwriting files or executing arbitrary code.
+
+------------------------------
+## 2. 🦹 Remote Code Execution (RCE) via Language Runtimes
+While similar in impact to command injection, these vulnerabilities happen because an attacker manipulates the programming language environment itself, which they then upgrade to execute OS commands.
+
+* Insecure Deserialization / Object Injection: When untrusted data is turned back into live programming objects (using libraries like Python's pickle, Java's Serialization, or PHP's unserialize), an attacker can pass a serialized object that executes native OS commands upon unpacking.
+* Server-Side Template Injection (SSTI): Attackers inject malicious template expressions into engines like Jinja2, FreeMarker, or Twig. Once inside, they use the language's internal reflections to access core runtime modules and execute shell commands.
+* Expression Language (EL) Injection: Occurs heavily in enterprise environments (like Java Spring Frameworks). Attackers abuse evaluate functions to call system runtime environments directly via HTTP parameters (e.g., the famous Log4Shell concept).
+
+------------------------------
+## 3. 📂 File-Based Attack Vectors
+These flaws abuse file management logic to trick the operating system into executing code or changing configuration files.
+
+* Arbitrary File Upload to RCE: An attacker uploads a backdoor script (like a .php, .jsp, or .asp web shell) into a web directory. They then visit the file URL, using the web shell as an interface to run native OS commands on the hosting server.
+* Arbitrary File Write (Path Traversal to RCE): As discussed in our previous folder lab, if an application allows you to write files anywhere on the disk via path traversal, an attacker can overwrite critical system startup scripts or configuration files (like Cron jobs or .bashrc), which forces the operating system to execute their payload automatically on the next run.
+
+------------------------------
+## 4. 🔀 Third-Party & Binary Dependencies
+Sometimes, the custom web application is secure, but the underlying system binaries it talks to contain critical flaws.
+
+* Binary Exploitation (Buffer Overflows): If a local compiled C/C++ program handling backend data suffers from memory corruption, an attacker can overwrite the instruction pointer register and redirect code flow directly to execution payloads that call /bin/sh.
+* Exploiting Local System Utilities: If an application safely uses a binary like curl, tar, or wget, but those specific tools suffer from unpatched CVEs, an attacker can manipulate the input parameters to compromise the entire system process.
+
+------------------------------
+Would you like to build a quick Local Command Injection Lab with a client and server to practice bypassing common filters, or should we look at an Insecure Deserialization script next?
+
