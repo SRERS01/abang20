@@ -1,0 +1,5 @@
+curl -i -s -X POST "https://www.betpawa.cm/api/user/v3/authenticate" \
+-H "User-Agent: Mozilla/5.0" \
+-H "Content-Type: application/json" \
+-H "X-Pawa-Brand: betpawa-cameroon" \
+-d '{"username":"652223518","password":"9012","rememberMe":false}' | grep -i "set-cookie: x-pawa-token=" | head -n 1 | awk -F'=' '{print $2}' | awk -F';' '{print $1}'

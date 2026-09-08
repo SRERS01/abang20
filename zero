@@ -1,0 +1,38 @@
+On a sports betting or iGaming site, a Zero Balance Account (ZBA) error happens when the backend system processes an action for a user whose wallet has exactly $0.00, or when a developer mistakenly routes a transaction through an inactive master/sub-wallet.
+In betting architecture, developer errors on zero-balance accounts typically trigger across four core endpoint categories:
+## 💡 1. Bet Placement & Slips (The Most Critical)
+When a user submits a wager, the system must validate funds. A developer error occurs if the endpoint allows the code to bypass client-side checks and hit the database with a zero balance, or if it handles a dual-wallet setup (e.g., separating Cash vs. Bonus funds) incorrectly.
+
+* Affected Endpoints: POST /v1/bets, POST /betslips/place, POST /wagers
+* Developer Error Trigger: Failing to place a synchronous database lock on the wallet ledger before checking the balance. If a user rapidly double-clicks "Place Bet," concurrent API requests hit the server; the first request clears the balance, and the second request throws a critical error because the account is now at zero.
+* Common System Errors: 422 Unprocessable Entity (INSUFFICIENT_FUNDS), 500 Internal Server Error (Database constraint violation for negative balances), or 400 Bad Request (INVALID_BET_AMOUNT).
+
+## 🗒 2. Live Betting & Cash-Out Engines
+Live in-play betting requires rapid API polling. Errors crop up when a developer's code tries to evaluate cash-out algorithms or accept dynamic in-play odds adjustments on an account with no liquid cash.
+
+* Affected Endpoints: POST /v1/bets/{betId}/cashout, POST /live/wagers
+* Developer Error Trigger: The developer's backend loop attempts to calculate a partial cash-out value or auto-hedge a bet, but forgets to validate if the user's primary balance state is active and funded, leading to null pointer exceptions when trying to credit a zeroed ledger.
+* Common System Errors: 409 Conflict (ACCOUNT_STATE_RESTRICTED), 403 Forbidden (ZERO_BALANCE_CASH_OUT_DENIED).
+
+## 💸 3. Promotions, Free Bets, & Bonus Wallets
+Betting sites frequently separate real money from promotional balances. Developer errors happen when the code treats these two balances as a single entity or fails to map them to the correct deduction logic.
+
+* Affected Endpoints: POST /promotions/claim, POST /v1/bonus/apply
+* Developer Error Trigger: A developer configures a free bet or bonus to apply only if the user has a zero cash balance (a "no-risk" promotion). However, if the account's cash balance is zero but the system tries to charge the real-money endpoint instead of the bonus endpoint, the API breaks.
+* Common System Errors: 400 Bad Request (BONUS_REQUISITE_FAILED), 422 Unprocessable Entity (MAIN_WALLET_ZERO).
+
+## 🎰 4. Third-Party Casino & Game Provider Seamless Wallets
+Most betting sites integrate third-party casino games (e.g., slots, live roulette) via Seamless Wallet APIs. The betting platform acts as the bank, and the casino provider calls the betting platform's API every time a player spins.
+
+* Affected Endpoints: POST /api/seamless/debit, POST /casino/spin
+* Developer Error Trigger: The third-party slot provider calls your debit endpoint to initiate a $0.50 spin. If the developer's integration logic doesn't return a clean, handled error structure to the provider when the wallet is at zero, the third-party game engine will crash or hang indefinitely, thinking the system is down.
+* Common System Errors: HTTP 200 with a payload of {"error": "INSUFFICIENT_FUNDS", "balance": 0.00} (this is the correct way), or a broken 500 Server Error (developer error).
+
+------------------------------
+To help pinpoint the exact fix, could you share:
+
+* The programming language or framework your backend is using (Node.js, C#, Java)?
+* Are you dealing with an internal platform wallet or a third-party seamless wallet integration?
+* What specific HTTP status code or error message is the system spitting out?
+
+

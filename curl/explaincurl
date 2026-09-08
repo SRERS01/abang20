@@ -1,0 +1,23 @@
+Your real token is 166dd80c0de56027-ce02896a7b62bd66.
+The API passes this value back through the set-cookie headers. To make future requests, you must supply this value either inside a Cookie header or as a custom header, depending on what the endpoint expects.
+## How to use it in your next curl command
+To make an authenticated request (like checking your balance or profile info), pass the token back using the -H "Cookie: ..." flag:
+
+curl -X GET "https://betpawa.cm" \
+-H "User-Agent: Mozilla/5.0" \
+-H "X-Pawa-Brand: betpawa-cameroon" \
+-H "Cookie: x-pawa-token=166dd80c0de56027-ce02896a7b62bd66"
+
+## Pro-Tip: Automatically extract the token using a script
+If you want to extract just the token string from your command without scrolling, you can pipe it to grep and awk like this:
+
+curl -i -s -X POST "https://www.betpawa.cm/api/user/v3/authenticate" \
+-H "User-Agent: Mozilla/5.0" \
+-H "Content-Type: application/json" \
+-H "X-Pawa-Brand: betpawa-cameroon" \
+-d '{"username":"652223518","password":"9012","rememberMe":false}' \
+
+| grep -i "set-cookie: x-pawa-token=" | head -n 1 | awk -F'=' '{print $2}' | awk -F';' '{print $1}'
+
+Would you like to write a bash script to automate logging in and extracting this token automatically, or do you need the exact curl command to check your wallet balance next?
+
