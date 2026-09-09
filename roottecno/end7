@@ -1,0 +1,14 @@
+It looks like you successfully saved your rules! The cat command shows you have explicitly added rules for two major Android vendors:
+
+* 0e8d: MediaTek devices
+* 18d1: Google / Nexus / Pixel devices (and many generic Android bootloaders)
+
+Because you used MODE="0666", any user on your laptop has read and write permissions for these devices, which is great for debugging.
+Now, you just need to make your laptop apply these new rules so it recognizes your phone. Run these two commands in your terminal:
+
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+Once you've done that, plug in your Android phone via USB, make sure USB Debugging is turned on in your phone's settings, and test the connection.
+Would you like the commands to check if your phone is communicating with adb or fastboot now?
+
