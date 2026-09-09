@@ -1,0 +1,31 @@
+Perfect! The firmware has extracted cleanly, and we have boot.img right where we need it (alongside vbmeta.img, which we will also need to keep things stable).
+Let's push boot.img to your phone and clear the verification security.
+------------------------------
+## Step 1: Send boot.img to your Phone
+Make sure your phone is booted up normally, connected to your computer via USB, and that USB Debugging is turned on in your phone's Developer Options.
+Run this command to copy the file directly to your phone's Download folder:
+
+adb push Tecno_Firmware/boot.img /sdcard/Download/
+
+------------------------------
+## Step 2: Patch it with Magisk on your Phone
+
+   1. Disconnect your phone (or leave it plugged in) and open the Magisk App on your device.
+   2. Tap Install (the top one, next to Magisk).
+   3. Select Select and Patch a File.
+   4. Use your phone's file manager to go to your Downloads folder and select boot.img.
+   5. Tap LET'S GO.
+   6. Once it says "All done!", look at the log on your phone screen. It will tell you the name of the new file it created, usually something like:
+   magisk_patched_XXXXX.img
+
+------------------------------
+## Step 3: Pull the Patched File Back to Ubuntu
+Connect your phone back to the computer and pull that modified file into your terminal directory:
+
+adb pull /sdcard/Download/magisk_patched_*.img .
+
+(Note the dot . at the end of the command—it tells Ubuntu to copy the file to your current ~/Downloads folder).
+------------------------------
+Let me know when you have successfully pulled the magisk_patched file to your computer.
+Before we write it to your phone, we need to unlock your bootloader. Have you already enabled OEM Unlocking and backed up your data on the phone?
+
