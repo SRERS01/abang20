@@ -1,0 +1,45 @@
+user@user-Latitude-3380:~$ cd ~/Downloads
+user@user-Latitude-3380:~/Downloads$ unzip Tecno-Spark-8-KG6k-H6218MNOP-R-GL-230912V614-Flash-File-RMM.zip -d Tecno_Firmware
+Archive:  Tecno-Spark-8-KG6k-H6218MNOP-R-GL-230912V614-Flash-File-RMM.zip
+ extracting: Tecno_Firmware/android-info.txt  
+  inflating: Tecno_Firmware/APDB_MT6765_S01__W2104  
+  inflating: Tecno_Firmware/APDB_MT6765_S01__W2104_ENUM  
+  inflating: Tecno_Firmware/boot-adb.img  
+  inflating: Tecno_Firmware/boot.img  
+  inflating: Tecno_Firmware/Checksum.ini  
+  inflating: Tecno_Firmware/dtbo.img  
+  inflating: Tecno_Firmware/efuse_MT6765.xml  
+  inflating: Tecno_Firmware/gz.img   
+  inflating: Tecno_Firmware/installed-files-product.txt  
+ extracting: Tecno_Firmware/installed-files-ramdisk.txt  
+  inflating: Tecno_Firmware/installed-files-system_ext.txt  
+  inflating: Tecno_Firmware/installed-files-vendor.txt  
+  inflating: Tecno_Firmware/kernel   
+  inflating: Tecno_Firmware/lk.img   
+   creating: Tecno_Firmware/Log/
+  inflating: Tecno_Firmware/Log/ADPT_20230912-233821_0.log  
+  inflating: Tecno_Firmware/logo.bin  
+  inflating: Tecno_Firmware/md1img.img  
+  inflating: Tecno_Firmware/MDDB_InfoCustomAppSrcP_MT6765_S00_MOLY_LR12A_R3_MP_V149_4_P69_1_ulwtg_n.EDB  
+  inflating: Tecno_Firmware/MT6765_Android_scatter.txt  
+  inflating: Tecno_Firmware/ota_scatter.txt  
+  inflating: Tecno_Firmware/preloader_emmc.img  
+  inflating: Tecno_Firmware/preloader.img  
+  inflating: Tecno_Firmware/preloader_kg6k_h6218.bin  
+  inflating: Tecno_Firmware/preloader_raw.img  
+  inflating: Tecno_Firmware/preloader_ufs.img  
+  inflating: Tecno_Firmware/scp.img  
+  inflating: Tecno_Firmware/spmfw.img  
+  inflating: Tecno_Firmware/sspm.img  
+  inflating: Tecno_Firmware/super_empty.img  
+  inflating: Tecno_Firmware/super.img  
+  inflating: Tecno_Firmware/tee.img  
+  inflating: Tecno_Firmware/tool_custom.ini  
+  inflating: Tecno_Firmware/tranfs.img  
+  inflating: Tecno_Firmware/userdata.img  
+  inflating: Tecno_Firmware/vbmeta.img  
+  inflating: Tecno_Firmware/vbmeta_system.img  
+  inflating: Tecno_Firmware/vbmeta_vendor.img  
+  inflating: Tecno_Firmware/Mobile Software Course- Be an Expert - RepairMyMobile.in.url  
+user@user-Latitude-3380:~/Downloads$ 
+
