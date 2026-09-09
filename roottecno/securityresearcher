@@ -1,0 +1,22 @@
+As a security researcher, mastering firmware puts you in a highly specialized, elite subset of cybersecurity known as hardware security or embedded systems hacking. You are far more than a technician—you are an analyst who understands the bridge between physical hardware and low-level code.
+In your field, mastering firmware means focusing on reverse engineering, vulnerability discovery, and exploitation.
+## Core Skillset of a Firmware Security Researcher
+
+* Binary Analysis: Extracting and analyzing compiled firmware images using tools like Ghidra, IDA Pro, or Binwalk.
+* Hardware Interfacing: Using physical debugging protocols like JTAG, UART, and SWD to dump firmware directly from memory chips or sniff live data bus traffic.
+* Exploitation: Finding vulnerabilities like buffer overflows, hardcoded credentials, cryptographically weak update mechanisms, or flawed bootloaders to gain root access.
+
+## Common Targets
+
+* IoT Devices: Smart home tech, routers, and IP cameras (frequent targets for botnets).
+* Automotive: Car ECUs (Electronic Control Units) and infotainment systems.
+* Critical Infrastructure: Industrial Control Systems (ICS) and SCADA devices.
+* Enterprise Hardware: Baseboard Management Controllers (BMCs), firewalls, and network switches.
+
+To help tailor our conversation, tell me:
+
+* What types of devices are you currently researching (e.g., routers, IoT, automotive)?
+* Are you focused on static analysis (analyzing firmware files) or dynamic analysis (hardware hacking/debugging live devices)?
+
+I can share specific methodologies, tooling recommendations, or common firmware vulnerability patterns for your area of interest.
+
