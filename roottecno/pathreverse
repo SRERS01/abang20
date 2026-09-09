@@ -1,0 +1,26 @@
+The files you just unzipped are located inside a new folder named Tecno_Firmware, which was created directly inside your current working directory, ~/Downloads.
+The full path to your extracted files is /home/YOUR_USERNAME/Downloads/Tecno_Firmware/.
+As a security researcher looking at this MediaTek (MT6765 / Helio G35) firmware, you hit a goldmine of critical targets. Here are the most valuable files in that folder for reverse engineering and vulnerability research, grouped by their function:
+## 1. Bootloaders & Low-Level Initialization
+These run before the main Android OS and are prime targets for finding flaws in the secure boot chain or creating custom tethered execution.
+
+* preloader.img (and its variants): This is the First Stage Bootloader. It runs directly from the Boot ROM (BROM). It initializes the RAM (DRAM) and handles the low-level USB handshake for flashing tools (like SP Flash Tool). If you want to find BROM-level exploits or bypass authentication protections (like MediaTek's SLA/DA), this is where you look.
+* lk.img: Little Kernel. This is the Second Stage Bootloader. It initializes the display, handles the fastboot menu, and verifies the cryptographic signature of the boot image.
+
+## 2. Security & Partition Verification
+
+* tee.img: Trusted Execution Environment. This runs inside ARM TrustZone. It handles your hardware-backed cryptographic keys, fingerprint authentication, and DRM. Reversing this can reveal flaws in how secure apps (Trustlets) communicate with the normal world.
+* vbmeta.img, vbmeta_system.img, vbmeta_vendor.img: Verified Boot Metadata. These contain the public keys and cryptographic hashes used by Android Verified Boot (AVB 2.0) to ensure the system partitions haven't been tampered with.
+
+## 3. The Main Android Code & Filesystems
+
+* boot.img: Contains the Android kernel and the ramdisk. You can use magiskboot or abootimg to unpack this to analyze the Linux kernel vulnerabilities or modify the initial root configuration.
+* super.img: In modern Android, this is a dynamic partition that bundles System, Vendor, and Product filesystems together. You can use tools like lpunpack to break it down, then mount or extract the underlying ext4 or erofs images to audit system binaries, setuid executables, and pre-installed proprietary Tecno apps for vulnerabilities.
+
+## 4. Hardware Mapping & Radios
+
+* MT6765_Android_scatter.txt: A crucial configuration file. It outlines the exact physical memory offsets and partition layout of the device's eMMC/UFS storage.
+* md1img.img: The baseband/modem firmware. It controls the cellular radio and communication protocols (GSM/LTE).
+
+Would you like to know how to use binwalk or lpunpack on your Linux machine to safely dismantle super.img or boot.img so you can start looking at the actual binaries inside?
+
