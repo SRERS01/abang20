@@ -1,0 +1,34 @@
+To get the official firmware for your Tecno Spark 8 (KG6k) matching build KG6k-H6218MNOP-R-GL-230912V614, you will need to download it from trusted third-party firmware repositories. Tecno does not host a public, direct consumer download portal for their full stock ROM archives.
+## Where to Safely Download the ROM
+Search for your exact build string on reputable source platforms like:
+
+* GSM Mafia
+* Halabtech (requires a free account)
+* FirmwareFile
+
+## How to Extract the boot.img on Ubuntu
+Because MediaTek firmwares are packed inside an archive, once downloaded, follow these steps to retrieve your boot image:
+1. Unzip the main firmware file
+If the downloaded archive is a .zip file, extract it using your Ubuntu terminal:
+
+unzip Tecno_KG6k_Firmware_*.zip -d ~/tecno_firmware
+
+2. Check the format inside the folder
+Open the extracted directory (~/tecno_firmware) and check the file types:
+
+* Scenario A (Loose files): If you see a file explicitly named boot.img, you are ready to copy it directly to your phone for Magisk patching.
+* Scenario B (super.img or payload.bin): If your firmware contains a consolidated payload.bin file, you will need a extraction tool like payload-dumper-go to split it apart:
+
+# Install the dumper tool via snap
+sudo snap install payload-dumper-go
+# Extract the boot partition out of the payload
+payload-dumper-go -p boot ~/tecno_firmware/payload.bin
+
+
+## Moving the file to your Phone for Magisk
+Once you locate or extract the clean boot.img, send it to your phone's storage via ADB so you can open it inside the Magisk app to select "Select and Patch a File":
+
+adb push ~/tecno_firmware/boot.img /sdcard/Download/
+
+Have you already downloaded the firmware archive onto your computer, or would you like assistance with the specific command lines to verify its integrity once it finishes downloading?
+

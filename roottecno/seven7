@@ -1,0 +1,52 @@
+To safely root your Tecno Spark 8 (KG6k) on build KG6k-H6218MNOP-R-GL-230912V614, you need exactly four items on your Ubuntu system.
+Here is the complete list of files you need and the exact terminal commands to get them:
+------------------------------
+## 📦 The 4 Essential Files & Tools## 1. Android Platform Tools (adb and fastboot)
+
+* What it does: Allows your Ubuntu terminal to communicate with your phone and flash the root files.
+* How to get it: Run this command in your terminal:
+
+sudo apt update && sudo apt install -y android-sdk-platform-tools
+
+
+## 2. The Official Stock Firmware Archive
+
+* What it does: Contains the original, untouched system files specifically built for your phone's exact software version.
+* How to get it: Search for your exact build code KG6k-H6218MNOP-R-GL-230912V614 on GSM Mafia, Halabtech, or FirmwareFile. Download the Linux/ZIP package to your Downloads folder.
+
+## 3. The boot.img and vbmeta.img Files
+
+* What they do: The boot.img is what Magisk will patch to grant root access. The vbmeta.img is required to disable MediaTek's secure boot verification so the phone doesn't bootloop.
+* How to get them: Extract your downloaded firmware ZIP archive:
+
+# Create a working directory
+mkdir ~/tecno_root
+# Unzip the downloaded file (replace with your actual downloaded filename)
+unzip ~/Downloads/Tecno_KG6k_Firmware_*.zip -d ~/tecno_root
+
+Look inside ~/tecno_root. If you see loose files, copy boot.img and vbmeta.img to a safe spot. If you see a payload.bin, extract them using payload-dumper-go.
+
+## 4. The Patched Magisk Boot Image (magisk_patched.img)
+
+* What it does: This is the modified kernel that actually unlocks root permissions on the device.
+* How to get it:
+1. Send the clean boot.img to your phone:
+   
+   adb push ~/tecno_root/boot.img /sdcard/Download/
+   
+   2. Install the Magisk Manager APK from the [Official Magisk GitHub Repository](https://github.com/topjohnwu/Magisk).
+   3. Open Magisk on the phone, tap Install, choose Select and Patch a File, and select the boot.img.
+   4. Once patched, pull the new file back to Ubuntu:
+   
+   adb pull /sdcard/Download/magisk_patched_*.img ~/tecno_root/magisk_patched.img
+   
+   
+------------------------------
+## 📋 Checklist Before Proceeding
+Before you type any flashing commands, confirm your working folder looks like this by running ls ~/tecno_root. You must see:
+
+* vbmeta.img (Stock)
+* magisk_patched.img (Patched via phone)
+
+Have you already downloaded the firmware archive from the web, or do you need help finding the right download link for your build string?
+

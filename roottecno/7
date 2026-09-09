@@ -1,0 +1,31 @@
+For hiding root effectively, Magisk v30.7 (Latest Stable) is much better than the v31.0 pre-release.
+Root evasion is heavily dependent on third-party modules like Shamiko and Play Integrity Fix. Because v31.0 is an experimental pre-release that alters internal architecture, many hiding modules will crash or fail to work on it until they are updated. [1, 2, 3, 4] 
+The exact recipe to hide root on an Android 11 device using v30.7 requires careful configuration:
+## 🛠️ The Ultimate Hiding Configuration Blueprint## 1. Setup the Magisk App Environment
+
+* 
+* Open Magisk settings and choose Hide the Magisk app. This changes the package name to something completely random so banking apps cannot detect the "Magisk" application on your device. [5, 6] 
+* Turn ON the Zygisk switch in settings. (Zygisk allows root-hiding scripts to load inside app processes). [5, 6, 7, 8] 
+* Turn OFF the Enforce DenyList toggle. (Crucial: Leaving this on will break external hiding modules). [1, 6] 
+* Tap Configure DenyList and select the target apps you want to hide root from (e.g., your banking app, Google Play Services, and Google Play Store). Check every sub-process under those apps. [1, 9] 
+* 
+
+## 2. Install Your Hiding Toolkit (Modules)
+Flash these zip files directly via the Modules tab in Magisk and reboot your phone when finished: [1, 5] 
+
+* 
+* Shamiko (Latest) — This takes over your Magisk DenyList. It executes an advanced, "whitelist-style" hide that completely tricks banking apps without triggering standard detection flags.
+* Play Integrity Fix — Essential for Android 11. This modules spoofs your device signature so that Google Play Integrity passes, allowing your banking apps to communicate with servers securely.
+* HideMyApplist (Optional APK) — Some severe banking apps scan your phone for other root tools (like Termux or Titanium Backup). Using HideMyAppsList will blind those target apps from seeing any other app installed on your phone. [1, 2, 9, 10, 11] 
+* 
+
+## 3. Clear App Cache Data (Final Step)
+After configuring everything and rebooting, you must wipe the memory of the apps that already caught you: [12] 
+
+   1. Go to Android Settings > Apps > See all apps.
+   2. Find your Banking App, Google Play Store, and Google Play Services.
+   3. For each one, select Storage and tap Clear Storage / Clear Data. [1, 12] 
+
+Which specific banking or financial app are you attempting to hide root from? (Some apps require extra tools like LSPosed or TrickyStore to fully bypass their security checks). [1, 13] 
+
+

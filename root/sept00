@@ -1,0 +1,34 @@
+To see if the required tools are ready on your system, you can perform a quick check directly from the Ubuntu terminal. The correct tool names are adb and fastboot (with an "s" instead of a "t"). [1, 2, 3] 
+## Step 1: Check if ADB and Fastboot are Installed
+Open your Ubuntu terminal (Ctrl + Alt + T) and run these two commands separately:
+
+adb version
+
+fastboot --version
+
+
+* 
+* If installed: The terminal will display version numbers (e.g., Android Debug Bridge version 1.0.41).
+* If not installed: Ubuntu will output Command 'adb' not found or suggest an installation command. [3] 
+* 
+
+## Step 2: How to Install Them (If Missing)
+If they are missing, run the following command to install the standard Android SDK platform tools via the official Ubuntu repositories: [2, 3] 
+
+sudo apt update && sudo apt install -y android-sdk-platform-tools
+
+------------------------------
+## Crucial Precautions for Rooting your Tecno KG6K (Spark 8)
+Your device runs a MediaTek (MTK) chipset and is specifically on the KG6k-H6218MNOP-R-GL-230912V614 build. When preparing to root Android 11 with [Magisk](https://github.com/topjohnwu/Magisk) on this exact firmware, you must strictly follow these rules to avoid hard-bricking your phone: [4, 5] 
+
+   1. Match the Boot Image Exactly: You must download the exact official firmware stock ROM matching your build string KG6k-H6218MNOP-R-GL-230912V614. Extracting and patching a boot.img or vbmeta.img from any other version (even a slightly different build date) will cause a bootloop. [5] 
+   2. Unlock Bootloader via Fastboot: On Ubuntu, you will need to put your Tecno into Fastboot mode, check its status using fastboot devices, and then unlock it using:
+   
+   fastboot flashing unlock
+   
+   (Note: This factory-resets your phone, back up all your data first!) [4, 6] 
+   3. Handle Disable Verification: Because it is an Android 11 MTK device, you will likely need to flash the patched boot image along with an empty or verified-boot disabling argument (fastboot flash vbmeta --disable-verity --disable-verification vbmeta.img) to bypass MediaTek's secure boot checks.
+
+Do you already have the exact stock firmware zip extracted on your Ubuntu computer, or do you need help finding out how to safely extract the boot.img for patching?
+
+

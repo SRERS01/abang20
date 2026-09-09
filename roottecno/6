@@ -1,0 +1,81 @@
+Here is the complete, step-by-step master guide to fully root your Tecno Spark 8 (KG6k) running Android 11 (Build: KG6k-H6218MNOP-R-GL-230912V614) using Ubuntu.
+------------------------------
+## Step 1: Back Up Your Phone
+Unlocking the bootloader will factory reset your phone and erase every single file, app, and photo. Move everything important to your PC or cloud storage before continuing.
+------------------------------
+## Step 2: Prepare Your Ubuntu Linux Terminal
+Open your Ubuntu terminal (Ctrl + Alt + T) and run these commands to set up the official Android tools and configure USB permissions.
+
+   1. Install ADB and Fastboot:
+   
+   sudo apt update
+   sudo apt install android-tools-adb android-tools-fastboot -y
+   
+   2. Configure USB Permissions:
+   
+   sudo nano /etc/udev/rules.d/51-android.rules
+   
+   3. Paste these lines inside the text editor that opens:
+   
+   SUBSYSTEM=="usb", ATTR{idVendor}=="0e8d", MODE="0666", GROUP="plugdev"
+   SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", MODE="0666", GROUP="plugdev"
+   
+   4. Press Ctrl + O, then Enter to save. Press Ctrl + X to exit.
+   5. Reload the system configuration:
+   
+   sudo udevadm control --reload-rules
+   sudo service udev restart
+   
+   
+------------------------------
+## Step 3: Unlock Your Phone's Bootloader
+
+   1. On your phone, go to Settings > My Phone.
+   2. Tap Build Number 7 times consecutively until it says "You are now a developer!"
+   3. Go back to Settings > System > Developer Options.
+   4. Switch ON OEM Unlocking and USB Debugging.
+   5. Plug your phone into your Ubuntu PC with a reliable USB cable.
+   6. Check your terminal to see if the phone is recognized:
+   
+   adb devices
+   
+   (Look at your phone screen; a prompt will ask you to "Allow USB Debugging". Check "Always allow" and tap OK).
+   7. Reboot the phone into Fastboot mode:
+   
+   adb reboot bootloader
+   
+   8. Once the phone screen changes to a black screen with small text (Fastboot mode), run the unlock command:
+   
+   sudo fastboot flashing unlock
+   
+   9. Look at your phone screen immediately. It will prompt you to press a volume key (usually Volume Up) to confirm the unlock. Press it.
+   10. The phone will wipe itself and reboot back to the initial setup screen. Proceed through the setup wizard.
+   11. Re-enable Developer Options and USB Debugging exactly like you did in sub-steps 1-4.
+
+------------------------------
+## Step 4: Get and Patch the boot.img File
+
+   1. Download the official Magisk APK directly onto your phone from the [Official Magisk GitHub Page](https://github.com/topjohnwu/Magisk/releases) and install it.
+   2. Acquire your exact stock firmware files (boot.img and vbmeta.img) for build 230912V614 via Hovatek or RomFlasher databases as planned earlier.
+   3. Copy the stock boot.img to your phone's internal memory (e.g., the Download folder). Keep vbmeta.img on your PC.
+   4. Open the Magisk App on your phone.
+   5. Tap Install (on the top Magisk card) -> Select and Patch a File.
+   6. Select your stock boot.img. Tap Let's Go.
+   7. Magisk will create a file named something like magisk_patched_[random_letters].img in your phone's Download folder.
+   8. Copy this magisk_patched_[random_letters].img file from your phone back to your Ubuntu computer.
+
+------------------------------
+## Step 5: Flash the Patched Files Using Fastboot
+
+   1. Move both vbmeta.img and your new magisk_patched_[random_letters].img file into a single folder on your Ubuntu computer.
+   2. Right-click inside that folder and select Open in Terminal.
+   3. Plug your phone back into the computer. Reboot it into Fastboot mode:
+   
+   adb reboot bootloader
+   
+   4. Disable Android 11 Verification Checks (Crucial):
+   
+   sudo fastboot flash vbmeta --disable-verity --disable-verification vbmeta.img
+   
+   5. Flash the Magisk Patched Boot Image:
+   …

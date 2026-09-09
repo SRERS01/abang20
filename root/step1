@@ -1,0 +1,62 @@
+That is completely fine! Since you do not have the files yet, we need to take a step back. Rooting a MediaTek device like the Tecno Spark 8 (KG6K) on Android 11 requires strict preparation. If you flash the wrong file, the phone will get stuck in a bootloop.
+Here is the exact roadmap of what you need to do, step-by-step.
+------------------------------
+## Step 1: Back Up Everything
+Unlocking the bootloader will completely factory reset your phone and wipe all internal storage (photos, apps, messages). Back up your data to the cloud or another device before moving forward.
+## Step 2: Obtain the Exact Firmware Files
+You cannot use just any Tecno KG6K firmware; you must hunt for the specific build matching KG6k-H6218MNOP-R-GL-230912V614. [1] 
+
+   1. Search online firmware repositories (like [Hovatek Forum](https://www.hovatek.com/forum/) or generalized Android file hosts) for your specific build number string.
+   2. Download the full Stock ROM zip file to your Ubuntu computer and extract it. [1] 
+   3. Look inside the extracted folder for two critical files:
+   * boot.img
+      * vbmeta.img [1] 
+   
+## Step 3: Patch the boot.img with Magisk
+Once you have the boot.img file, you need to let Magisk modify it: [2] 
+
+   1. Copy the stock boot.img file from your computer onto your phone's internal storage.
+   2. Download and install the official [Magisk APK](https://github.com/topjohnwu/Magisk/releases) on your Tecno phone.
+   3. Open Magisk, tap Install next to Magisk, and choose Select and Patch a File.
+   4. Navigate to your storage, select the boot.img you copied over, and tap Let's Go.
+   5. Magisk will output a file named something like magisk_patched_[random_letters].img in your phone's Download folder.
+   6. Copy that patched file back to your Ubuntu laptop. Put it in the same folder where your stock vbmeta.img is stored. [2, 3, 4] 
+
+------------------------------
+## Step 4: Unlock the Bootloader
+
+   1. Turn on USB Debugging and OEM Unlocking under Settings > System > Developer Options on your phone.
+   2. Plug your phone into your laptop. Open the Ubuntu terminal and type:
+   
+   adb reboot bootloader
+   
+   3. Once the phone screen goes dark and shows "FASTBOOT MODE", unlock it by typing:
+   
+   fastboot flashing unlock
+   
+   4. Look at your phone's screen. It will ask you to press Volume Up to confirm. Press it.
+   5. The phone will wipe itself and reboot back into the system.
+   6. Set the phone up quickly (skip the accounts for now) and re-enable USB Debugging in Developer Options. [2, 5] 
+
+------------------------------
+## Step 5: Flash the Root Files
+Now that the bootloader is unlocked, boot the phone back into fastboot mode via terminal (adb reboot bootloader). [2, 3] 
+Open your terminal in the exact folder where your vbmeta.img and magisk_patched.img are located and run these commands: [3, 6] 
+
+# 1. Disable Android Verified Boot (AVB) so the phone accepts the modified boot file
+fastboot flash vbmeta --disable-verity --disable-verification vbmeta.img
+# 2. Flash the Magisk-patched boot image
+fastboot flash boot magisk_patched.img
+# 3. Reboot your device back to Android
+fastboot reboot
+
+Once the phone boots up, install the Magisk app again if it's missing. Open it, and it should show Installed: [Version Number], confirming your Tecno Spark 8 is successfully rooted!
+Let me know when you start looking for the firmware:
+
+* 
+* Have you successfully found a download link for the KG6k-H6218MNOP-R-GL-230912V614 stock ROM?
+* Do you need help finding a reliable source to download the firmware safely?
+* 
+
+
+

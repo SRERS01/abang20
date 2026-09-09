@@ -1,0 +1,44 @@
+Your terminal output shows that both tools are successfully installed on your computer.
+However, you have a slight configuration quirk: your adb and fastboot are executing from two different installation folders (one is from the built-in Ubuntu system repositories, and the other is manually installed inside your home directory's Android SDK path).
+While they will likely work fine, to avoid any communication mismatch mismatches between the tools while flashing, make sure you run your terminal commands from your home Android SDK path where your latest fastboot lives.
+------------------------------
+## Step 2: Test Device Communication & Udev Setup
+Before you try to flash anything, you must verify that Ubuntu can actually "see" your Tecno Spark 8 (KG6K) in both standard and fastboot modes without permission errors.
+## 1. Test ADB Mode (While the phone is powered ON)
+
+   1. On your Tecno, go to Settings > System > Developer Options and toggle USB Debugging to ON.
+   2. Plug the phone into your Ubuntu laptop via USB.
+   3. In your terminal, run:
+   
+   adb devices
+   
+   4. Look at your phone's screen. A popup will appear asking to "Allow USB Debugging?". Check the box for "Always allow" and tap OK.
+   5. Run adb devices again. It should change from unauthorized to device.
+
+## 2. Test Fastboot Mode (The critical flashing environment)
+To reboot your Tecno into Fastboot mode directly from Ubuntu, type:
+
+adb reboot bootloader
+
+Your phone's screen will go dark and reboot to a black screen with tiny text at the bottom saying "FASTBOOT MODE" or "ORANGE STATE".
+Once it is in that state, type:
+
+fastboot devices
+
+
+* If it shows a string of numbers followed by "fastboot": You are perfectly connected and ready to proceed.
+* If it shows blank or "no permissions": Linux needs a security rule (udev rule) to talk to MediaTek chips. If you get a permission error, run this command to fix it, replug the phone, and try again:
+
+sudo apt install android-sdk-platform-tools-common
+
+
+------------------------------
+## Your Next Step
+Since your environment is confirmed working, the next phase is preparing the root files.
+Have you already downloaded and extracted the official boot.img and vbmeta.img from the specific KG6k-H6218MNOP-R-GL-230912V614 stock firmware firmware onto your computer? If you have them ready, I can give you the exact terminal syntax to unlock the bootloader and flash them safely.
+Please let me know:
+
+* Have you already unlocked your bootloader?
+* Do you have the patched Magisk boot image file ready on your laptop?
+
+

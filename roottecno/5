@@ -1,0 +1,53 @@
+If you are using Ubuntu, setting up your environment for rooting your Tecno Spark 8 is actually much easier and more stable than on Windows. Linux handles Android USB drivers natively, meaning you do not need to hunt down sketchy MediaTek driver packages.
+Here is how to set up your Ubuntu terminal to unlock your bootloader and flash the files.
+------------------------------
+## Step 1: Install ADB and Fastboot on Ubuntu
+Open your Ubuntu terminal (Ctrl + Alt + T) and run the standard package manager to install the official Android tools:
+
+sudo apt update
+sudo apt install android-tools-adb android-tools-fastboot -y
+
+------------------------------
+## Step 2: Configure USB Permissions (Crucial Linux Step)
+By default, Ubuntu might block your user account from talking directly to the phone via USB. You need to give your system permission by adding a udev rule:
+
+   1. Create a rules file by running this command:
+   
+   sudo nano /etc/udev/rules.d/51-android.rules
+   
+   2. Paste the following line into the file (this covers all MediaTek and generic Android devices):
+   
+   SUBSYSTEM=="usb", ATTR{idVendor}=="0e8d", MODE="0666", GROUP="plugdev"
+   SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", MODE="0666", GROUP="plugdev"
+   
+   3. Press Ctrl + O then Enter to save, and Ctrl + X to exit the text editor.
+   4. Reload the rules and restart the USB service:
+   
+   sudo udevadm control --reload-rules
+   sudo service udev restart
+   
+   
+------------------------------
+## Step 3: Run the Commands on Ubuntu
+Now you can safely follow the original instructions. Note that on Ubuntu, you might need to add sudo before your fastboot commands if your user account isn't in the plugdev group.
+
+* To test if your phone is seen while turned on with USB debugging enabled:
+
+adb devices
+
+* To reboot into fastboot mode:
+
+adb reboot bootloader
+
+* To unlock your bootloader (Step 0):
+
+sudo fastboot flashing unlock
+
+* To flash your files (Step 2) once you have them in your current terminal directory:
+
+sudo fastboot flash vbmeta --disable-verity --disable-verification vbmeta.img
+sudo fastboot flash boot magisk_patched.img
+sudo fastboot reboot
+
+
+Are you currently experiencing any terminal errors like "command not found" or "waiting for device" while trying to connect your Tecno Spark 8 to Ubuntu?
