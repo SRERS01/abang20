@@ -1,0 +1,28 @@
+The cannot find or open error happens because your terminal is currently looking in your Home (~) folder, but your files are likely sitting inside your Downloads directory.
+Let's navigate to the right folder first and then run the unzip command.
+------------------------------
+## 🛠️ Fix and Extract
+
+   1. Change directory to where your files are:
+   
+   cd ~/Downloads
+   
+   (If you put them somewhere else, replace ~/Downloads with that folder path).
+   2. Verify the file is visible:
+   
+   ls | grep Tecno
+   
+   You should see Tecno-Spark-8-KG6k-H6218MNOP-R-GL-230912V614-Flash-File-RMM.zip pop up in green or white text.
+   3. Run the extraction command again:
+   
+   unzip Tecno-Spark-8-KG6k-H6218MNOP-R-GL-230912V614-Flash-File-RMM.zip -d Tecno_Firmware
+   
+   
+------------------------------
+Once the extraction completes, let me know:
+
+* Did it finish without errors?
+* If you run ls Tecno_Firmware, do you see boot.img listed inside?
+
+We can then instantly push it over to your phone!
+
