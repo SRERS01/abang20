@@ -1,0 +1,33 @@
+To keep your Ubuntu screen turned on permanently and prevent it from dimming, locking, or going to sleep, you can do this easily through either the graphical settings or the terminal.
+## Method 1: Using the Graphical Settings (Easiest)
+
+   1. Open the Settings application (click the top-right corner of your screen and select the gear icon).
+   2. On the left sidebar, click on Power.
+   3. Look for the Power Saving section:
+   * Change Screen Blank to Never.
+      * Change Automatic Suspend to Off.
+   4. Next, click on Privacy in the left sidebar, then select Screen Lock.
+   * Switch Automatic Screen Lock to Off.
+   
+------------------------------
+## Method 2: Using the Terminal (Fastest)
+If you are working via SSH or prefer using the command line, run these three commands to completely disable screen blanking, sleep, and locking:
+
+# 1. Prevent the screen from blanking/turning off
+gsettings set org.gnome.desktop.session idle-delay 0
+# 2. Prevent the system from automatically suspending when idle
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
+# 3. Disable the automatic screen lock
+gsettings set org.gnome.desktop.screensaver lock-enabled false
+
+(Note: Setting the values to 0 tells Ubuntu to never trigger the timeout.)
+------------------------------
+## Method 3: Using "Caffeine" (Best for Laptop Users)
+If you only want your screen to stay on sometimes (like when you are running a long bug bounty script), you can install a lightweight tool called Caffeine. It adds a small coffee cup icon to your top bar that you can click to turn the screensaver on or off instantly.
+To install it, run:
+
+sudo apt update && sudo apt install caffeine -y
+
+After installing, open your application menu, launch Caffeine Indicator, and click the toggle in your top panel.
+Are you setting this up on a desktop or a laptop? If it's a laptop, let me know if you also need to keep it running when the lid is closed.
+

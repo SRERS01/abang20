@@ -1,0 +1,37 @@
+To keep your Ubuntu laptop awake and running bug bounty automation scripts even when you close the lid, you need to adjust the system’s backend rules. [1] 
+By default, Ubuntu forces laptops to go to sleep the moment the lid closes. Since you already applied the general screen settings, follow these steps to stop the lid-close sleep behavior: [2] 
+## Adjusting the Systemd Configuration (Permanent Fix)
+Ubuntu manages the laptop lid switch using a core service called systemd-logind. You can configure it to completely ignore when the lid closes: [2, 3] 
+
+   1. Open the system configuration file in your terminal using the nano text editor:
+   
+   sudo nano /etc/systemd/logind.conf
+   
+   [4] 
+   2. Find these specific lines (they usually have a # symbol in front of them, which means they are commented out):
+   
+   #HandleLidSwitch=suspend
+   #HandleLidSwitchExternalPower=suspend
+   
+   [4, 5] 
+   3. Modify the lines by removing the # and changing the value to ignore:
+   
+   HandleLidSwitch=ignore
+   HandleLidSwitchExternalPower=ignore
+   
+   (Note: This tells Ubuntu to "do nothing" when you close the lid, keeping your processes running whether you are on battery or plugged into the wall.) [4, 5, 6] 
+   4. Save and exit the editor:
+   * Press Ctrl + O and hit Enter to write the changes.
+      * Press Ctrl + X to close the editor. [4, 6] 
+   5. Apply the changes immediately by restarting the login service:
+   
+   sudo systemctl restart systemd-logind
+   
+   ⚠️ Heads up: Running this command might briefly log you out of your current desktop session. Make sure your current Git progress or scripts are saved before executing it. [2, 4] 
+
+------------------------------
+## ⚠️ A Quick Warning for Long Automations
+If you leave a bug bounty script (like your negative counter test) running in a loop with the laptop lid closed, keep the laptop in a well-ventilated area. Laptops dissipate a large amount of heat through the keyboard face. Closing the lid restricts that airflow and can cause the system to run hot during intensive loops. [7] 
+Would you like to test if the rule worked by running a background monitoring command that shows if your script keeps looping after you close the lid?
+
+
