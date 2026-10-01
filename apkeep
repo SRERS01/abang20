@@ -1,0 +1,8 @@
+The error happened because the correct source name is apk-pure (with a hyphen), not apkpure.
+Also, since your terminal prompt shows you are already inside the bidget folder (~/bidget), running the command with bidget at the end will try to create a subfolder named bidget/bidget. Instead, use a dot (.) to save it directly into your current directory.
+Run this command to fix it:
+
+/home/user/.cargo/bin/apkeep -d apk-pure -a com.bitkeep.wallet .
+
+Let me know if this successfully starts the Bitget Wallet download or if you hit any network blocks!
+
