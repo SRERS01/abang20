@@ -1,0 +1,25 @@
+Not quite—pull and push are used to send and receive files via ADB, but in Git, those terms mean something completely different.
+Because you used both tools, it is easy to mix them up! Here is the direct breakdown of how the terms change depending on the tool you are using:
+## 1. In ADB (Phone to Computer)
+You are moving physical files between your Android phone and your Ubuntu machine.
+
+* adb pull: Copies a file/folder from the phone to your computer (like when you grabbed the APK).
+* adb push: Copies a file/folder from your computer to the phone.
+
+## 2. In Git (Computer to GitHub/Cloud)
+You are syncing code history and tracking changes between your local Ubuntu folder and a remote cloud platform (like GitHub or GitLab).
+
+* git pull: Fetches and merges code history from the cloud repository down to your computer.
+* git push: Sends your committed local history changes from your computer up to the cloud repository.
+
+------------------------------
+Now that you have run git add . inside your ~/edf folder, would you like to:
+
+* See how to git commit and git push these files to an online repository like GitHub?
+* Or are you trying to adb push the APK file back out to a different phone?
+
+To give you the exact commands for your next step, let me know:
+
+* Are you trying to back up your project to GitHub/GitLab right now, or are you trying to move files to another Android device?
+
+
