@@ -1,0 +1,65 @@
+To hunt for bugs on an Application Programming Interface (API) using ffuf like the top 1% of researchers, you have to throw out standard web-fuzzing rules. APIs don't usually serve HTML pages—they serve structured text (JSON/XML) and rely on strict HTTP verbs (GET, POST, PUT, DELETE, PATCH).
+Here is the master playbook for elite API reconnaissance and anomaly discovery.
+------------------------------
+## 🗺️ The API Architecture Mapping Matrix
+To uncover hidden entry points, look for unexpected status codes or changes in response formatting.
+------------------------------
+## 🚀 Advanced API Fuzzing Playbooks## 1. The Method-Overriding & Endpoint Discovery Matrix
+99% of hunters miss API endpoints because they only check them with a GET request. If an endpoint requires a POST or PUT, it may return a 404 or 405, fooling you into thinking it doesn't exist. This command forces ffuf to dynamically test every path against every HTTP method simultaneously.
+
+ffuf -w /path/to/SecLists/Discovery/Web-Content/api/api-endpoints.txt:ROUTE \
+     -w /path/to/SecLists/Discovery/Web-Content/web-vulnerabilities.txt:METHOD \
+     -u https://target.com \
+     -X METHOD \
+     -mode clusterbomb \
+     -mc all -fc 404 -ignore-body -v
+
+
+* 
+* The Logic: By using -mode clusterbomb, ffuf tests every path with GET, POST, PUT, DELETE, and PATCH.
+* The Magic: -mc all -fc 404 hides the dead routes but alerts you to anything else. If /users returns a 405 Method Not Allowed on a GET request but a 415 Unsupported Media Type on a POST request, you just found a live API injection point.
+* 
+
+## 2. Mass Content-Type Brute Forcing (Bypassing JSON Filters)
+Many APIs use restrictive input filters. If you send data as application/json, it might get blocked by a WAF. However, if you fuzz the Content-Type header, you can sometimes trigger an application fallback that processes other data types unvalidated.
+
+ffuf -w /path/to/SecLists/Miscellaneous/web-content-types.txt:CTYPE \
+     -u https://target.com \
+     -X POST \
+     -H "Content-Type: CTYPE" \
+     -d '{"admin": true, "user_id": "1002"}' \
+     -ac
+
+
+* 
+* The Magic: This bypasses front-end parsing layers. You might find that the API engine rejects JSON input but blindly accepts and processes data when the header is switched to application/xml or application/x-yaml, potentially introducing serious parsing vulnerabilities.
+* 
+
+## 3. Unlinked & Hidden API Parameter Hunting
+Modern REST and GraphQL APIs often accept undocumented parameters used exclusively for internal debugging, feature-flag testing, or legacy compatibility.
+
+ffuf -w /path/to/SecLists/Discovery/Web-Content/burp-parameter-names.txt \
+     -u https://target.com \
+     -H "Authorization: Bearer [JWT_TOKEN]" \
+     -ac -acc "status,size"
+
+
+* 
+* The Magic: By utilizing strict auto-calibration (-ac -acc "status,size"), ffuf filters out the baseline response of the checkout page. If a parameter name like &debug=true, &admin=1, or &testing=true changes the byte size or response structure even slightly, you've exposed an unlinked business logic trigger.
+* 
+
+------------------------------
+## 📂 Essential SecLists Paths for API Fuzzing
+When configuring your ffuf paths, skip generic wordlists and target these specific directories inside [SecLists](https://github.com/danielmiessler/SecLists):
+
+* 
+* API Endpoints: /Discovery/Web-Content/api/ (Contains dedicated files for Swagger, OpenAPI, and common microservice paths).
+* Parameter Names: /Discovery/Web-Content/burp-parameter-names.txt (An exceptional list for uncovering hidden API query parameters).
+* HTTP Verbs: /Discovery/Web-Content/web-vulnerabilities.txt (Contains method variations like GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD).
+* 
+
+Would you like to build a live API automation engine? Let me know:
+
+* 
+* Is your target API built on a specific architecture like GraphQL, REST, or gRPC?
+* Do you need assistance generating a custom script to automatically extract and pass active JWT or OAuth authorization headers directly into ffuf?

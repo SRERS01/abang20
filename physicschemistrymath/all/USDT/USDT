@@ -1,0 +1,22 @@
+USDT, also known as Tether, is a cryptocurrency called a stablecoin that is permanently pegged to the value of the United States Dollar (USD).
+Unlike volatile cryptocurrencies like Bitcoin or Ethereum whose prices change drastically every minute, 1 USDT is designed to always be equal to $1 USD.
+## How it Works in Simple Terms
+Think of USDT as a digital dollar wrapper. For every single USDT token issued into the digital world, the parent company (Tether Limited) claims to hold exactly $1 USD in real-world bank reserves, short-term bonds, or cash equivalents to back it up.
+Because it acts exactly like a dollar but moves over blockchain networks, it allows people all over the world to save, send, and trade in US dollars without needing a traditional American bank account.
+------------------------------
+## Why USDT is Crucial for P2P Trading in the XAF Zone
+In countries like Cameroon, Gabon, or Chad, USDT has become the dominant financial bridge for several reasons:
+
+* Protection Against Local Inflation: Instead of holding large amounts of local cash, traders convert their XAF into USDT to protect their savings from the devaluation or inflation of the local currency.
+* The Global Trading Standard: When you trade crypto peer-to-peer, you rarely buy Bitcoin directly with XAF. Instead, you use your MTN MoMo to buy USDT, and then you use that USDT to buy any other cryptocurrency or pay for goods globally.
+* Massive Liquidity: Because it is the most stable and heavily used token in Central Africa, it is incredibly easy to find buyers and sellers on MTN MoMo who will trade USDT instantly back into XAF cash at any hour of the day.
+
+------------------------------
+## Technical Networks: A Critical Warning
+USDT does not have its own blockchain; instead, it "rides" on top of other networks. When you copy your wallet address to receive USDT, you must always make sure the network matches perfectly:
+
+* TRC-20 (Tron Network): This is the most popular network used in Africa. It has very low fees (usually around $1 to $2 per transfer) and is incredibly fast.
+* ERC-20 (Ethereum Network): This is much slower and has incredibly high gas fees (sometimes $5 to $20+ per transfer). Avoid this for small daily MoMo trades.
+
+If someone sends you USDT via the TRC-20 network, but you give them an ERC-20 address, the funds will disappear into the blockchain completely, and no one can recover them.
+Are you setting up a USDT wallet address on an app like Binance or Trust Wallet right now? Tell me which app you are using, and I can give you the exact steps to locate your TRC-20 deposit address safely.

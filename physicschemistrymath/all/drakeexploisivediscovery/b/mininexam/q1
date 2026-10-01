@@ -1,0 +1,37 @@
+Here are two classic practice questions that frequently appear on professional certifications and engineering exams.
+------------------------------
+## Practice Question 1: The Powder Factor Calculation (Module 3)
+Scenario:
+You are designing a single-row bench blast in a limestone quarry. Your drill hole diameter requires a Burden (B) of 3 meters and a Spacing (S) of 4 meters. The bench height (the vertical depth of the rock face) is 10 meters. You load each hole with 72 kilograms of an emulsion blasting agent.
+Your Task:
+Calculate the Powder Factor for this blast in kilograms per cubic meter ($\text{kg/m}^3$).
+## Step-by-Step Solution:
+
+   1. Calculate the Volume of Rock broken per hole ($V$):
+   $$\text{Volume} = \text{Burden} \times \text{Spacing} \times \text{Bench Height}$$ 
+   $$V = 3\text{ m} \times 4\text{ m} \times 10\text{ m} = 120\text{ m}^3$$ 
+   2. Calculate the Powder Factor ($\text{PF}$):
+   $$\text{Powder Factor} = \frac{\text{Total Weight of Explosive}}{\text{Volume of Rock Broken}}$$ 
+   $$\text{PF} = \frac{72\text{ kg}}{120\text{ m}^3} = \mathbf{0.6\text{ kg/m}^3}$$ 
+
+Exam Tip: In a real exam, if they ask for the powder factor in kg/ton, they will provide the density of the rock. You would simply multiply the volume ($120\text{ m}^3$) by the rock's density before dividing.
+------------------------------
+## Practice Question 2: The Misfire Scenario (Module 5)
+Scenario:
+You are the blaster-in-charge at a surface construction site utilizing a Non-Electric (Nonel) shock tube initiation system to split a hard granite ledge. After firing the shot sequence, you execute a visual inspection from a safe distance and notice that the last two holes in the row did not fire. The shock tubes leading to them are intact but blackened, indicating a system failure, leaving live primers and main charges trapped in the rock.
+Exam Multiple-Choice Question:
+Which of the following actions represents the correct, legally compliant safety protocol for handling this misfire?
+
+* A) Walk down immediately to pull the shock tubes out of the hole by hand and insert a fresh detonator.
+* B) Signal an all-clear to the site workforce, wait 5 minutes, and then use a pneumatic drill to drill out the stemming material from the failed hole.
+* C) Evacuate the area, maintain guards at all entry points, wait a mandatory minimum of 30 minutes, and then drill a parallel relieving hole at a safe, regulatory distance (e.g., 60 cm away) to blast the rock safely.
+* D) Flood the failed holes with water to completely neutralize the emulsion and immediately bring in an excavator to dig out the live rock.
+
+## Correct Answer: C
+Why this is correct:
+
+* The Waiting Period: For non-electric shock tubes, regulatory bodies require a minimum wait time of 30 minutes (compared to 60 minutes for electric caps) to rule out a delayed ignition or "hangfire."
+* Guarding: The blast area must remain completely secure during this period.
+* The Relieving Hole: You can never drill directly into a misfired hole or try to force tools into it, as striking the hidden detonator will trigger an accidental explosion. Drilling a separate, parallel hole a safe distance away allows you to break the rock surrounding the misfire safely so the unexploded ordnance can be recovered or detonated under controlled conditions.
+
+Would you like to try a few more multiple-choice questions on Explosive Storage (Magazines) or learn how to calculate Sub-drilling depth?

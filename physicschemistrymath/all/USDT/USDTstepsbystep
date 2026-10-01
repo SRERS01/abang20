@@ -1,0 +1,30 @@
+Here are the step-by-step instructions for finding your USDT TRC-20 wallet address on Binance and Trust Wallet, the two most popular apps used in Cameroon.
+------------------------------
+## 1. How to find your USDT TRC-20 address on Binance
+Because Binance updates its layout frequently, follow this direct path to your funding or spot wallet:
+
+* Step 1: Open the Binance app and tap the Wallets icon in the bottom right corner of the screen.
+* Step 2: Tap the Deposit button at the top of the screen.
+* Step 3: Select Crypto and type USDT in the search bar, then tap on Tether (USDT).
+* Step 4 (CRITICAL): The app will ask you to "Choose Network". Scroll down the list and tap Tron (TRC20).
+* Step 5: You will see a QR code and a long string of numbers and letters starting with a capital "T" (e.g., T9zPy...). Tap the Copy icon next to it.
+
+------------------------------
+## 2. How to find your USDT TRC-20 address on Trust Wallet
+Trust Wallet is a decentralized app, meaning you control your own keys, but you must manually ensure you select the correct token version:
+
+* Step 1: Open the Trust Wallet app on your phone.
+* Step 2: On the main dashboard, look for USDT or Tether.
+* Note: Look closely at the small text under or next to the logo. It must say Tether TRC20 or have a small "TRX" badge.
+   * If you don't see it: Tap the Manage Crypto icon (the toggle lines in the top right), search for "USDT", and switch on the toggle for Tether USDT (TRON).
+* Step 3: Tap on the Tether TRC20 token from your main list.
+* Step 4: Tap the blue Receive button.
+* Step 5: Your unique address starting with a capital "T" will appear on the screen. Tap Copy at the bottom.
+
+------------------------------
+## ⚠️ Golden Rules Before You Share Your Address
+
+* The "T" Rule: A valid TRC-20 network address always starts with a capital letter T. If your copied address starts with "0x", it is an Ethereum (ERC-20) or BNB Chain address. Sending TRC-20 funds to a "0x" address will result in permanent loss.
+* Never Type It Manually: Always use the Copy button. If you mistype even one single character out of the 34 letters and numbers, your crypto will be cast into the blockchain void forever.
+
+Are you copying this address to receive USDT from a P2P buyer, or are you trying to transfer funds from another app? Let me know so I can tell you if there are any network transfer fees to consider.

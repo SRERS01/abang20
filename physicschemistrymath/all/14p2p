@@ -1,0 +1,26 @@
+Yes, exactly. If the buyer provides valid proof of payment, the platform will automatically take the crypto from your escrow wallet, give it to the buyer, and ban your account for bad faith trading.
+The platform will not pay the buyer out of its own pocket; instead, it uses the crypto you locked in escrow when you first clicked "Sell".
+Here is exactly how that final step plays out:
+## 1. The Platform Uses Your Escrowed Crypto
+When you create a sell order, the platform instantly takes your crypto and places it into a temporary holding vault called escrow. You cannot withdraw it or spend it while the trade is active. This ensures that if you receive the MTN MoMo money and run away, the platform has the crypto ready to give to the rightful buyer.
+## 2. Customer Support Reviews the Evidence
+Once the buyer opens an appeal, a customer support agent will look at the MTN MoMo transaction receipt provided by the buyer.
+
+* They will check the transaction ID, the date, the time, and the recipient's name.
+* If the name and phone number on the MoMo receipt match the details you provided on your P2P profile, the support agent knows the buyer is telling the truth.
+
+## 3. The Force-Release and Ban
+If you do not respond to the platform's warnings within a few hours:
+
+   1. Force-Release: The agent clicks a button that manually moves the crypto from the escrow vault directly into the buyer's wallet.
+   2. Account Ban: Your account is flagged as a fraudulent or unresponsive trader. Your account is usually permanently banned, meaning you lose access to the platform entirely, and you will not be allowed to open a new account using your identity documents (ID/Passport).
+
+------------------------------
+## What to do if you simply forgot or were offline
+If you missed the trade because your battery died, you lost internet connection, or you fell asleep, do not panic yet.
+Log into your app right now:
+
+* If the order is still "In Appeal," click "Payment Received" immediately to release it yourself. This protects your account from being banned.
+* If the platform has already force-released it, your account might already be restricted. You will need to contact customer support to explain that it was an honest mistake due to a connectivity issue, though unbanning a P2P account can be very difficult.
+
+Has the platform already banned your account, or is the order currently sitting in "Appeal" status? If you can still log in, let me know which platform you are using so I can guide you on how to check your appeal status.

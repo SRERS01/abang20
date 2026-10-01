@@ -1,0 +1,79 @@
+To configure Burp Suite to intercept HTTPS mobile application traffic on a Xiaomi device, you must perform a multi-step setup. Because modern Android versions do not trust user-installed certificates for applications by default, simply changing the Wi-Fi proxy will only capture web browser traffic.
+Below is the complete blueprint to route, decrypt, and interrupt your mobile app traffic. [1, 2] 
+------------------------------
+## Step 1: Configure the Burp Suite Listener
+By default, Burp Suite only listens on localhost (127.0.0.1), which blocks external devices from connecting. [3] 
+
+   1. On your computer, open Burp Suite.
+   2. Navigate to Settings (or the Proxy tab -> Proxy settings).
+   3. Under Proxy Listeners, select your default listener and click Edit (or click Add).
+   4. Set Bind to port to an open port (e.g., 8082 or 8080).
+   5. Change Bind to address to All interfaces.
+   6. (Optional but recommended for mobile): Go to the Request handling tab and check Support invisible proxying. Click OK. [4, 5] 
+
+## Step 2: Point your Xiaomi Phone to the Proxy
+Your computer and your Xiaomi phone must be on the exact same Wi-Fi network. [6, 7] 
+
+   1. Find your computer's local IP address (run ipconfig on Windows CMD or ifconfig/ip a on Mac/Linux terminal).
+   2. On your Xiaomi phone, go to Settings > Wi-Fi.
+   3. Tap the arrow icon (>) next to your connected network.
+   4. Scroll down to Proxy and change it to Manual.
+   5. Enter your computer's local IP address as the Hostname, and the port you configured in Burp (e.g., 8082) as the Port.
+   6. Tap the Checkmark icon in the top-right corner to save. [5, 8, 9, 10] 
+
+## Step 3: Install the Burp Certificate as a Trusted System Root
+Since Android 7+, mobile apps ignore user-installed certificates. To capture actual app traffic, Burp's certificate must be injected into the Android System store. This requires a rooted device (via Magisk). [6, 8, 11] 
+## Option A: The Easy Way (Magisk Module)
+
+   1. On your PC, open a web browser and go to http://burp while your proxy is active to download the cacert.der file. [3, 8] 
+   2. Change the file extension from .der to .crt. [3] 
+   3. Move the file to your phone. [3, 7] 
+   4. Download and install a Magisk module such as AlwaysTrustUserCerts via Magisk. This module automatically treats user-installed certificates as system-level certificates.
+   5. Go to your Xiaomi settings: Settings > Privacy > Protection > Special Permissions > Encryption & credentials > Install a certificate > CA Certificate and select your .crt file.
+
+## Option B: The Manual Way via ADB (No Module)
+If you prefer pushing it directly to the system directory (/system/etc/security/cacerts/) using a computer with [ADB Platform Tools](https://developer.android.com/tools/releases/platform-tools): [12, 13] 
+
+   1. Export the Burp certificate as cert.der.
+   2. Convert it to .pem and find its subject hash using OpenSSL:
+   
+   openssl x509 -inform DER -in cert.der -out cert.pem
+   openssl x509 -inform PEM -subject_hash_old -in cert.pem | head -n 1
+   
+   3. Rename your cert.pem file to match that output hash followed by .0 (e.g., 9a5da82b.0).
+   4. Use ADB to push the certificate straight to the system store:
+   
+   adb root
+   adb remount
+   adb push 9a5da82b.0 /system/etc/security/cacerts/
+   adb shell chmod 644 /system/etc/security/cacerts/9a5da82b.0
+   
+   5. Reboot your phone. [4, 11, 12, 13] 
+
+------------------------------
+## Step 4: Intercept and Bypass SSL Pinning
+If you have completed the steps above, you will successfully intercept standard HTTPS traffic. However, mainstream applications (like Instagram, financial apps, or games) utilize SSL Pinning. They hardcode their specific server certificates into the app logic, causing the app to crash or refuse to connect when Burp acts as the middleman. [1, 2, 4, 14] 
+To break SSL Pinning:
+
+   1. Install the LSPosed Framework (Zygisk version) onto your rooted device.
+   2. Download and activate an SSL pinning bypass module like TrustMeAlready or Inspeckage within LSPosed.
+   3. Alternatively, use a script framework like [Frida](https://frida.re) combined with Objection to dynamically hook the application and turn off its pinning verification at runtime. [15] 
+
+Once running, turn Intercept is ON under Burp's Proxy -> Intercept tab, open your application, and you will see the app requests populate your history. [4] 
+Is the target mobile app an application you developed yourself (where we can just alter the network security config file), or is it a third-party app from the Play Store? If you get any errors, let me know what Burp's Alert tab says.
+
+[1] [https://portswigger.net](https://portswigger.net/burp/documentation/desktop/mobile)
+[2] [https://portswigger.net](https://portswigger.net/burp/documentation/desktop/mobile)
+[3] [https://medium.com](https://medium.com/@aasthathakker/setting-up-burp-suite-with-android-analyzing-the-traffic-b2db52aa36f3)
+[4] [https://portswigger.net](https://portswigger.net/burp/documentation/desktop/mobile/config-android-device)
+[5] [https://www.youtube.com](https://www.youtube.com/watch?v=GoQI3jaYj_8&t=89)
+[6] [https://www.youtube.com](https://www.youtube.com/watch?v=_nPy5MhtNk0&t=54)
+[7] [https://www.youtube.com](https://www.youtube.com/watch?v=0nhgWb7ju_w&t=386)
+[8] [https://bugbounty.meta.com](https://bugbounty.meta.com/en-gb/blog/intercepting-mobile-traffic/)
+[9] [https://www.youtube.com](https://www.youtube.com/watch?v=KnBv8n3vR2A)
+[10] [https://webkul.com](https://webkul.com/blog/configure-android-device-with-burpsuite/)
+[11] [https://knowledge.dhound.io](https://knowledge.dhound.io/security-practices/android-and-apk-analysis/setting-up-an-android-device-for-root-access-and-https-traffic-interception-via-burp-suite)
+[12] [https://dev.to](https://dev.to/whatminjacodes/how-to-setup-burp-suite-on-android-581a)
+[13] [https://www.youtube.com](https://www.youtube.com/watch?v=xp8ufidc514)
+[14] [https://strobes.co](https://strobes.co/blog/intercepting-traffic-proxy-unaware-mobile-apps/)
+[15] [https://medium.com](https://medium.com/@aasthathakker/setting-up-burp-suite-with-android-analyzing-the-traffic-b2db52aa36f3)

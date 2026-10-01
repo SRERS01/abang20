@@ -1,0 +1,95 @@
+To use ffuf (Fuzz Faster U Fool) effectively with SecLists in bug bounty hunting, you need to know how to structure your commands, position the FUZZ placeholder, and use the strict "rules" (flags) of the tool to separate signals from noise. [1] 
+## The Foundational Rules of FFUF Syntax
+
+* 
+* The Location Rule: Every command requires a wordlist (-w) and a target URL (-u).
+* The Injection Rule: You must place the literal word FUZZ exactly where you want ffuf to dynamically drop entries from your wordlist.
+* The Case-Sensitivity Rule: By default, wordlist mappings are case-sensitive. If you name your keyword placeholder FUZZ, it must match exactly in the command line. [2, 3] 
+* 
+
+------------------------------
+## Core Bug Bounty Playbooks (Commands)## 1. Directory and File Discovery
+This maps out hidden paths on a target web application. [4] 
+
+ffuf -c -w /path/to/SecLists/Discovery/Web-Content/raft-medium-directories.txt -u https://target.com/FUZZ -ac
+
+
+* 
+* -c: Enables colorized terminal output for faster visual scanning.
+* -ac: Auto-calibration. This tells ffuf to automatically learn what a standard "404 Not Found" or error looks like and discard it so you don't get flooded with false positives. [3, 5] 
+* 
+
+## 2. Finding Specific Extensions (e.g., backups, source files)
+If looking for specific file formats (like configuration templates or database dumps) across routes: [4, 6] 
+
+ffuf -c -w /path/to/SecLists/Discovery/Web-Content/common.txt -u https://target.com/FUZZ -e .php,.bak,.zip,.log,.env -mc 200,301
+
+
+* 
+* -e: Appends specific comma-separated extensions onto every word in the list.
+* -mc 200,301: Match Codes. Only prints outputs returning status codes 200 or 301. [4, 6] 
+* 
+
+## 3. Subdomain Enumeration (Vhost Fuzzing)
+Many companies hide internal staging/development apps behind virtual hosts. You can hunt for them by fuzzing the Host: header: [3, 7] 
+
+ffuf -c -w /path/to/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u https://target.com/ -H "Host: FUZZ.target.com" -fs 1234
+
+
+* 
+* -H: Adds or modifies a custom HTTP request header.
+* -fs 1234: Filter Size. If a bad subdomain returns a standard page size of 1234 bytes, this flag drops it completely. [3, 7, 8] 
+* 
+
+## 4. Parameter Discovery (GET & POST)
+Finding unlinked query parameters often opens the door to bugs like IDOR, SQLi, or SSRF. [6] 
+
+* 
+* GET Parameter Hunting:
+
+ffuf -c -w /path/to/SecLists/Discovery/Web-Content/burp-parameter-names.txt -u https://target.com -fs 412
+
+* POST Parameter Hunting:
+
+ffuf -c -w /path/to/SecLists/Discovery/Web-Content/burp-parameter-names.txt -u https://target.com -X POST -d "FUZZ=admin" -H "Content-Type: application/x-www-form-urlencoded"
+
+* -X POST: Switches the HTTP query method from default GET to POST.
+   * -d: Passes data inside the body of the POST request. [8, 9] 
+* 
+
+------------------------------
+## Strict Rules for Noise Filtering (The "Signals" Flags)
+If you don't filter, a "soft 404" page will cause ffuf to return tens of thousands of fake results. Master these rules to isolate valid targets: [3] 
+
+| Filter Flag | Rule / Logic | Usage Example |
+|---|---|---|
+| -fc | Filter Codes: Hides responses matching specific HTTP status codes. | -fc 403,404 (ignores forbidden/not found) |
+| -fs | Filter Size: Hides responses with an exact byte size. | -fs 2341 (ignores standard error templates) |
+| -fw | Filter Words: Hides responses matching an exact word-count length. | -fw 12 |
+| -fl | Filter Lines: Hides responses matching an exact number of lines. | -fl 45 |
+
+------------------------------
+## Bug Bounty Safety & Operational Rules
+
+   1. The Concurrency Rule (-t): By default, ffuf spawns 40 threads. On fragile production servers, running uncontrolled multi-threading can cause a Denial of Service (DoS), violating your bounty program rules. Control it using -t.
+   * Safe scan: -t 20
+      * Fast/Aggressive scan: -t 100 [6, 10] 
+   2. The Rate Limiting Rule (-p / -rate): To avoid getting your IP banned by Web Application Firewalls (WAFs) like Cloudflare, inject artificial delays.
+   * -p 0.1: Pauses 0.1 seconds between requests.
+      * -rate 50: Restricts the engine to a max of 50 requests per second. [8, 11] 
+   3. The Evidence Rule (-o): Always save your output to document your findings. Program platforms accept structured JSON reports.
+   * -o results.json -of json [3, 8] 
+   
+Are you currently hunting on a specific technology stack (like PHP, IIS, or an API gateway), or are you trying to bypass a specific WAF? Let me know so I can tailor the wordlist paths and evasion flags for you.
+
+[1] [https://www.youtube.com](https://www.youtube.com/watch?v=iEhS-Fr293o)
+[2] [https://www.youtube.com](https://www.youtube.com/watch?v=HFdFpr-Lf9Y&t=23)
+[3] [https://hackerdna.com](https://hackerdna.com/blog/how-to-use-ffuf)
+[4] [https://bblabs.es](https://bblabs.es/en/blog/ffuf-fuzzing-web-tutorial)
+[5] [https://secureaks.com](https://secureaks.com/en/blog/ffuf-the-essential-tool-for-web-pentests)
+[6] [https://medium.com](https://medium.com/@RaunakGupta1922/how-to-use-seclists-for-bug-bounty-what-to-use-when-to-use-and-exact-commands-fb25651ff03e)
+[7] [https://www.youtube.com](https://www.youtube.com/watch?v=PiTwSBI8VDE&t=40)
+[8] [https://infosecwriteups.com](https://infosecwriteups.com/mastering-ffuf-basic-and-advanced-commands-60e53bdbffc7)
+[9] [https://manpages.debian.org](https://manpages.debian.org/testing/ffuf/ffuf.1.en.html)
+[10] [https://github.com](https://github.com/ffuf/ffuf/wiki/Contributing-Flags-and-Help)
+[11] [https://medium.com](https://medium.com/@NiaziSec/mastering-ffuf-the-full-toolkit-3e7266dcced9)

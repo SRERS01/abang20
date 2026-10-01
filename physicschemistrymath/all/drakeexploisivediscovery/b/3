@@ -1,0 +1,75 @@
+To help you study for your exam, here is an interactive quiz covering the thermodynamics, chemical kinetics, and physical principles underlying reactions, activation energy, and chemical decompositions.
+C₄H₈(g) → 2C₂H₄(g)
+The decomposition of C₄H₈ is known to be a first-order process, and data supporting this claim is collected and graphed at a constant temperature. What is the half-life of C₄H₈ at this temperature?
+[] 
+   
+   1. 1.0 s
+   Incorrect. This value does not come from a first-order half-life calculation and is far too small for the slope shown on the graph.
+   2. 10 s
+   Incorrect. This comes from reading a graph interval incorrectly instead of calculating the half-life from the rate constant.
+   3. 6.9 s
+   Incorrect. This value comes from using an incorrect rate constant (e.g., k = 0.10 s⁻¹ instead of 0.01 s⁻¹) in the half-life formula.
+   4. 69 s
+   Correct! This matches the half-life calculated from the graph’s slope for a first-order reaction using t₁/₂ = 0.693 / k.
+   
+Hint:
+For a first-order reaction, how does the slope of a ln[Concentration] vs. time graph relate to the rate constant, k? Once you find k, use the half-life formula for a first-order reaction.
+Using the information shown in the reaction energy profile, determine the activation energy for the reverse reaction: CaO(s) + H₂O(g) → Ca(OH)₂(s).
+[] 
+   
+   1. 11 kJ mol⁻¹
+   Correct! The activation energy for the reverse reaction is the energy difference between the products and the transition state peak, which is shown on the graph as 11 kJ mol⁻¹.
+   2. 55 kJ mol⁻¹
+   Incorrect. This value is an arbitrary difference that does not represent the activation energy barrier for the reverse process.
+   3. 66 kJ mol⁻¹
+   Incorrect. This value represents the overall enthalpy change (ΔH) for the forward reaction rather than the reverse activation energy.
+   4. 77 kJ mol⁻¹
+   Incorrect. This value represents the activation energy of the forward reaction, not the reverse reaction.
+   
+Hint:
+The question asks for the activation energy of the reverse reaction. Identify the energy level of the products and the peak of the energy barrier on the provided graph.
+How does an increase in temperature affect the rate constant ($k$) of a chemical reaction, and what is the underlying physical reason according to the Arrhenius equation ($k = A e^{-E_a / RT}$)?
+[] 
+   
+   1. The rate constant decreases because higher temperatures cause reactant molecules to disperse and collide less frequently.
+   Incorrect. While collision frequency changes slightly with temperature, the dominant effect is an exponential increase in the fraction of molecules with sufficient energy to overcome the activation energy barrier.
+   2. The rate constant increases exponentially because a larger fraction of colliding molecules possess kinetic energy greater than or equal to the activation energy.
+   Correct! As temperature rises, the Maxwell-Boltzmann distribution shifts to higher kinetic energies, increasing the proportion of molecules that exceed the activation energy threshold.
+   3. The rate constant remains unaffected because activation energy is an intrinsic property independent of thermal energy.
+   Incorrect. Activation energy itself is constant, but the thermal energy of the system directly dictates how readily that barrier is breached, altering the rate constant significantly.
+   4. The rate constant increases linearly because the frequency factor A is directly proportional to the absolute temperature.
+   Incorrect. The dependence of k on temperature is exponential, governed by the negative exponent $-E_a / RT$, rather than a simple linear relationship.
+   
+Hint:
+Think about the Maxwell-Boltzmann distribution curve for molecular speeds and how thermal energy alters the population of high-energy particles.
+For a specific endothermic decomposition reaction, both the standard enthalpy change ($\Delta H^\circ$) and standard entropy change ($\Delta S^\circ$) are positive. Under what temperature conditions will this reaction be thermodynamically spontaneous?
+[] 
+   
+   1. Spontaneous only at very low temperatures where the enthalpy term dominates the Gibbs free energy equation.
+   Incorrect. At low temperatures, a positive $\Delta H^\circ$ makes $\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$ positive (non-spontaneous).
+   2. Spontaneous at all temperatures because entropy always overrides enthalpy in decomposition processes.
+   Incorrect. Spontaneity depends on the magnitude of $T\Delta S^\circ$ relative to $\Delta H^\circ$; at low temperatures, $\Delta H^\circ$ dominates, making the reaction non-spontaneous.
+   3. Spontaneous only at high temperatures where the entropy term ($T\Delta S^\circ$) becomes larger than the enthalpy term ($\Delta H^\circ$).
+   Correct! For $\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$ to be negative when both $\Delta H^\circ$ and $\Delta S^\circ$ are positive, the temperature $T$ must be high enough so that $T\Delta S^\circ > \Delta H^\circ$.
+   4. Non-spontaneous at all temperatures because endothermic reactions can never have a negative Gibbs free energy change.
+   Incorrect. An endothermic reaction can indeed become spontaneous if the temperature is raised sufficiently to make the $T\Delta S^\circ$ term dominant.
+   
+Hint:
+Examine the Gibbs free energy equation: $\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$. Consider what happens when both $\Delta H$ and $\Delta S$ are positive signs as $T$ increases.
+Which of the following statements accurately describes the effect of a catalyst on a chemical reaction system at dynamic equilibrium?
+[] 
+   
+   1. It shifts the position of equilibrium toward the products, increasing the final yield of the reaction.
+   Incorrect. A catalyst accelerates both the forward and reverse rates equally, leaving the equilibrium position and overall yield completely unchanged.
+   2. It alters the overall standard enthalpy change ($\Delta H^\circ$) of the reaction pathway.
+   Incorrect. The initial energy state of the reactants and final energy state of the products remain identical; a catalyst only lowers the activation energy barrier.
+   3. It selectively increases the rate of the reverse reaction while inhibiting the forward reaction.
+   Incorrect. A catalyst lowers the transition state barrier for both directions of a reversible reaction equally.
+   4. It provides an alternative reaction mechanism with a lower activation energy, allowing equilibrium to be reached faster.
+   Correct! Catalysts speed up reaction kinetics by offering an alternate pathway with a reduced activation energy, without changing thermodynamics or equilibrium concentrations.
+   
+Hint:
+Remember the difference between thermodynamics (where a reaction ends/equilibrium) and kinetics (how fast it gets there).
+Advanced Kinetics, Activation Energy, and Thermodynamics Quiz
+[] 
+If you would like to focus on a different area, let me know if you want to review kinetics calculations, gas law equations, or enthalpy changes next.

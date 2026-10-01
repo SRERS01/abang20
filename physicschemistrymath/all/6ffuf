@@ -1,0 +1,118 @@
+Here is the complete, absolute reference of all official ffuf command-line flags (rules) categorized by function. Use this as your exhaustive blueprint for fine-tuning bug bounty scans. [1, 2] 
+## 🌐 HTTP Request Options
+These flags dictate how ffuf builds, formats, and transmits the network payload. [2, 3] 
+
+* 
+* -u : Target URL (e.g., https://target.com/FUZZ). [Mandatory].
+* -X : HTTP method to use (e.g., GET, POST, PUT) (Default: GET).
+* -H : Custom HTTP header in "Name: Value" format. Can use multiple times.
+* -b : Cookie data string ("NAME1=V1; NAME2=V2") for authenticated sessions.
+* -d : POST request data payload.
+* -http2 : Enforces the use of the HTTP2 protocol (Default: false).
+* -ignore-body : Drops response body parsing. Drastically speeds up asset mapping by focusing only on headers/status codes.
+* -r : Follow HTTP location redirects automatically (Default: false).
+* -raw : Prevents URL-encoding on the target URI path. Sends the payload byte-for-byte.
+* -sni : Targets a static TLS Server Name Indication (Does not support FUZZ syntax). [1, 2, 3, 4, 5, 6, 7, 8] 
+* 
+
+## 🎯 Matchers (-m...)
+Matchers specify exactly what criteria a response must meet to be outputted to the screen. [4, 9] 
+
+* 
+* -mc : Match specific HTTP status codes (e.g., -mc 200,301,302).
+* -ml : Match a specific number of lines in the response.
+* -mr : Match a specific Regular Expression string within the body text.
+* -ms : Match an exact response payload byte size.
+* -mw : Match a precise word count inside the response.
+* -mt : Match responses based on milliseconds elapsed (response time target). [4, 5, 8, 9, 10] 
+* 
+
+## 🚫 Filters (-f...)
+Filters specify exactly what criteria a response must be dropped or ignored to remove noise. [4, 11] 
+
+* 
+* -fc : Filter out specific HTTP status codes (e.g., -fc 404,403).
+* -fl : Filter out responses with a specific number of lines.
+* -fr : Filter out responses matching a specific Regular Expression.
+* -fs : Filter out responses matching an exact byte size.
+* -fw : Filter out responses matching a precise word count.
+* -ft : Filter out responses matching specific completion times. [4, 5, 9, 10, 12] 
+* 
+
+## 📁 Wordlists & Multiple Target Handling
+Rules that determine how files and keywords are mapped into memory. [4, 6] 
+
+* 
+* -w : Wordlist location format. Format can be /path:KEYWORD (Default keyword is FUZZ). [Mandatory]. [5, 6, 13] 
+* -mode : Behavior matrix when managing multiple wordlists simultaneously:
+* clusterbomb : Tests every available item configuration combination (Cartesian product).
+   * pitchfork : Advances lines concurrently across lists side-by-side (Lockstep).
+   * sniper : Swaps wordlists sequence target locations sequentially across fields. [4, 6, 9] 
+* -e : Append list of specific file extensions separated by commas (e.g., -e .php,.json,.bak). [5, 12] 
+* -ic : Ignores comments or documentation blocks started with # inside wordlists. [13, 14] 
+* -enc : Applies payload encoding encoders natively before executing requests.
+* 
+
+## 🔄 Recursion Rules
+
+* 
+* -recursion : Enables deep directory mapping. When a directory maps successfully, it spins off a sub-fuzzer inside that folder.
+* -recursion-depth : Maximum folder nesting limit allowed during discovery sweeps (Default: 0 / unlimited).
+* -recursion-strategy : Dictates entry conditions. Options are default (redirect analysis) or greedy (recurse everything matched). [2, 7] 
+* 
+
+## 🏎‍🟀 Performance, Throttling & Network Tuning
+Critical for compliance with bug bounty rate-limiting regulations. [4, 6] 
+
+* 
+* -t : Number of parallel runtime execution threads (Default: 40).
+* -p : Absolute artificial delay timer pause injected between requests (e.g., -p 0.1 is 100ms).
+* -rate : Strict maximum request limit threshold cap per second (e.g., -rate 20).
+* -timeout : Drops connections if the endpoint hangs for a specific period in seconds (Default: 10).
+* -maxtime : Caps maximum runtime duration allowance across the entire execution run.
+* -maxtime-job : Max execution runtime cap permitted for an isolated target/directory job slice. [1, 2, 4, 6, 8, 9, 15] 
+* 
+
+## 🕵️ Proxies & Traffic Inspection
+
+* 
+* -x : Upstream Proxy routing definition URL (Supports HTTP or SOCKS5, e.g., http://127.0.0.1:8080).
+* -replay-proxy : Forwards only successful matching entries straight to another proxy tool like [Burp Suite](https://portswigger.net/burp) to avoid bloating proxy state context logs. [1, 2, 4] 
+* 
+
+## 📝 Logging & Outputs
+
+* 
+* -o : Destination path location string to commit results.
+* -of : Explicit file format conversion mapping. Supported formats: json, ejson, html, md, csv, all.
+* -or : Suppress data backup file creations; only updates file parameters if changes or valid bugs break. [4, 7, 8, 10] 
+* 
+
+## ⚙️ Automation & UI Control
+
+* 
+* -ac : Dynamic auto-calibration filtering rule. Pre-probes the application to dynamically remove custom site layouts or variations from matching patterns.
+* -acc : Extends string configurations defining exact parameters used by -ac calibration loops.
+* -config : Ingests external settings structures built directly within custom .toml configuration properties blueprints.
+* -s : Silent console mode. Strips status lines, bars, and banners for neat pipeline standard output forwarding.
+* -v : Verbose runtime logging output mode. Explicitly prints the translated dynamic query payload targets. [4, 6, 10, 15, 16] 
+* 
+
+Would you like a ready-to-run automation shell script template combining these rules to safely run ffuf scans without crashing production servers? Let me know!
+
+[1] [https://www.kali.org](https://www.kali.org/tools/ffuf/)
+[2] [https://github.com](https://github.com/ffuf/ffuf/wiki/CLI-flags)
+[3] [https://github.com](https://github.com/ffuf/ffuf/wiki/Request-options)
+[4] [https://www.youtube.com](https://www.youtube.com/watch?v=aN3Nayvd7FU)
+[5] [https://medium.com](https://medium.com/@sari.mmusab/the-most-important-ffuf-parameters-every-bug-bounty-hunter-should-use-in-2025-a523a0e1735b)
+[6] [https://hackerdna.com](https://hackerdna.com/blog/how-to-use-ffuf)
+[7] [https://manpages.debian.org](https://manpages.debian.org/testing/ffuf/ffuf.1.en.html)
+[8] [https://medium.com](https://medium.com/@NiaziSec/mastering-ffuf-the-full-toolkit-3e7266dcced9)
+[9] [https://github.com](https://github.com/ffuf/ffuf)
+[10] [https://github.com](https://github.com/kh4sh3i/FFUF-Tricks)
+[11] [https://www.youtube.com](https://www.youtube.com/watch?v=iEhS-Fr293o)
+[12] [https://infosecwriteups.com](https://infosecwriteups.com/content-discovery-with-ffuf-5bc81d2d8db6)
+[13] [https://www.youtube.com](https://www.youtube.com/watch?v=HFdFpr-Lf9Y&t=23)
+[14] [https://www.youtube.com](https://www.youtube.com/shorts/VTs_17D9CBo)
+[15] [https://www.hackingloops.com](https://www.hackingloops.com/gobuster-ffuf-cheat-sheet/)
+[16] [https://github.com](https://github.com/ffuf/ffuf/wiki/Configuration)

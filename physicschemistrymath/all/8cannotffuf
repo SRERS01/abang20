@@ -1,0 +1,50 @@
+You cannot find a vulnerability with ffuf directly because it is a fuzzer, not a scanner. Instead, you find anomalous behaviors, unexpected status codes, or unlinked assets that expose flaws.
+By analyzing the variations in responses, you can discover five distinct categories of bugs.
+------------------------------
+## 1. High-Severity Information Disclosures & Hidden Assets
+This is the most common category of bug uncovered via path and directory fuzzing.
+
+* Exposed Environment Files (.env, config.php.bak): Gives you raw access to database credentials, API secret keys, and cloud infrastructure passwords.
+* Hidden Git Repositories (/.git/HEAD): Allows you to download the source code of the entire application using tools like git-dumper.
+* Exposed Administrative Panels (/admin-v2, /stage-login): Bypasses obscurity protections and points you straight to weak or default login endpoints.
+* Information Leakage via Stack Traces: Fuzzing bad characters or unexpected inputs can force the app to return a 500 Internal Server Error, exposing database queries or internal file paths.
+
+## 2. Broken Object Level Authorization (BOLA / IDOR)
+Discovered by fuzzing API endpoints that contain user-specific identifiers (like user IDs or UUIDs) in the URL path.
+
+* Horizontal IDOR: Fuzzing an account identifier (/api/v1/users/FUZZ/profile) allows you to view or edit the profile data of other users on the platform.
+* Vertical Privilege Escalation: Fuzzing an administrative endpoint with a standard user session cookie (/api/v1/admin/users/FUZZ/delete) can allow a regular user to perform high-privilege actions.
+
+## 3. Server-Side Request Forgery (SSRF) & Remote File Inclusion (RFI)
+Discovered by fuzzing parameter values that handle external URLs, or by fuzzing unlinked parameters entirely.
+
+* Internal Network Scanning: If an endpoint accepts a URL parameter, fuzzing the value with internal IP ranges (/redirect?url=http://127.0.0.1:FUZZ) can allow you to map out restricted internal ports.
+* Unlinked Parameter Injection: Fuzzing GET/POST keys on a feature that handles webhooks or external data can uncover hidden parameters that force the backend server to make outward requests to your server.
+
+## 4. Mass Assignment & Business Logic Flaws
+Discovered by fuzzing the parameters sent inside the JSON or URL-encoded body of a POST/PUT request.
+
+* Privilege Squatting: When registering or updating a profile, fuzzing additional parameter names in the JSON body (such as "is_admin": true or "role": "superuser") can force the backend to assign you higher privileges if the parameters are not properly validated.
+* Coupon / Discount Brute Forcing: Fuzzing coupon code parameters (/checkout?coupon=FUZZ) with list arrays can allow you to guess active merchant discount configurations.
+
+## 5. Access Control Bypass via Non-Standard Methods
+Discovered by fuzzing the HTTP Request Methods or routing headers rather than the URL path.
+
+* HTTP Method Override: If a specific path blocks a POST request, fuzzing the HTTP Verb (-X FUZZ) with PUT, PATCH, or HEAD might bypass the access control filter while still executing the underlying logic.
+* Header-Based Authentication Bypass: Fuzzing non-standard request headers (such as X-Forwarded-For: 127.0.0.1 or X-Custom-IP-Authorization: FUZZ) can trick poorly configured reverse proxies into thinking your traffic is coming from a trusted internal source.
+
+------------------------------
+## How to Turn ffuf Results into a Bug Report
+To turn an anomaly into a paid bounty, look for changes in three metrics:
+
+                  ┌───────────────────────────┐
+                  │   Look for Deviations     │
+                  └─────────────┬─────────────┘
+                                │
+         ┌──────────────────────┼──────────────────────┐
+         ▼                      ▼                      ▼
+  Status Codes             Byte Size              Word Count
+(e.g., 405 instead     (e.g., 200 OK with     (e.g., A 403 page with
+   of a 404)             larger payload)       0 words vs 500 words)
+
+Which of these bug categories are you most interested in hunting right now? I can give you the exact SecLists file path and the matching ffuf commands specifically optimized to find it.

@@ -1,0 +1,89 @@
+The reason 99% of average hunters miss critical bugs isn't because they don't know ffuf; it’s because they treat it like a generic shotgun tool. Elite researchers treat ffuf as a highly precise surgical instrument by combining obscure parameters to bypass WAFs, exploit business logic, and extract hidden assets. [1, 2] 
+These advanced "rules" and tactics separate the top 1% of bug bounty hunters from the rest:
+## 1. The Multi-Wordlist "Contextual Binding" Rule
+Most hunters run one wordlist at a time. Elite hunters fuzz parameters and values simultaneously to bypass authorization logic or find hidden API states using custom keywords instead of just FUZZ. [3] 
+
+ffuf -u "https://target.com" \
+  -w /path/to/SecLists/Discovery/Web-Content/api/api-endpoints.txt:DIR \
+  -w /path/to/SecLists/Discovery/Web-Content/burp-parameter-names.txt:PARAM \
+  -mode pitchfork
+
+
+* 
+* The Magic: By changing the default keyword to :DIR and :PARAM, you can fuzz two variables side-by-side. The pitchfork mode forces them to advance in lockstep, making it perfect for hunting specific endpoint-parameter structures without flooding the server. [3, 4] 
+* 
+
+## 2. The Non-Standard API Matcher Rule (-mc all)
+When fuzzing API endpoints, 99% of hunters only match for 200 or 301 status codes. APIs don't work like traditional web servers—a valid hidden path might respond with a 415 (Unsupported Media Type) or 405 (Method Not Allowed). Missing these means missing the endpoint entirely. [5] 
+
+ffuf -w /path/to/SecLists/Discovery/Web-Content/api/api-endpoints.txt -u https://target.com/FUZZ -mc all -fc 404
+
+
+* 
+* The Magic: -mc all coupled with -fc 404 forces ffuf to show you everything except the standard dead paths. If a hidden endpoint gives you a 405 Method Not Allowed, you just discovered a valid API endpoint that requires a POST instead of a GET request. [4, 5] 
+* 
+
+## 3. The "Silent Replay" Proxy Rule (-replay-proxy)
+If you route all your ffuf traffic through Burp Suite using -x, your Burp history will instantly crash from millions of requests. Elite hunters keep their main proxy completely clean, only pushing the successful hits into Burp for manual exploitation. [1, 4, 6] 
+
+ffuf -w /path/to/SecLists/Discovery/Web-Content/raft-medium-files.txt \
+  -u https://target.com/FUZZ \
+  -replay-proxy http://127.0.0.1:8080 \
+  -ac
+
+
+* 
+* The Magic: ffuf will do all the fast multi-threaded heavy lifting quietly on your network. The moment it triggers an actual response match (e.g., finding a .env or backup file), it seamlessly replays only that single specific request through your Burp proxy history (127.0.0.1:8080). [4, 6, 7, 8] 
+* 
+
+## 4. The WAF Evasion / Host Header Spoofing Rule
+Many elite findings occur on internal infrastructure that hunters mistakenly think is blocked by Cloudflare or Akamai. By pairing your target's origin IP with a dynamic Host header fuzzing technique, you completely bypass edge proxies. [1, 9, 10] 
+
+ffuf -w /path/to/SecLists/Discovery/DNS/subdomains-top1million-5000.txt \
+  -u https://192.168.1 \
+  -H "Host: FUZZ.target.com" \
+  -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)..." \
+  -ac
+
+
+* 
+* The Magic: You do not run the scan against target.com. You point -u directly at the backend server IP (192.168.1.50), while fuzzing the Host: header. This tricks the backend application server into serving its hidden staging or development environments straight to you. [9, 10] 
+* 
+
+## 5. Regex Filtering for Dynamic Soft-404s (-fr)
+When a target site uses dynamic elements (like placing a live timestamp, unique tracking ID, or the typed search query inside the page template), the file byte size (-fs) and word count (-fw) change on every single request. Auto-calibration (-ac) will fail here. [9, 11] 
+
+ffuf -w /path/to/SecLists/Discovery/Web-Content/common.txt \
+  -u https://target.com/FUZZ \
+  -fr "error-tracking-id|timestamp|not found"
+
+
+* 
+* The Magic: The -fr (Filter Regex) option ignores numbers completely. It searches the raw text of the response body for static phrases like "not found" or system error patterns, dropping the noise no matter how much the byte size shifts. [11, 12] 
+* 
+
+## 6. Mass Domain Pipelining
+Elite hunters don't run ffuf sequentially on individual domains. They feed active, resolved host lists directly into ffuf via command-line pipes to perform wide-scale discovery across thousands of corporate assets in seconds. [13] 
+
+cat live_subdomains.txt | xargs -I@ sh -c 'ffuf -w words.txt -u @/FUZZ -mc 200 -s'
+
+
+* 
+* The Magic: The -s flag strips the ffuf interactive loading bar banner. This allows you to output raw, clean targets straight into structural mapping scripts or vulnerability engines like [Nuclei](https://github.com/projectdiscovery/nuclei). [1, 7] 
+* 
+
+Are you targeting a modern Single Page Application (React/Vue) or a legacy enterprise system? I can give you the specific regex strings (-fr) and custom wordlist subsets tailored for either stack.
+
+[1] [https://www.linkedin.com](https://www.linkedin.com/posts/sudoaman_stop-fuzzing-blindly-the-ultimate-guide-activity-7401217575159910400-GEOM)
+[2] [https://www.linkedin.com](https://www.linkedin.com/posts/sudoaman_stop-fuzzing-blindly-the-ultimate-guide-activity-7401217575159910400-GEOM)
+[3] [https://www.acceis.fr](https://www.acceis.fr/ffuf-advanced-tricks/)
+[4] [https://www.acceis.fr](https://www.acceis.fr/ffuf-advanced-tricks/)
+[5] [https://www.youtube.com](https://www.youtube.com/watch?v=0v1CTSyRpMU&t=380)
+[6] [https://c9lab.com](https://c9lab.com/blog/fuzzing-web-applications-using-ffuf-the-complete-mastery-guide/)
+[7] [https://medium.com](https://medium.com/@NiaziSec/mastering-ffuf-the-full-toolkit-3e7266dcced9)
+[8] [https://hackproofhacks.com](https://hackproofhacks.com/blog/guide-to-ffuf-directory-bruteforcing/)
+[9] [https://bblabs.es](https://bblabs.es/en/blog/ffuf-fuzzing-web-tutorial)
+[10] [https://www.youtube.com](https://www.youtube.com/watch?v=PiTwSBI8VDE&t=40)
+[11] [https://hackerdna.com](https://hackerdna.com/blog/how-to-use-ffuf)
+[12] [https://medium.com](https://medium.com/@sari.mmusab/the-most-important-ffuf-parameters-every-bug-bounty-hunter-should-use-in-2025-a523a0e1735b)
+[13] [https://github.com](https://github.com/kh4sh3i/FFUF-Tricks)

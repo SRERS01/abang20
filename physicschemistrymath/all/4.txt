@@ -1,0 +1,70 @@
+Since you are on Ubuntu and using a non-rooted Xiaomi device, you cannot push Burp’s certificate directly to the system root. Instead, you must repackage (patch) the target app's APK file so it bypasses its own security configurations and trusts user-added certificates.
+Follow this definitive workflow to intercept app traffic on your system.
+------------------------------
+## Step 1: Install Required Tools on Ubuntu
+You need Java, Node.js, and an automation utility called apk-mitm. Open your Ubuntu terminal and run: [1] 
+
+# 1. Update your system
+sudo apt update
+# 2. Install Java (Required for APK signing)
+sudo apt install default-jre default-jdk -y
+# 3. Install Node.js and NPM
+sudo apt install nodejs npm -y
+# 4. Install apk-mitm globally via NPM
+sudo npm install -g apk-mitm
+
+## Step 2: Extract the App's APK from your Xiaomi Phone
+You need the raw .apk file of the application you want to inspect.
+
+   1. Install a free app like [APK Extractor](https://play.google.com) from the Google Play Store onto your Xiaomi phone.
+   2. Open it, select your target app, and extract it.
+   3. Transfer that .apk file from your phone to your Ubuntu machine (via USB, Google Drive, or ADB).
+
+## Step 3: Patch the APK using apk-mitm
+[apk-mitm](https://github.com/niklashigi/apk-mitm) automates decompiling the app, forcing it to allow user certificates, tearing down common SSL pinning barriers, and rebuilding it. [1, 2] 
+In your Ubuntu terminal, navigate to the folder where your APK is located and run:
+
+apk-mitm path/to/your-app.apk
+
+
+* 
+* What happens now: The tool automatically adjusts the internal network security configurations and strips out hardcoded certificate pinning validations.
+* The output: You will get a new file named your-app-patched.apk in the same directory. [1, 2, 3] 
+* 
+
+## Step 4: Configure Burp Suite on Ubuntu
+
+   1. Launch Burp Suite on Ubuntu.
+   2. Go to Settings > Tools > Proxy.
+   3. Under Proxy Listeners, click Add.
+   4. Set Bind to port to 8082.
+   5. Set Bind to address to All interfaces. Click OK.
+   6. Find your Ubuntu machine's local IP address by running ip route get 1.1.1.1 or ifconfig in an open terminal. Keep this IP handy (e.g., 192.168.1.50). [4] 
+
+## Step 5: Connect and Install the Burp Certificate on the Phone
+Because your app is now modified to trust user certificates, you can install the Burp certificate as a standard user profile.
+
+   1. On your Xiaomi phone, connect to the exact same Wi-Fi network as your Ubuntu machine.
+   2. Go to Settings > Wi-Fi > tap the arrow (>) next to your Wi-Fi network.
+   3. Set Proxy to Manual and input your Ubuntu IP address as the hostname and 8082 as the port. Save it.
+   4. Open Chrome on your phone, go to http://burp, and tap CA Certificate to download it.
+   5. Rename the downloaded file to have a .crt extension if it downloaded as .der (e.g., cacert.crt).
+   6. Go to Settings > Privacy > Protection > Special Permissions > Encryption & credentials > Install a certificate > CA Certificate and install it. [5] 
+
+## Step 6: Install the Patched App
+
+   1. Uninstall the original app from your Xiaomi phone first.
+   2. Transfer your-app-patched.apk from Ubuntu back to your phone.
+   3. Open the file manager on your phone and install the patched APK.
+   4. Launch the application.
+
+Turn Intercept is ON under the Proxy tab in Burp Suite, and you will see the non-rooted mobile app traffic flowing into your history. [6] 
+Did apk-mitm finish patching successfully, or did it throw any errors during compiling? If the app crashes when you open it, let me know; some apps require a more specific framework like mitmproxy's android-unpinner tool. [7] 
+
+[1] [https://github.com](https://github.com/niklashigi/apk-mitm)
+[2] [https://gracker.ai](https://gracker.ai/cybersecurity-tools/apk-mitm)
+[3] [https://www.youtube.com](https://www.youtube.com/watch?v=odGnlw4MZx0)
+[4] [https://portswigger.net](https://portswigger.net/burp/documentation/desktop/mobile/config-android-device)
+[5] [https://www.youtube.com](https://www.youtube.com/watch?v=_nPy5MhtNk0&t=54)
+[6] [https://bugbounty.meta.com](https://bugbounty.meta.com/en-gb/blog/intercepting-mobile-traffic/)
+[7] [https://github.com](https://github.com/mitmproxy/android-unpinner)
