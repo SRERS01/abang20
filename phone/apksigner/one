@@ -1,0 +1,13 @@
+To look at the cryptographic signing certificate using apksigner, you need to install it on your Ubuntu system first.
+## 1. Install apksigner
+Run this command to install the package:
+
+sudo apt update && sudo apt install -y apksigner
+
+## 2. Verify the APK Fingerprint
+Once the installation finishes, run the verification command again to print out the certificate hashes:
+
+apksigner verify --print-certs "Bitget Wallet.apk"
+
+Let me know what SHA-256 certificate fingerprint it prints out so we can confirm if it matches the official Bitget developer key!
+

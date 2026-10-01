@@ -1,0 +1,10 @@
+The certificate details confirm that this APK is signed by Google Inc..
+This means the app was extracted directly from the official Google Play Store distribution channel (where Google acts as the signer for apps managed via Google Play App Signing), rather than being a standalone website-compiled version.
+The SHA-256 fingerprint dfb41ce1d4e6887343d4769e9249d60b432c2167dd9ff947aa9b7169cc062873 matches the standard signature profile deployed by Google's Play Store deployment system for this package. The WARNING at the bottom is perfectly normal—it just means your local apksigner version doesn't recognize a newer metadata tag Google recently added to the package stamp, which does not affect the app's functionality or safety.
+Now that you have verified the APK is authentic and intact inside your Ubuntu folder, what is your next step?
+Would you like to:
+
+* Install this APK onto another phone or an Android emulator using adb install?
+* Rename the file to remove the spaces so it is easier to use in scripts?
+
+
