@@ -1,0 +1,28 @@
+To view or inspect the contents inside the Bitget Wallet.apk file directly from your Ubuntu terminal, you can choose one of the following methods depending on what you want to see:
+## Method 1: View the Inner Files & Assets (Like a Zip file)
+An APK is just a compressed ZIP archive. You can list every image, layout, and code file inside it using the unzip tool without extracting it:
+
+unzip -l "Bitget Wallet.apk"
+
+(If you want to view it using a graphical interface, you can just right-click the file in your Ubuntu folder manager and choose "Open with Archive Manager").
+## Method 2: View App Information (Package name, Version, Permissions)
+To read the compiled Android manifest file and view technical details like version numbers, app names, and required hardware permissions, use aapt2:
+
+aapt2 dump badging "Bitget Wallet.apk"
+
+(If aapt2 is missing, you can install it quickly by running sudo apt install aapt2).
+## Method 3: Decompile the App to View Source Code
+If you want to view the actual readable application source code, resources, and XML layouts, you can use jadx or apktool:
+
+# Decompile using apktool to view layouts and resources
+sudo apt install apktool
+apktool d "Bitget Wallet.apk"
+
+This will create a new readable folder containing the app's components.
+What are you trying to view inside the file? Let me know if you want to look at:
+
+* The app's images, icons, and assets
+* The underlying source code / AndroidManifest.xml
+* The app version and permission settings
+
+
