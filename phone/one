@@ -1,0 +1,23 @@
+Your phone is successfully connected and authorized (Serial: FUEYGI8P5HQ8DIXC).
+To find the exact storage path of your folder on the phone and pull it to Ubuntu, follow these steps:
+## 1. Locate the exact folder on your phone
+Run an ADB shell command to search your phone's storage for the folder name:
+
+adb shell ls /sdcard/ /sdcard/Download/
+
+Look for where your folder is located in the output list.
+## 2. Pull the folder to your Ubuntu directory
+Once you know the path, run the pull command. For example, if your folder is named bidget and sits in your phone's main storage space, run:
+
+adb pull /sdcard/bidget/ ~/bidget
+
+If it is located inside your phone's Downloads folder instead, run this:
+
+adb pull /sdcard/Download/bidget/ ~/bidget
+
+Run the folder search or pull command, and let me know:
+
+* What is the exact name of the folder on your phone if it isn't bidget?
+* Did the terminal start transferring the files, or did you get a "does not exist" error?
+
+

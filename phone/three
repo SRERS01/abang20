@@ -1,0 +1,12 @@
+The file transfer was completely successful, pulling 111.22 MB of data into your local folder in about 3 seconds.
+To verify that your split config files, base APK, or split assets arrived safely, you can check the contents of your target directory by running:
+
+ls -lh ~/bidget
+
+Now that the files are on your Ubuntu machine, what would you like to do next?
+
+* Check if the directory holds a single base APK or a set of Split APKs (APKS)?
+* Install this APK onto another device or emulator using ADB?
+* Run a checksum integrity verification test on the file?
+
+

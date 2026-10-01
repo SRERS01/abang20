@@ -1,0 +1,16 @@
+I see your folder listed in your phone's root storage directory as ubuntubitget!
+To transfer that entire folder and everything inside it directly into your Ubuntu machine's ~/bidget directory, run this command:
+
+adb pull /sdcard/ubuntubitget/ ~/bidget
+
+## What this does:
+
+* /sdcard/ubuntubitget/ points to the source folder we located on your phone.
+* ~/bidget targets your existing folder on your Ubuntu computer as the destination.
+
+Run the pull command, and let me know:
+
+* Did the transfer finish successfully?
+* Do you want to list the files on Ubuntu using ls ~/bidget to verify everything arrived intact?
+
+
