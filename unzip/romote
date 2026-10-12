@@ -1,0 +1,53 @@
+To view and monitor how applications are using MediaProjection (screen recording/casting) and Accessibility Services using ADB, you can query Android’s system service managers.
+Here are the exact commands you can run from your Ubuntu terminal to inspect these permissions:
+## 1. View Active MediaProjection (Screen Sharing)
+Android handles all screen casting through the media_projection service. To see if any app is currently capturing or streaming your screen, run:
+
+adb shell dumpsys media_projection
+
+What to look for in the output:
+
+* Look for lines like Active Projection: or MProjectionToken.
+* If a remote access tool or app is actively streaming your screen, its package name (e.g., com.teamviewer... or org.rustdesk...) will be listed under the active components.
+* If it says Active Projection: null or shows no current sessions, nothing is actively recording your screen.
+
+------------------------------
+## 2. View Enabled Accessibility Services (Touch Injection)
+Android tracks apps with permission to inject touches or read screen layouts inside the accessibility service. To get a complete breakdown, run:
+
+adb shell dumpsys accessibility
+
+Because that command outputs a lot of data, you can filter it down using grep to see exactly which apps are enabled:
+
+adb shell dumpsys accessibility | grep "Enabled services"
+
+What to look for in the output:
+
+* You will see a list of package names that currently have active Accessibility access.
+* A normal device usually only lists trusted services like Google's TalkBack or password managers (e.g., Bitwarden).
+* If you see an unfamiliar app or a third-party APK you downloaded listed here, that app has the technical capability to interact with your screen and inject touches.
+
+------------------------------
+## 3. Alternative: Check Apps with Granted Permissions
+If you want to quickly see a list of all installed apps that have requested the structural permission to run an accessibility service (even if they aren't turned on right now), you can ask ADB to filter package capabilities:
+
+adb shell pm list packages -a
+
+To find apps targeting specific security-sensitive settings like drawing over other apps (System Alert Windows), you can check:
+
+adb shell dumpsys appops | grep -E "SYSTEM_ALERT_WINDOW|PROJECT_MEDIA"
+
+## How to immediately revoke access via ADB
+If you find a suspicious app using these services and want to force-disable its permissions immediately using ADB, you can strip its settings or uninstall it:
+
+* To disable an accessibility service instantly:
+
+adb shell settings put secure enabled_accessibility_services 'null'
+
+* To completely remove the suspicious app:
+
+adb uninstall package.name.here
+
+
+Would you like help interpreting the package names that show up when you run the grep "Enabled services" command, or do you want to test turning a service on or off to see how the system updates?
+
