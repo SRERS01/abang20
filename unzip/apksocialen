@@ -1,0 +1,91 @@
+To build an app that can remotely view the screen and control touch inputs, developers utilize official Android APIs that were designed for screen sharing and accessibility support.
+From a software architecture perspective, a functioning remote control application requires three main building blocks: an Accessibility Service component, a MediaProjection handler, and a Network Client to talk to a server.
+Here is how an application is structured and coded to achieve this:
+------------------------------
+## 1. Declaring Intentions (The Manifest file)
+Every Android app needs a AndroidManifest.xml file to declare its components and request permissions from the operating system.
+To inject touches, the app must register an explicit AccessibilityService. To capture the screen, it requests the background media capture permission.
+
+<manifest xmlns:android="http://android.com">
+    
+    <!-- Permission to record or stream the screen -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+
+    <application>
+        <!-- Registering the touch injection capability -->
+        <service android:name=".RemoteControlService"
+                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="android.view.accessibility.AccessibilityService" />
+            </intent-filter>
+            <meta-data android:name="android.view.accessibility.accessibilityservice"
+                       android:resource="@xml/accessibility_config" />
+        </service>
+    </application>
+</manifest>
+
+------------------------------
+## 2. Capturing and Streaming the Screen (MediaProjection)
+To get visual frames from the operating system, the app triggers a MediaProjectionManager.
+When the app triggers this code, Android forces a system popup asking the user: "Allow [App Name] to record or cast your screen?" Once accepted, the app creates a virtual display and captures the pixels.
+
+// Setting up the screen capture mechanism
+MediaProjectionManager manager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+// Capturing the intent result once the user presses "Allow"
+MediaProjection mediaProjection = manager.getMediaProjection(resultCode, resultData);
+// Creating an invisible virtual canvas to pull screen pixels into a buffer
+VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay(
+    "RemoteScreen",
+    width, height, dpi,
+    DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+    surface, null, null
+);
+
+The pixels inside the surface buffer are compressed (usually using an H.264 video codec) and continuously transmitted over a network socket to the remote operator's screen.
+------------------------------
+## 3. Simulating Touches (Accessibility Service)
+When the operator clicks on their computer screen, the network component receives a message containing coordinates (e.g., X: 450, Y: 800).
+The custom Accessibility Service parses these coordinates and builds a programmatic gesture.
+
+public class RemoteControlService extends AccessibilityService {
+
+    // This function executes whenever a coordinate message arrives from the network
+    public void injectRemoteTap(float x, float y) {
+        // 1. Create a path (a single point for a simple tap)
+        Path touchPath = new Path();
+        touchPath.moveTo(x, y);
+
+        // 2. Build a stroke description (Coordinates, Start time, Duration in milliseconds)
+        GestureDescription.StrokeDescription clickStroke = 
+            new GestureDescription.StrokeDescription(touchPath, 0, 100);
+
+        // 3. Package the stroke into a Gesture Description
+        GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
+        gestureBuilder.addStroke(clickStroke);
+
+        // 4. Send the stroke directly to the Android OS input framework
+        dispatchGesture(gestureBuilder.build(), null, null);
+    }
+
+    @Override
+    public void onAccessibilityEvent(AccessibilityEvent event) {
+        // Unused but required by the framework: captures system events
+    }
+
+    @Override
+    public void onInterrupt() {
+        // Handles what happens if the system stops the service
+    }
+}
+
+When dispatchGesture() runs, the Android operating system treats it with the same priority as a physical layer interrupt coming from the digitizer glass on the screen.
+------------------------------
+## The Security Barrier
+Even if a developer packages this exact code into an APK file, it cannot run on its own. Android sandbox security blocks it by default:
+
+   1. The MediaProjection system will fail unless a human physically taps the native system prompt to allow screen sharing.
+   2. The Accessibility Service will remain completely dormant until the user manually opens Settings -> Accessibility -> Installed Apps, clicks on the app name, and toggles the switch to "On".
+
+Would you like to explore how Android's permission sandbox isolates applications from one another, or how you can use ADB commands to inspect the exact properties of an installed app's manifest file?
+
