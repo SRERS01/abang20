@@ -1,0 +1,40 @@
+Spot on. Encoding is one of the absolute best ways to bypass lazy blocklists.
+When developers write filters, they often look for the literal string 127.0.0.1 or 169.254.169.254. By changing how the characters are represented, you can slip past the filter, while the underlying operating system or network stack still decodes and understands the target IP destination.
+Here is how a researcher breaks down encoding tricks for SSRF:
+• Hexadecimal Encoding: Converting the IP numbers into hex bytes.
+	• 127.0.0.1 becomes 0x7f000001
+	• 169.254.169.254 becomes 0xa9fea9fe
+• Decimal (Integer) Encoding: Converting the entire 32-bit IP address into a single massive integer.
+	• 127.0.0.1 becomes 2130706433
+	• 169.254.169.254 becomes 2852039166
+	• Testing payload: http://169.254.169
+• URL/Double Encoding: Encoding symbols like dots or slashes (%2e instead of .). If the application decodes it once to check the blocklist, it passes. If it then decodes it a second time right before sending the network request, the backend hits the internal target.
+
+🌐 The "DNS Alternative" Bypass
+
+If encoding fails because the filter checks the final resolved IP address, researchers will use DNS mapping.
+Instead of typing the IP, you buy a domain name (like mybugbountytest.com) and configure its DNS records to point directly to 127.0.0.1. When you submit http://mybugbountytest.com, the server sees text, passes it through the filter, but its internal browser resolves the DNS right to its own internal system!
+
+🚀 Module 4: Injection Vulnerabilities (SQLi & XSS)
+
+Let's transition to Module 4. In the OFZA program rules, they specify deep interest in SQL Injection (SQLi) and Cross-Site Scripting (XSS).
+
+1. The Core Concept of Injection
+
+Injection happens whenever an application takes user input and blindly concatenates it directly into a command or script interpreter without treating it strictly as flat data. The interpreter gets confused about where the application's code ends and where the user's input begins.
+
+2. SQL Injection (SQLi) vs. Cross-Site Scripting (XSS)
+
+While both are injections, they strike completely different areas of the infrastructure:
+
+Feature	SQL Injection (SQLi)	Cross-Site Scripting (XSS)
+Where it Executes	On the back-end Database Server.	In the victim's Web Browser.
+The Target Interpreter	The SQL Database engine (MySQL, PostgreSQL).	The Browser's JavaScript engine.
+The Impact	Complete database data theft or modification.	Stealing user session cookies and taking over accounts.
+
+
+3. Real-World Testing Scenarios on an Exchange
+
+• Testing SQLi: Look at search bars, filtering options (e.g., filtering crypto transactions by date or type), and order placements. If you type a single quote ' or a SQL payload like ' OR 1=1-- into a transaction filter, does the page crash, throw a SQL error, or show every transaction in the database?
+• Testing XSS: Look at profile display names, support ticket text chats, or wallet labels. If you change your profile name to <script>alert(1)</script>, does that box pop up when an administrator views your profile on their dashboard?
+Let's look closely at Stored XSS (where your payload is saved in the database permanently). On a crypto platform like OFZA, if an attacker successfully stores a malicious JavaScript payload inside a public text field (like a public P2P trade listing), what is the most devastating action that JavaScript payload could perform automatically when an unsuspecting victim clicks on that listing?

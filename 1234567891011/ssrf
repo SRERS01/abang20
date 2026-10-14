@@ -1,0 +1,36 @@
+Exactly! Seeing multiple 200 OK responses is the ultimate "jackpot" indicator of a successful race condition.
+If the application was secure, the very first request would return a 200 OK (processing your daily conversion), and the other 19 parallel requests would instantly return something like 400 Bad Request or 403 Forbidden with an error message saying "You have already redeemed your points today."
+When you see multiple 200 OK responses instead, it proves the server processed the actions concurrently before updating the database flag that says you already claimed the reward.
+
+🚀 Module 3: Server-Side Request Forgery (SSRF)
+
+Let's move on to Module 3, which is heavily prioritized in the OFZA scope under Critical/High severity.
+
+1. The Concept
+
+An SSRF vulnerability happens when a web server accepts a URL from a user, and the server itself goes out to fetch that URL without proper validation.
+Think of the server as a proxy. If an internal network is walled off from the public internet, you cannot access it directly. But if you can convince the trusted web server to fetch a local file or internal IP for you, the firewall will let it through because the request is coming from inside the house.
+
+2. The Crypto / Cloud Context
+
+Modern crypto platforms like OFZA run on cloud infrastructure (like AWS, Google Cloud, or DigitalOcean). Cloud environments have a highly sensitive, internal API endpoint called the Metadata Service.
+If an attacker finds an SSRF vulnerability on a cloud server, they will try to force the server to request its own cloud metadata.
+• The Golden AWS Metadata IP: http://169.254.169
+• The Prize: If the server fetches this, it can leak secret access keys, IAM roles, and database credentials, allowing an attacker to compromise the entire cloud infrastructure.
+
+3. Where to Look on an Exchange
+
+Look for any feature where the application asks you to provide a link or uploads external content:
+• Profile Pictures via URL: "Enter a URL to fetch your avatar from the web."
+• Webhooks: Features for advanced traders to receive alerts (e.g., "Enter your URL so we can send a POST request when a trade completes").
+• PDF Generators: Systems that take input and render a PDF invoice. If you can inject an HTML <img> tag pointing to an internal IP, the PDF generator might fetch it.
+
+4. How to Test Manually
+
+1. Find an input field that takes a URL (e.g., POST /api/profile/upload-url with {"url": "https://example.com"}).
+2. Change the URL to an internal or loopback address, such as:
+	• http://127.0.0.1:80 (Testing if it talks to its own web server)
+	• http://169.254.169 (Testing for AWS cloud metadata)
+3. Analyze the response. If the server returns cloud configuration data, system internal files, or displays distinct error messages indicating a port is open versus closed (e.g., "Connection refused" vs "Timeout"), you have a live SSRF.
+Let's look at a defensive filter. Imagine you try to inject http://169.254.169.254 into a profile avatar URL field, but the website blocks it instantly and says "IP address not allowed."
+Developers often try to block the text 169.254.169.254 or 127.0.0.1. What are some clever ways you think a researcher could bypass this basic text block to still point the server to those internal addresses?

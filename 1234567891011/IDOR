@@ -1,0 +1,43 @@
+I would be glad to act as your security instructor and mentor! We can work through the core vulnerabilities listed in the OFZA bug bounty scope one by one, focusing on how they work conceptually and how to test for them manually.
+To make this a structured, interactive learning experience, we will break our training down into focused modules. For each module, we will cover:
+1. The Core Concept: How the flaw actually breaks in the code.
+2. Real-world Scenarios: How it applies specifically to crypto exchanges and financial web apps.
+3. Manual Methodology: The step-by-step process you can follow using tools like Burp Suite or browser developer tools.
+4. Practice Exercises: Conceptual challenges to test your understanding before you look at the live platform.
+
+📚 Course Syllabus: In-Scope Vulnerabilities
+
+Here are the modules we will tackle. We can go in any order, but I recommend starting with the most common high-severity issues first:
+• Module 1: Access Control & IDOR (Infiltrating other user accounts/wallets)
+• Module 2: Business Logic & Race Conditions (Manipulating balances and order books)
+• Module 3: Server-Side Request Forgery (SSRF) (Tricking the server into attacking internal infrastructure)
+• Module 4: Input Validation (SQLi, XSS, XXE) (Injecting malicious payloads)
+• Module 5: Component & File Vulnerabilities (Directory traversal and file inclusion)
+
+🚀 Let's Begin: Module 1 – IDOR (Insecure Direct Object References)
+
+Since OFZA is an exchange handling user portfolios and sensitive personal data, Access Control Issues are highly critical. An IDOR happens when an application provides direct access to objects based on user-supplied input without verifying if the user has permission.
+
+1. The Concept
+
+Imagine a gym where your locker key just has a number written on it: 101. If you walk up to locker 102 and your key opens it simply because you tried, that is an IDOR. In web apps, this happens when parameters in the URL, POST body, or API headers are changed.
+
+2. The Crypto Context
+
+On an exchange like OFZA, look for IDORs in places where unique identifiers are passed:
+• Viewing order history: GET /api/v1/orders?id=5501 → Change to 5500
+• Downloading trade invoices: GET /download/statement/USR-9942.pdf → Change to USR-9941.pdf
+• Managing API keys: POST /api/delete-key with body {"key_id": "12345"}
+
+3. How to Test Manually
+
+1. Set up two separate accounts that you entirely own (Account A and Account B). Log into them in two different browser sessions (or one in a normal tab, one in Incognito).
+2. Capture a request from Account A using a proxy like Burp Suite (for example, fetching account settings or viewing a transaction).
+3. Find the parameter that identifies the resource (e.g., user_id, account_no, wallet_id).
+4. Replace Account A's identifier with Account B's identifier, but keep Account A's session cookies/tokens intact.
+5. Send the request. If Account A successfully views or modifies Account B's data, you have found a valid IDOR.
+Let's test your understanding before moving to live targets. Imagine you find an API endpoint used to update user profiles:
+PUT /api/users/profile
+Authorization: Bearer [Your_Token]
+{"email": "test@email.com", "target_uid": "8842"}
+If you wanted to test this for an IDOR using your second account (UID 8843), what specific steps would you take, and what outcome would prove a vulnerability exists?

@@ -1,0 +1,41 @@
+Exactly! That is the definitive impact of Stored XSS.
+Because the malicious JavaScript executes directly inside the victim's browser session, it acts with the victim's permissions. It can silently read their session cookies, grab their authentication tokens, and make unauthorized API calls back to the platform.
+On a crypto exchange like OFZA, this "action on behalf of the victim" could mean:
+• Instantly initiating an unauthorized withdrawal or transfer of funds.
+• Placing a market order to buy a worthless token at an inflated price (draining their wallet into the attacker's wallet via the order book).
+• Generating a new API key with full trading rights and sending it to the attacker's server.
+
+🚀 Module 5: Directory Traversal & File Inclusion
+
+Let's move to our final primary module, Module 5, covering Directory Traversal and Local/Remote File Inclusion (LFI/RFI).
+
+1. The Concept
+
+Directory Traversal happens when an application uses user input to construct a path to a file on the server's hard drive, but fails to sanitize characters like ../ (dot-dot-slash).
+In operating systems, .. means "go up one folder." If you chain enough of these together (../../../../), you can escape the website's intended directory and access the root operating system files.
+
+2. The Crypto Context
+
+Web applications frequently deal with file retrieval mechanisms, such as:
+• Downloading trade statements or tax receipts.
+• Viewing localized language files (GET /index.php?lang=en).
+• Displaying user uploaded documents for KYC (Know Your Customer) identity verification.
+
+3. How to Test Manually
+
+1. Look for parameters that reference filenames or file paths in your proxy logs (e.g., GET /api/download?file=statement_october.pdf).
+2. Replace the filename with traversal sequences to attempt to read known system files:
+	• On Linux servers: ../../../../etc/passwd (This file lists system user accounts and is universally readable).
+	• On Windows servers: ../../../../windows/win.ini
+3. Analyze the response. If the server outputs the contents of the /etc/passwd file in plain text instead of a PDF file, you have a critical directory traversal bug.
+
+🎓 Graduation & Next Steps
+
+You have successfully completed the core training syllabus! You now understand the underlying mechanics, manual methodologies, and specific crypto-exchange risks for the most critical vulnerabilities in the OFZA scope:
+1. IDOR: Manipulating IDs while holding your session token to access other accounts.
+2. Race Conditions: Blasting simultaneous parallel requests to bypass balance or time limits.
+3. SSRF: Tricking the server into hitting internal IPs or cloud metadata endpoints (169.254.169.254).
+4. Injections: Tricking interpreters into executing database commands (SQLi) or browser scripts (XSS).
+5. Traversal: Using ../ sequences to break out of folders and read server system files.
+As your instructor, my final piece of advice before you perform manual testing is to always stay organized. Keep a spreadsheet of the endpoints you test, the parameters you fuzz, and the exact payloads you try.
+Now that you have a solid grasp of these core methodologies, which of these five vulnerability types do you want to start looking for first via manual browser/Burp testing, or is there a specific endpoint behavior you've encountered that you would like us to analyze together?
