@@ -1,0 +1,48 @@
+While most high-profile software bugs happen because an interpreter was tricked into executing data as code, there is a massive category of flaws that have absolutely nothing to do with interpreters.
+These vulnerabilities occur due to logical design mistakes, cryptographic weaknesses, timing errors, or physical hardware behaviors. In these scenarios, the interpreter or CPU is running perfectly valid, intended code—but the business logic or math behind that code is fundamentally flawed.
+Here is a comprehensive list of vulnerabilities that do not involve an interpreter, grouped by how they break a system:
+
+1. Cryptographic & Key Management Flaws
+
+These bugs occur when the math or implementation protecting data is weak, allowing an attacker to read encrypted secrets without needing to break or trick any code engine.
+• Insufficient Entropy / Predictable Randomness: The application generates a cryptographic token, session ID, or password reset link using a predictable seed value (like the exact current timestamp). An attacker can guess the next token easily.
+• Use of Broken/Deprecated Algorithms: Using old mathematical hashing functions like MD5 or SHA-1 for passwords, which can be easily reversed via brute-force or rainbow tables.
+• Hardcoded Credentials: Storing secret API keys, passwords, or private keys directly in the source code or a publicly accessible front-end script.
+
+2. Broken Business Logic & State Manipulation
+
+These flaws exist entirely in the design of the application's rules. The server processes the requests exactly as programmed, but the programmer forgot to account for how an attacker might abuse the workflow.
+• Insecure Direct Object References (IDOR): As we learned, changing an ID (like user_id=100 to 101) to view someone else's data. The server's logic simply checks if you are logged in, but fails to check if you own that specific record.
+• Parameter Tampering: Modifying hidden form fields (e.g., changing a price field in a shopping cart from {"price": 100.00} to {"price": 0.01}) before submitting the checkout request.
+• Forced Browsing / Unprotected Endpoints: Accessing hidden files or folders simply by guessing their URL paths (e.g., typing /admin/export-all-users.csv into your browser bar) because the file itself lacks an authorization check.
+• Rate Limit Missing / Brute-Force: Allowing an attacker to guess a login password or a 2FA OTP pin millions of times without locking the account or slowing down the requests.
+
+3. Concurrency & Timing Vulnerabilities
+
+These vulnerabilities exploit how systems handle time and simultaneous actions, rather than manipulating command strings.
+• Race Conditions: As covered in Module 2, sending multiple requests at the exact same millisecond to bypass a check (like withdrawing money multiple times before the balance updates).
+• Timing Attacks: Guessing a password or API token character-by-character by measuring how many milliseconds the server takes to respond. If the server rejects the password instantly on the first wrong character, but takes longer if the first character is correct, an attacker can map out the correct string.
+
+4. Low-Level Memory Handling Errors
+
+These occur in compiled languages like C or C++ (which do not use interpreters). They exploit how the physical computer architecture manages raw RAM blocks.
+• Buffer Overflow / Overwrite: Shoving more data into a memory slot than it was built to hold, causing the extra data to spill over and overwrite neighboring memory cells.
+• Memory Leaks: A program requests a block of RAM to perform a task but forgets to release it when finished. Over time, the server completely runs out of physical memory and crashes (Denial of Service).
+• Use-After-Free: Attempting to use a pointer or reference to a specific memory block after that memory location has already been cleared or reassigned.
+
+5. Platform & Infrastructure Misconfigurations
+
+These are setup mistakes made by the network or system administrators rather than code bugs.
+• Directory Indexing Enabled: A web server configuration mistake that allows anyone to view a folder structure in their browser as a list of clickable files, leaking backup archives or configuration files.
+• Default Credentials: Leaving default usernames and passwords active on live infrastructure (e.g., admin / password on a database or server management panel).
+• CORS Misconfiguration: An over-permissive Cross-Origin Resource Sharing (CORS) policy that tells browsers to allow any external website to read sensitive data from your platform.
+
+📊 Quick Conceptual Difference
+
+
+Feature	Interpreter-Based Bug (e.g., SQLi, XSS)	Non-Interpreter Bug (e.g., IDOR, Race Condition)
+The Core Issue	The engine gets confused between data and commands.	The instructions are clear, but the logic/math is wrong.
+How it's triggered	Specially crafted strings/characters (', <, ;).	Manipulating timing, order of operations, or sequence IDs.
+The Fix	Input validation, sanitization, parameterization.	Implementing strict authorization checks and atomic locks.
+
+Looking over this list, would you like to explore how a researcher tests for non-interpreter bugs like IDOR or Parameter Tampering, or would you prefer to look at how to prevent Race Conditions using database locking mechanics? Let me know which path you want to dive into!

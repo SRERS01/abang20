@@ -1,0 +1,47 @@
+To completely round out your cybersecurity knowledge base, let’s catalog the remaining security vulnerabilities that do not involve an interpreter. [1] (https://community.owasp.org/Injection_Flaws)
+As you have realized, when you strip away interpreters, you are left with flaws rooted entirely in broken human logic, system architecture, session mechanics, cryptographic implementations, and physical hardware limits. The server executes its code perfectly, but the system's rules are designed or integrated unsafely. [1] (https://community.owasp.org/vulnerabilities/Business_logic_vulnerability), [2] (https://www.splunk.com/en_us/blog/learn/vulnerability-types.html), [3] (https://www.blackduck.com/blog/types-of-security-vulnerabilities.html), [4] (https://scs.owasp.org/sctop10/SC02-BusinessLogicVulnerabilities/)
+The final categories of non-interpreter vulnerabilities include:
+
+1. Advanced Session & Authentication Failures
+
+These flaws occur when a platform verifies who you are or maintains your login session insecurely. No code strings are executed; the state handling is simply broken. [1] (https://dev.to/morrismoses149/50-common-web-application-vulnerabilities-explained-2mmn), [2] (https://community.owasp.org/vulnerabilities/Business_logic_vulnerability)
+• Session Fixation: An attacker generates a valid session ID on the betting/crypto site, then tricks a victim into clicking a link containing that exact session ID. When the victim logs in, the server fails to issue a new session ID. The attacker can now use their original copy of the ID to hijack the victim's authenticated account.
+• Insufficient Session Expiration: A platform allows a login session or an API bearer token to remain valid indefinitely. If a user logs out, or logs in from a public computer, the token remains alive in memory, allowing a later attacker to reuse it.
+• Weak Password Reset Workflows: This includes flaws like generating sequential or easily guessable password reset tokens, or allowing an attacker to manipulate the Email parameter in a password-reset request so the link gets sent to the attacker instead of the victim.
+
+2. Workflow & Sequential Logic Abuse
+
+These are pure Business Logic Vulnerabilities where an attacker breaks the sequence of steps expected by a multi-stage process. [1] (https://daily.dev/posts/owasp-top-10-business-logic-abuse-what-you-need-to-know-2u1tihuxx), [2] (https://scs.owasp.org/sctop10/SC02-BusinessLogicVulnerabilities/), [3] (https://community.owasp.org/vulnerabilities/Business_logic_vulnerability)
+• Step-Bypass / Out-of-Order Execution: Imagine a 3-step checkout process:
+	• Step 1: Select Items → Step 2: Submit Payment → Step 3: Confirm & Ship.
+If a user manually changes their browser URL to jump straight from Step 1 to Step 3, and the server blindly fulfills the order without verifying if Step 2 was completed successfully, that is a workflow bypass. [1] (https://community.owasp.org/vulnerabilities/Business_logic_vulnerability)
+• Discount Stacking / Negative Quantities:
+	• Discount Stacking: Applying a promo code intended for single-use over and over again on the same shopping cart because the logic validates the coupon code individually rather than checking the total cart status.
+	• Negative Quantities: Submitting an order with a negative quantity (e.g., buying -2 tokens or shirts). If the server multiplies the negative number by the price, it subtracts money from the total, resulting in the site paying the user. [1] (https://community.owasp.org/vulnerabilities/Business_logic_vulnerability)
+
+3. API & Decentralized Accounting Vulnerabilities
+
+Prevalent in modern financial APIs and Web3/Crypto exchanges, these occur due to discrepancies between multiple accounting modules. [1] (https://scs.owasp.org/sctop10/SC02-BusinessLogicVulnerabilities/)
+• Flash Loan / Price Oracle Manipulation: On crypto platforms, if an automated system calculates exchange rates by looking at a single liquidity pool, an attacker can borrow massive capital to artificially inflate or tank that pool's balance for a split second, forcing the exchange to execute a trade at a highly distorted, abusive price. [1] (https://scs.owasp.org/sctop10/SC02-BusinessLogicVulnerabilities/)
+• Reentrancy Flaws: Found in smart contracts and low-level state machines. A contract sends funds to an external account before updating its internal ledger balance balance. The receiver instantly loops back and requests another withdrawal before the first transaction finishes updating the balance ledger, draining the platform. [1] (https://scs.owasp.org/sctop10/SC02-BusinessLogicVulnerabilities/)
+
+4. Low-Level Memory & Hardware Weaknesses
+
+These occur in systems built with compiled languages (like C or Rust) or are embedded into the server's actual microchips. [1] (https://derscanner.com/blog/common-weakness-enumeration-cwe-checker)
+• Out-of-Bounds Read (e.g., Heartbleed): A program reads data past the end of its allocated buffer. For instance, a user asks the server to send back a 5-letter word but claims the word is 5,000 letters long. The server copies 5,000 characters straight out of its raw RAM memory, leaking neighboring system secrets, passwords, or keys.
+• Rowhammer (Hardware Vulnerability): An attacker repeatedly accesses specific rows of memory cells in a physical RAM stick at extreme speeds. The resulting electromagnetic leak causes bits in adjacent rows to flip (0 becomes 1), bypassing operating system security controls on a hardware level. [1] (https://www.sans.org/top25-software-errors), [2] (https://www.youtube.com/watch?v=grBAlhTtknY&t=391)
+
+5. Client-Side Presentation Tricks
+
+These exploit the visual presentation of a browser to trick a human user, rather than exploiting a server-side compiler or interpreter. [1] (https://medium.com/@majameeljameey/10-basic-vulnerabilities-every-web-developer-should-know-3c586dabc8aa)
+• Clickjacking (UI Redress Attack): An attacker transparently overlays an invisible webpage (like an OFZA "Confirm Wire Transfer" page) on top of an alluring, clickable game or video button. When the user thinks they are clicking "Play Game," their mouse click passes through and executes a high-stakes financial action on the hidden site. [1] (https://medium.com/@majameeljameey/10-basic-vulnerabilities-every-web-developer-should-know-3c586dabc8aa)
+
+🎓 The Master Security Mapping
+
+Now that you have seen every angle, you can summarize security engineering into two main disciplines:
+1. Syntactic Defenses (For Interpreters): Using parameterization, encoding, and escaping so code engines don't misinterpret user data.
+2. Semantic Defenses (For Logic): Implementing strict access control matrices, explicit server-side state machines, atomic database transactions, and cryptographic validation to ensure the business model cannot be abused. [1] (https://cheatsheetseries.owasp.org/cheatsheets/Business_Logic_Security_Cheat_Sheet.html), [2] (https://www.zafran.io/ctem-academy/top-vulnerability-types-mitigation-guide), [3] (https://derscanner.com/blog/common-weakness-enumeration-cwe-checker)
+We have officially mapped out the entire world of software security bugs!
+As your mentor, how would you like to apply this next? We can:
+• Write out a Code Review Blueprint detailing exactly what to look for when reviewing raw source code.
+• Discuss how to write security bug reports that get accepted instantly by triage teams without getting rejected as "informative" or "out of scope."
