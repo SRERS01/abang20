@@ -1,0 +1,73 @@
+An attacker can target almost every layer and component of a modern computing ecosystem. While traditional security models focus on a single computer, the modern web application landscape includes specialized layers—like cloud environments, virtualization, containers, and edge networks—that drastically expand the "attack surface."
+Here is the complete, master breakdown of all layers and components that can be targeted, including how to test them from a web application perspective for your bug bounties:
+
+1. Hardware Layer (Physical & Component Level)
+
+Attackers target physical components to steal data, intercept communications, or destroy the device.
+* Processor (CPU): Targeted via architectural flaws to leak data from memory (e.g., Spectre and Meltdown) [1] or via algorithmic complexity attacks.
+	• Web App Test: Look for Asymmetric Resource Consumption (DoS) by uploading highly nested archives (ZIP bombs) or XML entities (Billion Laughs) to force 100% CPU utilization.
+* System Memory (RAM): Subject to attacks like Rowhammer, memory leaks, or corruption.
+	• Web App Test: Target fields processing binary files, images, or native serialization protocols. Look for Buffer Overflows or memory mismanagement bugs that force the application to leak fragments of raw server memory in HTTP responses.
+* Storage Drives (SSD/HDD): Physically accessed, or targeted via file system exploitation.
+	• Web App Test: Test for Path Traversal / Local File Inclusion (LFI) using sequences like ../../../../etc/passwd to force the drive to retrieve files outside the web root directory.
+* Graphics Card (GPU): Hijacked to mine cryptocurrency or perform advanced client tracking.
+	• Web App Test: Exploit Stored Cross-Site Scripting (XSS) to inject malicious JavaScript that runs WebGL operations in visitor browsers, hijacking their local GPUs.
+* USB & Peripheral Ports: Targeted by malicious physical hardware (like a Rubber Ducky USB).
+	• Web App Test: Test if XSS vulnerabilities allow unauthorized interaction with client hardware via modern browser APIs (WebUSB or WebSerial).
+
+2. Firmware Layer (The Hardware-Software Bridge)
+
+Low-level code embedded directly into hardware. Attacks here persist even if the OS is wiped clean.
+* BIOS / UEFI: Targeted by bootkits to launch before the OS and security software start.
+* Peripheral Firmware: The microcontrollers inside webcams, hard drives, and network cards can be maliciously reprogrammed.
+	• Web App Test: Look for web-accessible administrative consoles or firmware upgrade panels (common in IoT devices). Test if the file upload function lacks cryptographic signature validation, allowing unverified firmware images to be flashed via the web interface.
+
+3. Hypervisor & Virtualization Layer
+
+The software layer that splits a single physical computer into dozens of isolated virtual machines (VMs) using technology like VMware, KVM, or Hyper-V.
+* Hypervisor / Host System: The master control layer running on the physical hardware.
+	• Web App Test: Look for Virtual Machine Escape vulnerabilities. First, exploit a web flaw to get Remote Code Execution (RCE) on the guest virtual server. From there, run exploits targeting the underlying hypervisor to break out of the VM and compromise the entire host machine.
+
+4. Containerization & Orchestration Layer (The DevOps Layer)
+
+Modern applications split code into tiny microservices inside light software containers (Docker) managed by an automated orchestration engine (Kubernetes).
+* Containers (Docker / Containerd): Isolated environments sharing the host machine's kernel.
+	• Web App Test: Get RCE inside a web application container and check for Container Escape vectors, such as the container running in --privileged mode or having misconfigured cgroups.
+* Orchestration Clustures (Kubernetes): Systems managing deployment, scaling, and networks.
+	• Web App Test: Use Server-Side Request Forgery (SSRF) to search for exposed Kubernetes API endpoints (usually on ports 10250 or 6443) or unauthenticated Kube-dashboards to gain control over the entire environment cluster.
+
+5. Cloud Infrastructure Layer (The Control Plane)
+
+The underlying virtual data center (AWS, Google Cloud, Azure) managing permissions, storage buckets, and server configurations.
+* Identity & Access Management (IAM): The permission model governing what resource can access what.
+* Cloud Storage & Services: Hosted resources like AWS S3 buckets or database instances.
+	• Web App Test: Exploit SSRF to target the Cloud Metadata Service (http://169.254.169). If successful, extract temporary cloud IAM security credentials to bypass the server entirely and access the company's cloud console or private S3 buckets.
+
+6. Software & Operating System (OS) Layer
+
+The system environments and local software hosting the application, which frequently introduce exploitable code.
+* Operating System Kernel: The core of the OS handling resource management.
+	• Web App Test: Gain an initial web shell via RCE (e.g., Command Injection). Run local enumeration scripts to find kernel vulnerabilities to test for Privilege Escalation from a low-level web user (www-data) to master control (root).
+* System Files & Registries: Directories handling OS configurations and startup services.
+	• Web App Test: Combine RCE or an arbitrary file write flaw to test if you can modify system-wide startup folders, crontabs, or OS registry keys to establish permanent persistence.
+* Applications & Browsers: Software dependencies, PDF renderers, or the visitor's client browser.
+	• Web App Test: Test for Server-Side Template Injection (SSTI) or XSS to force server-side applications or client browsers to execute malicious exploit payloads.
+* Local Databases & Caches: Systems storing configuration tables, temporary application data, and user info.
+	• Web App Test: Test inputs, parameters, and HTTP headers for SQL Injection (SQLi) or NoSQL Injection to bypass the application code and read/write directly to the backend database tables.
+
+7. Network & Transport Layer (The Delivery Pipeline)
+
+The hardware, routing configurations, and network protocols responsible for communication with the outside world.
+* Network Interface Cards (NICs): Inbound/outbound interfaces handling network traffic.
+	• Web App Test: Test for SSRF loop loops to force the host's NIC to flood internal network zones with network traffic (Denial of Service).
+* Network Sockets & Open Ports: Network interfaces exposed to accept connections.
+	• Web App Test: Exploit an SSRF vulnerability to use the web server as an internal proxy. Point the request back at http://127.0.0.1 or internal IPs to port-scan hidden services (like SSH on port 22 or Redis on port 6379) closed to the public internet.
+* Transport Protocols (TCP/HTTP Smuggling): The rules dictating how web traffic is packed and parsed.
+	• Web App Test: Look for discrepancies in how front-end reverse proxies (like Cloudflare, Nginx) and back-end servers interpret content-length or transfer-encoding headers to test for HTTP Request Smuggling, allowing you to hijack or poison other users' traffic.
+
+8. The Human Element (The User)
+
+The operators and clients using the system, structurally considered a critical part of the security architecture.
+* The User's Trust: Manipulated to bypass technical security boundaries.
+	• Web App Test: Look for Open Redirects (?next=http://evil.com), HTML Injection, or XSS to manipulate the trusted website's interface, allowing you to display spoofed login prompts or redirect users to external phishing portals using the company's real domain name.
+Now that you have the complete map of every layer, would you like an example of a vulnerability chain showing how an attacker uses a single Web Application flaw (Layer 6) to slide down and extract Cloud IAM credentials (Layer 5)?
