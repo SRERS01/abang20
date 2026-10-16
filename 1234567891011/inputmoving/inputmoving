@@ -1,0 +1,114 @@
+Here is the step-by-step security mapping for all 20 stages of an input's journey, detailing exactly which vulnerability can strike at each specific point and why it happens.
+
+Phase 1: The Client Side (The Browser)
+
+
+1. User Action
+
+* Vulnerability: Shoulder Surfing / Clipboard Hijacking
+* Why: The input is still in plain text on the screen or in the system clipboard. Malicious background apps or physical onlookers can steal it before it even interacts with the browser.
+
+2. DOM Capture
+
+* Vulnerability: Client-Side Cross-Site Scripting (DOM XSS)
+* Why: If the browser’s JavaScript captures the input and immediately writes it back to the page layout (e.g., using innerHTML) without sanitizing it, malicious input strings can hijack the browser session.
+
+3. Client-Side Validation
+
+* Vulnerability: Validation Bypass
+* Why: Attackers can easily open browser developer tools, delete the JavaScript validation rules entirely, and force the browser to send completely unchecked or oversized data.
+
+4. HTTP Serialization
+
+* Vulnerability: Prototype Pollution (Client-Side)
+* Why: When JavaScript converts input into a JSON object string, malicious keys (like _proto_) can overwrite global JavaScript property objects, altering the browser's behavior.
+
+5. TLS Encryption
+
+* Vulnerability: Man-in-the-Middle (MitM) via Weak Ciphers
+* Why: If the browser supports outdated encryption standards (like SSLv3 or broken TLS 1.0 ciphers), an attacker on the same Wi-Fi network can downgrade the connection and decrypt the payload.
+
+6. Network Transmission
+
+* Vulnerability: DNS Spoofing / Cache Poisoning
+* Why: Before packets leave the machine, a corrupted local DNS cache can trick the network stack into sending the data to an attacker-controlled clone server instead of the real destination.
+
+Phase 2: The Network & Infrastructure Edge
+
+
+7. DNS & Routing
+
+* Vulnerability: BGP Hijacking
+* Why: Malicious internet service providers or state actors can broadcast false routing paths, diverting the raw network packets through unauthorized data hubs across the globe.
+
+8. Load Balancer / Reverse Proxy
+
+* Vulnerability: HTTP Request Smuggling
+* Why: Discrepancies in how the frontend reverse proxy and the backend server read packet boundaries (using Content-Length vs Transfer-Encoding) allow an attacker to stitch a hidden request onto the end of a legitimate one.
+
+9. TLS Termination
+
+* Vulnerability: Memory Leak via Buffer Over-read (Heartbleed Style)
+* Why: The server handling decryption allocates RAM to read the incoming TLS heartbeat. If it blindly copies memory without checking the declared input size, it can leak surrounding private keys stored in the proxy's memory.
+
+10. Web Application Firewall (WAF)
+
+* Vulnerability: WAF Bypass via Encoding Obfuscation
+* Why: If the WAF doesn't understand complex double-URL encoding or specific Unicode variations, malicious input strings pass straight through undetected.
+
+Phase 3: The Application Server (The Backend Runtime)
+
+
+11. Web Server Parsing
+
+* Vulnerability: Denial of Service via Pixel Floods / HashDoS
+* Why: As the raw data stream is read into system memory, malicious dimensions in an image header or thousands of identical-hash keys will choke server RAM and CPU before the application code even executes.
+
+12. HTTP Deserialization
+
+* Vulnerability: Insecure Deserialization
+* Why: If the framework reconstructs incoming binary or JSON data back into object forms natively, malicious input fields can trick the language runtime into executing arbitrary class structures.
+
+13. Server-Side Validation
+
+* Vulnerability: Integer Overflow / Mass Assignment
+* Why: This is the critical gate. If the code checks input size using bounded variables that wrap around mathematically, or lets users submit fields they shouldn't possess (like isAdmin=true), the app's logical constraints completely collapse.
+
+14. Business Logic Processing
+
+* Vulnerability: Path Traversal / Business Logic Price Manipulation
+* Why: If input data is directly used to look up system files (e.g., ../../etc/passwd) or alter transaction rates in cart workflows, the application's internal procedural rules are directly compromised.
+
+15. Database Query Construction
+
+* Vulnerability: SQL Injection (SQLi) / Command Injection
+* Why: If the application constructs database queries using simple string concatenation (e.g., "SELECT * FROM users WHERE input = '" + input + "'"), the database interpreter will mistake the user's data for actual query code.
+
+Phase 4: The Database Layer
+
+
+16. Database Driver Transport
+
+* Vulnerability: Cleartext Credential Leak / Transport Sniffing
+* Why: If the network link between the app server and the database server is unencrypted, an attacker who has breached the internal network can sniff the raw input data out of transit.
+
+17. Database Parsing & Execution
+
+* Vulnerability: Second-Order SQL Injection
+* Why: Even if safe parameters prevent initial execution, a database configuration that dynamically executes stored input text later during background triggers or sub-queries can execute the malicious payload.
+
+18. Transaction Log (WAL)
+
+* Vulnerability: Log Injection / Log Forgery
+* Why: If the raw input contains carriage return line feed (\r\n) characters, it can forge fake ledger entries inside the text logs, blinding auditors tracking system changes.
+
+19. Memory Buffer Placement
+
+* Vulnerability: Heap Corruption in DBMS
+* Why: If the database engine’s internal memory management suffers from a flaw when organizing heavily fragmented array blocks, custom-formatted input payloads can cause a database crash or a privilege leak in RAM.
+
+20. Physical Disk Serialization
+
+* Vulnerability: Unencrypted Data at Rest / Directory Traversal Overwrite
+* Why: If the database table files on the SSD are unencrypted, an attacker with physical or administrative server disk access can read the raw data blocks directly off the hardware drive.
+Would you like to drill down into the exact secure coding patterns needed to completely block vulnerabilities at Stage 13 (Server-Side Validation) or Stage 15 (Query Construction)?
