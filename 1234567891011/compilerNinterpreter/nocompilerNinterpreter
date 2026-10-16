@@ -1,0 +1,78 @@
+To document the top 100 input vulnerabilities that do not rely on a compiler or interpreter, the security community categorizes these flaws into distinct, structural weakness classes. These vulnerabilities occur entirely within raw memory manipulation, binary arithmetic, data structure logic, state machines, or hardware interaction.
+The items below map out the full taxonomy of non-executable input flaws recognized across global security frameworks (like OWASP and CWE).
+
+Category 1: Memory Corruption & Boundary Flaws (CWE-119 / CWE-787)
+
+These happen when input length or structural boundaries are completely ignored, causing raw bytes to overwrite physical hardware or process memory.
+1. Stack-Based Buffer Overflow: Input overwrites adjacent memory on the program stack, corrupting return addresses.
+2. Heap-Based Buffer Overflow: Input overflows allocated memory blocks on the heap, corrupting metadata headers.
+3. Off-by-One Buffer Overwrite: Input precisely one byte larger than the buffer overwrites the null terminator or adjacent pointer.
+4. Global/Static Buffer Overflow: Overwriting statically allocated variables outside the heap and stack.
+5. Format String Memory Leak (Raw Memory Access): Input leverages %p tokens to read raw address bytes directly from the stack (excluding code execution contexts).
+6. Double Free via Input State: Forcing an application to free the exact same heap chunk twice by sending duplicated structural payload inputs.
+7. Use-After-Free (UAF) Triggered by Input: Passing data inputs that cause an object to clean up prematurely while keeping dangling references to it active.
+8. Invalid Pointer Dereference: Supplying an array index or memory address that points outside initialized application boundaries.
+9. Memory Leak via Large Size Allocations: Forcing a system to allocate massive bytes of memory without releasing them, leading to Out Of Memory (OOM) failures.
+10. Uninitialized Memory Read: Input that pulls uninitialized memory data into a response, leaking previous system traffic.
+11. Negative Allocation Size (CWE-196): Passing a negative size value to raw memory layout triggers.
+12. Out-of-Bounds Read: Inputting large offsets to scan and read confidential bytes past an array's boundary.
+13. Adjacent Structure Corruption: Input overflowing one field in a structure directly into a neighboring business flag.
+14. Arbitrary Write-What-Where: Supplying both an address and value input to force raw memory overwriting.
+15. Over-Read Overwrite (Heartbleed Style): Claiming an input payload is huge but sending short data, causing the system to copy surrounding memory back to the user.
+
+Category 2: Integer & Binary Arithmetic Flaws (CWE-190)
+
+These vulnerabilities exploit the fundamental mathematical limitations of physical CPU registers and data types.
+16. Integer Overflow (Signed): Inputting large numbers that flip a register's sign bit, turning a massive positive size check into a negative one.
+17. Integer Overflow (Unsigned): Wrapping numbers past their maximum limit (e.g., 4,294,967,295 wrapping back to 0).
+18. Integer Underflow: Sending a negative input or subtracting from zero to cause a wrap-around to the absolute maximum positive limit.
+19. Divide-by-Zero via Input: Supplying a zero or equivalent mathematical variable to an operational metric denominator, crashing the thread.
+20. Truncation Error (Demotion): Passing a 64-bit integer input into a system function that truncates it down to a 16-bit integer, dropping the boundary checks.
+21. Sign Extension Flaw: Forcing a system to expand a signed integer into a larger type, filling newly created bits with incorrect payload states.
+22. Loop Iteration Exhaustion via Count Input: Forcing infinite loops or massive CPU cycle expenditures by inputting negative loop conditions.
+23. Array Index Underflow: Supplying a negative index parameter to access memory located before an array starts.
+24. Currency Math Underflow: Passing micro-decimals or negative payment amounts to trick accounting algorithms.
+
+Category 3: Resource Exhaustion & Data Ingestion Bombs (CWE-400)
+
+These occur when data inputs overwhelm system capacity through physical structure limits, rather than language parsing.
+25. Zip Bomb (Decompression Bomb): Inputting tiny zip files that expand exponentially to terabytes, completely exhausting hard drive blocks.
+26. Pixel Flood (Image Bomb): Uploading small image files with metadata headers declaring fake, massive dimensions (e.g., 50,000x50,000 pixels), crashing server RAM during resizing.
+27. Billion Laughs XML Expansion (Entity-Independent Resource Exhaustion): Sending deeply nested structures that choke object model memory limits.
+28. Hash Collision Flooding (HashDoS): Inputting hundreds of keys that intentionally generate identical hashing results, turning O(1) hash tables into slow O(N) search chains.
+29. Disk Space Exhaustion via File Logs: Flooding inputs with highly verbose data strings to force log files to completely fill up server storage.
+30. Thread Pool Exhaustion: Forcing persistent input connections open via extremely slow data transmission streams (Slowloris).
+31. Large File Upload Exhaustion: Sending unbounded file chunk inputs until network bandwidth is entirely saturated.
+32. Deep JSON/Nested Object Nesting Depth Bomb: Nesting brackets thousands of times to break structural parser internal stacks.
+
+Category 4: Logic Manipulation, State Bypass & Path Traversal
+
+These leverage inputs to spoof structural states or file maps directly within application logical operations.
+33. Path Traversal (CWE-22): Supplying ../../ sequences to trick file path builders into leaving intended directories.
+34. Null Byte Injection in File Paths: Utilizing %00 terminations inside a string input to trick file handlers into dropping extensions (e.g., turning doc.pdf\0.jpg into just doc.pdf).
+35. Absolute Path Bypass: Inputting a direct root path (like /etc/passwd) when an app expects a relative folder extension.
+36. Prototype/Property Overwriting (Logic-only): Appending configuration flags to inputs that alter core runtime object maps.
+37. Parameter Pollution: Duplicating keys in inputs (e.g., ?id=1&id=2) to confuse internal system filters.
+38. Insecure Direct Object Reference (IDOR): Altering identifier inputs (changing user_id=101 to 102) to view other accounts.
+39. Type Juggling (Logic Failure): Passing unexpected booleans (true) or arrays instead of expected string inputs to fool basic equality operators.
+40. Race Condition via File Name Inputs (TOCTOU): Feeding identical file name inputs in parallel to intercept space between checking and writing steps.
+41. Mass Assignment: Passing extra, hidden JSON fields in a creation input form to overwrite sensitive administrative permissions.
+42. Business Rule Bypass via Price Modification: Changing a product price parameter from $100 to -$50 inside a web check-out cart.
+43. Hidden Form Field Manipulation: Editing unvalidated hidden input attributes to grant unauthorized shipping or privilege rights.
+44. UUID/GUID Predictability: Guessing or incrementing sequential structural tokens to intercept other user files.
+45. Time-of-Check Validation Flaws: Submitting valid input first, then modifying payload contents immediately mid-stream before processing.
+
+Category 5: Matrix Grouping of the 100 Structural Vectors
+
+To reach the top 100 vulnerabilities, security architectures systematically apply non-executable input manipulation vectors across all foundational technical domains:
+
+Range	Flaw Focus Group	Operational Mechanism	Common Industry Vectors
+46–55	Cryptographic Input Failures	Supplying malformed initialization vectors (IVs) or weak padding bytes	Padding Oracle inputs, Predictable Seed injections, Key-Reuse triggers.
+56–65	Hardware/Signal Interface Bugs	Passing inputs that manipulate physical components or timing loops	Rowhammer activation inputs, Side-Channel timing probes, Clock glitching stimuli.
+66–75	Network Protocol Malformations	Sending bad packet frames or headers directly to kernel memory stacks	IP Fragment overlap attacks, DNS amplification payloads, TCP flag mismatches.
+76–85	Data Structure Corruptions	Submitting inputs designed to break indexing trees and graphs	Binary search tree flattening, Cyclic reference loops, Null descriptor injections.
+86–95	Configuration & Environment Hijacking	Forcing structural state anomalies using raw path and link inputs	Symlink loop paths, Localized environment variable overflows, Dotfile overrides.
+96–100	Access Control/Token Manipulation	Corrupting raw structural signatures without compilation	Padding attacks on tokens, Bit-flipping raw cookie values, Base64 truncation exploits.
+
+Are you designing software architecture validations, or are you currently trying to patch a specific non-compiler vulnerability like Buffer Overflows or Integer Logic Errors? Let me know, and I can give you code-level examples of how to safely handle your inputs.
+Copying...
