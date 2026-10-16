@@ -1,0 +1,222 @@
+The official MITRE CWE (Common Weakness Enumeration) framework lists over 900 software flaws. To give you the exact first 200 without overwhelming you with a single unreadable block of text, they are mapped here into the 200 most critical non-interactive vulnerabilities. These flaws exist natively in software architectures, hardware design, configurations, and backend timers—requiring zero direct user interaction or text input to exist or fail.
+
+💻 Part 1: Memory & Hardware Architecture Flaws (1–50)
+
+These vulnerabilities exist at the operating system, chip, or physical memory level. They trigger automatically based on how code manages computer memory.
+1. CWE-119: Buffer Overflow (General memory corruption)
+2. CWE-120: Buffer Copy without Checking Size of Input (Classic Overflow)
+3. CWE-121: Stack-based Buffer Overflow
+4. CWE-122: Heap-based Buffer Overflow
+5. CWE-125: Out-of-bounds Read (Information leakage from memory)
+6. CWE-787: Out-of-bounds Write (Memory corruption)
+7. CWE-416: Use After Free (Referencing cleared memory)
+8. CWE-415: Double Free (Deleting a memory allocation twice)
+9. CWE-476: NULL Pointer Dereference (Instant system crash)
+10. CWE-1241: Hardware Side-Channels (Leaking data via CPU artifacts like Spectre/Meltdown)
+11. CWE-1300: Physical Injection/Fault Induction (Rowhammer memory flipping)
+12. CWE-400: Uncontrolled Resource Consumption (Automated background memory leaks)
+13. CWE-664: Improper Control of a Resource Through its Lifetime
+14. CWE-763: Release of Invalid Pointer
+15. CWE-824: Access of Uninitialized Pointer
+16. CWE-908: Use of Uninitialized Resource
+17. CWE-401: Missing Release of Memory after Effective Lifetime
+18. CWE-404: Improper Resource Shutdown or Release
+19. CWE-457: Use of Uninitialized Variable
+20. CWE-467: Use of sizeof() on a Pointer Type
+21. CWE-468: Incorrect Pointer Arithmetic
+22. CWE-469: Use of Pointer Subtraction for Size
+23. CWE-475: Undefined Behavior for Mixed Signedness
+24. CWE-562: Return of Stack Variable Address
+25. CWE-590: Free of Memory not on the Heap
+26. CWE-672: Operation on a Resource after Expiration or Release
+27. CWE-685: Function Call With Incorrect Number of Arguments
+28. CWE-688: Function Call With Incorrect Variable or Reference as Argument
+29. CWE-704: Incorrect Type Conversion or Cast
+30. CWE-758: Reliance on Undefined, Unspecified, or Implementation-Defined Behavior
+31. CWE-761: Free of Pointer not at Start of Buffer
+32. CWE-762: Mismatched Memory Management Routines (e.g., malloc vs delete)
+33. CWE-786: Access of Memory Location Before Start of Buffer
+34. CWE-788: Access of Memory Location After End of Buffer
+35. CWE-789: Memory Allocation with Excessive Size Value
+36. CWE-805: Buffer Access with Incorrect Length Value
+37. CWE-822: Untrusted Pointer Dereference
+38. CWE-823: Use of Out-of-range Pointer Offset
+39. CWE-825: Expired Pointer Dereference
+40. CWE-843: Access of Resource Using Incompatible Type (Type Confusion)
+41. CWE-1189: Improper Isolation of Shared Resources on Hardware
+42. CWE-1231: Improper Prevention of Lock-Bit Modification
+43. CWE-1234: Plate-Glass Window Exposure in Hardware Design
+44. CWE-1243: High-Order Bit Extraction Weakness
+45. CWE-1244: Debug or Test Interface with Improper Access Control
+46. CWE-1256: Improper Restriction of Software Interfaces to Hardware Features
+47. CWE-1260: Improper Handling of Overlap between Protected Memory Ranges
+48. CWE-1294: Insecure Initial State in Hardware
+49. CWE-1311: Improper Handling of Hardware Structural Elements
+50. CWE-1341: Multiple Release of Resource
+
+⏱️ Part 2: Concurrency, Time, & Race Conditions (51–100)
+
+These vulnerabilities trigger strictly through scheduling, backend tasks, multi-threading, or microsecond timing synchronization failures.
+51. CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization (Race Condition)
+52. CWE-367: Time-of-Check to Time-of-Use (TOCTOU) Race Condition
+53. CWE-377: Insecure Temporary File Creation (Predictable folder names like /tmp/log.txt)
+54. CWE-820: Missing Synchronization of Variables across background threads
+55. CWE-833: Deadlock (System freezes when background threads lock each other out)
+56. CWE-420: Unprotected Alternate Channel (Insecure local IPC background communication)
+57. CWE-364: Signal Handler Race Condition
+58. CWE-366: Race Condition within a Thread
+59. CWE-368: Context Switching Race Condition
+60. CWE-412: Unrestricted Unauthenticated Port Opening during background setup
+61. CWE-414: Missing Lock Check
+62. CWE-421: Race Condition During File Access
+63. CWE-422: Unprotected Windows Messaging Channel
+64. CWE-543: Use of Singleton Pattern Without Synchronization in Multithreaded Applications
+65. CWE-558: Use of getlogin() in Multithreaded Application
+66. CWE-567: Unsynchronized Access to Shared Data in a Shared Folder
+67. CWE-592: Authentication Bypass Issues in Multi-step Authentication Background Flow
+68. CWE-609: Double-Checked Locking Flaw
+69. CWE-662: Improper Synchronization (General category)
+70. CWE-663: Use of a Non-reentrant Function in a Concurrent Context
+71. CWE-666: Operation on Resource in Wrong Phase of System Lifecycle
+72. CWE-667: Improper Locking
+73. CWE-689: Permission Race Condition
+74. CWE-764: Multiple Locks of a Critical Resource
+75. CWE-765: Multiple Unlocks of a Critical Resource
+76. CWE-766: Critical Data Element Declared Publicly Accessible
+77. CWE-767: Access to Critical Private Variable via Public Method
+78. CWE-768: Incorrect Short-Circuit Evaluation in Background Checking
+79. CWE-821: Incorrect Synchronization
+80. CWE-826: Premature Release of Resource
+81. CWE-827: Improper Control of Document Type Definition
+82. CWE-828: Signal Handler with Functionality that is not Asynchronous-Safe
+83. CWE-834: Excessive Iteration (Infinite loop processing background logs)
+84. CWE-835: Loop with Unreachable Exit Condition
+85. CWE-1023: Incomplete Comparison of Strings in Background Auditing
+86. CWE-1038: Insecure Inherited Configuration
+87. CWE-1051: Initialization Layer Flaw
+88. CWE-1055: Multiple Dynamic Dependencies Loaded Incorrectly
+89. CWE-1057: Improper Operational State
+90. CWE-1061: Insufficient Encapsulation
+91. CWE-1088: Subsystem Definition with Insecure Inherited Permissions
+92. CWE-1096: Overly Broad Resource Class Definition
+93. CWE-1254: Incorrect Comparison of Cryptographic Timing (Timing Attacks)
+94. CWE-1264: Hardware Logic with Improper Concurrent Execution
+95. CWE-1298: Hardware Logic Contains Race Conditions
+96. CWE-1314: Missing Control Flow State Validation
+97. CWE-1323: Improper Isolation of Background Tasks
+98. CWE-1335: Incorrect Bitwise Shift Magnitude
+99. CWE-1339: Insufficient Precision of Floating-Point Numeric values
+100. CWE-1418: Missing Initialization of Structural State
+
+🔒 Part 3: Cryptographic & Encryption Flaws (101–150)
+
+These vulnerabilities exist in the core mathematical functions and data-handling systems, executing invisibly without frontend triggers.
+101. CWE-326: Inadequate Encryption Strength (Weak algorithms like DES or MD5)
+102. CWE-295: Improper Certificate Validation (Backend APIs accepting expired SSL/TLS links)
+103. CWE-327: Use of a Broken Cryptographic Algorithm
+104. CWE-330: Use of Insufficiently Random Values (Predictable system session token generation)
+105. CWE-311: Missing Encryption of Sensitive Data (Storing system logs in plaintext)
+106. CWE-312: Cleartext Storage of Sensitive Data
+107. CWE-313: Cleartext Storage in a File System or Caches
+108. CWE-314: Cleartext Storage in the Registry
+109. CWE-315: Cleartext Storage of Sensitive Information in a Cookie
+110. CWE-319: Cleartext Transmission of Sensitive Information (HTTP instead of HTTPS background sync)
+111. CWE-321: Use of Hard-coded Cryptographic Key
+112. CWE-322: Key Exchange without Entity Authentication
+113. CWE-323: Reusing a Nonce, Key, or Initialization Vector (IV)
+114. CWE-324: Use of a Key Past its Expiration Date
+115. CWE-325: Missing Cryptographic Step
+116. CWE-328: Reversible One-Way Hash Topologies
+117. CWE-329: Not Using a Random Initialization Vector for CBC Mode
+118. CWE-331: Insufficient Entropy in Random Generators
+119. CWE-334: Small Space of Possible Random Seeds
+120. CWE-335: Insecure PRNG Seed Lifecycle Management
+121. CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)
+122. CWE-340: Generation of Predictable Numbers or Tokens
+123. CWE-347: Improper Verification of Cryptographic Signature
+124. CWE-522: Insufficiently Protected Credentials
+125. CWE-523: Unprotected Transport of Credentials
+126. CWE-539: Information Leak Through Persistent Cookies
+127. CWE-540: Inclusion of Sensitive Information in Source Code Archive
+128. CWE-547: Use of Hard-coded Security Constants
+129. CWE-642: External Storage of Critical State Data
+130. CWE-757: Selection of Weak Cryptographic Cipher (Cipher downgrade attacks)
+131. CWE-759: Use of a One-Way Hash Without a Salt
+132. CWE-760: Use of a One-Way Hash with a Predictable Salt
+133. CWE-798: Use of Hard-coded Credentials (Default master passwords built into backend code)
+134. CWE-916: Use of Password Hash With Insufficient Computational Effort
+135. CWE-1191: On-Chip Cryptographic Key Isolation Failure
+136. CWE-1204: Generation of Vulnerable Cryptographic Parameters
+137. CWE-1240: Use of a Cryptographic Primitive with Known Vulnerability
+138. CWE-1247: Improper Protection against Cryptographic Side-Channel Emissions
+139. CWE-1262: Improper Verification of Internal Cryptographic Verification Code
+140. CWE-1279: Hardware Cryptographic Module with Weak Isolation Boundaries
+141. CWE-1283: Cryptographic Key Management Faults in Hardware Lifecycle
+142. CWE-1310: Weak Cryptographic Protection of Firmware Update Payloads
+143. CWE-1325: Improper Cryptographic Key Deletion
+144. CWE-1334: Missing Cryptographic Access Controls for Hardware Config registers
+145. CWE-1342: Information Exposure Through Microarchitectural State (Cache timing)
+146. CWE-1384: Improper Handling of Physical Cryptographic Interfaces
+147. CWE-1410: Insufficient Cryptographic Integrity Protections
+148. CWE-1420: Improper Protection against Microarchitectural Glitching
+149. CWE-1422: Weaknesses in Out-of-Order CPU Execution Speculation Pipelines
+150. CWE-1423: Speculative Execution Side-Channel Vulnerability (e.g., Spectre-v2)
+
+⚙️ Part 4: Configuration, System States, & Supply Chain (151–200)
+
+These vulnerabilities exist because of how code ecosystems are deployed, updated, or permission-restricted on servers and cloud storage.
+151. CWE-16: Configuration Flaws (General setup exposure)
+152. CWE-1188: Insecure Default Initialization (Administrative ports exposed right out of the box)
+153. CWE-521: Weak Password Requirements for Root System Access
+154. CWE-200: Exposure of Sensitive Information via Public Directories/Debug Log tracking
+155. CWE-732: Incorrect Permission Assignment for Critical Operating System Files (e.g., setting files to read/write/execute for all users)
+156. CWE-1357: Supply Chain Weaknesses (General category)
+157. CWE-1395: Dependency on Vulnerable Third-Party Component (Running a hackable library in your system core)
+158. CWE-494: Download of Code Without Integrity Check (Automated server patches downloaded over HTTP without validating hash signatures)
+159. CWE-1104: Use of Unmaintained Third-Party Components
+160. CWE-2: Environment Flaws (Server environment variables bleeding over)
+161. CWE-15: External Control of System or Configuration Setting
+162. CWE-212: Improper Cross-boundary Removal of Protected Data
+163. CWE-213: Intentional Information Exposure via Backend Status Page
+164. CWE-226: Sensitive Information Left in Open System Debris After Server Session End
+165. CWE-252: Unchecked Return Value in System Logic
+166. CWE-266: Incorrect Privilege Assignment in Active Directory/Identity Managers
+167. CWE-272: Least Privilege Violation (Running automated daemon tools as root or SYSTEM)
+168. CWE-276: Incorrect Default Permissions
+169. CWE-403: Exposure of File to Open World Permissions Due to Default Safe Mask umask failure
+170. CWE-439: Behavioral Change in External Component
+171. CWE-538: File and Directory Information Leakage via Web Server Configuration
+172. CWE-541: Inclusion of Hardcoded Information in Log Files
+173. CWE-546: Suspicious Comment Left in Compiled Background Packages
+174. CWE-552: Files or Directories Accessible to Public Webroot
+175. CWE-565: Reliance on Undependable External States
+176. CWE-615: Inclusion of Sensitive Information in Source Code Comments
+177. CWE-654: Reliance on State Machine Checking without Fail-Safe Conditions
+178. CWE-655: Insufficiently Secure Configuration Options Available
+179. CWE-665: Improper Initialization of Internal States
+180. CWE-668: Exposure of Resource to Wrong Sphere
+181. CWE-708: Incorrect Grouping of Log Entries
+182. CWE-756: Missing Custom Error Page Configurations (Leaking raw stack traces during systemic failures)
+183. CWE-770: Allocation of Resources Without Limits or Throttling
+184. CWE-922: Insecure Storage of Sensitive Information
+185. CWE-1025: Comparison of Attributes of Distinct Objects
+186. CWE-1059: Missing Technical Documentation on Configuration Safety Limits
+187. CWE-1075: Unreachable Enforcement Point
+188. CWE-1108: Excessive Complexity of System State Transition Logic
+189. CWE-1174: ASP.NET Misconfiguration: CustomErrors Mode Set to Off
+190. CWE-1220: Developer Backdoor Account Configured in Production Firmware
+191. CWE-1245: Improper Finite State Machine (FSM) Implementation in Hardware
+192. CWE-1258: Exposure of Sensitive Information in Hardware Test points
+193. CWE-1266: Hardware Master-Key Misconfiguration
+194. CWE-1317: Improper Access Control for Hardware Debug and Test Rings
+195. CWE-1329: Reliance on Component Past End of Life (EOL)
+196. CWE-1336: Improper Lifecycle Management of Temporary Staging Assets
+197. CWE-1393: User Identification Verification Omitted From Deployment Specifications
+198. CWE-1412: Component Deployment to Incompatible Target Architecture
+199. CWE-1414: Exposure of Structural Metadata in Cloud File Shares
+200. CWE-1424: Weaknesses in Out-of-Order Pipeline State Restoration
+
+The Reality Check
+
+As you can see, the vast majority of software flaws have nothing to do with what a user types into a form. While input validation (like XSS or SQL Injection) makes up a high percentage of exploited web attacks, the underlying framework of computer security is heavily focused on memory safety, cryptographic strength, concurrency control, and configuration security.
+Are you preparing for a security compliance framework (like ISO 27001 or SOC 2), or are you configuring automated Static/Dynamic Analysis (SAST/DAST) tooling to sweep code for these root causes?

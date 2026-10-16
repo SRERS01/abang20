@@ -1,0 +1,52 @@
+To list all 200+ individual vulnerabilities that don't require user input would result in a massive, unreadable list of technical CVEs (Common Vulnerabilities and Exposures). Instead, cybersecurity standards organize these into the official CWE (Common Weakness Enumeration) framework.
+Here is the definitive breakdown of the major non-interactive vulnerability categories, mapped to their official CWE identifiers, covering the hundreds of flaws that require zero user input:
+
+💻 1. Memory, Hardware & Architecture Flaws (CWE-693 / CWE-119)
+
+These occur at the physical hardware, operating system, or memory management level without any frontend application interaction.
+* CWE-1241: Hardware Side-Channels (e.g., Spectre, Meltdown) — Leaking data via CPU optimization artifacts.
+* CWE-1300: Physical Injection/Fault Induction (e.g., Rowhammer) — Altering memory bits via electromagnetic or electrical disturbance.
+* CWE-400: Uncontrolled Resource Consumption — Memory leaks or CPU exhaustion over time due to poor background garbage collection.
+* CWE-664: Improper Control of a Resource Through its Lifetime — Objects left open in memory after a background routine finishes.
+* CWE-416: Use After Free — Referencing memory sections that the OS has already cleared or reallocated.
+* CWE-415: Double Free — Deleting the same memory pointer twice, causing instant system crashes.
+
+⏱️ 2. Concurrency, Time & Race Conditions (CWE-362)
+
+Vulnerabilities triggered purely by scheduling, background tasks, or multi-threading timing conflicts.
+* CWE-367: Time-of-Check to Time-of-Use (TOCTOU) — A file status changes in the millisecond after a system checks it but before it executes it.
+* CWE-377: Insecure Temporary File Creation — Background processes dropping predictable filenames in shared system folders (/tmp).
+* CWE-420: Unprotected Alternate Channel — Background system processes communicating via insecure local sockets.
+* CWE-820: Missing Synchronization — Multi-threaded background tasks overwriting each other’s data simultaneously.
+* CWE-833: Deadlock — Two background system services freezing because they are waiting on each other to release a file.
+
+🔒 3. Cryptographic & Key Management Failures (CWE-310)
+
+Flaws caused by mathematics, poor key generation, or automated lifecycle expiration.
+* CWE-326: Inadequate Encryption Strength — Using outdated, weak algorithms (like MD5 or DES) that can be cracked entirely offline.
+* CWE-295: Improper Certificate Validation — Automated backend API clients accepting expired or self-signed SSL/TLS certificates.
+* CWE-327: Use of a Broken Cryptographic Algorithm — Implementing flawed mathematical functions natively.
+* CWE-330: Use of Insufficiently Random Values — Predictable random number generators (PRNGs) generating guessable system tokens.
+* CWE-311: Missing Encryption of Sensitive Data — Storing background logs or system configuration caches in plain text.
+
+⚙️ 4. Insecure Configurations & Default States (CWE-16)
+
+Vulnerabilities that exist purely because of how an operating system, server, or cloud architecture was deployed.
+* CWE-1188: Insecure Default Initialization — Ships with administrative services turned on by default.
+* CWE-521: Weak Password Requirements — Default system, root, or firmware credentials (e.g., admin/admin) left active.
+* CWE-200: Exposure of Sensitive Information to an Unauthorized Actor — Debug modes or directory indexing left enabled on public ports.
+* CWE-611: Improper Restriction of XML External Entity Reference (XXE) — Background parsing configurations allowing systemic server file read.
+* CWE-732: Incorrect Permission Assignment for Critical Resource — Setting file permissions to 777 (read/write/execute for everyone) in the OS.
+
+📦 5. Supply Chain & Ecosystem Weaknesses (CWE-1357)
+
+Vulnerabilities inherited automatically from upstream code repositories, updates, or third parties.
+* CWE-1395: Dependency on Vulnerable Third-Party Component — Legitimate apps running on outdated, compromised background libraries.
+* CWE-494: Download of Code Without Integrity Check — Automated update engines downloading patches over unencrypted HTTP without verifying cryptographic signatures.
+* CWE-1104: Use of Unmaintained Third-Party Components — Code relies on dead open-source projects that contain unpatched zero-days.
+
+The Cyber Takeaway
+
+If you are looking at the CWE Top 25 or database repositories like MITRE and NIST, you will find hundreds of individual sub-variants of these categories. They prove that input validation is only one slice of the security pie. A system can have zero text boxes and still be completely compromised via background memory architecture, bad timing, or bad configuration.
+Are you compiling this list for a risk assessment matrix, or are you designing a system architecture and trying to figure out which automated scanners (like SAST or DAST) you need to catch these?
+Copying...
