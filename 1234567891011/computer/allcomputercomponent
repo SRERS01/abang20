@@ -1,0 +1,30 @@
+A computer is made up of several hardware components that work together to process, store, and display information. They are generally divided into internal core components (inside the computer case) and external peripheral components (used to interact with the system). [1] (https://www.apu.apus.edu/area-of-study/information-technology/resources/basic-components-of-a-computer/), [2] (https://thamescollege.org/the-main-components-of-a-computer-and-how-they-work/), [3] (https://www.idtech.com/blog/parts-of-a-computer)
+Here is the breakdown of all the primary components of a computer:
+
+Core Internal Components
+
+These parts are housed inside the PC case and form the foundation of the computer's processing and storage power. [1] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [2] (https://www.idtech.com/blog/parts-of-a-computer)
+* Motherboard: The main circuit board that acts as the "backbone" or nervous system of the computer. Every other component plugs directly into the motherboard so they can communicate with one another. [1] (https://www.hp.com/us-en/tech-takes/components/explainer/most-important-computer-components.html), [2] (https://www.apu.apus.edu/area-of-study/information-technology/resources/basic-components-of-a-computer/), [3] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [4] (https://thamescollege.org/the-main-components-of-a-computer-and-how-they-work/)
+* Central Processing Unit (CPU): Known as the "brain" of the computer. It fetches data, processes instructions, and performs all the mathematical and logical calculations required to run programs. [1] (https://www.youtube.com/watch?v=Pmah-xlrejc), [2] (https://byjus.com/govt-exams/computer-components/), [3] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [4] (https://www.hp.com/us-en/tech-takes/components/explainer/most-important-computer-components.html)
+* Graphics Processing Unit (GPU) / Graphics Card: Specializes in processing complex visual data. It is responsible for rendering images, videos, 3D animations, and games onto your screen. [1] (https://www.youtube.com/watch?v=YxcTBB6_bws), [2] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [3] (https://www.youtube.com/watch?v=Pmah-xlrejc)
+* Random Access Memory (RAM): The computer's volatile, short-term memory. It temporarily holds data that the CPU needs to access quickly right now. RAM is wiped clean whenever the computer is turned off. [1] (https://www.youtube.com/watch?v=YxcTBB6_bws), [2] (https://www.youtube.com/watch?v=Pmah-xlrejc), [3] (https://www.youtube.com/watch?v=VHhAZx4EvM8)
+* Storage Devices (SSD or HDD): The computer's long-term memory that retains your files even when the power is off.
+	• Solid State Drives (SSDs) use fast flash memory chips.
+	• Hard Disk Drives (HDDs) use older, spinning magnetic platters. [1] (https://www.youtube.com/watch?v=YxcTBB6_bws), [2] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [3] (https://www.youtube.com/watch?v=Pmah-xlrejc)
+* Power Supply Unit (PSU): Converts alternating current (AC) from your wall socket into safe, direct current (DC) electricity to power all the internal hardware. [1] (https://www.youtube.com/watch?v=W0HvBdoAWq8)
+* Cooling System: Comprises fans, heat sinks, or liquid cooling systems. Computers generate massive amounts of heat, and cooling systems prevent the CPU and GPU from overheating and getting damaged. [1] (https://www.youtube.com/watch?v=YxcTBB6_bws), [2] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [3] (https://www.youtube.com/watch?v=Pmah-xlrejc)
+* Computer Case (Chassis): The physical outer shell that protects the internal components, organizes cables, and directs airflow for cooling. [1] (https://www.youtube.com/watch?v=VHhAZx4EvM8), [2] (https://www.youtube.com/watch?v=W0HvBdoAWq8)
+* Network Interface Card (NIC): A built-in or expansion card (like a wireless Wi-Fi card) that allows the computer to connect to local networks and the internet. [1] (https://www.youtube.com/watch?v=YxcTBB6_bws), [2] (https://www.youtube.com/watch?v=Pmah-xlrejc)
+
+External Components (Peripherals)
+
+Peripherals allow users to input data into the computer and see or hear the output results. [1] (https://medium.com/@datascientists35/lecture-2-main-components-of-computer-systems-ce2476df118c), [2] (https://sbbsuniversity.ac.in/Digital%20Literatcy%20App/chapter4.html)
+* Input Devices: Tools used to give commands and feed data into the computer.
+	• Keyboard: For typing text and entering commands.
+	• Mouse / Touchpad: For controlling the on-screen cursor and clicking UI elements.
+	• Other inputs include microphones, webcams, and scanners. [1] (https://www.youtube.com/watch?v=F-wdTl6-drY), [2] (https://www.apu.apus.edu/area-of-study/information-technology/resources/basic-components-of-a-computer/), [3] (https://medium.com/@datascientists35/lecture-2-main-components-of-computer-systems-ce2476df118c), [4] (https://www.scribd.com/document/916853396/To-Identify-Different-Components-of-a-Computer)
+* Output Devices: Tools that present the processed data back to the user.
+	• Monitor (Screen): Displays the visual output from the graphics card.
+	• Speakers / Headphones: Output audio signals.
+	• Printer: Creates physical copies of digital documents. [1] (https://byjus.com/govt-exams/computer-components/), [2] (https://medium.com/@datascientists35/lecture-2-main-components-of-computer-systems-ce2476df118c), [3] (https://www.youtube.com/watch?v=F-wdTl6-drY), [4] (https://www.scribd.com/document/916853396/To-Identify-Different-Components-of-a-Computer), [5] (https://sbbsuniversity.ac.in/Digital%20Literatcy%20App/chapter4.html)
+Are you asking because you are planning to build a PC, trying to troubleshoot a hardware issue, or just curious about how they work? I can give you advice tailored to what you need next!
