@@ -1,0 +1,64 @@
+To install Ubuntu 24.04 LTS (Noble Numbat) on your other laptop so that it matches this exact operating system version, follow this complete step-by-step guide from start to finish.
+
+Step 1: Prerequisites & Preparations
+
+Before you begin, make sure you have the following items ready:
+• A USB flash drive with at least 8 GB of capacity (all data on it will be erased).
+• A backup of any important files on the target laptop, as installing a new OS can overwrite the hard drive.
+• An internet connection (Wi-Fi or Ethernet) on the target laptop to download updates during installation.
+
+Step 2: Download the Ubuntu ISO Image
+
+You need to download the official installer file on any working computer.
+1. Open your web browser and go to the official Ubuntu Desktop Download page.
+2. Look for Ubuntu 24.04 LTS.
+3. Click the Download button to download the .iso file to your computer.
+
+Step 3: Create a Bootable USB Flash Drive
+
+You cannot simply copy the ISO file onto the USB drive; you must flash it using a bootable USB creation tool.
+• If you are using Windows: Download Rufus (free). Open Rufus, select your USB drive, choose the downloaded Ubuntu ISO file, leave the default settings, and click Start.
+• If you are using macOS or Linux: Download BalenaEtcher (free). Select the ISO file, select your USB drive, and click Flash.
+
+Step 4: Configure the Target Laptop's BIOS/UEFI
+
+1. Power off the laptop you want to install Ubuntu on and plug in the bootable USB drive.
+2. Turn on the laptop and immediately start tapping the Boot Menu key repeatedly.
+	• Note: For Dell laptops (like your current one), this is usually F12. For HP it is F9, for Lenovo it is F12 or Enter, and for ASUS/Acer it is usually F12 or F2.
+3. If the Boot Menu appears, select your USB Flash Drive and press Enter.
+4. Alternative: If you can't get to the Boot Menu, enter the BIOS setup (usually by tapping F2 or Del at startup), go to the Boot tab, and set your USB drive as the primary boot device. Save and exit.
+
+Step 5: Run the Ubuntu Installer
+
+1. When the laptop boots from the USB, a black screen with text options will appear. Select Try or Install Ubuntu and press Enter.
+2. Wait for the Ubuntu desktop environment to load.
+3. A welcome wizard will pop up. Select your Language and click Next.
+4. Choose your Keyboard layout and click Next.
+5. Connect to your Wi-Fi network when prompted (this allows the system to install essential drivers and updates during setup).
+
+Step 6: Choose Installation Preferences
+
+1. Interactive Installation: Choose Interactive Installation and click Next.
+2. App Selection: Select Default selection (comes with a web browser and basic utilities) or Extended selection (adds office suites, media players, and development tools).
+3. Third-Party Software: Check the box that says "Install third-party software for graphics and Wi-Fi hardware and additional media formats". This ensures your Wi-Fi card and graphics drivers work out of the box.
+
+Step 7: Disk Partitioning (Crucial Step)
+
+You will be asked how you want to install Ubuntu:
+• Option A: Erase disk and install Ubuntu. Choose this if you want Ubuntu to be the only operating system on the laptop. Warning: This deletes everything currently on that drive.
+• Option B: Install Ubuntu alongside [Your Current OS]. Choose this if you want to dual-boot (e.g., keep Windows and choose between Windows or Ubuntu every time you turn on the laptop).
+• Select your preferred option and click Install Now, then confirm the changes.
+
+Step 8: Final Account Setup & Installation
+
+1. Time Zone: Select your location on the map to set your local time zone.
+2. User Details: Fill out your name, the laptop's network name, a username, and a strong password. You can choose to log in automatically or require the password at startup.
+3. Click Next to begin the actual installation. This process usually takes between 10 to 20 minutes depending on your hard drive speed.
+
+Step 9: Complete the Installation
+
+1. Once finished, a prompt will appear saying "Installation Complete". Click Restart Now.
+2. The screen will turn black and display a message: "Please remove the installation medium, then press ENTER".
+3. Unplug your USB flash drive from the laptop and press Enter.
+Your target laptop will boot into your brand new, cleanly installed Ubuntu 24.04 LTS environment!
+Are you planning to dual-boot this alongside Windows, or will Ubuntu be the only operating system on the new laptop?

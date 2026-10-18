@@ -1,0 +1,34 @@
+user@user-Latitude-3380:~$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04.4 LTS
+Release:	24.04
+Codename:	noble
+user@user-Latitude-3380:~$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.4 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.4 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+user@user-Latitude-3380:~$ hostnamectl
+ Static hostname: user-Latitude-3380
+       Icon name: computer-laptop
+         Chassis: laptop 💻
+      Machine ID: 87d1a29ec30941ec98ef7a6de81e5aa5
+         Boot ID: 1a447267841943b6b7b5befa34635ba1
+Operating System: Ubuntu 24.04.4 LTS              
+          Kernel: Linux 7.0.0-34-generic
+    Architecture: x86-64
+ Hardware Vendor: Dell Inc.
+  Hardware Model: Latitude 3380
+Firmware Version: 1.14.1
+   Firmware Date: Wed 2021-06-02
+    Firmware Age: 5y 4month 2w 2d        
