@@ -1,0 +1,34 @@
+When downloading tools, software, or operating system packages, you must consider your architecture for any compiled binaries, virtualization software, or low-level system utilities.
+Because your system profile shows you are running an x86-64 (Intel/AMD 64-bit) architecture running Linux, you must look for downloads explicitly labeled x86_64, amd64, or 64-bit Linux. You must avoid downloads labeled ARM64, aarch64, i386, or 32-bit.
+The specific types of tools where architecture is critical include:
+
+1. Developer Environments & Runtimes
+
+These platforms compile or run code directly against your CPU instructions:
+• Java Development Kit (JDK): Downloads are separated strictly by Linux x64 vs. Linux ARM64.
+• Node.js / Python / Go: Compilers and binaries must match x64 to execute on your machine.
+• Docker Desktop / Engine: The engine depends heavily on host kernel structures and architecture.
+
+2. Virtualization & Emulation Tools
+
+Tools that manage virtual hardware or container slices are bound to the host CPU:
+• VirtualBox / VMware Workstation: They require direct access to your x86-64 virtualization extensions (Intel VT-x/AMD-V).
+• Android Studio / Emulators: Emulating a phone requires downloading specific x86_64 system images for speed, or configuration tweaks to simulate ARM.
+
+3. Database Engines
+
+High-performance storage layers are optimized for specific hardware instructions:
+• MongoDB / PostgreSQL / MySQL: Server binaries are strictly segmented by operating system and architecture.
+
+4. System & Hardware Utilities
+
+Any software that speaks directly to your hardware components:
+• Graphics Drivers (NVIDIA/AMD): Kernel modules are built precisely for x86-64 Linux kernels.
+• Wine / Proton: Compatibility layers translating Windows instructions to Linux depend heavily on whether the app is 32-bit (x86) or 64-bit (x64).
+
+5. Third-Party Web Apps (Non-Repository Software)
+
+When downloading software from outside the official Ubuntu Software Center via .deb files or binary tarballs:
+• VS Code / Google Chrome / Discord: You must manually choose the .deb (amd64) option on their download pages.
+Note: You do not need to worry about architecture for tools installed directly via standard terminal commands (like sudo apt install tool-name or sudo snap install tool-name). Ubuntu's package manager automatically detects your x86-64 system and pulls the correct version behind the scenes.
+Are you looking to download a specific tool or application right now that you need help finding the correct architecture layout for?
