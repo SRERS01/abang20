@@ -1,0 +1,25 @@
+Perfect! Frida is now installed and fully accessible inside your virtual environment, running version 17.15.3.
+Now you need to make sure the companion tool (frida-server) running on your mobile device or emulator matches this exact version.
+
+Next Steps to Connect
+
+1. Download matching Frida Server:
+Go to the Frida GitHub Releases page and download frida-server-17.15.3-android-arm64.xz (or x86_64 if using a standard PC emulator like Genymotion/Android Studio).
+2. Push and Run on Device:bash
+# Extract the file
+unxz frida-server-17.15.3-android-*.xz
+
+# Push to device
+adb push frida-server-17.15.3-android-* /data/local/tmp/frida-server
+
+# Execution (on device via adb shell as root)
+adb shell
+su
+chmod 755 /data/local/tmp/frida-server
+/data/local/tmp/frida-server &
+Use code with caution.
+3. Verify the Connection:
+Open a new terminal tab (or stay in your current one), ensure your virtual environment is active, and test the connection by listing the processes on your device:bash
+frida-ps -U
+Use code with caution.
+Once frida-ps -U successfully lists your device's processes, do you want to find the exact package name for Wolt to start your analysis?
