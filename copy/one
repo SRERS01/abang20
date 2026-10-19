@@ -1,0 +1,276 @@
+Walt (ex Wallet on Telegram) looks forward to working with the security community to identify vulnerabilities and help keep our business and customers safe.
+Vulnerability Classification & Severity Levels
+We assess and categorize reported vulnerabilities based on their potential impact.  This helps ensure that rewards are proportionate to the severity and real-world risk of each finding.
+🟣 Extreme
+Reward: $30,000 to $100,000  
+
+    Access to financial services with the ability to withdraw funds from blockchain wallets that have a significant impact on the business
+    A large-scale compromise of user wallets
+
+🔴 Critical
+Reward: $3,000 to $29,999 
+
+    Remote Code Execution (RCE) with direct access to core infrastructure, servers, or sensitive user data
+    Full system or infrastructure compromise
+    Unrestricted access to highly sensitive user data (e.g., financial data)
+
+🟠 High
+Reward: $500 to $3,000 
+
+    Privilege escalation across users, roles, or system boundaries
+    Unauthorized access to sensitive or restricted data
+    RCEs with limited impact due to containment, lack of access to valuable data, or other mitigating factors
+    Bypassing major access controls or business logic
+
+🟡 Medium
+Reward: $200 to $500 
+
+    Cross-Site Scripting (XSS)
+    SQL injection with limited scope or controlled impact
+    Vulnerabilities with moderate business or user impact
+    Vulnerabilities requiring significant user interaction or affecting non-critical components
+
+🔵 Low
+Reward: $100 to $200 
+
+    Exposure of non-sensitive information (e.g., user-agent logs, internal metadata)
+    Low-impact misconfigurations (e.g., non-exploitable headers)
+
+    ⚠️ Note: Not all RCEs are considered critical.
+
+    RCEs that are limited to low-privileged environments (e.g., sandboxed browser contexts or restricted environments without meaningful access or impact) may be rated High or Medium, depending on exploitability and potential harm.
+
+Additional Evaluation Criteria
+Risk Rating System:
+Final severity and bounty amounts are determined using our internal risk assessment model, which considers exploitability, potential business impact, and monetary risk
+PII Exposure:
+Reports involving personally identifiable information (PII) are evaluated using an internal framework. Severity is based on the nature of the data, context of exposure, and risk to affected users.
+Response Targets
+Walt will make a best effort to meet the following SLAs for hackers participating in our program:
+Type of Response	SLA in business days
+First Response	2 days
+Time to Triage	10 days
+Time to Bounty	14 days
+Time to Resolution	depends on severity and complexity
+Disclosure Policy
+
+    As this is a private program, please do not discuss this program or any vulnerabilities (even resolved ones) outside of the program without express consent from the organization.
+    Follow HackerOne's disclosure guidelines.
+
+Scope Leniency
+
+    This program will not accept submissions for assets that are not listed as in scope
+
+Program Rules
+Please provide detailed reports with reproducible steps. If the report is not detailed enough to reproduce the issue, the issue will not be eligible for a reward.
+
+    Submit one vulnerability per report, unless you need to chain vulnerabilities to provide impact.
+    When duplicates occur, we only award the first report that was received (provided that it can be fully reproduced).
+    Multiple vulnerabilities caused by one underlying issue will be awarded one bounty.
+    Social engineering (e.g. phishing, vishing, smishing) is prohibited.
+    Make a good faith effort to avoid privacy violations, destruction of data, and interruption or degradation of our service.
+    Ask the program team before submitting vulnerabilities on unscoped subdomains
+    Only interact with accounts you own or with the explicit permission of the account holder.
+
+Test Plan
+
+    Users are able to sign up for a free account through our (Telegram webapp)[https://t.me/walt]
+    After signing up with your Telegram account, please setup a recovery email inside the TON Space with your *hacker email alias** (h1username@wearehackerone.com)
+
+Session Layer: HTTP Headers
+Researchers should add headers to requests such as: 
+
+    “X-HackerOne-Research: [H1 username]”
+
+Out of Scope Vulnerabilities
+When reporting vulnerabilities, please consider (1) attack scenario / exploitability, and (2) security impact of the bug. The following issues are considered out of scope:
+
+    UI/UX bugs with no security impact or minor security impact
+    Clickjacking on pages with no sensitive actions
+    Cross-Site Request Forgery (CSRF) on unauthenticated forms or forms with no sensitive actions
+    Attacks requiring MITM or physical access to a user's device.
+    Previously known vulnerable libraries without a working Proof of Concept.
+    Comma Separated Values (CSV) injection without demonstrating a vulnerability.
+    Missing best practices in SSL/TLS configuration.
+    Any activity that could lead to the disruption of our service (DoS).
+    Content spoofing and text injection issues without showing an attack vector/without being able to modify HTML/CSS
+    Rate limiting or bruteforce issues on non-authentication endpoints
+    Missing best practices in Content Security Policy.
+    Missing HttpOnly or Secure flags on cookies
+    Missing email best practices (Invalid, incomplete or missing SPF/DKIM/DMARC records, etc.)
+    Vulnerabilities only affecting users of outdated or unpatched browsers [Less than 2 stable versions behind the latest released stable version]
+    Software version disclosure / Banner identification issues / Descriptive error messages or headers (e.g. stack traces, application or server errors).
+    Public Zero-day vulnerabilities that have had an official patch for less than 1 month will be awarded on a case by case basis.
+    Tabnabbing
+    Open redirect - unless an additional security impact can be demonstrated
+    Issues that require unlikely user interaction
+    Missing, misconfigured, or overly permissive DNS CAA records (RFC 8659), without a demonstrated certificate issuance bypass or other direct security impact.
+    Public Sentry DSN exposure, unauthenticated submission of Sentry events, envelopes, or traces, or Sentry monitoring/log poisoning, without demonstrated impact to customer data, account security, or another in-scope asset.
+    Public access to events-gateway or unauthenticated submission of analytics, telemetry, metrics, or business events, including fake event injection, metrics poisoning, monitoring noise without demonstrated impact to customer data, account security, asset custody, or another in-scope asset.
+    JavaScript source map exposure or disclosure of publicly delivered client-side code, without demonstrated exposure of valid credentials, sensitive non-public data, unauthorized access, or another concrete security impact.
+
+We prohibit any AI agents from searching for vulnerabilities as part of the Bug Bounty program.
+Thank you for helping keep Walt and our users safe!
+Top hackers
+See all hackers
+1
+h1xploit
+h1xploit
+Reputation: 322
+2
+hij4cker
+hij4cker
+Reputation: 57
+3
+voiid
+voiid
+Reputation: 54
+4
+c0r73xx
+c0r73xx
+Reputation: 44
+5
+wkcaj
+wkcaj
+Reputation: 44
+6
+0m4x
+0m4x
+Reputation: 44
+7
+sultan_0day
+sultan_0day
+Reputation: 32
+8
+h4z4x
+h4z4x
+Reputation: 29
+9
+unico
+unico
+Reputation: 27
+10
+hologrammmm0x
+hologrammmm0x
+Reputation: 24
+11
+mnem0tiv
+mnem0tiv
+Reputation: 22
+12
+theendisnear
+theendisnear
+Reputation: 22
+walt_io
+98%
+Asset name
+	Type
+	Coverage
+	Max. severity
+	Bounty
+	Last update
+	Resolved Reports
+wallettg.net	Domain		
+Critical
+	
+Eligible
+	
+Feb 6, 2026
+	
+0 (0%)
+wallettg.com	Domain		
+Critical
+	
+Eligible
+	
+Feb 6, 2026
+	
+1 (3%)
+walletbot.me	Domain		
+Critical
+	
+Eligible
+	
+Apr 11, 2024
+	
+12 (40%)
+p2p.walletbot.me	Domain		
+Critical
+	
+Eligible
+	
+Mar 16, 2026
+	
+2 (7%)
+http://t.me/walt	URL		
+Critical
+	
+Eligible
+	
+Sep 29, 2026
+	
+0 (0%)
+http://t.me/wallet	URL		
+Critical
+	
+Eligible
+	
+Sep 29, 2026
+	
+0 (0%)
+Crypto infrastructure for cold and hot wallets	Other		
+Critical
+	
+Eligible
+	
+Apr 11, 2024
+	
+2 (7%)
+pay.wallet.tg	Domain		
+High
+	
+Eligible
+	
+Apr 11, 2024
+	
+0 (0%)
+walt.io	Domain		
+Low
+	
+Eligible
+	
+Sep 29, 2026
+	
+2 (7%)
+wallet.tg	Domain		
+Low
+	
+Eligible
+	
+Apr 11, 2024
+	
+2 (7%)
+wallet.helpscoutdocs.com	Domain		
+None
+	
+Ineligible
+	
+Apr 11, 2024
+	
+0 (0%)
+toncenter.walletbot.me	Domain		
+None
+	
+Ineligible
+	
+Feb 12, 2026
+	
+0 (0%)
+docs.wallet.tg	Domain		
+None
+	
+Ineligible
+	
+Apr 11, 2024
+	
+0 (0%)
