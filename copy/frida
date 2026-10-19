@@ -1,0 +1,70 @@
+It looks like you have Wolt.apk ready in your directory, but Frida is not currently installed or configured in your system's PATH (since which frida returned nothing).
+To test Wolt with Frida, you first need to install the tools on your computer and the matching server on your Android device (or emulator).
+
+Step 1: Install Frida on your Host Computer
+
+Since you are on a Linux terminal (Ubuntu/Debian-based judging by the hostname), run the following commands to install the Frida CLI tools via Python's package manager:
+bash
+sudo apt update && sudo apt install python3-pip python3-venv -y
+pip3 install frida-tools
+Use code with caution.
+Verify the installation:
+bash
+frida --version
+Use code with caution.
+
+Step 2: Download and Run Frida-Server on the Device
+
+Frida requires a companion binary running on the Android device with root privileges.
+1. Check your device architecture: Connect your phone/emulator via ADB and run:bash
+adb shell getprop ro.product.cpu.abi
+Use code with caution.
+(It will likely return something like arm64-v8a or x86_64).
+2. Download the server: Go to the official Frida GitHub Releases page. Download the exact frida-server package matching your host Frida version and your device architecture (e.g., frida-server-$VERSION-android-arm64.xz).
+3. Push and run it on the device:bash
+# Extract the file first
+unxz frida-server-*.xz
+
+# Push to device
+adb push frida-server-* /data/local/tmp/frida-server
+
+# Change permissions and run as root
+adb shell
+su
+chmod 755 /data/local/tmp/frida-server
+/data/local/tmp/frida-server &
+Use code with caution.
+
+Step 3: Install the Wolt APK
+
+Install your local Wolt.apk onto the target test device:
+bash
+adb install Wolt.apk
+Use code with caution.
+
+Step 4: Test Wolt with Frida
+
+
+1. Find the Package Name
+
+Before hooking, you need Wolt's bundle identifier. Find it by running:
+bash
+frida-ps -Uai | grep -i wolt
+Use code with caution.
+(This will output something like com.wolt.android or similar).
+
+2. Spawn the Application
+
+To monitor the app from its absolute startup (useful for catching SSL pinning, root detection, or early initialization checks), use the spawn flag (-f):
+bash
+frida -U -f com.wolt.android
+Use code with caution.
+Note: Type %resume in the Frida CLI prompt to let the app finish booting once attached.
+
+3. Inject a Pre-made Script (e.g., SSL Pinning Bypass)
+
+Apps like Wolt typically use SSL pinning to prevent traffic interception via tools like Burp Suite or OWASP ZAP. You can bypass this using community scripts from Frida Codeshare:
+bash
+frida -U -f com.wolt.android --codeshare pcipolloni/universal-android-ssl-pinning-bypass-with-frida
+Use code with caution.
+Are you trying to inspect network traffic (API endpoints), bypass root/integrity detection, or hook into specific Java classes inside the Wolt app? Let me know so I can provide the exact JavaScript snippet for your hook.
