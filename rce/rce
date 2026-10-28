@@ -1,0 +1,39 @@
+Remote Code Execution (RCE) is one of the most critical security vulnerabilities because it allows an unauthorized attacker to run arbitrary code or system-level commands on your server or application. [1] (https://www.fortinet.com/fr/resources/cyberglossary/remote-code-execution), [2] (https://www.bugcrowd.com/glossary/remote-code-execution-rce/)
+The primary causes of RCE can be categorized below. The items marked with a ⭐ are exceptionally difficult to avoid or notice because they lie outside normal application logic, bypass standard firewalls, or hide within trusted components. [1] (https://www.fastly.com/learning/what-is-remote-code-execution-rce), [2] (https://runsafesecurity.com/blog/worst-security-vulnerabilities/)
+
+1. Insecure Serialization & State Failures
+
+* Insecure Deserialization: Applications convert unstructured bytes back into structured programmatic objects. If an attacker controls the serialized data, they can pass malicious objects that force the application to execute system commands during reconstruction. [1] (https://www.oligo.security/academy/remote-code-execution-rce-how-it-works-and-8-defensive-strategies), [2] (https://www.fortinet.com/br/resources/cyberglossary/remote-code-execution), [3] (https://www.fastly.com/learning/what-is-remote-code-execution-rce)
+* ⭐ Core Runtime Memory Corruption (The "Invisible" Vector): These are flaws embedded deep inside the programming language interpreter or engine itself (e.g., PHP, Java, Python). Attackers exploit memory mismanagement (like use-after-free or out-of-memory states) within trusted runtime workers to corrupt memory and hijack execution flow.
+	• Why it’s starred: It is virtually impossible to notice or prevent via code reviews or application-level firewalls (WAFs). For example, the historic "PHP2Shell" flaws (CVE-2026-109618/19) allowed unauthenticated RCE by simply triggering out-of-memory errors on a standard server, forcing the core PHP interpreter into a corrupt state. [1] (https://www.wiz.io/blog/php2shell-php-rce), [2] (https://www.fastly.com/learning/what-is-remote-code-execution-rce), [3] (https://patchstack.com/articles/php-major-vulnerability-alert-10-2026/), [4] (https://www.sweet.security/blog/php2shell-critical-php-vulnerabilities-expose-millions-of-applications-to-remote-code-execution)
+
+2. Supply Chain & Ecosystem Weaknesses
+
+* ⭐ Vulnerable Third-Party Dependencies (The "Trojan Horse"): Modern platforms are built on thousands of nested open-source libraries. If a deeply buried utility library contains an RCE flaw, your entire platform becomes vulnerable.
+	• Why it’s starred: Your code can be 100% flawless, yet you remain entirely exposed. Infamous supply chain exploits like Log4Shell (in a standard Java logging library) and React2Shell (CVE-2025-55182, an RCE found in default React Server Component configurations) allowed attackers to breach networks via basic requests that looked entirely benign to traditional security systems. [1] (https://www.sasa-software.com/learning/what-is-remote-code-execution-rce/), [2] (https://www.fastly.com/learning/what-is-remote-code-execution-rce), [3] (https://runsafesecurity.com/blog/worst-security-vulnerabilities/), [4] (https://www.imperva.com/learn/application-security/remote-code-execution/), [5] (https://www.youtube.com/watch?v=ICN39qR39hA)
+
+3. Edge Infrastructure & Network Routing
+
+* ⭐ Edge Appliance & Gateway Exploits (The "Perimeter Failure"): RCE vulnerabilities occurring within your firewalls, VPNs, load balancers, or API gateways (e.g., Citrix NetScaler, F5 BIG-IP, Ivanti).
+	• Why it’s starred: They happen before network traffic even reaches your application logs. Attackers exploit these pre-authentication flaws to compromise the perimeter equipment directly, harvesting server credentials or routing malicious commands under the guise of normal network infrastructure. [1] (https://runsafesecurity.com/blog/worst-security-vulnerabilities/), [2] (https://socradar.io/blog/top-rce-vulnerability/)
+
+4. Input Interpretation & Injection Flaws
+
+* OS Command Injection: Passing unvalidated user input directly into system shells (e.g., executing a system ping command or image conversion tool using text supplied by a user). [1] (https://www.fortinet.com/br/resources/cyberglossary/remote-code-execution), [2] (https://www.fastly.com/learning/what-is-remote-code-execution-rce)
+* Server-Side Template Injection (SSTI): Injecting code into web templates (like Twig, Jinja, or Blade). If the template engine parses user input raw, the attacker can break out of the HTML layout and execute backend script code. [1] (https://www.scribd.com/document/781597919/Remote-Code-Execution-RCE-Cheat-Sheet-by-Codelivly), [2] (https://www.fastly.com/learning/what-is-remote-code-execution-rce)
+* Expression Language (EL) Injection: Forcing application expression engines (often used in Java frameworks) to evaluate mathematical or string functions that point to underlying system tasks. [1] (https://www.fastly.com/learning/what-is-remote-code-execution-rce)
+
+5. File Handling & Parsing Flaws
+
+* Unrestricted File Uploads: Allowing users to upload executable files (like .php, .jsp, or .exe) into web-accessible directories, where they can later trigger the file via a URL to act as a "web shell". [1] (https://www.fortinet.com/br/resources/cyberglossary/remote-code-execution), [2] (https://www.fastly.com/learning/what-is-remote-code-execution-rce)
+* ⭐ Malicious File Metadata Parsing (The "Hidden Payload"): Uploading an outwardly normal file (like a .jpg image or .docx file) that contains embedded exploit code inside its hidden metadata (Exif data, XML parsing properties). [1] (https://www.imperva.com/learn/application-security/remote-code-execution/), [2] (https://www.sasa-software.com/learning/what-is-remote-code-execution-rce/)
+* Why it’s starred: Standard file scanners will flag the file extension as safe. However, the moment your backend processes the file to resize it or read its data, a hidden bug in the image/document processing library (like ImageMagick) executes the malicious payload. [1] (https://www.imperva.com/learn/application-security/remote-code-execution/)
+
+How to Mitigate the "Unnoticable" RCEs
+
+Because you cannot manually find or code your way out of the starred (⭐) categories, defense requires architectural zero-trust:
+1. Aggressive Dependency Management: Run automated tools (like Snyk or Dependabot) to catch supply-chain flaws instantly.
+2. Runtime Isolation (Sandboxing): Assume your application will get compromised. Run backend workers in strictly isolated containers or low-privilege microservices so an RCE cannot escape to the main server.
+3. Strict Network Segmentation: Ensure your web-facing applications cannot communicate with internal master databases or administrative infrastructure unless strictly authenticated. [1] (https://patchstack.com/articles/php-major-vulnerability-alert-10-2026/), [2] (https://www.fastly.com/learning/what-is-remote-code-execution-rce), [3] (https://www.wiz.io/academy/application-security/remote-code-execution-rce-attack)
+Are you designing a security monitoring workflow for a live production platform, or are you auditing a specific programming language framework right now? Let me know so I can tailor the detection strategies.
+Copying...
