@@ -1,0 +1,55 @@
+Expanding on the business logic flaws where only the attacker enters their PIN to authorize a transaction, yet successfully manipulates the final credit value on the merchant's application, requires looking closely at how multi-tier systems process transactional states.
+Below is the complete, advanced breakdown of methods—including the original four alongside several highly nuanced, deep architecture edge cases that automated tools and traditional code reviewers frequently miss.
+
+1. The Race-Condition Lock Bypass (Limit Overrun)
+
+This flaw targets the execution gap between a payment gateway's success signal and the merchant's database locking mechanism. [1] (https://portswigger.net/web-security/race-conditions)
+* The Workflow: The attacker initiates a legitimate $10 deposit request, pays via the gateway, and inputs their authorization PIN. The gateway marks this distinct token as "Paid."
+* The Execution: The attacker intercepts the completion redirect or callback payload. Using synchronization tools (like HTTP/2 single-packet injection), they fire dozens of concurrent confirmation requests (POST /api/wallet/complete) to the merchant server at the exact same millisecond. [1] (https://portswigger.net/web-security/race-conditions)
+* The Blind Spot: If the application backend uses optimistic database concurrency controls or lacks strict isolation levels (e.g., missing a SELECT ... FOR UPDATE lock), each concurrent thread checks the database, reads the transaction as "Pending," and subsequently adds $10 to the user's balance before the first thread can toggle the state to "Completed."
+* The Result: The single authenticated PIN authorization multiplies into many times its initial balance value. [1] (https://www.yeswehack.com/learn-bug-bounty/ultimate-guide-race-condition-vulnerabilities), [2] (https://blog.isecauditors.com/en/race-conditions-a-silent-threat-to-web-applications)
+
+2. Currency Exchange Rate Parameter Tampering
+
+This vector exploits inconsistencies between how the client-side UI calculates international values versus how the payment gateway executes them.
+* The Workflow: The attacker initializes a deposit request for "1,000" units inside an application configured for a low-value base currency (e.g., Japanese Yen - JPY).
+* The Execution: Before the request reaches the merchant API to generate the gateway checkout session, the attacker tampers with the currency parameter, changing it to a high-value currency (e.g., British Pounds - GBP or USD) while retaining the value string 1000.
+* The PIN Entry: On the payment gateway UI, the attacker manually changes the checkout preference back to JPY or updates the checkout page directly to charge ¥1,000 (~$6 USD), then enters their secure PIN.
+* The Blind Spot: If the merchant backend assumes the invoice properties are static and logs the credit to the database based on the initial high-value currency code payload but validates completion solely based on a generic "Success" status from the provider, the user's wallet receives a credit of 1,000 GBP/USD while only paying 1,000 JPY. [1] (https://community.owasp.org/attacks/Web_Parameter_Tampering)
+
+3. Floating-Point Rounding & Precision Mismatch
+
+This relies on data-type processing discrepancies between third-party systems that adhere to strict standard cash decimals and internal micro-transaction ledgers.
+* The Workflow: The attacker attempts to execute a deposit using a fractional scientific notation string or extreme floating-point decimal (e.g., 0.00000000001 or an explicit negative boundary like -0.01).
+* The Execution: When the intent passes to the banking provider or card processor, the third party automatically truncates or rounds the impossible fraction down to a flat $0.00 or a basic 1-cent verification charge. The attacker completes the zero-dollar checkout using their PIN.
+* The Blind Spot: When the payment verification data flows back to the core database, the application code fails to cleanly typecast the payload. It runs the fractional value through an unvalidated integer conversion or a math division function that overflows, mapping the input to the maximum available system storage allocation (such as 2,147,483,647).
+
+4. Status-State Inversion (Abusing 'Failed' Callbacks)
+
+This takes advantage of generic internal routers that handle data pipeline updates without verifying conditional logic paths.
+* The Workflow: The attacker initiates a $5,000 deposit, triggers the payment portal, but deliberately submits an incorrect PIN or lets the transaction expire. The bank registers a hard refusal.
+* The Execution: The third-party gateway redirects the application frame back with a failure parameter structure: GET /callback?transaction_status=failed&ref=XYZ_99. The attacker intercepts this return packet on their device and flips the string value to transaction_status=success.
+* The Blind Spot: A structural logic flaw occurs if the receiving merchant endpoint simply checks that an update occurred to close out the transaction ticket, immediately querying the transaction's locally saved deposit definition rather than checking the status string inside the cryptographically signed payload token returned by the provider. The failure is processed implicitly as a credit trigger.
+
+5. Dual-Intent Idempotency Key Swapping
+
+This exploits systems that use an arbitrary identifier provided by the client's device to ensure duplicate requests aren't charged twice.
+* The Workflow: The attacker creates two distinct deposit drafts inside the application interface simultaneously: Draft #1 for $5 and Draft #2 for $5,000.
+* The Execution: The app assigns an Idempotency-Key or tracking header to prevent accidental double-billing. The attacker captures the checkout link for the $5 transaction, enters their PIN, and pays it successfully.
+* The Blind Spot: The merchant relies on a database setup where the fulfillment system resolves payments strictly by querying the client-controlled Idempotency-Key. The attacker alters the final confirmation step, sending the real gateway receipt from the $5 transaction but wrapping it with the header/idempotency key belonging to the $5,000 draft.
+* The Result: The app verifies the gateway token is signed and fully paid, then matches it to the data structure designated by the swapped key, completing the $5,000 entry.
+
+6. Multi-Step State Injection (The Pre-Auth Hijack)
+
+This flaw affects checkout funnels where the authorization and capture stages are handled as decoupled, independent states exposed directly to client API endpoints.
+* The Workflow: The attacker initiates a deposit. The application's backend architecture relies on a multi-step sequence: Step 1 (Initialize), Step 2 (Authorize via Gateway PIN), Step 3 (Credit Balance).
+* The Execution: The attacker executes Step 1 for a $10,000 deposit. They are handed a payment session ID. Instead of proceeding to Step 2 to enter their PIN for $10,000, they spin up a completely separate web request for a $1 transaction, completing that $1 session cleanly with their valid authorization PIN.
+* The Blind Spot: The attacker jumps straight to the merchant's step 3 completion API endpoint (/api/deposit/capture), feeding the backend the transaction proof from the $1 payment while binding it to the session tracker of the $10,000 request. If the endpoint trusts that any valid authorization token validates the currently open session parameters, the higher amount is pushed through. [1] (https://blog.isecauditors.com/en/race-conditions-a-silent-threat-to-web-applications)
+
+7. Gateway Metadata Injection via Variable Overwriting
+
+This occurs in systems using dynamic format configurations (like JSON or loosely typed arrays) where parameters can be appended to requests to override inner application variables.
+* The Workflow: The attacker sets up a standard $10 deposit.
+* The Execution: When the app makes the backend API call to communicate with the payment server, the attacker appends duplicate or nested variables into the JSON body payload: {"amount": 10.00, "wallet_credit_amount": 1000.00} or {"amount": 10, "amount": 1000}.
+* The Blind Spot: When parsing the incoming request, the gateway library uses a different logic structure than the internal wallet ledger database. The gateway parser prioritizes the first instance of the amount key, prompting a regular $10 charge requiring a PIN. Conversely, the internal database router processes the second variable instance or maps the injected secondary logic field (wallet_credit_amount), modifying the final credit amount applied to the account ledger.
+Are you designing core database architectures to protect against these specific flaws? I can explain how to implement strict database transaction tracking or webhook validation models to close these blind spots.
