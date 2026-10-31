@@ -1,0 +1,38 @@
+Schemathesis and Fencer are the primary Python-native, open-source web API security testing tools that can be installed directly via pip. [1] (https://github.com/abunuwas/fencer), [2] (https://faun.dev/toolbox/compare-open-source-api-security-testing-tools/)
+While many industry-standard API security scanners run as binary engines or Docker containers (like OWASP ZAP or StackHawk), Python boasts an excellent ecosystem of endpoint fuzzers, API dependency checkers, and contract security tools available on PyPI. [1] (https://novee.security/blog/best-api-security-testings-tools/)
+
+API-Native DAST & Fuzzing Tools
+
+These tools actively interact with your running API endpoints to uncover vulnerabilities like injection flaws, unhandled crashes, or logic errors by scanning your API schema definition. [1] (https://www.projectsatbangalore.com/cybersecurity-projects-for-final-year-students/api-security-testing-tool-using-python-and-requests/), [2] (https://novee.security/blog/best-api-security-testings-tools/)
+• Schemathesis: The most widely used open-source API fuzzer in the Python ecosystem. It reads your OpenAPI (Swagger) or GraphQL schemas and automatically generates thousands of malicious and boundary-testing payloads to find regressions and security issues. [1] (https://testguild.com/api-testing-tools/), [2] (https://faun.dev/toolbox/compare-open-source-api-security-testing-tools/)
+bash
+pip install schemathesis
+Use code with caution.
+• Fencer: An open-source automated API security testing tool built specifically around the OWASP API Security Top 10 checklist. It ingests local OpenAPI spec files (JSON/YAML) and tests for common API-specific vulnerabilities. [1] (https://github.com/abunuwas/fencer)
+bash
+pip install fencer
+Use code with caution.
+
+API Dependency & Secret Scanning (SCA) Tools
+
+Securing an API also requires protecting its backend dependencies and preventing exposed keys or structural flaws in the implementation code. [1] (https://medium.com/@muruganantham52524/python-security-toolkit-every-developer-needs-before-its-too-late-6bbc0bdd244d)
+• pip-audit: Essential for auditing your API's backend ecosystem. It scans your environment or requirements.txt to find known CVEs within the packages powering your API endpoints. [1] (https://pypi.org/project/pip-audit/), [2] (https://medium.com/@muruganantham52524/python-security-toolkit-every-developer-needs-before-its-too-late-6bbc0bdd244d)
+bash
+pip install pip-audit
+Use code with caution.
+• detect-secrets: A tool designed to scan codebases for accidentally hardcoded API tokens, encryption keys, and credentials before they get deployed to production. [1] (https://medium.com/@muruganantham52524/python-security-toolkit-every-developer-needs-before-its-too-late-6bbc0bdd244d)
+bash
+pip install detect-secrets
+Use code with caution.
+• Bandit: A security linter that analyzes your Python API source code (e.g., FastAPI, Flask codebase) for unsafe patterns like SQL injection vectors or dangerous function evaluations. [1] (https://dev.to/trottomv/secure-by-design-in-python-a-fastapi-app-with-5-devsecops-tools-and-a-real-time-ssti-vulnerability-2e6n), [2] (https://www.youtube.com/watch?v=pGF44No7sOs&t=12)
+bash
+pip install bandit
+Use code with caution.
+
+General Network & Endpoint Scanners via pip
+
+• CyberSecurityTools: A handy, lightweight bundle package on PyPI providing Python modules to run basic structural checks, network port scans, cross-site scripting (XSS), and basic SQL injection testers directly on target URLs. [1] (https://pypi.org/project/CyberSecurityTools/)
+bash
+pip install CyberSecurityTools
+Use code with caution.
+Would you like a sample GitHub Actions CI/CD configuration to automatically run Schemathesis against your Python API on every pull request?
