@@ -1,0 +1,15 @@
+HTTP/2 200 OK
+Date: Sun, 01 Nov 2026 22:10:30 GMT
+Content-Type: application/json
+Rememberme: false
+Vary: Accept-Encoding
+Set-Cookie: x-pawa-token-partitioned=aca203505d4b5eb0-7e66b17e8a9dd88b; Max-Age=2591999; Expires=Tue, 01 Dec 2026 22:10:29 GMT; Path=/; Secure; HTTPOnly; SameSite=None; Partitioned
+Set-Cookie: x-pawa-token-secure=aca203505d4b5eb0-7e66b17e8a9dd88b; Max-Age=2591999; Expires=Tue, 01 Dec 2026 22:10:29 GMT; Path=/; Secure; HTTPOnly; SameSite=None
+Set-Cookie: x-pawa-token=aca203505d4b5eb0-7e66b17e8a9dd88b; Max-Age=2591999; Expires=Tue, 01 Dec 2026 22:10:29 GMT; Path=/; HTTPOnly
+Set-Cookie: __cf_bm=3gmlYlyNWMAx5Z6yJ76sKRQch33JNAtSMa7zRkg9fHc-1793571030.3467772-1.0.1.1-.U6VV29nKv0HYZcEzWOSKVpGGmCfWff4AvhG_g0xHKb8T0xGvAh6iuAi14DRA1gBwfrcZJDErIKw4TXnAvKWbfTM6KRsl_W2ZwYsL8WDsSh3qmNmw0REf5B8rQ4wMNr2; HttpOnly; SameSite=None; Secure; Path=/; Domain=www.betpawa.cm; Expires=Sun, 01 Nov 2026 22:40:30 GMT
+Cf-Cache-Status: DYNAMIC
+Server: cloudflare
+Cf-Ray: a53e3adbaf6bcdbf-DLA
+Alt-Svc: h3=":443"; ma=86400
+
+{"userUuid":"e2b77657-f746-4920-8301-bd03e049e8f2","postLogin":{"user":{"userUuid":"e2b77657-f746-4920-8301-bd03e049e8f2","phoneNumber":"+237653454242","signedUp":"2025-03-15T20:23:12Z","phoneOperatorNetwork":"MTN","region":"","firstName":"","lastName":"","nameChangeAllowed":false,"effectiveSoftLockState":{"restrictedScopes":[]}},"preference":{"avg_weighted_stake":1620.84,"pawa6_last_deposit":"2026-08-25T17:56:52.312757745Z","any_up_filter_enabled":false,"any_up_onboarding_seen":true,"last_win_bet_price":3.35,"bets_placed":29,"won_total":44034.4,"language":"en","total_items":202,"accept_odds":false,"terms_accepted_date":"2025-12-14T16:36:48.283Z","hide_balance_tooltip_dismissed":true,"logins_count":11,"favorite_casino_games_ids":"104255,101773,123351,113879,129373,127674,3255,103036,67830,23031","last_bet":"2026-08-26T12:11:30Z","last_login":"2026-11-01T21:08:06Z","last_win_bet_payout":13989.69,"preferred_payment_provider":"MTN","phone_operator_network":"MTN","usp_widget_expanded":false,"last_win_bet_id":"12701058400","last_win_bet_compensation_amount":0.0,"last_seen_win_bet_id":"12701058400","collapsed_markets":"[\"1096755\",\"1096782\",\"1096807\",\"1096808\",\"1096814\",\"129108\",\"129109\",\"129110\",\"28000014\",\"28000035\",\"28000089\",\"28000224\",\"28000815\",\"28000816\",\"28000869\",\"3591790\",\"3747\",\"3756\",\"3774\",\"3789\",\"3792\",\"3807\",\"3816\",\"3819\",\"4063\",\"4272110\",\"4429\",\"4697\",\"4700\",\"4703\",\"4716\",\"4720\",\"4724\",\"4728\",\"4794\",\"4809\",\"4833\",\"4836\",\"4842\",\"4870\",\"4898\",\"4912\",\"4926\",\"4961\",\"4964\",\"4979\",\"4982\",\"5042\",\"5051\"]","staked_total":42951.39,"dark_mode_onboarding_seen":true,"deposit_option":"CAMEROON_PAWAPAY_MTN_MOMO","preferred_withdrawal_option":"CAMEROON_MTN_PAWAPAY","last_win_bet_date":"2026-08-21T20:57:02Z"}},"effectiveSoftLockState":{"restrictedScopes":[]}}
