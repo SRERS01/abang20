@@ -1,0 +1,78 @@
+To capture and inspect a Wi-Fi login page (captive portal) on Ubuntu, you need to monitor the network traffic at the exact moment your device connects and attempts to communicate with the internet.
+Here is the complete step-by-step process to capture the login page redirect using Wireshark (for full packet analysis) and Browser Developer Tools (for inspecting the webpage itself).
+
+Method 1: Using Wireshark (Full Network Packet Capture)
+
+This method captures the raw network packets to show exactly how the router intercepts your connection and redirects you to the login page.
+
+Step 1: Install Wireshark
+
+Open your terminal (Ctrl + Alt + T) and run the following commands to install Wireshark and configure it so you don't have to run it as root (which is safer):
+bash
+sudo apt update
+sudo apt install wireshark -y
+Use code with caution.
+During installation, a prompt will ask if non-superusers should be able to capture packets. Select Yes.
+To apply this change to your current user, add yourself to the wireshark group:
+bash
+sudo usermod -aG wireshark $USER
+Use code with caution.
+(Note: You may need to log out and log back into Ubuntu for the group change to take effect).
+
+Step 2: Identify Your Wireless Interface Name
+
+In the terminal, find the name of your Wi-Fi card by running:
+bash
+ip link
+Use code with caution.
+Look for an interface that starts with wlan or wlp (for example, wlp3s0). Note this name down.
+
+Step 3: Start Wireshark and Begin Capturing
+
+1. Open Wireshark from your Ubuntu applications menu.
+2. In the list of interfaces on the home screen, double-click your Wi-Fi interface (e.g., wlp3s0).
+3. Wireshark will immediately start capturing all network traffic in real-time.
+
+Step 4: Trigger the Capture
+
+1. Disconnect from your current Wi-Fi and connect to the target Wi-Fi network that requires the password/login page.
+2. Open a web browser and try to navigate to a plain, unencrypted website like http://neverssl.com.
+	• Why? Modern HTTPS websites encrypt traffic, making it harder for the router to cleanly redirect you. An HTTP site forces the router to step in and send the login page.
+
+Step 5: Filter for the Login Page Redirection
+
+Go back to Wireshark, click the red square icon in the top left to Stop the capture, and type this filter into the top bar:
+text
+http.response.code == 302 || http.response.code == 307
+Use code with caution.
+Press Enter. Look at the Info column. You will see an HTTP packet indicating a redirect. Click on it, expand the Hypertext Transfer Protocol section in the bottom pane, and look for the Location: line. This line contains the exact URL of the Wi-Fi login page.
+
+Method 2: Using Browser Developer Tools (Web Layer Capture)
+
+If you just want to capture the webpage code, its forms, and the login URL without dealing with raw network packets, your browser has everything built-in.
+
+Step 1: Open Your Browser's Network Monitor
+
+1. Open Firefox or Chrome/Chromium on Ubuntu.
+2. Press F12 (or right-click anywhere and select Inspect).
+3. Click on the Network tab at the top of the developer panel.
+
+Step 2: Enable "Persist Logs"
+
+This is the most critical step. Usually, when a page redirects, the browser clears the screen.
+* In Firefox: Click the gear icon on the right side of the Network tab and check Persist Logs.
+* In Chrome: Check the box that says Preserve log near the top left of the Network tab.
+
+Step 3: Trigger the Login Page
+
+1. Connect to the Wi-Fi network.
+2. In your browser's URL bar, type http://neverssl.com and hit Enter.
+3. The network tab will instantly populate with rows of data.
+
+Step 4: Analyze the Captured Requests
+
+1. Look at the very first row in the Network tab. You will see neverssl.com with a Status code of 302 or 307 (Redirect).
+2. Click on that row and look at the Headers tab on the right side.
+3. Under Response Headers, locate the Location: field. This displays the web address of the login portal.
+4. The rows immediately following it will show the images, HTML files, and scripts that make up the Wi-Fi login screen itself.
+Now that you know how to find the URL and headers, are you looking to troubleshoot why a portal isn't opening automatically, or are you looking to analyze how the login page processes credentials?
