@@ -1,0 +1,36 @@
+To capture, edit (modify), and send (replay) network packets while they are in transit, you need tools categorized as either Interception Proxies (for web application traffic) or Packet Manipulation Frameworks (for lower-level network packets).
+Here are the standard tools available on Ubuntu that allow you to modify and resend traffic, grouped by how they operate.
+
+1. Web Application Proxies (HTTP/HTTPS Layer)
+
+These tools act as a "man-in-the-middle" between your browser and the network. They pause the traffic, allow you to edit the headers, cookies, or form data, and then send it on to the destination.
+* Burp Suite
+	• Primary Function: Intercepting, editing, and replaying HTTP/HTTPS requests.
+	• How it edits: The "Proxy Intercept" feature pauses a request mid-transit, allowing you to type over the data before letting it pass. The "Repeater" tool lets you resend modified requests multiple times to test server responses.
+* OWASP ZAP (Zed Attack Proxy)
+	• Primary Function: A completely free and open-source alternative to Burp Suite.
+	• How it edits: Features a built-in breakpoint system that halts web requests. You can manually edit the raw text of the request or response and forward it to the server.
+* mitmproxy
+	• Primary Function: A lightweight, console-based (CLI) interactive intercepting proxy.
+	• How it edits: Perfect for scripts or terminal environments on Ubuntu. It allows you to intercept web traffic, edit it using an interactive command-line interface, or write Python scripts to automatically modify packets on the fly.
+
+2. Packet Manipulation Frameworks (Low-Level TCP/UDP Layer)
+
+If you want to edit raw network packets (like changing IP headers, TCP sequence numbers, or UDP payloads) rather than just web traffic, application proxies won't work. You must use packet crafting tools.
+* Scapy
+	• Primary Function: A powerful interactive packet manipulation program written in Python.
+	• How it edits: Scapy can forge or decode packets of a wide number of protocols. You can capture a packet, change specific fields (such as modifying the destination IP or altering the hex payload), and immediately send it back onto the wire using commands like send() or sr().
+* Netsed
+	• Primary Function: A network stream editor that alters packets matching specific patterns.
+	• How it edits: Think of it as sed (the text replacement command) but for live network traffic. You configure it with a rule (e.g., "replace string 'A' with string 'B'"), and it automatically edits the content of TCP or UDP packets passing through your system before they reach their destination.
+
+Key Operational Differences
+
+To understand which one to use for your workflow, consider this functional breakdown:
+
+Tool	Ideal For	Interface	Skill Needed
+Burp Suite / ZAP	Modifying logins, forms, cookies, and web tokens.	Graphical (GUI)	Low to Medium
+mitmproxy	Quick terminal-based editing or automated Python modification scripts.	Terminal (TUI)	Medium
+Scapy	Forging custom network packets, changing MAC/IP addresses, low-level testing.	Python Code / CLI	High
+
+Are you focusing on editing web application data (like text boxes and cookies on a login screen) or modifying low-level network headers (like raw IP and TCP data)? Let me know so I can provide a specific example configuration for that tool!
