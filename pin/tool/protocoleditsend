@@ -1,0 +1,120 @@
+Yes. In network penetration testing, different types of traffic require different tools to capture, inspect, modify and forward data.
+
+Below is a practical classification of network traffic and the tools commonly used for each operation.
+
+### 1\. Traffic types and corresponding tools
+
+| Traffic type          | Capture           | Modify                                                      | Forward                        |
+| --------------------- | ----------------- | ----------------------------------------------------------- | ------------------------------ |
+| HTTP (web traffic)    | Wireshark, TShark | Burp Suite, mitmproxy                                       | Burp Suite, mitmproxy          |
+| HTTPS (encrypted web) | Wireshark, TShark | Burp Suite, mitmproxy                                       | Burp Suite, mitmproxy          |
+| TCP                   | Wireshark, TShark | Scapy, custom proxies                                       | Custom proxy, networking tools |
+| UDP                   | Wireshark, TShark | Scapy                                                       | Custom UDP relay               |
+| DNS                   | Wireshark, TShark | DNS proxy, Scapy                                            | DNS proxy                      |
+| ARP                   | Wireshark, TShark | Scapy, Ettercap                                             | Ettercap, network bridge       |
+| ICMP (ping)           | Wireshark, TShark | Scapy                                                       | Custom packet relay            |
+| FTP                   | Wireshark, TShark | Proxy tools                                                 | FTP proxy                      |
+| SMTP (email)          | Wireshark, TShark | SMTP proxy                                                  | SMTP proxy                     |
+| POP3                  | Wireshark, TShark | Proxy tools                                                 | Mail proxy                     |
+| IMAP                  | Wireshark, TShark | Proxy tools                                                 | Mail proxy                     |
+| SSH                   | Wireshark, TShark | Generally not possible to modify encrypted application data | SSH proxy                      |
+| WebSocket             | Wireshark, TShark | Burp Suite, mitmproxy                                       | Burp Suite, mitmproxy          |
+| MQTT (IoT)            | Wireshark, TShark | MQTT proxy, custom scripts                                  | MQTT broker/proxy              |
+| TLS                   | Wireshark, TShark | TLS-terminating proxy in an authorized test environment     | TLS proxy                      |
+
+### 2\. Additional tools for different traffic
+
+| Traffic                 | Recommended interception/modification tools                                      |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| TCP application traffic | Bettercap, custom TCP proxy, Scapy                                               |
+| UDP application traffic | Scapy, UDP proxy/relay                                                           |
+| DNS requests            | DNS proxy, Scapy, Bettercap                                                      |
+| ARP traffic             | Ettercap, Bettercap, Scapy                                                       |
+| ICMP traffic            | Scapy                                                                            |
+| FTP traffic             | FTP proxy, custom TCP proxy                                                      |
+| SMTP traffic            | SMTP proxy                                                                       |
+| POP3 / IMAP             | Mail proxy                                                                       |
+| SSH                     | SSH proxy or endpoint instrumentation; encrypted payload cannot simply be edited |
+| MQTT                    | MQTT proxy, custom broker                                                        |
+| TLS traffic             | mitmproxy, Burp Suite, TLS-terminating proxy                                     |
+| QUIC / HTTP/3           | QUIC-aware proxy and protocol-specific tools                                     |
+
+Bettercap, for example, documents interception at packet, TCP and HTTP/HTTPS levels. bettercap
+
+### 3\. Best tools by capability
+
+Best for web traffic
+
+Burp Suite
+
+Captures, edits and forwards HTTP/HTTPS and WebSocket messages. PortSwigger +1
+
+Best for HTTP/HTTPS command line
+
+mitmproxy
+
+Intercepts, modifies and forwards HTTP/HTTPS traffic. docs.mitmproxy.org
+
+Best for LAN testing
+
+Bettercap
+
+Provides packet, TCP and HTTP/HTTPS interception capabilities. bettercap
+
+Best for custom packets
+
+Scapy
+
+Creates, captures and manipulates packets through Python.
+
+Best for packet analysis
+
+Wireshark / TShark
+
+Captures and analyses packets; they are not general-purpose traffic-modifying proxies.
+
+### 4\. Important distinction
+
+There are three different operations:
+
+* Packet manipulation: Changing packet headers or payloads.
+
+* Application-level modification: Changing HTTP parameters, headers, messages or responses.
+
+* Traffic forwarding: Relaying the modified traffic to its intended destination.
+
+Not every tool performs all three, and encryption, certificate pinning and protocol protections can prevent modification.
+
+### 5\. Let's narrow this down to your Termux setup
+
+Which traffic do you want to work with?
+
+HTTP and HTTPS
+
+Android application traffic
+
+TCP and UDP
+
+Entire Wi-Fi network traffic
+
+All network traffic
+
+Where will you run the tools?
+
+Android / Termux
+
+Linux / Kali Linux
+
+Windows
+
+What is your objective?
+
+Capture, inspect, modify and forward
+
+Capture and analyse only
+
+Build an authorized penetration-testing lab
+
+Submit
+
+I can then give you a compatible toolset rather than installing tools that perform the same functions.
