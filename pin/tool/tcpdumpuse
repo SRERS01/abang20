@@ -1,0 +1,45 @@
+Yes. If you want to run a Python script while tcpdump is capturing network traffic, using two Ubuntu terminal sessions is the easiest approach.
+
+### Session 1: Run tcpdump
+
+bash
+sudo tcpdump -i any -w capture.pcap
+
+
+This continuously captures packets and saves them into capture.pcap.
+
+### Session 2: Run your Python script
+
+bash
+python3 script.py
+
+
+Your Python script can generate network traffic, while tcpdump captures it simultaneously.
+
+### Session 3 (optional): Analyse captured traffic
+
+bash
+tcpdump -r capture.pcap
+
+
+Or use:
+
+bash
+tshark -r capture.pcap
+
+
+### How the setup works
+
+Terminal 1
+
+tcpdump — captures packets
+
+Terminal 2
+
+Python — generates test traffic
+
+Terminal 3 (optional)
+
+TShark — analyses saved packets
+
+You only need two sessions for capturing and running Python simultaneously. The third is optional. Use a network you own or have permission to test.
