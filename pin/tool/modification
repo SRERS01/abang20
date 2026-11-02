@@ -1,0 +1,66 @@
+n networking and cybersecurity, manipulation and modification are related, but they are not exactly the same.
+
+### 1\. Modification
+
+Modification means making a change to existing data, a packet, or a request.
+
+Example:
+
+Original HTTP request:
+
+http
+username=John&amount=100
+
+
+Modified request:
+
+http
+username=John&amount=200
+
+
+Here, the value of amount has been changed from 100 to 200.
+
+### 2\. Manipulation
+
+Manipulation is a broader term. It means controlling, altering, constructing, or influencing data or network traffic.
+
+It can include:
+
+* Changing packet contents.
+
+* Changing packet headers.
+
+* Redirecting traffic.
+
+* Reordering or dropping packets.
+
+* Creating new packets.
+
+* Replaying previously captured requests.
+
+### 3\. Main differences
+
+| Modification                          | Manipulation                                          |
+| ------------------------------------- | ----------------------------------------------------- |
+| Changes existing data                 | Controls or alters data and traffic                   |
+| Usually involves editing              | Can involve editing, redirecting or reconstructing    |
+| Narrower concept                      | Broader concept                                       |
+| Example: changing a request parameter | Example: changing, redirecting or replaying a request |
+
+### 4\. Tools and examples
+
+| Tool       | Modification      | Manipulation                   |
+| ---------- | ----------------- | ------------------------------ |
+| Burp Suite | Yes               | Yes                            |
+| mitmproxy  | Yes               | Yes                            |
+| Ettercap   | Yes               | Yes                            |
+| Bettercap  | Yes               | Yes                            |
+| Scapy      | Yes               | Yes                            |
+| tcpdump    | No                | No                             |
+| TShark     | No native editing | No active traffic manipulation |
+
+Exam-ready conclusion:
+
+Modification is the act of changing existing data, while manipulation is the broader process of controlling, altering, redirecting or reconstructing data and network traffic.
+
+Remember: Every modification is a form of manipulation, but not every manipulation necessarily involves modification.
