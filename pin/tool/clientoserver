@@ -1,0 +1,105 @@
+Yes. When you enter information into a website and submit it, the data passes through several networking layers. Each layer uses different protocols, and the location where data can be inspected or modified depends on the protocol and encryption.
+
+Here is the complete picture.
+
+### 1\. Protocols involved when sending website input
+
+| Order | Protocol         | Purpose                                      | Where it can be edited                     |
+| ----- | ---------------- | -------------------------------------------- | ------------------------------------------ |
+| 1     | DNS              | Resolves website domain to IP address        | DNS proxy / DNS server                     |
+| 2     | ARP              | Resolves local IP addresses to MAC addresses | Network layer / authorized ARP testing     |
+| 3     | Ethernet / Wi-Fi | Carries frames across the local network      | Network interface / packet tools           |
+| 4     | IP (IPv4/IPv6)   | Routes packets to the destination            | IP packet layer                            |
+| 5     | TCP              | Provides reliable connection                 | TCP proxy or custom networking code        |
+| 6     | TLS              | Encrypts HTTPS communication                 | TLS-terminating proxy in an authorized lab |
+| 7     | HTTP             | Carries website requests and responses       | Burp Suite / mitmproxy                     |
+| 8     | HTTP/2           | Carries multiplexed HTTP requests            | HTTP-aware proxy                           |
+| 9     | HTTP/3           | Carries HTTP over QUIC                       | HTTP/3-aware proxy                         |
+| 10    | WebSocket        | Supports two-way communication               | WebSocket-aware proxy                      |
+
+Not every website uses all these protocols. For example, HTTP/3 uses QUIC over UDP rather than TCP.
+
+### 2\. Where website input can be modified
+
+This is particularly important for your Python and Termux experiments.
+
+### Website communication flow
+
+1\. Browser
+
+Username, password, form data
+
+HTTP request creation
+
+2\. Application layer
+
+Burp Suite / mitmproxy
+
+Inspect and modify HTTP requests in an authorized test
+
+3\. TLS / TCP / IP
+
+Encryption, transport and routing
+
+Scapy and network diagnostic tools work at lower layers, subject to protocol constraints.
+
+4\. Web server
+
+Receives and processes the request
+
+### 3\. Tools and their editing locations
+
+| Tool       | Main working area | Capability                                  |
+| ---------- | ----------------- | ------------------------------------------- |
+| Burp Suite | HTTP/HTTPS        | Request and response modification           |
+| mitmproxy  | HTTP/HTTPS        | Request and response modification           |
+| Ettercap   | LAN traffic       | Interception and packet manipulation        |
+| Bettercap  | Network traffic   | Network interception and manipulation       |
+| Scapy      | Packet layer      | Custom packet construction and modification |
+| Wireshark  | Packet analysis   | Inspection                                  |
+| TShark     | Packet analysis   | Inspection                                  |
+| tcpdump    | Packet capture    | Capture and filtering                       |
+
+### 4\. Example: Where to edit a website POST request
+
+Imagine your test browser submits:
+
+http
+POST /login HTTP/1.1
+Host: example.test
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser&password=dummy123
+
+
+Burp Suite or mitmproxy can inspect and modify the request in an authorized test environment.
+
+For HTTPS, the proxy must establish a trusted TLS connection with the test browser. Simply capturing TCP packets with tcpdump will not expose the encrypted form data.
+
+### 5\. Important distinction: capture versus modification
+
+* tcpdump: Captures packets.
+
+* TShark: Analyses packets.
+
+* Wireshark: Visually inspects packets.
+
+* Burp Suite: Modifies application-level web requests.
+
+* mitmproxy: Modifies application-level web requests.
+
+* Scapy: Manipulates individual packets, but changing a packet does not automatically produce a valid modified application request.
+
+### 6\. What I recommend learning next
+
+Learn these three levels in order:
+
+* Application layer: HTTP requests, POST, GET, headers and body.
+
+* Transport layer: TCP, UDP, TLS and QUIC.
+
+* Network layer: IPv4, IPv6, ARP and ICMP.
+
+This will help you understand exactly where your browser's information travels and where each security-testing tool operates.
+
+I can also teach you how to build a local Python website and use Burp Suite, tcpdump and TShark together to observe the same request at different networking layers.
