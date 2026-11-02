@@ -1,0 +1,67 @@
+Not exactly. Wireshark and Nmap perform different cybersecurity functions. They complement each other rather than replace each other.
+
+### 1\. Wireshark vs Nmap
+
+| Function                      | Wireshark | Nmap                     |
+| ----------------------------- | --------- | ------------------------ |
+| Capture network packets       | Yes       | Limited                  |
+| Analyse network traffic       | Yes       | No, not its main purpose |
+| Identify protocols            | Yes       | Some                     |
+| Discover devices on a network | Limited   | Yes                      |
+| Scan open ports               | No        | Yes                      |
+| Identify running services     | No        | Yes                      |
+| Detect operating systems      | No        | Yes                      |
+| Inspect HTTP requests         | Yes       | Limited                  |
+| Monitor network communication | Yes       | No, not continuously     |
+
+### 2\. What each tool does
+
+![File:Wireshark icon.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/c4p4xtd9Di94z_wdlsbRKsI1EJEjQdVb2zf9j5MFMaB3RgI413pbYOdrfbHtZW7f4oCsbYdd6n8j7mM1Y0FSUs8iKGnL58rhAq-CTPvDNT5eb4G64_4fRRsWxeimQMWVxnFXogNT_hVTFx-Eex-A2p5vMLyiJiY2hrjF6ZkR182F34QjTZxrnYUar2Cc2Fqe?purpose=fullsize)
+
+Wireshark
+
+Think of it as a network microscope. It lets you observe and analyse packets travelling through your network.
+
+![Nmap Project Logo & Brand Assets (SVG, PNG and vector) - Brandfetch](https://images.openai.com/static-rsc-4/QpSh_05q9lFI9DB8RNIL6E1MOeQDxDdbRRZpOqDwbZK1fwNDBntHD9--3Y_XS7UViaJ_bGeX-OvLJPNsAiGGkS4wlCGTNXf8fMg12FnC6VvnnWoNYN-Cg-p0kJGmA3Nxx1ISvOOvbImB-7GQGzfKj_8MgDcGB24I27UkhzS6tCu2srkmQJrqHGrz-VaToJa-?purpose=fullsize)
+
+Nmap
+
+Think of it as a network discovery and scanning tool. It helps identify devices, open ports and services.
+
+### 3\. Example of using both in Ubuntu
+
+Terminal 1 – Discover devices and services on your own network:
+
+bash
+nmap -sV 192.168.1.1
+
+
+Terminal 2 – Capture network traffic:
+
+bash
+sudo tcpdump -i any -w network.pcap
+
+
+Terminal 3 – Analyse the captured traffic:
+
+bash
+tshark -r network.pcap
+
+
+You can also open network.pcap in Wireshark.
+
+### 4\. My recommended cybersecurity toolkit
+
+| Tool       | Main purpose                   |
+| ---------- | ------------------------------ |
+| Nmap       | Network scanning               |
+| Wireshark  | Packet analysis                |
+| TShark     | Command-line packet analysis   |
+| Tcpdump    | Packet capture                 |
+| Burp Suite | Web request interception       |
+| Ettercap   | LAN interception testing       |
+| Bettercap  | Network security testing       |
+| Scapy      | Packet manipulation            |
+| Metasploit | Authorized penetration testing |
+
+My advice: Don't abandon Nmap because you have Wireshark. If you want to understand network security properly, learn both.
