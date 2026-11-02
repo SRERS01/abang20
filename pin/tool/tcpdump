@@ -1,0 +1,99 @@
+Tcpdump is a powerful command-line packet capture and network monitoring tool. It is similar to TShark, but it is generally more lightweight and commonly used on Linux and Termux.
+
+However, tcpdump is primarily a packet-capture tool, not a traffic-modification proxy.
+
+### 1\. What tcpdump can do
+
+| Function                     | Tcpdump |
+| ---------------------------- | ------- |
+| Capture packets              |         |
+| Inspect packet headers       |         |
+| Inspect some packet contents |         |
+| Filter traffic               |         |
+| Save packets to PCAP         |         |
+| Modify captured packets      |         |
+| Forward modified packets     |         |
+| Perform MITM attacks         |         |
+
+### 2\. Useful tcpdump commands for Termux
+
+Check installation:
+
+bash
+tcpdump --version
+
+
+List network interfaces:
+
+bash
+ip link
+
+
+Capture packets:
+
+bash
+tcpdump -i any
+
+
+Capture HTTP traffic:
+
+bash
+tcpdump -i any 'tcp port 80'
+
+
+Capture DNS traffic:
+
+bash
+tcpdump -i any 'port 53'
+
+
+Capture HTTPS traffic:
+
+bash
+tcpdump -i any 'tcp port 443'
+
+
+Save packets into a PCAP file:
+
+bash
+tcpdump -i any -w capture.pcap
+
+
+Read a PCAP file:
+
+bash
+tcpdump -r capture.pcap
+
+
+### 3\. Comparison of your network tools
+
+| Tool       | Capture | Analyse | Modify                   | Forward                  |
+| ---------- | ------- | ------- | ------------------------ | ------------------------ |
+| Tcpdump    | Yes     | Yes     | No                       | No                       |
+| TShark     | Yes     | Yes     | No native editing        | No                       |
+| Wireshark  | Yes     | Yes     | No native editing        | No                       |
+| Ettercap   | Yes     | Yes     | Yes, with plugins        | Yes                      |
+| Burp Suite | Yes     | Yes     | Yes                      | Yes                      |
+| mitmproxy  | Yes     | Yes     | Yes                      | Yes                      |
+| Bettercap  | Yes     | Yes     | Yes, depending on module | Yes                      |
+| Scapy      | Yes     | Yes     | Yes                      | Yes, with custom scripts |
+
+### 4\. My recommendation
+
+For an authorized Termux network-testing environment, these tools complement one another:
+
+* Tcpdump: Packet collection.
+
+* TShark: Packet analysis.
+
+* Wireshark: Visual packet inspection.
+
+* Burp Suite: Web traffic interception and modification.
+
+* mitmproxy: HTTP/HTTPS interception and modification.
+
+* Ettercap: LAN interception testing.
+
+* Scapy: Custom packet manipulation.
+
+Remember: Capturing encrypted HTTPS packets does not automatically reveal their contents. Use authorized test devices and traffic.
