@@ -1,0 +1,33 @@
+To do this all in one go, you can use the Ubuntu Terminal. Since WhatsApp Web downloads usually name files starting with WhatsApp Image... or save them as standard image extensions, we can target them easily.
+Here are the step-by-step commands to move into your edf folder, create a new picture folder inside it, and copy the images there:
+
+1. Open your Terminal and go to your edf folder
+
+Assuming your edf folder is located in your Home directory or your Git repository, navigate to it first. For example, if it is in your Home directory:
+bash
+cd ~/edf
+Use code with caution.
+(If it is located somewhere else, change the path to match where your edf folder is.)
+
+2. Create the new picture folder
+
+Let's create a new folder inside edf specifically for your pictures (you can name it whatsapp_pics or whatever you prefer):
+bash
+mkdir whatsapp_pics
+Use code with caution.
+
+3. Copy all WhatsApp images into that new folder
+
+Run this command to find and copy all files from your Downloads folder that contain "WhatsApp" in the name, or end in common picture formats, directly into your new folder:
+bash
+cp ~/Downloads/*WhatsApp* ~/edf/whatsapp_pics/ 2>/dev/null || cp ~/Downloads/*.{jpg,jpeg,png,webp} ~/edf/whatsapp_pics/
+Use code with caution.
+
+How to verify it worked:
+
+To make sure all your pictures are safely inside the new folder, run:
+bash
+ls ~/edf/whatsapp_pics
+Use code with caution.
+This will print out the list of all the images you just copied over.
+Now that the pictures are organized inside your edf folder, would you like the Git commands to commit and push this new folder up to GitHub? Let me know if any images didn't copy over correctly!
