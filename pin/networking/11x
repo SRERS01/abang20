@@ -1,0 +1,106 @@
+The question is:
+
+Which of the following does NOT come under Social Engineering?
+
+Correct answer: C. Spamming
+
+Let's explain each option and how it works.
+
+### 1\. Phishing
+
+![Proofpoint impersonator steal Microsoft, Google logins in phishing campaign | IT Pro](https://images.openai.com/static-rsc-4/hmJzksRWAtO9f__NrN1VkCIFkZ5y5eEQO8ydRq5eyxxFAXtsPL9LeX4mKc22fD3u1IOXQNo36pzhTnjpriIlqfbacIaLEMKSAxtD8VZcR6ZUaRxEzi90K3b3rl4yHF6oaUQ7yFhOD5ItWN2z5GCijzddvRZ2o1gbloIBWhYeDVtJivdH6bQA-Xzpn9hDNSln?purpose=fullsize)
+
+Meaning: Phishing is a cyberattack in which an attacker pretends to be a trusted person or organisation to trick someone into revealing sensitive information.
+
+How it works:
+
+* An attacker sends a fake email, SMS or message.
+
+* The message may contain a fake login link.
+
+* The victim clicks the link.
+
+* The victim enters a password or banking details.
+
+* The attacker captures the information.
+
+Example: You receive a fake Gmail message asking you to verify your account password.
+
+### 2\. Tailgating
+
+![How to Stop Tailgating Attacks: Employer Communication Guide](https://images.openai.com/static-rsc-4/B91edfpq-o1LENKs0C4oqOqcY8WWeaLSaAyT8nr_vM52teljLUC9SDSfHuVFkpP_3w5Z8YQkPzFctnVV8EGqEF9avJ5o1gCzv2MGegW8cnTlfgXkaMv-TgVN2m6CgwoyKzqNBT3FaIpVNM3cfi7sJCNxgeLGJSLXSOLWaXLwWA5Q7HfP-14maLCshEH4oqUM?purpose=fullsize)
+
+Meaning: Tailgating is a physical security attack in which an unauthorized person follows an authorized person into a restricted area without proper permission.
+
+How it works:
+
+* An attacker waits near a restricted entrance.
+
+* An employee opens the secured door.
+
+* The attacker follows the employee inside.
+
+* The attacker gains unauthorized physical access.
+
+Example: Someone follows a company employee through an access-controlled door without using an access card.
+
+### 3\. Spamming
+
+![Etude : le spam et les malwares en hausse](https://images.openai.com/static-rsc-4/0jQnZh0KfkbNSNJWF9nVx2ByvckuexRzJu7joR38ySbQqM7WwrKgtlBfz8s_3cdjx9mDch6QSnOsQ8SWxX8SzuAER_zxaCSD2cIlsLGoPhaqXN7LeKg1_8Wbfb9gYbP_nL3jh5vJRAS8MyB82hMQ0yWqKaMR7Ook5jOtgLKp6osvw_TgXI6jWfpcXVtGBkc0?purpose=fullsize)
+
+Meaning: Spamming is the sending of large numbers of unwanted or unsolicited messages, usually through email, SMS or social media.
+
+How it works:
+
+* A sender distributes messages to many users.
+
+* The messages appear in their inboxes.
+
+* They may contain advertisements, promotions or suspicious links.
+
+* Users receive unwanted messages.
+
+Example: Receiving 100 unwanted promotional emails from unknown senders.
+
+Why it is the correct answer: Spamming is primarily the distribution of unsolicited messages. It is not inherently a social engineering technique, although spam messages can be used to deliver phishing attacks.
+
+### 4\. Pretexting
+
+![What is pretexting? - Norton](https://images.openai.com/static-rsc-4/235Lm7WbCuYG3WuzDJe888ZgQRUCUdh_Dr69uggW3IIfM6PZs6F9QBxVOc92Z67iFiMz1DAUJmLLePTBEilMYecGXCuPm2jI2BKLDlZq4e3Tq6lVjzFxpFOI29TdPTRLTbbA7BnJk0d8DMVCg_6MCy-0YiLHvxCycJWhG7f84f7wM3tHcTx70rsJJ4C3H9_E?purpose=fullsize)
+
+Meaning: Pretexting is a social engineering technique in which an attacker creates a false identity or believable story to trick someone into providing confidential information.
+
+How it works:
+
+* An attacker pretends to be an IT officer, bank worker or company employee.
+
+* The attacker creates a believable story.
+
+* The victim trusts the attacker.
+
+* The victim reveals confidential information.
+
+Example: Someone calls you pretending to be a bank employee and asks for your account details.
+
+### Important exam revision
+
+| Term       | Main function                                                               |
+| ---------- | --------------------------------------------------------------------------- |
+| Phishing   | Tricks people into revealing information through fake messages or websites. |
+| Tailgating | Gains unauthorized physical access by following someone.                    |
+| Spamming   | Sends large quantities of unwanted messages.                                |
+| Pretexting | Uses a false identity or story to gain information.                         |
+
+Remember for your cybersecurity examination:
+
+* Phishing = Fake messages.
+
+* Tailgating = Following someone into a restricted place.
+
+* Spamming = Unwanted bulk messages.
+
+* Pretexting = Fake identity or story.
+
+Correct answer: C. Spamming.
+
+I can also prepare 20 cybersecurity multiple-choice questions with answers and explanations to help you practise for your quiz.

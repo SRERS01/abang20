@@ -1,0 +1,108 @@
+The correct answer is B. Ad hoc.
+
+The question asks: Which wireless mode connects machines directly to one another without using an access point?
+
+Let's explain all four options so you can understand them for your cybersecurity and networking exams.
+
+### 1\. A. BSS (Basic Service Set)
+
+![Topologies IEEE 802.11 - cisco.goffinet.org](https://images.openai.com/static-rsc-4/ry5NPQLi7uMdO9gb1YkACiY4FL3_Ff0g5PqlT34i25c6dWVyJFDDIhguNy0JCpUUpApwOszR6Xznovak8LvIelCgDYwRP5kiZwwI1E_dtfHZMolFk3O2r6A-LL0XyS0f8lcU40j6yzJ7g7x6cJ_UJGQmuMRpG0DttszpWZDagh-R0PaMTg7OOIKFizVQ5ShU?purpose=fullsize)
+
+* BSS is a group of wireless devices connected within one Wi-Fi network.
+
+* In the traditional infrastructure BSS, devices communicate through a wireless access point (AP).
+
+* The access point coordinates communication between devices.
+
+* Example: Your phone and laptop connect to the same Wi-Fi router.
+
+Remember: BSS = wireless network organized around an access point.
+
+### 2\. B. Ad hoc
+
+![PPT - Wireless Networks Security PowerPoint Presentation, free download - ID:70813](https://images.openai.com/static-rsc-4/jpiBB1P-py5tH3fMXKKFlCvAqBQxeByvPQm726cgWQplhE12En9gzBBzipXjVTNZ25fcVM4zbhKEMXv3cTESycb80tuLdUIFpGfjlwwgi4hKstn8VTulTIzLXIAKuBXANioNS3UhsVL2FUdQVbYlsSdUxlTJea1dPpDyCSFp4pI07EYdH2s-KmacimHc4OVN?purpose=fullsize)
+
+Correct answer
+
+* Ad hoc is a wireless communication mode where devices connect directly to one another.
+
+* It does not require a central access point or router.
+
+* Devices communicate directly using wireless connections.
+
+* Example: Two laptops connecting directly through a wireless ad hoc network.
+
+Remember: Ad hoc = direct device-to-device communication without an access point.
+
+### 3\. C. Infrastructure
+
+![�v�����^�\[�̐ڑ����@�A�ǂꂪ�ǂ��́H�@���Y�݉����R���e���c�b �T�����_�C���N�g](https://images.openai.com/static-rsc-4/1H7CcEH2azX9ITaCBjEUxYTW6wfpG2NhXZYbs1vKDA5e_9xb2oCe6ScHiydxthzPI3uFasV_BHsMf5Gzd5r84359kY5XUTRJY0rwvO7O6xpfcYMm2wOyCdoGv9mJt3CobAL4RvdaP4YkfQoxBhU1onAv7LVR9umsSQ0ETIlsLjHDAahc8TBruty20j5d4HoZ?purpose=fullsize)
+
+* Infrastructure mode uses an access point (AP) to manage wireless communication.
+
+* Devices connect to the access point rather than forming a direct independent network.
+
+* The access point can connect wireless devices to a wired network or the internet.
+
+* Example: Your phone connects to your home Wi-Fi router.
+
+Remember: Infrastructure = communication through an access point.
+
+### 4\. D. Point to Point
+
+![PPT - Is Wireless in Your Future? LAN’s, WAN’s, and Digital Canopies PowerPoint Presentation - ID:70827](https://images.openai.com/static-rsc-4/vsoVTrmjTZt-khJRiHKdNDuNmIf7natDKtJJrKDyFMx3QvDnVA67PdnkouyCbp4koIIh3lnNFGsxOt2TFi1_X5gu2GDgvs9Q3txAmfMxsDQRo5KFb3Zdny4WM3OZMRIADTcJd9GfVLvmujgvsQutfxWfHKRTCK6yxsK4aM9KeIXDxXe3IURNIH9YtbO0_sLo?purpose=fullsize)
+
+* Point-to-point describes a connection between two specific endpoints.
+
+* It is commonly used to connect two buildings wirelessly.
+
+* It can use directional antennas to establish a dedicated link.
+
+* Example: Connecting two offices using wireless bridges.
+
+Remember: Point-to-point = direct link between two endpoints.
+
+### Important exam revision table
+
+| Option         | Main meaning                          |
+| -------------- | ------------------------------------- |
+| BSS            | Basic wireless network service set    |
+| Ad hoc         | Direct device-to-device communication |
+| Infrastructure | Uses an access point                  |
+| Point-to-point | Dedicated link between two endpoints  |
+
+### Test yourself
+
+1. Which wireless mode requires an access point?
+
+Ad hoc
+
+Infrastructure
+
+Point-to-point
+
+None
+
+2. Which wireless mode allows devices to communicate without a central access point?
+
+BSS
+
+Infrastructure
+
+Ad hoc
+
+ESS
+
+3. What does BSS stand for?
+
+Basic Service Set
+
+Broadband Security System
+
+Basic Switching Service
+
+Binary Service Set
+
+Check answers
+
+Exam tip: Whenever you see the words without an access point, immediately think of AD HOC MODE.

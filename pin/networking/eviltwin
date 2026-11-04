@@ -1,0 +1,149 @@
+The correct answer is C. Rogue Access Point (Evil Twin Attack).
+
+Let's explain all four options in a simple cybersecurity exam style.
+
+### 1\. A. MAC Spoofing
+
+Option A
+
+Definition: MAC spoofing is an attack in which an attacker changes or falsifies the MAC address of a device to impersonate another device.
+
+How it works:
+
+* Every network interface has a MAC address.
+
+* The attacker changes their device's MAC address.
+
+* They pretend to be an authorized device.
+
+* They may bypass MAC-based network restrictions.
+
+Example: An attacker copies the MAC address of an authorized laptop to gain access to a restricted Wi-Fi network.
+
+### 2\. B. ARP Poisoning
+
+Option B
+
+Definition: ARP poisoning is an attack in which an attacker sends fake ARP messages to associate their MAC address with another device's IP address.
+
+How it works:
+
+* ARP translates IP addresses into MAC addresses on a local network.
+
+* The attacker sends false ARP responses.
+
+* The victim associates the attacker's MAC address with the gateway's IP address.
+
+* The attacker can intercept or manipulate network traffic.
+
+Example: You connect to Wi-Fi, but an attacker positions themselves between your device and the router to intercept your traffic.
+
+This is commonly used in Man-in-the-Middle (MITM) attacks.
+
+### 3\. C. Rogue Access Point (Evil Twin)
+
+Correct answer
+
+Definition: An Evil Twin attack occurs when an attacker creates a fake Wi-Fi access point that imitates a legitimate Wi-Fi network.
+
+How it works:
+
+* A legitimate Wi-Fi network is called `School_WiFi`.
+
+* The attacker creates another network called `School_WiFi`.
+
+* A victim mistakenly connects to the attacker's fake network.
+
+* The attacker may monitor or intercept unencrypted traffic and attempt to steal login information.
+
+![Les vraies méthodes de piratage WiFi et la protection du réseau](https://images.openai.com/static-rsc-4/cG5HSEA59e9NPG_bVZoYQeE7ZuGFC8wIJ4mmX80hKFb2QYZ78-2I0gx40ntqIzTyWMGOVpXtX3jZ0X-pu1gRAr757iWrLtRB0y-9jSaAxA2XqMULv-d1Xl44qud1jFhNJfJqQYxyHzn89cLzS6Dln07iF34WYMMzEbzzKwVC1EJ5dJX39-cQnldOI1fDZvXI?purpose=fullsize)
+
+Example: You see two Wi-Fi networks with the same name at a café. One belongs to the café, while the other is controlled by an attacker.
+
+Important: An Evil Twin is a type of rogue access point attack.
+
+### 4\. D. Session Hijacking
+
+Option D
+
+Definition: Session hijacking is an attack in which an attacker takes control of an authenticated user's active session.
+
+How it works:
+
+* You log in to a website.
+
+* The website creates a session ID or session cookie.
+
+* An attacker obtains or abuses that session token.
+
+* The attacker uses it to impersonate you without necessarily knowing your password.
+
+Example: You log in to Facebook, and an attacker steals your session cookie and uses it to access your account.
+
+### Important differences for your cybersecurity quiz
+
+| Attack            | Main technique                     |
+| ----------------- | ---------------------------------- |
+| MAC spoofing      | Falsifying a MAC address           |
+| ARP poisoning     | Sending fake ARP messages          |
+| Evil Twin         | Creating a fake Wi-Fi access point |
+| Session hijacking | Taking over an active session      |
+
+### Test yourself
+
+Cybersecurity practice
+
+0/4 answered
+
+1. Which attack involves creating a fake Wi-Fi network?
+
+ARP poisoning
+
+Evil Twin
+
+MAC spoofing
+
+Session hijacking
+
+2. Which attack associates an attacker's MAC address with a gateway's IP address?
+
+Session hijacking
+
+MAC spoofing
+
+ARP poisoning
+
+Evil Twin
+
+3. Which attack involves stealing a session cookie?
+
+Session hijacking
+
+Evil Twin
+
+ARP poisoning
+
+MAC spoofing
+
+4. Which attack involves changing your device's MAC address?
+
+Evil Twin
+
+ARP poisoning
+
+Session hijacking
+
+MAC spoofing
+
+Submit answers
+
+Study tip: Remember these four keywords:
+
+* MAC = Address impersonation.
+
+* ARP = IP-to-MAC manipulation.
+
+* Evil Twin = Fake Wi-Fi.
+
+* Session Hijacking = Session takeover.
+*

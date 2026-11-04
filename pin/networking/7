@@ -1,0 +1,59 @@
+The correct answer is D. All of the Above.
+
+These options describe activities that can occur during different stages of a hacking attack. Let's explain each one.
+
+### A. Application Hiding
+
+This refers to concealing malicious applications or programs so that the victim or security software does not easily detect them.
+
+Example: An attacker hides a malicious application in the background of a computer so the user does not notice it.
+
+Purpose: To avoid detection and maintain unauthorized access.
+
+### B. Privileges Executing (Privilege Escalation)
+
+This refers to an attacker gaining higher levels of access or permissions on a computer system.
+
+There are two main types:
+
+* Vertical privilege escalation: A normal user gains administrator or root privileges.
+
+* Horizontal privilege escalation: An attacker accesses another user's account or resources at the same privilege level.
+
+Example: An attacker with normal user access obtains administrator privileges.
+
+Purpose: To gain greater control over the system.
+
+### C. Files Covering Tracks (Covering Tracks)
+
+This refers to hiding or removing evidence of an attack to make it difficult for investigators to discover what happened.
+
+Example: An attacker attempts to erase or alter system logs showing unauthorized access.
+
+Purpose: To avoid detection and conceal evidence.
+
+### D. All of the Above
+
+This is the correct option because A, B and C describe activities associated with hacking operations.
+
+### Exam revision: Remember these three terms
+
+| Term                 | Meaning                           |
+| -------------------- | --------------------------------- |
+| Application hiding   | Concealing malicious applications |
+| Privilege escalation | Gaining higher access permissions |
+| Covering tracks      | Hiding evidence of an attack      |
+
+Important: These are not the standard complete stages of ethical hacking. A common ethical hacking methodology includes:
+
+* Reconnaissance
+
+* Scanning and enumeration
+
+* Gaining access
+
+* Maintaining access
+
+* Covering tracks
+
+Exam tip: If you see All of the Above and all three options describe hacking-related activities, D is the expected answer.

@@ -1,0 +1,128 @@
+The question is: MAC address spoofing is which type of attack?
+
+Correct answer: C. Authentication
+
+Let's understand all four options and how they work.
+
+### A. Brute-force attack
+
+Meaning: A brute-force attack is when an attacker repeatedly tries different passwords or combinations until the correct one is discovered.
+
+How it works:
+
+* The attacker obtains a login page or password-protected account.
+
+* They use a program to generate password combinations.
+
+* The program tries passwords repeatedly.
+
+* If the correct password is found, access is granted.
+
+Example: Trying thousands of passwords to access someone's Wi-Fi router.
+
+Tools sometimes used: Hydra and John the Ripper.
+
+### B. Encryption
+
+Meaning: Encryption is the process of converting readable information (plaintext) into an unreadable format (ciphertext) to protect it from unauthorized access.
+
+How it works:
+
+* A sender enters a message.
+
+* An encryption algorithm converts it into ciphertext using a key.
+
+* The encrypted message travels across the network.
+
+* The receiver uses the correct key to decrypt it.
+
+Example:
+
+Original message: `HELLO`
+
+Encrypted message: `X7@P9#`
+
+Encryption is primarily a security protection technique, not an attack.
+
+### C. Authentication attack
+
+Correct answer
+
+Meaning: Authentication is the process of verifying the identity of a user or device before granting access to a system or network.
+
+An authentication attack attempts to bypass or deceive this verification process.
+
+How MAC address spoofing works:
+
+* Every network interface has a MAC address.
+
+* A network administrator may allow only registered MAC addresses to connect.
+
+* An attacker identifies an authorized device's MAC address.
+
+* The attacker changes their device's MAC address to imitate the authorized device.
+
+* If the network relies only on MAC filtering, the attacker may gain access.
+
+Example:
+
+* Authorized device: `AA:BB:CC:11:22:33`
+
+* Attacker's original MAC: `DD:EE:FF:44:55:66`
+
+* Attacker imitates the authorized MAC address.
+
+This is called MAC address spoofing.
+
+Important: MAC filtering alone is weak security because MAC addresses can be copied.
+
+### D. Social engineering
+
+Meaning: Social engineering is an attack that manipulates people into revealing confidential information or performing actions that compromise security.
+
+How it works:
+
+* The attacker pretends to be a trusted person.
+
+* They contact the victim through email, phone or messages.
+
+* They create fear, urgency or trust.
+
+* The victim reveals a password or other sensitive information.
+
+Example: Someone calls pretending to be a bank employee and asks for your banking password.
+
+Common forms:
+
+* Phishing
+
+* Pretexting
+
+* Baiting
+
+* Impersonation
+
+### Summary for your cybersecurity examination
+
+| Option                | Meaning                         | Main purpose        |
+| --------------------- | ------------------------------- | ------------------- |
+| A. Brute-force        | Repeatedly guessing passwords   | Discover passwords  |
+| B. Encryption         | Converting data into coded form | Protect information |
+| C. Authentication     | Verifying identity              | Control access      |
+| D. Social engineering | Manipulating people             | Steal information   |
+
+### Important points to remember
+
+* Brute-force: Guessing passwords.
+
+* Encryption: Protecting information.
+
+* Authentication: Verifying identity.
+
+* Social engineering: Tricking people.
+
+* MAC spoofing: Imitating another device's MAC address.
+
+Exam tip: MAC address spoofing is technically a spoofing/impersonation attack that can defeat weak MAC-based authentication. That is why option C is the best answer among the choices.
+
+I can also teach you how to identify these cybersecurity attacks quickly when answering multiple-choice questions.

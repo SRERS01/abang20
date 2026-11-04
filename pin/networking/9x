@@ -1,0 +1,230 @@
+The question in your screenshot is about TCP RST (Reset). To understand it properly, you need to know the different TCP flags (control commands), their functions, and how they are used in network communication.
+
+### 1\. TCP commands (TCP flags) and their functions
+
+TCP flags control how a TCP connection is established, maintained and terminated.
+
+![An Introduction to Port Scanning for Beginners Using Nmap | by Angelina Salim | Medium](https://images.openai.com/static-rsc-4/NkxfHJ4Wc6oiTmeQz6wErT4rgTIDOwY4jUXCYxUWgkm8pwnqfTrlotWF-ql3eu53pfS1K9OJnLfqGTX3x6LUnXSgE2P5u2ynkbHwI_CEH8RvJSm5CdaQK1s0A-5a4DVGmfgYH1GMcRxqiLHhLtGhbUm8Xv1nR-lw9nAhSfqKpnhxzH1wBXTFNshvEgepkJ-_?purpose=fullsize)
+
+1\. SYN – Synchronize
+
+* Function: Starts a TCP connection.
+
+* How it is used: A client sends SYN to request a connection with a server.
+
+* Example: Your browser requests a connection to a website.
+
+![PPT - PART 5 Transport Layer PowerPoint Presentation, free download - ID:5403249](https://images.openai.com/static-rsc-4/EzFBdA39QyrkpZe3Xl__ioDkmgR3rSJYCIDyzbsHLkQbiMTBKaAFlyF_CWiVLsKveLLZMXyqjbITlCsma7LRnbdZlKgS8q8l1CaHrqkJ_JNZo6sAYwce2oBg44vIlkfYLNgGiYdmz0yZ396dwL_osDW6sHdG2lgqCXR-qtgZaDGvmpyqqKa3v-S7MBjaUHmV?purpose=fullsize)
+
+2\. ACK – Acknowledgment
+
+* Function: Confirms that data has been received.
+
+* How it is used: The receiving device sends ACK to acknowledge received TCP data.
+
+* Example: A server acknowledges data sent by your computer.
+
+![Everything You Always Wanted to Know About TCP But Too Afraid to Ask](https://images.openai.com/static-rsc-4/sNXXnfanLXdAHNLPSdSl8up51kfq5GEPJZ_ahBe20Ix4uLRObTxBd6VishmyE2g-BdGPU-lUcq4e0N3_JX8qjdJg9H9rYUQ5gziOHYJ9Sfp-XgJRPyK_ZjtXOIYZghgHeUqKoeFyWqNWMoRSbhvgxvS6AEmj1oTdDd38WINvVeyQsTaO2_TbaJqzJSC_P-M8?purpose=fullsize)
+
+3\. FIN – Finish
+
+* Function: Closes a TCP connection gracefully.
+
+* How it is used: One device sends FIN when it has finished sending data.
+
+* Example: Closing a completed web connection.
+
+![TCP RESET Flag | CYBRESCUE](https://images.openai.com/static-rsc-4/QFL6UHxFzzBVXUfrJ0RjsjN0uq802CbEEaywOtVk076Ot31nIJ37HmUmzrhjZKL1rcc70BnWNBtiIuvq-SUWJpw2VUZEqfuxuFHTkHdOidlG01yld53zo5GWv9H3ttYzx8TjG5sxW2bojjYfdKuDAWHdbuD6Rz7l6OtxG3GCNzFeJOvHRie1d0_M--YgdrTQ?purpose=fullsize)
+
+4\. RST – Reset
+
+* Function: Immediately resets or aborts a TCP connection.
+
+* How it is used: A device sends RST when a connection is invalid or cannot continue.
+
+* Example: A server rejects a connection request.
+
+![PPT - To Intrusion Detection Analysts PowerPoint Presentation, free download - ID:381972](https://images.openai.com/static-rsc-4/fNpojBeBM897L6lYDWtHjiyca2P7QF-blVBi41WTTuxpWvpAiEWY0d65QapYXThuJ_sqPM3Clx3L-ALKGWNC8guFcL6S3emjFvjf8C8J6f444SRlkQu-W_osNLOxlxO5_orEZXIqEznBnxOi-N7EAnQFKgfsqGv-lyn1jaAZvL2xgIAKXicM2WW8EI_EcW1u?purpose=fullsize)
+
+5\. PSH – Push
+
+* Function: Requests that received data be delivered promptly to the application.
+
+* How it is used: Sent with data when prompt delivery is desired.
+
+* Example: Interactive communication.
+
+![Cisco Learning Network](https://images.openai.com/static-rsc-4/TCSi88HV8DhBTCdYpTYQ6UddH12rLwvTTJ7Do7y4RQhl3sQohn7QwDbU3dI6GeL5dKAT9OthoMqntwbHmpRuzV7GSEi4DWNuXJxMGEiaqXTYX7awKSpg5-FDJFei-XZmJdJhrRaCbeQU0ZieFd8sP0ofHwi7KDLMD7FAwvR699R41P5bcmkhyGvOQmCHzhhS?purpose=fullsize)
+
+6\. URG – Urgent
+
+* Function: Indicates that the urgent pointer field is significant.
+
+* How it is used: Marks urgent data in a TCP segment.
+
+* Example: Special urgent-data handling by an application.
+
+![PPT - Explicit Congestion Notification (ECN) PowerPoint Presentation, free download - ID:2327271](https://images.openai.com/static-rsc-4/BltJtGEM0tH63CnOfdvnq6uWMfCsCK39zViuRTM4fOhqzsCTaSrTR7zcKmlYiJtChgPajyBXmslK8FGVQixmFcXfDikLfkWwvBEznu5hOOl5VlEeXFHJZyFbjmk3BiYaqNsr5Kjj29eQ21hJd6b9VD4T7Et3WlsnNPpaGI2iqgdgXdf-zYsQTIkafRwH3eCC?purpose=fullsize)
+
+7\. ECE – ECN Echo
+
+* Function: Indicates congestion notification information.
+
+* How it is used: Helps communicate network congestion without necessarily dropping packets.
+
+![PPT - 15-744: Computer Networking PowerPoint Presentation, free download - ID:9205612](https://images.openai.com/static-rsc-4/G9SgjE5iyW10U6Ey9eCFedT8Wzt1-zCWWv7LGaBjgMNxVOx4jxRQfM0zNaNY7Otd4Ew3EXhR4KA9CBx2Qd5hJqwF2QNJ0HdsUaUvCt7hSHUetNCApMOUmlweMZ3Zq6gXuvcpHSZ-tj1ujWX6wVvgtqFLjUSVRShWzZnuiq6KpkBxa5Y4NqLVlXMbN_VglSJP?purpose=fullsize)
+
+8\. CWR – Congestion Window Reduced
+
+* Function: Indicates that the sender has reduced its congestion window.
+
+* How it is used: Helps TCP respond to network congestion.
+
+9\. NS – Nonce Sum
+
+* Function: An older ECN-related flag.
+
+* How it is used: Originally designed to support protection of ECN feedback information.
+
+### 2\. How TCP flags work together
+
+The most important process is the TCP three-way handshake.
+
+![he Complete Journey of a Web Request: DNS, TCP, HTTPS | Medium](https://images.openai.com/static-rsc-4/cdIDkjUOf8LPxy2u7HuX0ymX_stEOGZEYzlY-OnhCChy2xljzHtJDSRWm9BUEa7eSAczMcjhfrZLZfdRQvY1vRFfDW5ZtHZ6ZCQZ6FsJHVx8cb7rjl0aY3qzN470gSToGnQUc8CwKm1M-AZ8zD_zw1XkzI59zR74yU5m-C1qCl041a6WPatxCIr-7MDDO67C?purpose=fullsize)
+
+| Step | Command   | Function                        |
+| ---- | --------- | ------------------------------- |
+| 1    | SYN       | Client requests connection      |
+| 2    | SYN + ACK | Server accepts and acknowledges |
+| 3    | ACK       | Client confirms connection      |
+
+After this process, communication can begin.
+
+To close a connection:
+
+![TCP Deep Dive: Understanding Three-Way Handshakes and Reliable Communication | by Mohammad Aman | Jan, 2026 | Medium](https://images.openai.com/static-rsc-4/IPkH0H5NiNSXhz5XHRsOUU-SMZuKqap1yFZiuXECO21_8vL64neKLIIwv5e9QrzDKv99KBCD4X-dSUq4if7O9dGL61m8pWSsMyTXpBzy2JOVXEpT5At_qK4T1Y1sC8N-FZCRnyUzb4r9GjTioN1LHUsTLh4nuqn_Ht-f7_ccm_4YtoyR_L-jKDc1H8FPqQyM?purpose=fullsize)
+
+FIN and ACK flags are normally used to close a connection gracefully.
+
+### 3\. How to use and identify TCP flags in Kali Linux or Ubuntu
+
+You can use Wireshark and tcpdump to observe these flags.
+
+A. Using tcpdump
+
+First, identify your network interface:
+
+```bash
+ip a
+```
+
+Capture TCP packets:
+
+```bash
+sudo tcpdump -i any -nn tcp
+```
+
+Display only TCP reset packets:
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-rst != 0'
+```
+
+Display SYN packets:
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-syn != 0'
+```
+
+Display FIN packets:
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-fin != 0'
+```
+
+B. Using Wireshark
+
+Open Wireshark and enter these display filters:
+
+| Filter               | What it displays |
+| -------------------- | ---------------- |
+| tcp.flags.syn == 1   | SYN packets      |
+| tcp.flags.ack == 1   | ACK packets      |
+| tcp.flags.fin == 1   | FIN packets      |
+| tcp.flags.reset == 1 | RST packets      |
+| tcp.flags.push == 1  | PSH packets      |
+| tcp.flags.urg == 1   | URG packets      |
+| tcp.flags.ece == 1   | ECE packets      |
+| tcp.flags.cwr == 1   | CWR packets      |
+
+### 4\. Important differences for your examination
+
+| TCP flag | Main function                       |
+| -------- | ----------------------------------- |
+| SYN      | Starts connection                   |
+| ACK      | Acknowledges receipt                |
+| FIN      | Gracefully finishes connection      |
+| RST      | Immediately resets connection       |
+| PSH      | Requests prompt data delivery       |
+| URG      | Indicates urgent pointer is valid   |
+| ECE      | Signals ECN congestion information  |
+| CWR      | Signals congestion window reduction |
+| NS       | ECN-related protection flag         |
+
+Exam tip
+
+Remember these four especially:
+
+* SYN = Start.
+
+* ACK = Acknowledge.
+
+* FIN = Finish.
+
+* RST = Reset.
+
+### 5\. Test your understanding
+
+1. Which TCP flag starts a connection?
+
+RST
+
+SYN
+
+FIN
+
+ACK
+
+2. Which TCP flag immediately resets a connection?
+
+FIN
+
+PSH
+
+RST
+
+URG
+
+3. Which TCP flag gracefully closes a connection?
+
+FIN
+
+SYN
+
+ECE
+
+URG
+
+4. Which tool can capture and inspect TCP packets?
+
+Wireshark
+
+Microsoft Word
+
+Calculator
+
+Paint
+
+Submit answers
+
+I can also teach you the complete TCP, UDP, ICMP and IP protocols, including their commands, functions and practical usage in Kali Linux and Ubuntu.

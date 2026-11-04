@@ -1,0 +1,100 @@
+The correct answer is C. IRC (Internet Relay Chat).
+
+The question is asking which communication method is commonly used by systems in a botnet to communicate with their controller (Command and Control server).
+
+Let's explain all four options.
+
+### A. ICMP (Internet Control Message Protocol)
+
+Network diagnostic protocol
+
+* ICMP is a network protocol used to send error messages and diagnostic information.
+
+* It helps devices check whether another device is reachable.
+
+* It is commonly used by the `ping` command.
+
+* It can report network problems, such as unreachable destinations.
+
+* Attackers can sometimes abuse ICMP for covert communication.
+
+Example: When you type:
+
+```bash
+ping google.com
+```
+
+Your computer uses ICMP to check connectivity.
+
+### B. TFTP (Trivial File Transfer Protocol)
+
+File transfer protocol
+
+* TFTP is a simple protocol used to transfer files between computers.
+
+* It uses UDP, usually on port 69.
+
+* It does not provide strong authentication.
+
+* It is commonly used to transfer configuration files and boot files across networks.
+
+* Malware can sometimes abuse TFTP to transfer malicious files.
+
+Example: A network administrator transfers a configuration file from a server to a network device.
+
+### C. IRC (Internet Relay Chat)
+
+Correct answer
+
+* IRC is a communication protocol that allows people and computers to communicate through chat channels.
+
+* Some older botnets used IRC to receive instructions from their Command and Control (C2) servers.
+
+* An attacker could send commands through an IRC channel.
+
+* Infected computers (bots) connected to that channel and received instructions.
+
+* They could then perform activities such as DDoS attacks or sending spam.
+
+Example of how it works:
+
+Attacker / Botnet controller
+
+IRC communication channel
+
+Bot 1
+
+Bot 2
+
+Bot 3
+
+Infected computers receive instructions from the controller.
+
+Remember: IRC was historically popular for botnet Command and Control communication. Modern botnets also use HTTP, HTTPS, DNS and other methods.
+
+### D. E-mail (Electronic Mail)
+
+Electronic messaging
+
+* E-mail is used to send and receive electronic messages.
+
+* It can carry text, documents and attachments.
+
+* It uses protocols such as SMTP, IMAP and POP3.
+
+* Attackers can use malicious email attachments and links to infect computers.
+
+* Some malware can also use email for communication, but IRC is the expected answer in this question.
+
+### Quick exam revision
+
+| Option | Main purpose                                                |
+| ------ | ----------------------------------------------------------- |
+| ICMP   | Network diagnostics and error reporting                     |
+| TFTP   | Simple file transfer                                        |
+| IRC    | Internet chat and historically botnet command communication |
+| E-mail | Sending and receiving electronic messages                   |
+
+Exam tip: When you see botnet + communication with controller (C2) in a traditional cybersecurity MCQ, remember IRC.
+
+I can also explain the difference between a botnet, bot, C2 server and DDoS attack with examples.

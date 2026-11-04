@@ -1,0 +1,111 @@
+The correct answer is D. All of the Above.
+
+These are different password-cracking techniques used in cybersecurity to discover or recover passwords. Let me explain each one, including how it works.
+
+### 1\. Syllable Attack (AttackSyllable)
+
+Password cracking technique
+
+A syllable attack attempts to guess passwords by combining pronounceable parts of words (syllables).
+
+How it works:
+
+* It uses combinations of word sounds or syllables.
+
+* It creates possible password combinations.
+
+* It tests those combinations against a password.
+
+Example:
+
+A password might contain combinations such as:
+
+* Ba + na + na
+
+* Ma + ri + na
+
+The idea is to guess passwords that look or sound like ordinary words.
+
+### 2\. Hybrid Attack
+
+Password cracking technique
+
+A hybrid attack combines a dictionary-based approach with modifications such as numbers and special characters.
+
+How it works:
+
+It takes an existing word and modifies it by adding numbers or symbols.
+
+Example:
+
+Starting word: `teacher`
+
+Possible variations:
+
+* teacher123
+
+* teacher2026
+
+* teacher@
+
+It is more flexible than a basic dictionary attack because it tests variations of familiar words.
+
+### 3\. Brute Force Attack
+
+Password cracking technique
+
+A brute force attack systematically tries possible password combinations until it finds a match.
+
+How it works:
+
+* It tries different letters.
+
+* It tries numbers.
+
+* It tries special characters.
+
+* It continues testing combinations until a match is found or the search limit is reached.
+
+Example:
+
+For a hypothetical four-digit PIN, there are 10,000 possible combinations, from `0000` to `9999`.
+
+The longer and more complex the password, the more difficult this attack becomes.
+
+### 4\. Difference between the three
+
+| Technique       | Main approach                              |
+| --------------- | ------------------------------------------ |
+| Syllable attack | Combines pronounceable word parts          |
+| Hybrid attack   | Modifies dictionary words                  |
+| Brute force     | Tries possible combinations systematically |
+
+### 5\. How to protect yourself
+
+* Use passwords with at least 14–16 characters.
+
+* Combine uppercase and lowercase letters, numbers and symbols.
+
+* Avoid names, birthdays and common words.
+
+* Enable two-factor authentication (2FA).
+
+* Use a password manager.
+
+* Avoid reusing passwords across websites.
+
+### Important cybersecurity knowledge
+
+These techniques are relevant when learning tools such as:
+
+* John the Ripper: Password security auditing.
+
+* Hashcat: Password hash recovery and auditing.
+
+* Wireshark: Network traffic analysis.
+
+* Hydra: Authorized login security testing.
+
+Remember: Wireshark analyzes network traffic, while John the Ripper and Hashcat focus on password recovery and hash auditing.
+
+Exam tip: If you see syllable attack, hybrid attack and brute force attack listed together, the answer is D. All of the Above.

@@ -1,0 +1,189 @@
+Your answer is correct: B. BSSID.
+
+These four terms are important in wireless networking and ethical hacking, especially when using tools such as Kismet, Airodump-ng, Wireshark and Aircrack-ng.
+
+Let's explain each one, its function and how it is used.
+
+### 1\. SSID – Service Set Identifier
+
+Network name
+
+Meaning: SSID is the name given to a Wi-Fi network.
+
+Function:
+
+* Identifies a wireless network.
+
+* Allows users to distinguish one Wi-Fi network from another.
+
+* Helps users select the Wi-Fi network they want to connect to.
+
+Example:
+
+Imagine you scan for available Wi-Fi networks and see:
+
+* MTN_4G
+
+* Home_WiFi
+
+* Orange_Office
+
+These names are SSIDs.
+
+How it is used:
+
+On your phone:
+
+* Open Settings.
+
+* Select Wi-Fi.
+
+* Scan for available networks.
+
+* Select the SSID you want.
+
+* Enter the password if required.
+
+### 2\. BSSID – Basic Service Set Identifier
+
+MAC address of an access point
+
+Meaning: BSSID identifies a particular wireless access point or Basic Service Set. In typical infrastructure Wi-Fi networks, it is the MAC address of the access point's radio interface.
+
+Function:
+
+* Uniquely identifies a particular access point radio.
+
+* Helps distinguish access points broadcasting the same SSID.
+
+* Helps wireless monitoring tools identify individual access points.
+
+Example:
+
+Imagine a university has three access points with the same Wi-Fi name.
+
+| SSID            | BSSID             |
+| --------------- | ----------------- |
+| University_WiFi | AA:BB:CC:11:22:33 |
+| University_WiFi | AA:BB:CC:44:55:66 |
+| University_WiFi | AA:BB:CC:77:88:99 |
+
+Although they have the same SSID, each has a different BSSID.
+
+How it is used:
+
+Tools such as:
+
+* Kismet
+
+* Airodump-ng
+
+* Wireshark
+
+Can display BSSIDs when monitoring wireless networks.
+
+### 3\. MSSID – Multiple Service Set Identifier
+
+Multiple Wi-Fi networks
+
+Meaning: MSSID is commonly used to describe a multiple-SSID capability or configuration, although it is not a standard identifier field like SSID and BSSID.
+
+Function:
+
+* Allows one physical access point to broadcast multiple Wi-Fi network names.
+
+* Separates different categories of users.
+
+* Supports different security policies for different networks.
+
+Example:
+
+One router can broadcast:
+
+* Home_WiFi
+
+* Guest_WiFi
+
+* Office_WiFi
+
+All from the same physical device.
+
+How it is used:
+
+A network administrator configures multiple SSIDs in the router's administration settings.
+
+For example:
+
+* Employees connect to Office_WiFi.
+
+* Visitors connect to Guest_WiFi.
+
+* Administrators use a restricted management network.
+
+### 4\. RSSI – Received Signal Strength Indicator
+
+Signal strength
+
+Meaning: RSSI measures the strength of a received wireless signal.
+
+Function:
+
+* Shows how strong or weak a Wi-Fi signal is.
+
+* Helps determine wireless coverage.
+
+* Helps identify areas with poor connectivity.
+
+* Helps troubleshoot wireless connection problems.
+
+Example:
+
+RSSI is commonly displayed in dBm.
+
+| RSSI    | Signal quality |
+| ------- | -------------- |
+| -30 dBm | Excellent      |
+| -50 dBm | Very good      |
+| -60 dBm | Good           |
+| -70 dBm | Weak           |
+| -80 dBm | Very weak      |
+| -90 dBm | Extremely weak |
+
+How it is used:
+
+Wireless monitoring tools such as Kismet can display signal-strength information to help administrators locate access points and troubleshoot coverage.
+
+### Important differences for your examination
+
+| Term  | Full meaning                       | What it identifies/measures              |
+| ----- | ---------------------------------- | ---------------------------------------- |
+| SSID  | Service Set Identifier             | Wi-Fi network name                       |
+| BSSID | Basic Service Set Identifier       | Particular access point/radio identifier |
+| MSSID | Multiple SSID                      | Multiple Wi-Fi network names             |
+| RSSI  | Received Signal Strength Indicator | Received signal strength                 |
+
+### How they work together in ethical hacking
+
+![Kismet Wireless](https://images.openai.com/static-rsc-4/-UaT_5275uXK_621C1IA067FRlJFv1vatd42uURY-pJ9AQ7vKE6teGsL-1gwhzuY0wrOhSostjcD99eQcSFuBb_X3pLliXf5jpZgQpl8g0pPh7X-Q0qMrBLcnd-X-4FisIWhCaMPOtY5DEJh_mup9FXDvZ06b4ExmjbIog0Z5uuOJVRajiSaRHpRuK9tDnwc?purpose=fullsize)
+
+Imagine you are conducting an authorized wireless security assessment:
+
+* SSID: You identify the name of the wireless network.
+
+* BSSID: You identify the particular access point.
+
+* RSSI: You determine how strong the wireless signal is.
+
+* MSSID: You identify that the access point may be broadcasting multiple network names.
+
+Remember this examination trick:
+
+* SSID = Name.
+
+* BSSID = MAC address.
+
+* MSSID = Multiple network names.
+
+* RSSI = Signal strength.
+
+Important: BSSID is the correct answer to the quiz because it identifies the particular wireless access point, usually through its MAC address.
