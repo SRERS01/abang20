@@ -1,0 +1,404 @@
+### Complete Guide to Spoofing Attacks and How to Test Each
+
+In cybersecurity, spoofing is an attack in which someone or a device pretends to be another trusted person, device, website, server, or network address to deceive a victim or bypass security.
+
+For ethical hacking, you should understand:
+
+* The different types of spoofing.
+
+* How each attack works.
+
+* Which tools can detect or test it.
+
+* How to perform safe tests in your own lab.
+
+* How to prevent each attack.
+
+### 1\. Types of spoofing attacks
+
+There are many forms of spoofing. Here are the major categories.
+
+### A. Network spoofing
+
+![IP Spoofing In and Out of the Public Cloud: From Policy to Practice](https://images.openai.com/static-rsc-4/SYphBbGndCXlre1_qnz_LP_GFbY-OCV0KaC_3sXsJrzghjvxr5FLHxAwHxeMU4xnVMI2ChcMI4_SxYTrZ8lJ-EmNIv0q027iZKgHUfqACacqMr9sQqpUbHOb3tSCjN5EOl8elUb3D5OJ0JzuRTxDGrw1dYs3C7MAIE-3HtLmbs-AniHZFrcXnDr9k734FmjW?purpose=fullsize)
+
+1\. IP spoofing
+
+An attacker falsifies the source IP address of network packets to make them appear to come from another device.
+
+Testing tools: Wireshark, tcpdump, Scapy.
+
+Safe test: Capture traffic in your own lab and inspect source IP addresses against the actual device generating the traffic.
+
+![Les attaques d'usurpation d'identité](https://images.openai.com/static-rsc-4/8KGQsc12nRhqKVkYskfr3zfvd8DUL8lsfwAND9P3XqgO0gCY8F2XBDZlQGPD_dgRO6rP03bKn00czX5WT9ESGu10TIcWMn4KpoteQlAJKX1ASztfOibdZl_kUU8iNsbg8YqWut8lop4oNWlWZ7a_ep4kYa2oH6ETzheqtlLLe5yHBI13TCkrrhQbt7UWjO7b?purpose=fullsize)
+
+2\. ARP spoofing (ARP poisoning)
+
+An attacker sends false ARP messages to associate their MAC address with another device's IP address.
+
+Testing tools: Wireshark, arp, arp-scan.
+
+Safe test: Inspect your own LAN's ARP table and look for unexpected changes or duplicate IP-to-MAC mappings.
+
+![What is DNS Spoofing and Cache Poisoning❓](https://images.openai.com/static-rsc-4/YW8mrD0yogkMrF7rYSG8eimZLVy0Hx6xsChZ_F8B2okgbFle6X8odsl9w9Mlf9H0EgbTvUpERk6c0MJyN262A0rCA9-YGJtCTiM_nz-5soSNQus1rsnyfnWgLGt64fa78pfZDmtAKJ-vjn5pEaNjkva5zN3YsjjSv-1Tk3zcl4q-lx0-LxK3jmK5TFTJ4kmo?purpose=fullsize)
+
+3\. DNS spoofing
+
+False DNS responses direct users to an incorrect IP address instead of the legitimate website.
+
+Testing tools: nslookup, dig, Wireshark.
+
+Safe test: Compare DNS responses from your configured resolver with a trusted independent resolver.
+
+![MAC Address Spoofing: How It Works and Why It Matters](https://images.openai.com/static-rsc-4/MhYiuoPxAdNt8OGfydHjrMGKxmMRNVJMJQNwa95Bx1ADkvIOBghXTzI3LXWuVUkDcsIyvP5WoAxMQ_jSGysCzZtjdcGgR0nnYcxJzjZOAh-kR5g7RVTkS7WxE5R-bmplVHJHuyLNYxxty3gUfF7PGBxBtKhWev_7kYNG7fXeiscrXulMoyR--sGeQVLzF76p?purpose=fullsize)
+
+4\. MAC spoofing
+
+A device changes its apparent MAC address to imitate another network device.
+
+Testing tools: ip link, ipconfig, Wireshark.
+
+Safe test: Compare the MAC address shown by your operating system with the MAC address recorded by your router.
+
+![DHCP Spoofing: What It Is and How to Defend Against It | Adnan Khan posted on the topic | LinkedIn](https://images.openai.com/static-rsc-4/vVVqoSLaup_9_njho44qZcHC8ZtmNhFyCxdXyh21ZEpFU5l99QxUk3vggSg0_tkffbXnXNF5TaI8S2hxcZEsF_czGeWeQ6sqhZmHLMkrm7TMU0TYw_zcOWuWtq8c8IfoJ1CuzZUaHD9mTih6OibE1iTvC4mPFAOJOnEP0LnfHQDT0IvXhsrs5XMUckUWSDm0?purpose=fullsize)
+
+5\. DHCP spoofing
+
+A rogue DHCP server provides false network configuration, such as an incorrect gateway or DNS server.
+
+Testing tools: Wireshark, tcpdump.
+
+Safe test: Capture DHCP traffic and verify that only your authorized DHCP server is responding.
+
+![What is Email Spoofing? The Complete Guide | CloudSEK](https://images.openai.com/static-rsc-4/o4V8Q2mW5yb8JuKO9OvaKYXabvHPfh1Mg67OB0iswO0PhAxMpxh1FbaKAnyF8LGCr4LC4dMYiPgM8Hos9tkgvSsbqNlIWK_pi1hwrzah8i0yMtio-fOtikLYea_lskclMeybnu5BfGG7c3bZCE8dBFiEF1EiWLpD_a7qwuHcistqDWG2MTFanJvjCJxOa8FX?purpose=fullsize)
+
+6\. Email spoofing
+
+An attacker forges an email sender address to make a message appear to come from a trusted person or organization.
+
+Testing tools: Email header analyzer, MXToolbox.
+
+Safe test: Inspect your own test email headers and check SPF, DKIM and DMARC authentication results.
+
+### B. Wireless spoofing
+
+![Wireless security primer for users in 2021 | Cooltechzone](https://images.openai.com/static-rsc-4/J_6j-JXhOsdHMap0FO9WfFGHoRjhL21JSXM-5Uy4NjngPrQVdvqQh_KaiJIac_lwQLh7XK4LaCcdmfbnJG3SQMEaIOONNUHHETk2pwvo5WClEDhYfD1cvVCjEJDTcsbMC9dgxjI5V5B4PpCNGaDJCR0rb4YCx1Ql_jk21odVJ80PDmpfCRwupRN_q57c1Bjw?purpose=fullsize)
+
+7\. Evil Twin spoofing
+
+A fake Wi-Fi access point imitates a legitimate Wi-Fi network.
+
+Testing tools: Kismet, Wireshark, Wi-Fi analyzer.
+
+Safe test: Scan your own wireless environment for duplicate SSIDs and compare BSSIDs, channels and security settings.
+
+![How to Protect the Privacy of Your Bluetooth LE Device](https://images.openai.com/static-rsc-4/O47AvZB8GWxCLSZEYiypvfJ82QlmJMYF_-GdjwM07hZx1-gY3tValCYl9fxClwh63FRu_Zy0FVYAqWihwHQdvbH3uKBxmdX7bY8-UyqRg-ex2XBXHoPPtOjBQ_0SVLlI0q4gzLeOsaohWFE-cKsZUnrdfjRI7Qv7TpVZ-bU4cP4iPemSa0e1rjyQwjPka5Pz?purpose=fullsize)
+
+8\. Bluetooth spoofing
+
+A device impersonates another Bluetooth device or uses a misleading device identity.
+
+Testing tools: Bluetoothctl, Wireshark, btmon.
+
+Safe test: Inspect the Bluetooth devices visible to your own computer and verify their identities.
+
+![Störungen im Luftverkehr - Swiss ist täglich von GPS-Spoofing betroffen - News - SRF](https://images.openai.com/static-rsc-4/cGV5TVKREOJhoIA1mahBXx-toqV84GXrg33Uyb4CtxN8A-_gqDXvws2cbI3aaZURlnAKaWXdSSo8OIwesusLyzr-GvOzeoNeDCBGLQYt9ngxDLeKLRaIZyRaTe3wnHaxOBdd22TiQx9JWyHKYbD8oewSyqDZw65j3kJpigVP14NbC2owXMbPGRwwLwSdfeyi?purpose=fullsize)
+
+9\. GPS spoofing
+
+False satellite-like signals attempt to make a GPS receiver calculate an incorrect position or time.
+
+Testing tools: GNSS monitoring software and simulated GNSS receivers.
+
+Safe test: Use recorded or simulated GNSS data and compare the calculated position with the known reference position.
+
+### C. Website and identity spoofing
+
+![What Is a Copycat Website? (And How to Spot One Quickly) - BrandCat Blog](https://images.openai.com/static-rsc-4/3FDmXpEbw40qgvrKj8Hoq8wUy4XPRLVUK3DsB3DASpRPC6x3ToaBFFwSTsx7AE48EdYoQvlJ_HWtflA7qqyudH4lJrHn2R0wc430U7txxRG6FcVmi2177aOPV_f7jSuMjoo_QLwIuBY_3hBElvx0TDgqRSyDlMfj9-Ajd_0VdyMRiyzsGfVGHk58a3rzUfTo?purpose=fullsize)
+
+10\. Website spoofing
+
+A fake website copies the appearance of a legitimate website to deceive users.
+
+Testing tools: Browser developer tools, URL inspection, SSL Labs.
+
+Safe test: Compare your own test website's domain, certificate, redirects and login security with the legitimate version.
+
+![Scammers target residents using Stafford PD phone number](https://images.openai.com/static-rsc-4/Ala8pJqMTCxZYiECxK9RTYTibme3rLRAtzCZs7yYR3lnpNWU6zlZK0NFi1YCJa3jsXg9qRFZN6KZW2--xh8Vld-XpU0Tuk6ea60u39kSbKKA0qxxQATdLCoUQB-HnUipGhBLk1iqtxrEwfWrabAfSBYshUlSw1B7F4MmpRot-UBS-bxizWNSfFzwECo-hiXp?purpose=fullsize)
+
+11\. Caller ID spoofing
+
+A caller manipulates the displayed telephone number to impersonate another person or organization.
+
+Testing tools: Telecom provider verification systems and call logs.
+
+Safe test: Use a carrier-authorized test service to verify how caller identity is authenticated.
+
+![What Is SMS Spoofing & How to Prevent It - Sinch](https://images.openai.com/static-rsc-4/qK57vg1Ln-0YOmY2qocLuPjHImPsbPK7pRxrI1GmCSkVTy3Fo0YWDVIdWVWB3DtlVeVV-Q5zRQI3jL-e0FB7ROgaFgzebSwe1Np6yZJvKXY-_FQTgxdpI9gyhO6tNi3EYHs6swQNrdc6YWutWETis03wog1I2WoW5uCLfKpPIVmgeULvOc0fuLGFsjvhhKHj?purpose=fullsize)
+
+12\. SMS spoofing
+
+A forged sender ID makes a text message appear to come from a trusted organization.
+
+Testing tools: SMS gateway logs and provider security tools.
+
+Safe test: Inspect authorized test messages and compare sender authentication and delivery logs.
+
+![Qu’est-ce que l’usurpation d’identité et comment en prévenir les attaques](https://images.openai.com/static-rsc-4/2PCCjSdzRYVTUwqexD4_21Xzu2grAOmfjB1EOauAxrrjnZ2OJf_pbDK7utZpl80Q0M4wuEeORR_5nB8RWwkJocBAquIwjIl1nytOvsv505F-n68TKHYDWI2RTuYCZ7-2VEAGvKhtNZMaEkbetL5P1hDtSPXhFpXQ32E2JTwY7wkAwihxN1EII6MwQ0ih4sr-?purpose=fullsize)
+
+13\. Domain spoofing
+
+A fraudulent domain imitates a legitimate domain, often using similar spelling or characters.
+
+Testing tools: WHOIS, DNS lookup, browser inspection.
+
+Safe test: Check domain registration, DNS records and spelling differences against the genuine domain.
+
+### D. Application and protocol spoofing
+
+| No. | Type                             | How it works                                                                               | How to test                      |
+| --- | -------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------- |
+| 14  | HTTP Host spoofing               | Manipulates the Host header to impersonate another website.                                | Burp Suite, curl                 |
+| 15  | HTTP Referer spoofing            | Falsifies the webpage that supposedly referred a visitor.                                  | Browser DevTools, Burp Suite     |
+| 16  | User-Agent spoofing              | Makes a browser or script pretend to be another browser or device.                         | curl, Burp Suite                 |
+| 17  | TCP spoofing                     | Forges TCP packet information to impersonate or interfere with connections.                | Wireshark, Scapy in a lab        |
+| 18  | Session spoofing                 | Attempts to impersonate an authenticated user using a stolen or forged session identifier. | Burp Suite, browser DevTools     |
+| 19  | Cookie spoofing                  | Manipulates cookies to impersonate a user or alter application state.                      | Browser DevTools, Burp Suite     |
+| 20  | NTP spoofing                     | Provides false Network Time Protocol responses to manipulate system time.                  | Wireshark, NTP monitoring tools  |
+| 21  | BGP route spoofing/hijacking     | Announces misleading network routes to redirect internet traffic.                          | BGP monitoring tools, RIPE RIS   |
+| 22  | IPv6 Neighbor Discovery spoofing | Sends false IPv6 neighbor advertisements to redirect local traffic.                        | Wireshark, IPv6 monitoring tools |
+| 23  | Port spoofing                    | Manipulates source or destination port information to disguise traffic.                    | Wireshark, tcpdump               |
+
+### E. Social engineering and advanced identity spoofing
+
+| No. | Type                        | How it works                                                                     | How to test                             |
+| --- | --------------------------- | -------------------------------------------------------------------------------- | --------------------------------------- |
+| 24  | Identity spoofing           | Impersonates another person's identity.                                          | Identity verification audit             |
+| 25  | Profile spoofing            | Creates a fake social media profile using another person's details.              | Profile authenticity checks             |
+| 26  | Voice spoofing              | Uses recordings or AI-generated voices to impersonate someone.                   | Authorized voice-authentication testing |
+| 27  | Video/deepfake spoofing     | Uses manipulated video to impersonate another person.                            | Deepfake detection software             |
+| 28  | Biometric spoofing          | Attempts to fool fingerprint, facial or iris authentication.                     | Vendor-approved biometric test samples  |
+| 29  | QR-code spoofing            | Replaces a genuine QR code with one directing users to a fraudulent destination. | QR scanner and URL inspection           |
+| 30  | GPS location spoofing       | Makes a device report a false geographical location.                             | Simulated GPS testing                   |
+| 31  | Reflected identity spoofing | Abuses trusted identity information passed between applications or services.     | Application security testing            |
+
+This is a broad classification, not a mathematically complete list. Some categories overlap or are names for closely related techniques.
+
+### 2\. Practical commands for testing spoofing on Ubuntu or Kali Linux
+
+Since you have been working with Ubuntu, Termux, Wireshark, tcpdump and Kismet, here are useful commands for examining your own network.
+
+### Test 1: MAC address inspection
+
+```bash
+ip link show
+```
+
+Displays your network interfaces and their MAC addresses.
+
+### Test 2: ARP inspection
+
+```bash
+ip neigh show
+```
+
+Displays IP-to-MAC address mappings.
+
+Look for unexpected changes or conflicting mappings.
+
+### Test 3: DNS inspection
+
+```bash
+nslookup example.com
+```
+
+Or:
+
+```bash
+dig example.com
+```
+
+Compare the responses with your trusted DNS resolver.
+
+### Test 4: Network packet inspection
+
+```bash
+sudo tcpdump -i any -n
+```
+
+Captures packets passing through your interfaces.
+
+To capture DNS traffic only:
+
+```bash
+sudo tcpdump -i any port 53
+```
+
+### Test 5: Wi-Fi inspection
+
+```bash
+nmcli device wifi list
+```
+
+Displays nearby wireless networks.
+
+Look for duplicate SSIDs and unexpected access points. A duplicate name alone does not prove an Evil Twin attack.
+
+### Test 6: HTTP header inspection
+
+```bash
+curl -I https://example.com
+```
+
+Displays HTTP response headers.
+
+For an authorized test server, you can inspect how it handles different User-Agent values:
+
+```bash
+curl -A "TestBrowser" https://your-test-server.example
+```
+
+### Test 7: Email authentication
+
+Check the headers of an email you received and look for:
+
+* SPF: Sender Policy Framework.
+
+* DKIM: DomainKeys Identified Mail.
+
+* DMARC: Domain-based Message Authentication, Reporting and Conformance.
+
+These help identify forged email senders. Cisco +1
+
+### 3\. Best cybersecurity tools for spoofing detection
+
+### 1
+
+Wireshark
+
+Inspect network packets and investigate suspicious traffic.
+
+### 2
+
+tcpdump
+
+Capture and inspect packets from the terminal.
+
+### 3
+
+Kismet
+
+Monitor wireless networks and identify suspicious access points.
+
+### 4
+
+Ettercap
+
+Analyze network interception and ARP-related security risks in an authorized lab.
+
+### 5
+
+Scapy
+
+Construct and inspect network packets for controlled protocol testing.
+
+### 6
+
+Burp Suite
+
+Test HTTP requests, cookies, sessions and web application security.
+
+### 7
+
+Nmap
+
+Discover devices and services on your authorized network.
+
+### 8
+
+arp-scan
+
+Discover devices and their MAC addresses on a local network.
+
+### 4\. How to know whether spoofing is successful
+
+When testing your own systems, look for these indicators:
+
+| Attack           | Possible warning sign                             |
+| ---------------- | ------------------------------------------------- |
+| IP spoofing      | Source address inconsistent with network location |
+| ARP spoofing     | Unexpected IP-to-MAC changes                      |
+| DNS spoofing     | Unexpected DNS responses                          |
+| MAC spoofing     | Duplicate MAC addresses or unexpected changes     |
+| DHCP spoofing    | Unauthorized DHCP server                          |
+| Evil Twin        | Duplicate SSID with an unauthorized BSSID         |
+| Email spoofing   | SPF, DKIM or DMARC failure                        |
+| Website spoofing | Incorrect domain or suspicious certificate        |
+| Session spoofing | Unauthorized session reuse                        |
+| GPS spoofing     | Position inconsistent with trusted reference      |
+
+For DNS security, DNSSEC validation and trusted resolver configuration are important protections. Canadian Centre for Cyber Security +2
+
+### 5\. Let's build your practical spoofing laboratory
+
+I recommend learning these in this order:
+
+### Your ethical hacking learning path
+
+* Level 1 – MAC spoofing
+
+    Understand MAC addresses and network interfaces.
+
+* Level 2 – ARP spoofing
+
+    Understand ARP tables and how to detect poisoning.
+
+* Level 3 – IP spoofing
+
+    Understand packet headers and source address validation.
+
+* Level 4 – DNS spoofing
+
+    Understand DNS requests, responses and cache poisoning.
+
+* Level 5 – DHCP spoofing
+
+    Understand how devices receive IP addresses and gateways.
+
+* Level 6 – Evil Twin
+
+    Understand wireless access points and Kismet monitoring.
+
+* Level 7 – HTTP and session spoofing
+
+    Learn request headers, cookies and session authentication using Burp Suite.
+
+* Level 8 – Email spoofing
+
+    Learn SPF, DKIM and DMARC.
+
+One important question: Which environment do you want to use for the practical exercises?
+
+1\. Choose your environment
+
+Ubuntu Linux
+
+Kali Linux
+
+Termux on Android
+
+Windows
+
+Two virtual machines (attacker and target)
+
+2\. Choose your learning level
+
+Beginner – step by step
+
+Intermediate – commands and packet analysis
+
+Advanced – security testing and detection
+
+Start practical training
+
+I'll teach you how to test each attack, inspect the packets in Wireshark, understand what happens between devices, and identify whether the test was detected. All exercises will stay within systems you own or have permission to test.
