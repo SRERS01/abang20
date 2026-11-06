@@ -1,0 +1,33 @@
+You do not need to memorize everything Snort can block. Trying to memorize thousands of firewall rules would be impossible, especially since companies constantly update them.
+Instead, you just need to understand how Snort makes its decisions, and then use automated tools to find the holes.
+
+Think Like a Locksmith, Not an Encyclopedia
+
+If a locksmith wants to pick a high-security lock, they don't need to memorize every single key ever made in the world. They just need to understand how the pins inside the lock work. Once they know how the lock functions, they can use their tools to manipulate it.
+In bug bounty hunting, Snort is the lock, and your payloads are the keys.
+
+The 3 Core Blind Spots of Snort Rules
+
+Every firewall rule has structural flaws because humans write them. You can bypass almost any rule by targetting one of these three blind spots:
+
+1. Literal Matching (The exact word flaw)
+
+• The Snort Logic: If a rule looks for the exact word SELECT, it expects exactly those letters in that order.
+• The Hacker Bypass: You change it to SeLeCt, SEL%45CT (URL encoding), or /*!SELECT*/ (database comment injection). Snort doesn't see its exact keyword, so it assumes the traffic is safe.
+
+2. Protocol Confusion (The parsing flaw)
+
+• The Snort Logic: Snort inspects traffic based on what it thinks the protocol is. It might expect web traffic to only look like standard HTML.
+• The Hacker Bypass: You send your attack payload hidden inside a modern data format the rule author didn't think about—like a GraphQL query, a JSON parameter, or an XML entity (XXE). Snort passes it through because it doesn't know how to read that format, but the target's backend server parses it and executes your bug.
+
+3. Fragmented Packets (The look-away flaw)
+
+• The Snort Logic: To save computer memory, firewalls often inspect data in small pieces as it streams across the network.
+• The Hacker Bypass: You break your malicious payload across multiple tiny TCP packets (e.g., sending <sc in packet 1, ri in packet 2, and pt> in packet 3). Snort looks at each packet individually and sees harmless text fragments. But when the packets reach the target web server, the server glues them back together into a dangerous <script> tag.
+
+Let Your Tools Do the Guessing
+
+As a bug bounty hunter, you use automated fuzzers to systematically test these blind spots for you:
+1. Burp Intruder / Hackvertor: You give it your base exploit payload, and tell it to automatically fire 100 different variations (Base64 encoded, Hex encoded, mixed-case, padded with spaces).
+2. Analyze the responses: You look for the anomaly. If 99 requests return a 403 Forbidden (Firewall blocked) but 1 request returns a 200 OK or a database error, you know you successfully found a blind spot in their rule configuration.
+Would you like to see how to configure Burp Suite's Intruder or Hackvertor right now to automatically generate these variations for you? I can walk you through setting up a quick test.

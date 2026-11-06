@@ -1,0 +1,24 @@
+Yes, an HTTP 403 Forbidden status code is the most common sign that a firewall or Web Application Firewall (WAF) has blocked your request.
+When you are fuzzing or testing a target and suddenly get a 403 Forbidden response, it usually means your payload tripped a security signature.
+
+How to Tell the Difference: WAF Block vs. Normal 403
+
+Not all 403 errors are from firewalls. Sometimes a website naturally returns a 403 if you try to visit an admin page without logging in. Here is how you spot a firewall block:
+
+Indicator	Normal Web App 403	Firewall / WAF 403 Block
+Response Headers	Standard server headers (e.g., Server: Apache).	Shows firewall names (e.g., Server: cloudflare, X-Gateway, Server: Akamai).
+Response Body	Simple text like "Login Required" or custom site branding.	Displays security block pages, challenge screens (CAPTCHAs), or a unique Reference ID string.
+Trigger Event	Happens immediately when clicking a private link.	Only triggers the exact millisecond you type an exploit character (like ' or <).
+
+
+🚀 What to do next when you hit a Firewall 403
+
+When you see a firewall 403, do not give up. This is actually great news for a bug bounty hunter. It proves that the page or parameter you are testing is connected to something important that the company is actively trying to hide.
+To break past it, you start your mutation workflow:
+1. Isolate the character: Strip your payload down. Send just a single quote '. If it gets blocked, you know the firewall is watching that specific character.
+2. Change the Content-Type: If you sent the request as a standard web form (application/x-www-form-urlencoded), try converting the request to JSON (application/json) inside Burp Suite. Sometimes firewalls only check form fields and ignore JSON payloads entirely.
+3. Use the 403 Bypass Headers: Some firewalls are configured to let traffic pass if it looks like it comes from a trusted internal source. Use Burp Suite to inject headers like:
+	• X-Forwarded-For: 127.0.0.1
+	• X-Originating-IP: 127.0.0.1
+	• X-Remote-IP: 127.0.0.1
+Would you like to look at how to use Burp Suite's Match and Replace tool to automatically inject those bypass headers into every request you send?
