@@ -1,0 +1,21 @@
+The repository URL in your command is missing the author's username (bkerler) and contains an extra slash.
+To clone the repository correctly, use this exact command:
+bash
+git clone https://github.com/bkerler/mtkclient
+Use code with caution.
+
+Complete Steps from Your Location
+
+Since you are currently working in ~/edf/pin/networking, run the following sequential commands to get everything configured:
+bash
+# 1. Clone the correct repository
+git clone https://github.com/bkerler/mtkclient
+
+# 2. Change into the newly created directory
+cd mtkclient
+
+# 3. Install the required python dependencies
+pip3 install -r requirements.txt
+Use code with caution.
+Once those steps complete, your full path to the executable will be exactly what you need: /home/user/edf/pin/networking/mtkclient/mtk.
+Let me know if the git clone completes successfully or if you run into any pip installation errors while loading the requirements!
