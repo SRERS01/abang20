@@ -1,0 +1,26 @@
+Reward decisions
+A reward is paid only to the first researcher who reports a specific vulnerability.
+The final bounty decision is made within 30 days after triage at the latest, although the decision may be issued earlier. Once confirmed, the report will contain a message stating that the vulnerability has been validated and that a reward has been granted.
+Payments are made through HackerOne.
+Vulnerability	Price (USD)	Severity
+Remote code execution (RCE)	3000	Critical
+Unauthorized fund movement or balance crediting ¹	1500–2500	Critical
+Payment verification bypass or double-credit ¹	1500–2500	Critical
+Injections (SQLi or equivalent)	1500	Critical
+Local file access / manipulation (LFR, RFI, XXE)	1200	Critical
+Admin / support interface authentication bypass	1500	Critical
+SSRF, non-blind (readable response), except dedicated proxies	1300	High
+SSRF, blind, except dedicated proxies	750	High
+Info disclosure / IDOR / BOLA — critical or highly confidential data	1000	High
+Info disclosure / IDOR / BOLA — sensitive client/infra data (bulk)	750	High
+Info disclosure / IDOR / BOLA — sensitive client/infra data (non-covered)	400	High
+Account takeover	1500	High
+Admin / support interface blind XSS	1500	High
+Financial business-logic bypass with quantifiable gain ¹	200–400	Medium
+Cross-Site Scripting (XSS) ²	150	Medium
+Subdomain takeover	50	Low
+¹ Payment & financial-logic — what each row covers
+
+    Fund movement / crediting: anti-fraud/limit/hold bypass on payout, provider deception, unauthorized balance credit.
+    Verification bypass / double-credit: paid-without-payment, UTR reuse, gateway bypass, duplicate payout via race/replay.
+    Business-logic gain: bonus/voucher abuse, deposit/withdrawal limit bypass, currency-conversion abuse.
