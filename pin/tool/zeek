@@ -1,0 +1,53 @@
+To install Zeek, you can use official binary packages, package managers, or build from source. The easiest and most common way to install the current Long Term Support (LTS) release of Zeek on Ubuntu 24.04 is via the official OpenSUSE Build Service (OBS) repository. [1] (https://docs.zeek.org/en/v9.0.0/install.html)
+
+1. Install via Official Repository (Ubuntu 24.04)
+
+Run the following commands in your terminal to add the repository, import the GPG key, and install the latest Zeek 9.0 LTS line: [1] (https://zeek.org/get-zeek/), [2] (https://docs.zeek.org/en/v9.0.0/install.html)
+bash
+# Add the official Zeek repository
+echo 'deb https://download.opensuse.org/repositories/security:/zeek/xUbuntu_24.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
+
+# Import the repository GPG key
+curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_24.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
+
+# Update your package list and install Zeek
+sudo apt update
+sudo apt install zeek-9.0
+Use code with caution.
+(Note: If you are prompted about a mail server configuration during installation, selecting "Local only" is usually sufficient for a standard setup). [1] (https://www.youtube.com/watch?v=A69WwoGg0WU), [2] (https://www.howtoforge.com/how-to-install-zeek-network-security-monitoring-tool-on-ubuntu-22-04/)
+
+2. Alternative Operating Systems
+
+If you are not using Ubuntu, you can install Zeek using your system's package manager:
+
+Operating System / Environment	Installation Command
+macOS	brew install zeek
+FreeBSD	sudo pkg install -y zeek
+OpenBSD	doas pkg_add zeek
+Docker	docker pull zeek/zeek
+
+
+3. Post-Installation Setup (Linux)
+
+Once installed, Zeek's binaries live in /opt/zeek/bin. Follow these steps to complete the environment setup: [1] (https://docs.zeek.org/en/v9.0.0/install.html)
+1. Add Zeek to your System PATH:bash
+echo "export PATH=\$PATH:/opt/zeek/bin" >> ~/.bashrc
+source ~/.bashrc
+Use code with caution.
+2. Verify the Installation:bash
+zeek --version
+Use code with caution.
+3. Configure your Network Interface:
+Open the node configuration file:bash
+sudo nano /opt/zeek/etc/node.cfg
+Use code with caution.
+Find the line interface=eth0 (or similar) and change it to match your active sniffing interface (e.g., enp0s3 or eth0). You can find your active interfaces by running ip link.
+4. Deploy and Start Zeek: [1] (https://rahulcyberx.medium.com/how-to-install-zeek-on-linux-cybersecurity-homelab-5-06ca91765fde)
+bash
+sudo zeekctl deploy
+sudo zeekctl status
+Use code with caution.
+For advanced deployments or alternative builds, you can refer to the official Book of Zeek Installation Guide or download direct tarballs from the Get Zeek Portal. [1] (https://docs.zeek.org/en/v9.0.0/install.html), [2] (https://zeek.org/get-zeek/)
+To help fine-tune these steps, please let me know:
+• What Operating System or specific Linux distribution / version are you using?
+• Are you setting this up for a local lab/standalone machine or a distributed cluster environment?
