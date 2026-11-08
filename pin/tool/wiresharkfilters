@@ -1,0 +1,388 @@
+### Complete Wireshark Display Filters and Their Functions (Ubuntu)
+
+Wireshark uses display filters to help you find, examine and analyse specific network packets. They allow you to isolate traffic from browsers, terminals, servers, protocols and applications.
+
+There are hundreds of Wireshark display filters. Below is a practical reference covering the major filters you should learn for cybersecurity and network analysis.
+
+### 1\. Basic network filters
+
+| Filter | Function                           |
+| ------ | ---------------------------------- |
+| ip     | Displays IPv4 packets              |
+| ipv6   | Displays IPv6 packets              |
+| eth    | Displays Ethernet packets          |
+| arp    | Displays ARP traffic               |
+| icmp   | Displays ICMP packets              |
+| icmpv6 | Displays IPv6 ICMP packets         |
+| tcp    | Displays TCP traffic               |
+| udp    | Displays UDP traffic               |
+| dns    | Displays DNS traffic               |
+| tls    | Displays TLS encrypted connections |
+| http   | Displays HTTP traffic              |
+| ftp    | Displays FTP traffic               |
+| ssh    | Displays SSH traffic               |
+| dhcp   | Displays DHCP traffic              |
+
+### 2\. IP address filters
+
+| Filter                  | Function                          |
+| ----------------------- | --------------------------------- |
+| ip.addr == 192.168.1.10 | Traffic to or from an IP          |
+| ip.src == 192.168.1.10  | Packets coming from an IP         |
+| ip.dst == 192.168.1.10  | Packets going to an IP            |
+| ip.addr != 192.168.1.10 | Excludes an IP                    |
+| ip.src == 192.168.1.1   | Shows packets from a router       |
+| ip.dst == 8.8.8.8       | Shows packets going to Google DNS |
+| ip.ttl < 64             | Finds packets with TTL below 64   |
+
+Replace the example addresses with the addresses you want to investigate.
+
+### 3\. TCP filters
+
+| Filter                      | Function                                  |
+| --------------------------- | ----------------------------------------- |
+| tcp                         | All TCP packets                           |
+| tcp.port == 80              | HTTP port traffic                         |
+| tcp.port == 443             | HTTPS port traffic                        |
+| tcp.port == 22              | SSH traffic                               |
+| tcp.port == 21              | FTP control traffic                       |
+| tcp.srcport == 443          | TCP packets from source port 443          |
+| tcp.dstport == 443          | TCP packets going to destination port 443 |
+| tcp.flags.syn == 1          | TCP SYN packets                           |
+| tcp.flags.ack == 1          | TCP ACK packets                           |
+| tcp.flags.reset == 1        | TCP reset packets                         |
+| tcp.flags.fin == 1          | TCP FIN packets                           |
+| tcp.analysis.retransmission | TCP retransmissions                       |
+| tcp.analysis.lost_segment   | Possible missing TCP segments             |
+| tcp.analysis.duplicate_ack  | Duplicate TCP acknowledgements            |
+
+### 4\. UDP filters
+
+| Filter            | Function                                  |
+| ----------------- | ----------------------------------------- |
+| udp               | All UDP packets                           |
+| udp.port == 53    | DNS over UDP                              |
+| udp.port == 67    | DHCP server traffic                       |
+| udp.port == 68    | DHCP client traffic                       |
+| udp.port == 123   | NTP time synchronization                  |
+| udp.port == 161   | SNMP traffic                              |
+| udp.port == 443   | Often QUIC/HTTP3 traffic                  |
+| udp.srcport == 53 | UDP packets from DNS source port          |
+| udp.dstport == 53 | UDP packets going to DNS destination port |
+
+### 5\. DNS filters
+
+| Filter                         | Function                       |
+| ------------------------------ | ------------------------------ |
+| dns                            | All DNS packets                |
+| dns.qry.name                   | Displays DNS query names       |
+| dns.flags.response == 0        | DNS queries                    |
+| dns.flags.response == 1        | DNS responses                  |
+| dns.qry.type == 1              | IPv4 A-record queries          |
+| dns.qry.type == 28             | IPv6 AAAA-record queries       |
+| dns.qry.type == 15             | Mail exchange (MX) queries     |
+| dns.qry.type == 16             | TXT-record queries             |
+| dns.qry.name contains "google" | DNS queries containing google  |
+| dns.flags.rcode != 0           | DNS responses with error codes |
+
+Example:
+
+```wireshark
+dns.qry.name contains "facebook"
+```
+
+This helps you investigate DNS requests involving Facebook.
+
+### 6\. HTTP and HTTPS filters
+
+| Filter                          | Function                  |
+| ------------------------------- | ------------------------- |
+| http                            | All HTTP packets          |
+| http.request                    | HTTP requests             |
+| http.response                   | HTTP responses            |
+| http.request.method == "GET"    | GET requests              |
+| http.request.method == "POST"   | POST requests             |
+| http.request.method == "PUT"    | PUT requests              |
+| http.request.method == "DELETE" | DELETE requests           |
+| http.host                       | HTTP host information     |
+| http.request.uri                | Requested URI             |
+| http.response.code == 200       | Successful HTTP responses |
+| http.response.code == 404       | Not-found responses       |
+| http.response.code == 403       | Forbidden responses       |
+| http.response.code >= 500       | Server error responses    |
+| tls                             | TLS traffic               |
+| tls.handshake                   | TLS handshake packets     |
+| tls.handshake.type == 1         | Client Hello              |
+| tls.handshake.type == 2         | Server Hello              |
+| tls.alert                       | TLS alert messages        |
+
+Important: HTTPS does not normally reveal passwords, messages or page contents in Wireshark because the application data is encrypted.
+
+### 7\. ARP filters
+
+| Filter                         | Function                              |
+| ------------------------------ | ------------------------------------- |
+| arp                            | All ARP packets                       |
+| arp.opcode == 1                | ARP requests                          |
+| arp.opcode == 2                | ARP replies                           |
+| arp.src.proto_ipv4             | Sender IPv4 address                   |
+| arp.dst.proto_ipv4             | Target IPv4 address                   |
+| arp.duplicate-address-detected | Detects duplicate-address indications |
+| arp.isgratuitous               | Gratuitous ARP packets                |
+
+ARP is useful when investigating local network communication and possible IP-address conflicts.
+
+### 8\. ICMP filters
+
+| Filter             | Function                |
+| ------------------ | ----------------------- |
+| icmp               | All IPv4 ICMP traffic   |
+| icmp.type == 8     | Echo request (ping)     |
+| icmp.type == 0     | Echo reply              |
+| icmp.type == 3     | Destination unreachable |
+| icmp.type == 11    | Time exceeded           |
+| icmp.code == 1     | Host unreachable code   |
+| icmpv6             | IPv6 ICMP traffic       |
+| icmpv6.type == 128 | IPv6 echo request       |
+| icmpv6.type == 129 | IPv6 echo reply         |
+
+### 9\. DHCP filters
+
+| Filter                 | Function                                                 |
+| ---------------------- | -------------------------------------------------------- |
+| dhcp                   | DHCP traffic, where supported by the installed dissector |
+| bootp                  | DHCP/BOOTP traffic                                       |
+| bootp.option.dhcp == 1 | DHCP Discover                                            |
+| bootp.option.dhcp == 2 | DHCP Offer                                               |
+| bootp.option.dhcp == 3 | DHCP Request                                             |
+| bootp.option.dhcp == 5 | DHCP ACK                                                 |
+
+These help you understand how Ubuntu obtains an IP address from a DHCP server.
+
+### 10\. Email and file-transfer filters
+
+| Filter                        | Function                    |
+| ----------------------------- | --------------------------- |
+| smtp                          | Email transmission          |
+| pop                           | POP email traffic           |
+| imap                          | IMAP email traffic          |
+| ftp                           | FTP traffic                 |
+| ftp.request.command           | FTP commands                |
+| ftp.request.command == "USER" | FTP username command        |
+| ftp.request.command == "PASS" | FTP password command        |
+| tftp                          | Trivial FTP traffic         |
+| smb                           | SMB file-sharing traffic    |
+| smb2                          | SMB2/SMB3 traffic           |
+| nfs                           | Network File System traffic |
+
+Some older or unencrypted protocols can expose sensitive information. Do not assume encrypted mail or file-transfer sessions will reveal their contents.
+
+### 11\. Cybersecurity investigation filters
+
+| Filter                                   | Function                                   |
+| ---------------------------------------- | ------------------------------------------ |
+| tcp.flags.syn == 1 && tcp.flags.ack == 0 | Initial TCP SYN packets                    |
+| tcp.flags.reset == 1                     | TCP resets                                 |
+| tcp.analysis.retransmission              | Retransmission investigation               |
+| tcp.analysis.zero_window                 | TCP zero-window conditions                 |
+| dns.flags.rcode != 0                     | DNS errors                                 |
+| icmp.type == 3                           | Destination unreachable messages           |
+| ip.ttl <= 2                              | Very low IPv4 TTL                          |
+| tcp.len > 1000                           | TCP segments carrying more than 1000 bytes |
+| frame.len > 1500                         | Frames larger than 1500 bytes              |
+| tcp.stream eq 0                          | Packets in TCP stream number 0             |
+
+These filters help investigate connectivity problems, unusual traffic and network behaviour. They do not independently prove an attack.
+
+### 12\. SSH and remote-access filters
+
+| Filter           | Function                          |
+| ---------------- | --------------------------------- |
+| ssh              | SSH traffic                       |
+| tcp.port == 22   | SSH port traffic                  |
+| telnet           | Telnet traffic                    |
+| tcp.port == 23   | Telnet port traffic               |
+| rdp              | Remote Desktop Protocol traffic   |
+| vnc              | Virtual Network Computing traffic |
+| tcp.port == 3389 | Common RDP port                   |
+| tcp.port == 5900 | Common VNC port                   |
+
+### 13\. Wireless network filters
+
+| Filter                     | Function                   |
+| -------------------------- | -------------------------- |
+| wlan                       | Wireless LAN frames        |
+| wlan.fc.type == 0          | Wi-Fi management frames    |
+| wlan.fc.type == 1          | Wi-Fi control frames       |
+| wlan.fc.type == 2          | Wi-Fi data frames          |
+| wlan.fc.type_subtype == 8  | Beacon frames              |
+| wlan.fc.type_subtype == 4  | Probe requests             |
+| wlan.fc.type_subtype == 5  | Probe responses            |
+| wlan.fc.type_subtype == 11 | Authentication frames      |
+| wlan.fc.type_subtype == 12 | Deauthentication frames    |
+| wlan.ssid                  | SSID field, when available |
+
+Note: You need a compatible wireless adapter and monitor-mode capture to inspect over-the-air Wi-Fi management frames. Ordinary Wi-Fi interface captures may not expose them.
+
+### 14\. Application and network-service filters
+
+| Filter    | Function                              |
+| --------- | ------------------------------------- |
+| ntp       | Network time protocol                 |
+| snmp      | Network management traffic            |
+| ldap      | Directory service traffic             |
+| kerberos  | Kerberos authentication               |
+| sip       | Voice-over-IP signalling              |
+| rtp       | Real-time audio/video transport       |
+| rtcp      | RTP control traffic                   |
+| quic      | QUIC protocol traffic                 |
+| http2     | HTTP/2 traffic                        |
+| http3     | HTTP/3 traffic, when dissected        |
+| websocket | WebSocket communication               |
+| mqtt      | Message Queuing Telemetry Transport   |
+| modbus    | Industrial communication protocol     |
+| wireguard | WireGuard VPN traffic, when dissected |
+
+### 15\. Wireshark logical operators
+
+These are important because they allow you to combine multiple filters.
+
+| Operator | Function | |---|---| | `&&` | AND: both conditions must match | | `||` | OR: either condition can match | | `!` | NOT: excludes a condition | | `==` | Equal to | | `!=` | Not equal to | | `>` | Greater than | | `<` | Less than | | `>=` | Greater than or equal to | | `<=` | Less than or equal to | | `contains` | Finds a specified substring | | `matches` | Matches a regular expression | | `in` | Checks membership in a set |
+
+Examples:
+
+Find HTTPS and DNS traffic:
+
+```wireshark
+dns || tcp.port == 443
+```
+
+Find traffic from a particular IP, excluding DNS:
+
+```wireshark
+ip.src == 192.168.1.10 && !dns
+```
+
+Find HTTP GET and POST requests:
+
+```wireshark
+http.request.method == "GET" ||
+http.request.method == "POST"
+```
+
+Find TCP packets with a particular destination port:
+
+```wireshark
+tcp.dstport == 443
+```
+
+### 16\. Frame and packet analysis filters
+
+| Filter                    | Function                                   |
+| ------------------------- | ------------------------------------------ |
+| frame                     | All captured frames                        |
+| frame.number == 10        | Frame number 10                            |
+| frame.len == 128          | Frames exactly 128 bytes                   |
+| frame.len > 1000          | Large frames                               |
+| frame.time_delta > 1      | Frames separated by more than one second   |
+| frame contains "password" | Searches packet bytes for a byte sequence  |
+| data                      | Displays packets dissected as generic data |
+
+### 17\. Useful filters for browser and terminal monitoring
+
+These are particularly useful when practising on Ubuntu.
+
+| What you want to investigate | Filter | |---|---| | All browser/network traffic | `tcp || udp` | | DNS website lookups | `dns` | | HTTPS connections | `tcp.port == 443` | | HTTP browsing | `http` | | Google DNS | `ip.addr == 8.8.8.8` | | Ping commands | `icmp` | | SSH connections | `tcp.port == 22` | | QUIC browser traffic | `quic` | | Failed TCP connection attempts | `tcp.flags.reset == 1` | | DNS errors | `dns.flags.rcode != 0` | | Large network packets | `frame.len > 1000` | | Traffic to a particular server | `ip.dst == 192.168.1.10` |
+
+### 18\. Important: Display filters versus capture filters
+
+Wireshark has two different filtering systems.
+
+| Display filters                          | Capture filters                     |
+| ---------------------------------------- | ----------------------------------- |
+| Applied after packets are captured       | Applied before packets are captured |
+| Use Wireshark syntax                     | Use BPF syntax                      |
+| Can examine captured traffic selectively | Can limit what gets captured        |
+| Example: tcp.port == 443                 | Example: tcp port 443               |
+
+For example:
+
+Display filter:
+
+```wireshark
+ip.addr == 192.168.1.10
+```
+
+Capture filter:
+
+```bash
+host 192.168.1.10
+```
+
+### 19\. How to find every available filter in Ubuntu
+
+Wireshark has hundreds of protocol-specific fields, and the complete list changes with installed versions and dissectors.
+
+You can explore them using:
+
+```bash
+wireshark -G fields
+```
+
+To search for TCP fields:
+
+```bash
+wireshark -G fields | grep tcp
+```
+
+To search for DNS fields:
+
+```bash
+wireshark -G fields | grep dns
+```
+
+To list supported protocols:
+
+```bash
+tshark -G protocols
+```
+
+To see capture interfaces:
+
+```bash
+tshark -D
+```
+
+### 20\. Practical exercises to master Wireshark
+
+Recommended learning sequence
+
+* Capture DNS requests while browsing.
+
+* Identify the IP addresses of websites.
+
+* Analyse TCP three-way handshakes.
+
+* Examine TLS handshakes.
+
+* Monitor SSH connections.
+
+* Investigate DNS failures.
+
+* Analyse TCP retransmissions.
+
+* Compare browser traffic with terminal traffic.
+
+* Investigate suspicious network connections in an authorised lab.
+
+* Generate a network traffic report.
+
+My recommendation: Learn the filters first, then practise packet analysis. Knowing the filters is only the beginning; understanding what each packet means is what makes you a good network analyst.
+
+I can prepare a daily Ubuntu Wireshark practical exercise with commands, filters, packet-analysis questions and answers.
+
+🖥️
+
+Daily Wireshark practical lesson
+
+Tap to set up

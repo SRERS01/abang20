@@ -1,0 +1,368 @@
+### Using Snort on Ubuntu to Test Firewall Bypass
+
+You can use Snort 3 to test whether a firewall is properly enforcing its security rules, detect unexpected traffic and identify possible firewall bypass attempts.
+
+The important distinction is that Snort is an IDS/IPS, not a firewall-testing tool by itself. You use Snort alongside firewall rules, packet captures and connection tests to establish whether traffic is being blocked or allowed unexpectedly.
+
+Only perform these tests on your own computer, network or an environment where you have permission.
+
+### 1\. Different ways to test firewall enforcement
+
+Here are the main testing categories.
+
+| Test                         | What you investigate                                  |
+| ---------------------------- | ----------------------------------------------------- |
+| Port testing                 | Whether prohibited ports are accessible               |
+| TCP testing                  | Whether unauthorised TCP connections pass             |
+| UDP testing                  | Whether restricted UDP traffic passes                 |
+| ICMP testing                 | Whether ping traffic is allowed unexpectedly          |
+| DNS testing                  | Whether DNS restrictions are enforced                 |
+| HTTP testing                 | Whether web traffic follows firewall policy           |
+| HTTPS testing                | Whether encrypted web connections follow policy       |
+| SSH testing                  | Whether remote administration is restricted           |
+| IPv6 testing                 | Whether IPv6 bypasses IPv4 firewall rules             |
+| Fragmentation testing        | Whether fragmented packets are handled correctly      |
+| VPN testing                  | Whether unauthorised VPN connections are permitted    |
+| Network segmentation testing | Whether one network segment can access another        |
+| Egress testing               | Whether restricted outbound connections are possible  |
+| Ingress testing              | Whether unauthorised inbound connections are possible |
+
+### 2\. Prepare Ubuntu
+
+Check your Snort version:
+
+```bash
+snort -V
+```
+
+Identify your network interfaces:
+
+```bash
+ip addr
+```
+
+Check your default gateway:
+
+```bash
+ip route
+```
+
+Check the firewall:
+
+```bash
+sudo ufw status verbose
+```
+
+For systems using nftables:
+
+```bash
+sudo nft list ruleset
+```
+
+For systems using iptables:
+
+```bash
+sudo iptables -L -n -v
+```
+
+These commands help you understand which firewall policies are active.
+
+### 3\. Capture traffic with Snort
+
+Start Snort on your active interface:
+
+```bash
+sudo snort -c /etc/snort/snort.lua -i eth0 -A alert_fast
+```
+
+Replace `eth0` with your actual interface.
+
+To monitor a saved packet capture:
+
+```bash
+sudo snort -c /etc/snort/snort.lua -r firewall-test.pcap
+```
+
+To test your configuration:
+
+```bash
+sudo snort -T -c /etc/snort/snort.lua
+```
+
+### 4\. Create Snort rules for firewall monitoring
+
+Create a custom rules file:
+
+```bash
+sudo nano /etc/snort/firewall.rules
+```
+
+Add these defensive monitoring rules.
+
+```snort
+# 1. Detect ICMP traffic
+alert icmp any any -> any any (msg:"ICMP traffic observed"; sid:1000201; rev:1;)
+
+# 2. Detect DNS traffic
+alert udp any any -> any 53 (msg:"DNS traffic observed"; sid:1000202; rev:1;)
+
+# 3. Detect SSH traffic
+alert tcp any any -> any 22 (msg:"SSH traffic observed"; sid:1000203; rev:1;)
+
+# 4. Detect HTTP traffic
+alert tcp any any -> any 80 (msg:"HTTP traffic observed"; sid:1000204; rev:1;)
+
+# 5. Detect HTTPS traffic
+alert tcp any any -> any 443 (msg:"HTTPS traffic observed"; sid:1000205; rev:1;)
+
+# 6. Detect traffic to a restricted test port
+alert tcp any any -> any 8080 (msg:"Traffic to test port 8080"; sid:1000206; rev:1;)
+
+# 7. Detect UDP traffic on a test port
+alert udp any any -> any 5353 (msg:"UDP traffic on test port 5353"; sid:1000207; rev:1;)
+```
+
+These rules detect traffic. They do not establish whether the firewall allowed it. You must compare the observations with the firewall's expected policy.
+
+Test the rules against a capture:
+
+```bash
+sudo snort -c /etc/snort/snort.lua \
+-R /etc/snort/firewall.rules \
+-r firewall-test.pcap \
+-A alert_fast
+```
+
+The official Snort documentation explains live interface monitoring, PCAP analysis and inline operation. Snort 3 Rule Writing Guide +1
+
+### 5\. Test individual protocols
+
+Use a separate machine or a controlled test server in your lab.
+
+| Protocol | Port       | Test purpose                 |
+| -------- | ---------- | ---------------------------- |
+| HTTP     | TCP 80     | Web access policy            |
+| HTTPS    | TCP 443    | Encrypted web access policy  |
+| SSH      | TCP 22     | Remote administration policy |
+| DNS      | UDP/TCP 53 | Name resolution policy       |
+| FTP      | TCP 21     | File transfer policy         |
+| SMTP     | TCP 25     | Email transmission policy    |
+| NTP      | UDP 123    | Time synchronisation policy  |
+| SMB      | TCP 445    | File sharing policy          |
+| RDP      | TCP 3389   | Remote desktop policy        |
+| QUIC     | UDP 443    | HTTP/3 traffic policy        |
+| ICMP     | Protocol 1 | Ping and diagnostic policy   |
+
+For example, check a permitted or restricted test service:
+
+```bash
+nc -vz 192.168.1.20 22
+```
+
+Check HTTPS:
+
+```bash
+curl -I --connect-timeout 5 https://example.com
+```
+
+Check DNS:
+
+```bash
+dig example.com
+```
+
+Check ICMP:
+
+```bash
+ping -c 4 192.168.1.20
+```
+
+For UDP, use an appropriate test service and verify the result on the receiving machine. A UDP timeout alone does not prove that the firewall blocked the traffic.
+
+### 6\. Test port accessibility with Nmap
+
+Nmap complements Snort by actively checking whether services are reachable.
+
+Install it:
+
+```bash
+sudo apt install nmap -y
+```
+
+Check selected TCP ports on your authorised test machine:
+
+```bash
+nmap -sT -Pn -p 22,80,443,445,3389 192.168.1.20
+```
+
+Check selected UDP ports:
+
+```bash
+sudo nmap -sU -Pn -p 53,123,161 192.168.1.20
+```
+
+Interpretation:
+
+| Result        | Meaning                                                                |
+| ------------- | ---------------------------------------------------------------------- |
+| Open          | Service is accepting connections                                       |
+| Closed        | Host responded, but service is not listening                           |
+| Filtered      | Nmap could not determine the state, often because filtering intervened |
+| Open/filtered | UDP response was insufficient to distinguish the state                 |
+
+Do not interpret `filtered` as definitive proof of correct firewall enforcement.
+
+### 7\. Important firewall bypass checks
+
+These are particularly important during a security assessment.
+
+| Check                | What to verify                                          |
+| -------------------- | ------------------------------------------------------- |
+| IPv4 versus IPv6     | Are both protected by equivalent policies?              |
+| Inbound connections  | Are unauthorised incoming connections rejected?         |
+| Outbound connections | Can restricted applications communicate externally?     |
+| DNS policy           | Can clients use only authorised DNS resolvers?          |
+| VPN policy           | Are unauthorised VPN connections restricted?            |
+| Network segmentation | Can guest devices reach protected servers?              |
+| NAT rules            | Are port-forwarding rules exposing unintended services? |
+| Fragmented packets   | Are fragmented packets inspected consistently?          |
+| Stateful inspection  | Are invalid or unexpected connection states rejected?   |
+| Firewall logging     | Are denied connections recorded?                        |
+
+For IPv6, check:
+
+```bash
+ip -6 addr
+```
+
+Check IPv6 firewall rules:
+
+```bash
+sudo ufw status verbose
+```
+
+If using nftables:
+
+```bash
+sudo nft list ruleset
+```
+
+A firewall that protects IPv4 but leaves IPv6 unrestricted can expose services unexpectedly.
+
+### 8\. How to determine whether traffic actually bypassed the firewall
+
+This is the most important part of the exercise.
+
+![Blinding Snort IDS/IPS: Breaking the Modbus OT Preprocessor | Claroty](https://images.openai.com/static-rsc-4/YHYV1aR6GEmvYnJodhvrvPds7GNWmK54oCAg873zoPmRdrqxQzfbY_prQVM5TXYBhbSnNcI-CWHJy7VEgmHSis3LmmNYUcr6hBikHAzJmxLUuUp5EY5lfxJ8xZChxINUPHDAKiw3Odg7HGBLOezjPoyVLFDPx7cSkVcYnD0dXc0F5BmMPXr8ghqEa9Q9t-Jv?purpose=fullsize)
+
+Ideally, capture traffic at two points:
+
+* Outside the firewall.
+
+* Inside the firewall.
+
+Compare the results.
+
+| Outside sensor   | Inside sensor                       | Interpretation                                                              |
+| ---------------- | ----------------------------------- | --------------------------------------------------------------------------- |
+| Traffic observed | Traffic observed                    | Traffic crossed the firewall                                                |
+| Traffic observed | No matching traffic                 | Firewall may have blocked it, or another network device may have dropped it |
+| No traffic       | Traffic observed                    | Investigate alternate paths, capture placement and local traffic            |
+| Traffic observed | Traffic observed on prohibited port | Potential policy violation requiring investigation                          |
+
+Also compare:
+
+* Firewall logs.
+
+* Snort alerts.
+
+* Nmap results.
+
+* Server application logs.
+
+* Network routing and NAT configurations.
+
+A single Snort alert cannot establish a firewall bypass.
+
+### 9\. Useful Ubuntu diagnostic commands
+
+| Command                  | Purpose                                   |
+| ------------------------ | ----------------------------------------- |
+| ip addr                  | View network interfaces                   |
+| ip route                 | View routing table                        |
+| ip -6 route              | View IPv6 routes                          |
+| ss -tulpen               | View listening services                   |
+| sudo ufw status numbered | View numbered firewall rules              |
+| sudo nft list ruleset    | Inspect nftables configuration            |
+| sudo iptables -L -n -v   | Inspect IPv4 iptables rules               |
+| sudo ip6tables -L -n -v  | Inspect IPv6 iptables rules               |
+| sudo tcpdump -i any      | Capture traffic across interfaces         |
+| sudo journalctl -k       | Inspect kernel logs                       |
+| snort -V                 | Check Snort version                       |
+| snort --daq-list         | List available packet acquisition modules |
+
+### 10\. Recommended practical firewall assessment
+
+Hands-on laboratory
+
+Use this topology:
+
+Test network / Internet
+
+External test machine
+
+Firewall
+
+UFW / nftables / dedicated firewall
+
+Internal network
+
+Ubuntu server and test applications
+
+Snort monitoring sensor
+
+Observe traffic on suitable network monitoring points
+
+Your objective is to establish whether the firewall's actual behaviour matches its intended security policy.
+
+### 11\. Check your understanding
+
+Test yourself: Firewall and Snort
+
+1. Can Snort in passive IDS mode block a connection?
+
+Yes, automatically
+
+No, it only observes and detects
+
+Only UDP traffic
+
+2. Which command checks listening services on Ubuntu?
+
+ip route
+
+ss -tulpen
+
+snort -V
+
+3. What does an Nmap filtered result mean?
+
+The port is definitely safe
+
+The service is definitely running
+
+Filtering may prevent determining the port state
+
+0/3 answered
+
+Reset quiz
+
+Official technical references:
+
+* [Snort 3 traffic inspection](https://docs.snort.org/start/inspection?utm_source=chatgpt.com)
+
+* [Snort 3 rules and inline testing](https://docs.snort.org/start/rules?utm_source=chatgpt.com)
+
+* [Snort rule structure](https://docs.snort.org/rules/?utm_source=chatgpt.com).
+
+My suggested next practical project is to build a two-machine Ubuntu firewall laboratory, install Snort on the monitoring machine, and test inbound, outbound, IPv4, IPv6, TCP, UDP and ICMP policies.

@@ -1,0 +1,337 @@
+Worked for 9s
+
+### Snort + Bug Bounty: Advanced Website Security Testing
+
+Yes. You can combine Snort, Wireshark, Burp Suite, Nmap and browser developer tools to improve your bug bounty investigations.
+
+However, one important thing to understand:
+
+Snort does not directly discover every website vulnerability. It monitors network traffic and detects suspicious patterns. Burp Suite and other web-testing tools help you investigate application vulnerabilities.
+
+The strongest approach is to combine them so that you can observe, intercept, analyse and understand website traffic.
+
+Only test domains and systems explicitly included in your bug bounty programme's scope.
+
+### 1\. The best tool combinations
+
+![SNORT. INTRODUCTION | by SarahAgnave | Medium](https://images.openai.com/static-rsc-4/xKX2TILO1Zjks8tScB0eUO32FI_XN2pDRR7zvBHg2nphDQxnBLBw9P82_QN1e857-CvF8Lu5HHxv0C11aSnufCGVVlgvU2SGXR-xrwQo0e7rBmZAXDc6d0d_pAhqiO9wrahv-a-rl_r_WC-rV_iF4NRmYlkjJufTMI2Y2AlHvl8aEEDkJIDP_hOmSOLnzL-T?purpose=fullsize)
+
+Snort
+
+Network intrusion detection
+
+Monitor
+
+![Como o Burp Suite pode levar seu pentest para o próximo nível](https://images.openai.com/static-rsc-4/ROHpT8-2Da0lDJ6qjz-AOx02XeCJamYi6oVXcqsS7FwG_EMK1F6m_WjpBi9xw8bLjJZ1Rha4sGEgSIf326ZNnPUaRTPu4PXJ9S5tuwI5clkXb1ODdZK-3uf0-5ey8umv8ns1j5ByHr78c48ZSlap78ZpwnUqigFwZJXcU_4B3b5PoBWH4vSRUPhzzYieNODR?purpose=fullsize)
+
+Burp Suite
+
+HTTP request and response analysis
+
+Inspect
+
+![File:Wireshark icon.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/c4p4xtd9Di94z_wdlsbRKsI1EJEjQdVb2zf9j5MFMaB3RgI413pbYOdrfbHtZW7f4oCsbYdd6n8j7mM1Y0FSUs8iKGnL58rhAq-CTPvDNT5eb4G64_4fRRsWxeimQMWVxnFXogNT_hVTFx-Eex-A2p5vMLyiJiY2hrjF6ZkR182F34QjTZxrnYUar2Cc2Fqe?purpose=fullsize)
+
+Wireshark
+
+Packet-level investigation
+
+Analyse
+
+![Nmap Download - Netzwerkscanner für Profis](https://images.openai.com/static-rsc-4/jlO0cPEDAPu0xkpg3y8eOxKIiO_OmbhxrBHwa0SD6aMHI6HK1gVJwzrZ23pNAsQtGVKswVAmuAPxXn0XvwSGps9Kof19dSQ_kjpoxOLhEabnz3VfEuiN_S_rmxuYTSaslOXPjSO9uuyA99k-n3_yqM-DctsPNMQsxw3ZWl_k31ub4VURHy7nK6dQroiZ2YXu?purpose=fullsize)
+
+Nmap
+
+Authorised service discovery
+
+Discover
+
+![File:OWASP ZAP logo.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/2DArQRV8MQPQd687gUpX8t19NAuFYYy-c9TrLiKuwjzwE-XJEBN4QFEkHAT2K8KX-mU_WnKYVBzGBKoZo7NjVdeNo6791uJrZjF2cOxbR_0hPwSrLu_LH58cUqbyLjZ3wx77ld4Gj5gWdG1kz1QI8yldV2GDIyrYg__xoVG6ZcFK67mrfJt5uJ_J5yQl0zCy?purpose=fullsize)
+
+OWASP ZAP
+
+Web application security testing
+
+Test
+
+### 2\. Snort combinations for website investigations
+
+These are useful monitoring combinations.
+
+| Combination          | What you investigate                                  |
+| -------------------- | ----------------------------------------------------- |
+| Snort + Burp Suite   | Suspicious HTTP requests and responses                |
+| Snort + Wireshark    | Network behaviour during testing                      |
+| Snort + Nmap         | Unexpected exposed services                           |
+| Snort + DNS analysis | DNS resolution and unexpected destinations            |
+| Snort + TLS analysis | TLS handshakes and connection errors                  |
+| Snort + OWASP ZAP    | Traffic generated during authorised security tests    |
+| Snort + server logs  | Correlation of network events with application events |
+
+### 3\. Custom Snort rules for website security monitoring
+
+Create a dedicated rules file:
+
+```bash
+sudo nano /etc/snort/bugbounty.rules
+```
+
+The following Snort 3 examples monitor potentially interesting HTTP behaviour.
+
+A. Detect requests to administrative paths
+
+```snort
+alert http any any -> any any (
+    msg:"BUGBOUNTY - Admin path requested";
+    flow:established,to_server;
+    http_uri;
+    content:"/admin";
+    sid:2000001;
+    rev:1;
+)
+```
+
+B. Detect unusual HTTP methods
+
+```snort
+alert http any any -> any any (
+    msg:"BUGBOUNTY - Unusual HTTP method";
+    flow:established,to_server;
+    http_method;
+    content:"TRACE";
+    sid:2000002;
+    rev:1;
+)
+```
+
+C. Detect possible directory traversal patterns
+
+```snort
+alert http any any -> any any (
+    msg:"BUGBOUNTY - Traversal pattern observed";
+    flow:established,to_server;
+    http_uri;
+    content:"../";
+    sid:2000003;
+    rev:1;
+)
+```
+
+D. Detect HTTP server errors
+
+```snort
+alert http any any -> any any (
+    msg:"BUGBOUNTY - HTTP server error";
+    flow:established,to_client;
+    http_stat_code;
+    content:"500";
+    sid:2000004;
+    rev:1;
+)
+```
+
+E. Detect suspiciously large HTTP headers
+
+```snort
+alert http any any -> any any (
+    msg:"BUGBOUNTY - Large HTTP header line";
+    http_max_header_line:>1024;
+    sid:2000005;
+    rev:1;
+)
+```
+
+These are monitoring signatures, not vulnerability confirmations. For example, visiting `/admin` does not prove an access-control vulnerability.
+
+Snort 3 supports separate HTTP buffers for URIs, methods, headers, cookies, request bodies and response information. Snort 3 Rule Writing Guide +1
+
+### 4\. Combine Snort with bug bounty vulnerability categories
+
+This is where your testing becomes more useful.
+
+| Vulnerability               | Snort's contribution                        | Main testing tool            |
+| --------------------------- | ------------------------------------------- | ---------------------------- |
+| IDOR                        | Observe HTTP requests                       | Burp Suite                   |
+| Broken access control       | Monitor access attempts                     | Burp Suite                   |
+| SQL injection               | Detect selected suspicious request patterns | Burp Suite / manual testing  |
+| Cross-site scripting (XSS)  | Observe request patterns                    | Burp Suite                   |
+| SSRF                        | Monitor unexpected outbound connections     | Burp + server-side telemetry |
+| Authentication flaws        | Observe authentication traffic              | Burp Suite                   |
+| Session vulnerabilities     | Monitor cookie behaviour                    | Burp Suite                   |
+| Directory traversal         | Detect suspicious URI patterns              | Burp Suite                   |
+| Security misconfiguration   | Observe HTTP headers and responses          | Burp Suite / ZAP             |
+| Information disclosure      | Monitor responses                           | Burp Suite                   |
+| API vulnerabilities         | Inspect API request patterns                | Burp Suite                   |
+| File upload vulnerabilities | Observe upload traffic                      | Burp Suite                   |
+
+Important: Snort cannot establish that an IDOR, SQL injection or SSRF vulnerability exists merely by detecting a matching packet. You need to verify the application's behaviour.
+
+### 5\. The most useful combinations for finding real vulnerabilities
+
+Combination 1: IDOR and access-control testing
+
+Burp SuiteSnortApplication logs
+
+* Identify object IDs in your own account.
+
+* Compare requests using two authorised test accounts.
+
+* Check whether account A can access account B's protected test resources.
+
+* Use Snort to monitor the associated HTTP traffic.
+
+    Snort monitors; Burp helps verify the access-control weakness.
+
+    Combination 2: SSRF investigation
+
+    Burp SuiteSnortServer logs
+
+* Identify application features that retrieve external resources.
+
+* Use an authorised, controlled callback endpoint.
+
+* Observe whether the server initiates unexpected outbound connections.
+
+* Correlate the request with server-side logs.
+
+    Combination 3: Authentication testing
+
+    Burp SuiteSnortBrowser DevTools
+
+* Examine login and logout requests.
+
+* Examine session-cookie attributes.
+
+* Check session invalidation after logout.
+
+* Verify authentication enforcement on protected endpoints.
+
+    Combination 4: API security testing
+
+    Burp SuiteSnortOWASP ZAP
+
+* Identify API endpoints.
+
+* Examine authentication and authorisation.
+
+* Check input validation.
+
+* Examine response data for unintended disclosure.
+
+    Combination 5: Security misconfiguration
+
+    SnortWiresharkBurp Suite
+
+* Examine HTTP response headers.
+
+* Investigate unexpected services.
+
+* Check TLS configuration.
+
+* Look for unintended information disclosure.
+
+### 6\. Run your custom Snort rules
+
+First, test the rule configuration:
+
+```bash
+sudo snort -T \
+-c /etc/snort/snort.lua \
+-R /etc/snort/bugbounty.rules
+```
+
+Then monitor your authorised test traffic:
+
+```bash
+sudo snort \
+-c /etc/snort/snort.lua \
+-R /etc/snort/bugbounty.rules \
+-i eth0 \
+-A alert_fast
+```
+
+Replace `eth0` with your actual network interface.
+
+HTTPS limitation: Snort normally sees encrypted TLS application data, not the decrypted website requests. Use Burp Suite's HTTP history for application-level inspection. Snort can still observe connection metadata and TLS handshakes.
+
+### 7\. Your complete bug bounty workflow
+
+* Scope identification
+
+    Identify the permitted domains, APIs and testing restrictions.
+
+* Reconnaissance
+
+    Use browser tools and permitted discovery techniques to map the application.
+
+* Traffic monitoring
+
+    Start Snort and Wireshark.
+
+* Request interception
+
+    Use Burp Suite to examine requests and responses.
+
+* Vulnerability investigation
+
+    Investigate IDOR, authentication, access control, SSRF, XSS and API security.
+
+* Evidence collection
+
+    Save relevant requests, responses, timestamps and Snort alerts, redacting sensitive information.
+
+* Responsible reporting
+
+    Document the impact, reproduction steps and remediation recommendations.
+
+Check each programme's scope and rules of engagement before testing; some programmes prohibit particular scanning techniques or automated testing. HackerOne +1
+
+### 8\. Official learning resources
+
+* [Snort 3 complete rule-writing documentation](https://docs.snort.org/?utm_source=chatgpt.com)
+
+* [PortSwigger Web Security Academy](https://portswigger.net/web-security?utm_source=chatgpt.com)
+
+* [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/?utm_source=chatgpt.com)
+
+* [Snort rule documentation and SID search](https://snort.org/rule-docs?utm_source=chatgpt.com)
+
+### 9\. Let's build your bug bounty testing environment
+
+I recommend starting with Snort 3 + Burp Suite Community + Wireshark on Ubuntu.
+
+One question before I prepare your practical configuration:
+
+Which bug bounty environment are you currently using?
+
+1\. Bug bounty platform
+
+HackerOne
+
+Bugcrowd
+
+Intigriti
+
+My own website or lab
+
+2\. Snort version
+
+Snort 3
+
+Snort 2
+
+Not installed yet
+
+3\. Main objective
+
+Find web application vulnerabilities
+
+Find API vulnerabilities
+
+Monitor suspicious traffic
+
+Build a complete bug bounty laboratory
+
+Prepare my testing environment
+
+I can then build the configuration and practical exercises around your actual setup.

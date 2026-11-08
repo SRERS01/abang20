@@ -1,0 +1,461 @@
+### Complete Snort Filters and Their Functions (Ubuntu)
+
+Snort is an open-source Network Intrusion Detection and Prevention System (IDS/IPS). It monitors network traffic and uses rules to identify suspicious activity, policy violations and potential attacks.
+
+Unlike Wireshark, Snort primarily uses rules and rule options rather than display filters.
+
+There are three important parts to understand:
+
+* Rule headers – determine which network traffic to inspect.
+
+* Rule options – determine what to look for inside packets.
+
+* Rule actions – determine what Snort does when a rule matches.
+
+Let's cover them systematically.
+
+### 1\. Basic Snort rule structure
+
+A Snort rule generally follows this structure:
+
+```text
+action protocol source_ip source_port direction destination_ip destination_port (options)
+```
+
+Example:
+
+```snort
+alert tcp any any -> 192.168.1.10 80 (msg:"HTTP traffic detected"; sid:1000001; rev:1;)
+```
+
+Meaning:
+
+| Component    | Function                   |
+| ------------ | -------------------------- |
+| alert        | Generate an alert          |
+| tcp          | Inspect TCP traffic        |
+| any          | Any source IP              |
+| any          | Any source port            |
+| ->           | Traffic direction          |
+| 192.168.1.10 | Destination IP             |
+| 80           | Destination port           |
+| msg          | Alert description          |
+| sid          | Rule identification number |
+| rev          | Rule revision              |
+
+### 2\. Snort rule actions
+
+| Action | Function                                                           |
+| ------ | ------------------------------------------------------------------ |
+| alert  | Generates an alert                                                 |
+| log    | Logs matching packets                                              |
+| pass   | Allows matching traffic without further rule processing            |
+| drop   | Drops matching packets in inline IPS mode and logs them            |
+| reject | Drops and attempts to reject the connection                        |
+| sdrop  | Silently drops matching packets in supported inline configurations |
+
+Important: `drop`, `reject` and `sdrop` require an appropriate inline IPS configuration. In ordinary passive IDS monitoring, Snort cannot block traffic.
+
+### 3\. Snort protocols
+
+| Protocol | Function                                             |
+| -------- | ---------------------------------------------------- |
+| tcp      | Transmission Control Protocol                        |
+| udp      | User Datagram Protocol                               |
+| icmp     | Internet Control Message Protocol                    |
+| ip       | General IP traffic                                   |
+| ipv6     | IPv6 traffic                                         |
+| http     | HTTP application traffic, in supported rule contexts |
+| any      | Any supported protocol                               |
+
+### 4\. Snort IP address and network matching
+
+| Syntax                      | Function                  |
+| --------------------------- | ------------------------- |
+| any                         | Matches any IP address    |
+| 192.168.1.10                | Matches one IP address    |
+| 192.168.1.0/24              | Matches an entire subnet  |
+| !192.168.1.10               | Excludes an IP address    |
+| [192.168.1.10,192.168.1.20] | Matches either IP address |
+| [192.168.1.0/24,10.0.0.0/8] | Matches either network    |
+
+### 5\. Snort port matching
+
+| Syntax   | Function             |
+| -------- | -------------------- |
+| any      | Any port             |
+| 80       | Port 80              |
+| 443      | Port 443             |
+| 22       | Port 22              |
+| 1:1024   | Ports 1 through 1024 |
+| :1024    | Ports up to 1024     |
+| 1024:    | Ports 1024 and above |
+| [80,443] | Port 80 or 443       |
+| !80      | Excludes port 80     |
+
+### 6\. Traffic direction operators
+
+| Operator | Function                       |
+| -------- | ------------------------------ |
+| ->       | One-way traffic direction      |
+| <>       | Bidirectional traffic matching |
+
+Example:
+
+```snort
+alert tcp any any -> any 443 (msg:"HTTPS connection"; sid:1000002; rev:1;)
+```
+
+This matches TCP traffic going to destination port 443.
+
+### 7\. General Snort rule options
+
+These identify and describe rules.
+
+| Option    | Function                                     |
+| --------- | -------------------------------------------- |
+| msg       | Defines alert message                        |
+| sid       | Assigns unique rule ID                       |
+| rev       | Defines rule revision                        |
+| gid       | Identifies rule generator                    |
+| classtype | Classifies the type of event                 |
+| priority  | Sets alert priority                          |
+| reference | Links to an external vulnerability reference |
+| metadata  | Adds descriptive rule information            |
+| service   | Identifies the application service           |
+| rem       | Adds a rule comment                          |
+| file_meta | Adds file-related metadata                   |
+
+Example:
+
+```snort
+alert tcp any any -> any 80
+(msg:"HTTP monitoring";
+ classtype:attempted-recon;
+ priority:2;
+ sid:1000010;
+ rev:1;)
+```
+
+### 8\. Payload detection options
+
+These inspect the contents of packets.
+
+| Option       | Function                                                       |
+| ------------ | -------------------------------------------------------------- |
+| content      | Searches for specific text or bytes                            |
+| nocase       | Makes content matching case-insensitive                        |
+| fast_pattern | Selects content for fast pattern matching                      |
+| offset       | Specifies where content searching begins                       |
+| depth        | Limits the search depth                                        |
+| distance     | Specifies distance from a previous content match               |
+| within       | Limits the distance from a previous match                      |
+| isdataat     | Checks whether data exists at a specified position             |
+| dsize        | Checks packet payload size                                     |
+| pcre         | Uses Perl-compatible regular expressions                       |
+| regex        | Uses regular-expression matching in supported Snort 3 contexts |
+| bufferlen    | Checks the length of a selected buffer                         |
+| pkt_data     | Selects packet data for subsequent inspection                  |
+| raw_data     | Selects raw packet data                                        |
+| file_data    | Selects file-related application data                          |
+| js_data      | Selects JavaScript data in supported contexts                  |
+| vba_data     | Selects VBA data in supported contexts                         |
+
+Example:
+
+```snort
+alert tcp any any -> any 80
+(msg:"Test keyword detected";
+ content:"admin";
+ nocase;
+ sid:1000011;
+ rev:1;)
+```
+
+This looks for the word `admin` in the inspected packet content.
+
+### 9\. HTTP-specific options
+
+These are particularly important when investigating web applications.
+
+| Option             | Function                                          |
+| ------------------ | ------------------------------------------------- |
+| http_uri           | Inspects normalized HTTP URI                      |
+| http_raw_uri       | Inspects raw URI                                  |
+| http_header        | Inspects normalized HTTP headers                  |
+| http_raw_header    | Inspects raw HTTP headers                         |
+| http_cookie        | Inspects HTTP cookies                             |
+| http_raw_cookie    | Inspects raw cookies                              |
+| http_client_body   | Inspects client request body                      |
+| http_raw_body      | Inspects raw request body                         |
+| http_param         | Inspects HTTP parameters                          |
+| http_method        | Inspects HTTP request method                      |
+| http_version       | Inspects HTTP version                             |
+| http_stat_code     | Inspects HTTP response status code                |
+| http_stat_msg      | Inspects HTTP response status message             |
+| http_raw_request   | Inspects raw HTTP request                         |
+| http_raw_status    | Inspects raw HTTP status                          |
+| http_trailer       | Inspects HTTP trailers                            |
+| http_raw_trailer   | Inspects raw HTTP trailers                        |
+| http_true_ip       | Inspects the true client IP buffer when available |
+| http_version_match | Matches HTTP version conditions                   |
+| http_header_test   | Tests HTTP header properties                      |
+| http_trailer_test  | Tests HTTP trailer properties                     |
+
+Example:
+
+```snort
+alert http any any -> any any
+(msg:"Suspicious URI keyword";
+ http_uri;
+ content:"admin";
+ sid:1000012;
+ rev:1;)
+```
+
+This is a Snort 3-style HTTP rule.
+
+### 10\. Non-payload detection options
+
+These examine packet and protocol information without searching ordinary payload text.
+
+| Option            | Function                              |
+| ----------------- | ------------------------------------- |
+| fragoffset        | Checks IP fragment offset             |
+| ttl               | Checks IP time-to-live                |
+| tos               | Checks IP type-of-service             |
+| id                | Checks IP identification field        |
+| ipopts            | Checks IP options                     |
+| fragbits          | Checks IP fragmentation flags         |
+| ip_proto          | Checks IP protocol number             |
+| flags             | Checks TCP flags                      |
+| flow              | Checks connection state and direction |
+| flowbits          | Maintains state between related rules |
+| file_type         | Checks identified file type           |
+| seq               | Checks TCP sequence number            |
+| ack               | Checks TCP acknowledgement number     |
+| window            | Checks TCP window size                |
+| itype             | Checks ICMP type                      |
+| icode             | Checks ICMP code                      |
+| icmp_id           | Checks ICMP identifier                |
+| icmp_seq          | Checks ICMP sequence number           |
+| rpc               | Checks RPC information                |
+| stream_reassemble | Controls stream reassembly behaviour  |
+| stream_size       | Checks TCP stream size                |
+
+### 11\. Post-detection options
+
+These control what happens after a rule matches.
+
+| Option           | Function                                                      |
+| ---------------- | ------------------------------------------------------------- |
+| detection_filter | Generates events based on matching frequency                  |
+| replace          | Replaces matching payload content in supported configurations |
+| tag              | Logs additional packets associated with an event              |
+
+Example:
+
+```snort
+alert tcp any any -> any 22
+(msg:"Repeated SSH traffic";
+ flow:to_server;
+ detection_filter:track by_src,count 10,seconds 60;
+ sid:1000013;
+ rev:1;)
+```
+
+This is a rate-based detection example. It generates an event when the rule's match count exceeds the configured threshold.
+
+### 12\. Advanced data extraction and inspection options
+
+| Option        | Function                                             |
+| ------------- | ---------------------------------------------------- |
+| byte_extract  | Extracts a numeric value from packet data            |
+| byte_test     | Tests a value in packet data                         |
+| byte_math     | Performs mathematical operations on extracted values |
+| byte_jump     | Moves the inspection position based on packet data   |
+| base64_decode | Decodes Base64-encoded data                          |
+| base64_data   | Inspects decoded Base64 data                         |
+| ber_data      | Selects BER-encoded data                             |
+| ber_skip      | Skips BER-encoded data                               |
+| md5           | Checks MD5 hashes                                    |
+| sha256        | Checks SHA-256 hashes                                |
+| sha512        | Checks SHA-512 hashes                                |
+| ssl_state     | Checks TLS/SSL connection state                      |
+| ssl_version   | Checks TLS/SSL version                               |
+
+### 13\. Specialised protocol detection options
+
+Snort also has protocol-specific detection options.
+
+| Protocol/category | Examples of options                      |
+| ----------------- | ---------------------------------------- |
+| DCE/RPC           | dce_iface, dce_opnum, dce_stub_data      |
+| SIP               | sip_method, sip_stat_code, sip_header    |
+| GTP               | GTP-specific header and message matching |
+| DNP3              | DNP3-specific field matching             |
+| CIP               | CIP-specific field matching              |
+| IEC 104           | IEC 104-specific field matching          |
+| MMS               | MMS-specific field matching              |
+| Modbus            | Modbus-specific field matching           |
+| S7CommPlus        | S7CommPlus-specific field matching       |
+
+These are useful for industrial networks, telecommunications and specialised application protocols.
+
+### 14\. Snort 3 command-line options
+
+These are commands and configuration switches rather than rule filters.
+
+| Command              | Function                            |
+| -------------------- | ----------------------------------- |
+| snort -V             | Displays Snort version              |
+| snort -h             | Displays help                       |
+| snort -T             | Tests configuration                 |
+| snort -c             | Specifies configuration file        |
+| snort -i             | Selects network interface           |
+| snort -r             | Reads a PCAP file                   |
+| snort -R             | Loads a rule file                   |
+| snort -A             | Selects alert output mode           |
+| snort -l             | Specifies log directory             |
+| snort -q             | Quiet mode                          |
+| snort -D             | Runs in daemon mode where supported |
+| snort --daq-list     | Lists available DAQ modules         |
+| snort --help-options | Displays available options          |
+
+Example:
+
+```bash
+sudo snort -T -c /etc/snort/snort.lua
+```
+
+This tests the Snort configuration.
+
+Capture traffic on an Ubuntu interface:
+
+```bash
+sudo snort -c /etc/snort/snort.lua -i eth0
+```
+
+Read an existing packet capture:
+
+```bash
+sudo snort -c /etc/snort/snort.lua -r traffic.pcap
+```
+
+The interface and configuration paths may differ on your installation.
+
+### 15\. Practical Snort rules for your Ubuntu laboratory
+
+Here are five basic rules you can practise with on a network you own or are authorised to monitor.
+
+A. Detect ping traffic
+
+```snort
+alert icmp any any -> any any (msg:"ICMP traffic detected"; sid:1000100; rev:1;)
+```
+
+B. Detect DNS traffic
+
+```snort
+alert udp any any -> any 53 (msg:"DNS traffic detected"; sid:1000101; rev:1;)
+```
+
+C. Detect SSH connection attempts
+
+```snort
+alert tcp any any -> any 22 (msg:"SSH connection detected"; sid:1000102; rev:1;)
+```
+
+D. Detect HTTP requests
+
+```snort
+alert http any any -> any any (msg:"HTTP request detected"; flow:to_server; sid:1000103; rev:1;)
+```
+
+E. Detect repeated connections to a service
+
+```snort
+alert tcp any any -> any 443
+(msg:"Repeated HTTPS connection activity";
+ detection_filter:track by_src,count 20,seconds 60;
+ sid:1000104;
+ rev:1;)
+```
+
+These are introductory monitoring rules, not proof of malicious behaviour.
+
+### 16\. Wireshark vs Snort
+
+![Wireshark 4.4.9 - Neowin](https://images.openai.com/static-rsc-4/I536klsPyYSSBjr4H2ievLZQ8TFQWa51KJT304P1N06zB1q5XyZ90nRQqRWNRfy-hmppjIj0SCTG0Gd1L7qLLkolvHf23rYkj1zAequsmk7iYtVRPvZ3g_LvMgqRrjOmQ0doMIaKL8IBbdqIBN9sC_drIhvw1BRgumgBFRlX-eljpYomQ53gTHjhVx29609u?purpose=fullsize)
+
+Wireshark
+
+Packet analysis
+
+* Captures packets
+
+* Examines protocols
+
+* Displays packet contents
+
+* Investigates connections
+
+![Decoding the Intricacies of Snort: A Comprehensive Overview | by Meghraj Patil | Medium](https://images.openai.com/static-rsc-4/WmvSwxb2Bvh3li8AXzeko3nP6VyilGAvf49dpsFvsGHsPv6jb7B82G5S15P787gcOD1BPdd3cIoocUyLwVMqpp1oQ6ayUFafnF4iqMfhV__FNeiQ_yOdyMANIVO8_PnYylrV_dj8V6Ar1HMPvV_R91eMq7CAvo1AJb8yLBYnMduAA_GHEk4nWxdsC0nRADV6?purpose=fullsize)
+
+Snort
+
+Intrusion detection/prevention
+
+* Inspects traffic
+
+* Applies detection rules
+
+* Generates alerts
+
+* Can block traffic in IPS mode
+
+### 17\. Official Snort documentation
+
+For the complete, version-specific list of rule options, consult:
+
+* [Snort 3 Rule Writing Guide](https://docs.snort.org/rules/?utm_source=chatgpt.com)
+
+* [Snort 3 Rule Options](https://docs.snort.org/rules/options/?utm_source=chatgpt.com)
+
+* [Snort Rule Headers](https://docs.snort.org/rules/headers/?utm_source=chatgpt.com)
+
+* [Detection Filter Documentation](https://docs.snort.org/rules/options/post/detection_filter?utm_source=chatgpt.com)
+
+Important: Snort 2 and Snort 3 have syntax and feature differences. The examples above primarily use Snort 3 syntax. Always check the version installed on Ubuntu before using rules.
+
+### 18\. Recommended learning order
+
+* Snort installation and configuration.
+
+* Rule structure and actions.
+
+* IP addresses, ports and protocols.
+
+* Content matching.
+
+* HTTP and DNS detection.
+
+* TCP flags and flow tracking.
+
+* Detection filters and alert management.
+
+* Writing custom IDS rules.
+
+* Analysing alerts alongside Wireshark.
+
+* Configuring IPS mode safely.
+
+If you master these areas, you will have a strong foundation in Snort rule writing and network intrusion detection.
+
+Reference: Cisco Talos Snort 3 Rule Writing Guide. Snort 3 Rule Writing Guide +3
+
+🛡️
+
+Daily Snort rule-writing lessons
+
+Tap to set up
