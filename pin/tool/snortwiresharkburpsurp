@@ -1,0 +1,249 @@
+Yes. Snort and Wireshark perform different jobs. Wireshark is primarily a packet-analysis tool, while Snort is an intrusion detection and prevention system (IDS/IPS).
+
+The biggest difference is that Snort can make security decisions about network traffic using rules and, when deployed inline, can actively block or modify matching traffic. Wireshark is primarily designed to capture, inspect, filter and troubleshoot traffic.
+
+Here is what Snort can do that Wireshark cannot do by itself.
+
+### 1\. Snort capabilities Wireshark doesn't provide natively
+
+| Capability                                                 | Snort                                   | Wireshark                                                              |
+| ---------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------- |
+| Generate security alerts from IDS rules                    |                                         | No native IDS engine                                                   |
+| Block malicious packets inline                             | Yes, in IPS mode                        | No                                                                     |
+| Drop matching connections                                  | Yes, with suitable rules and deployment | No                                                                     |
+| Automatically detect rule-defined attack patterns          | Yes                                     | Manual analysis or external tools                                      |
+| Apply custom intrusion signatures continuously             | Yes                                     | Display filters are not equivalent                                     |
+| Generate active responses to detected traffic              | Yes, with supported actions             | No                                                                     |
+| Automatically classify traffic against an IDS rule set     | Yes                                     | Not as an IDS                                                          |
+| Detect suspicious network activity using threat signatures | Yes                                     | Requires manual analysis or external integrations                      |
+| Normalize traffic for inspection                           | Yes, through inspectors                 | Decodes and presents packets, but does not act as an inline normalizer |
+| Run as an inline network security control                  | Yes                                     | No                                                                     |
+
+Snort's official documentation describes its alert, block, drop, reject, react and rewrite actions. Snort 3 Rule Writing Guide +2
+
+### 2\. More advanced things Snort can do
+
+### A. Signature-based intrusion detection
+
+Snort can compare live traffic against thousands of security signatures and your own custom rules.
+
+It can be configured to alert on:
+
+* Known exploit attempts.
+
+* Suspicious HTTP requests.
+
+* Known malware communication patterns.
+
+* Port scanning activity.
+
+* Suspicious protocol behaviour.
+
+* Attempts to exploit known network vulnerabilities.
+
+* Unusual traffic matching your custom signatures.
+
+Example: You create a rule that alerts whenever traffic matches a particular suspicious request pattern. Snort can monitor for it continuously and generate an alert.
+
+Wireshark can help you investigate the same packet, but it does not provide Snort's native rule-driven IDS engine.
+
+### B. Intrusion prevention
+
+Major advantage
+
+Snort can operate inline, between network devices, so it can take action when a rule matches.
+
+| Snort action | What it does                                                      |
+| ------------ | ----------------------------------------------------------------- |
+| alert        | Generates a security alert                                        |
+| drop         | Drops a matching packet                                           |
+| block        | Blocks the matching packet and subsequent packets in its flow     |
+| reject       | Terminates the connection with a response                         |
+| react        | Sends a response and terminates the session                       |
+| rewrite      | Modifies packet contents when configured with replacement options |
+| log          | Logs matching traffic                                             |
+| pass         | Allows matching traffic through                                   |
+
+These actions depend on the deployment mode and configuration. Snort 3 Rule Writing Guide +1
+
+### C. Stateful traffic inspection
+
+Snort can maintain information about network conversations instead of treating every packet as an isolated event.
+
+It can:
+
+* Track TCP sessions.
+
+* Reassemble TCP streams.
+
+* Inspect traffic direction.
+
+* Identify application protocols.
+
+* Apply rules to established connections.
+
+* Inspect protocol-specific content through its inspectors.
+
+This is particularly useful when detecting suspicious behaviour that spans multiple packets.
+
+### D. Application-layer inspection
+
+Snort 3 has protocol inspectors that can analyse supported application protocols.
+
+For example, its HTTP inspector can expose information such as:
+
+* HTTP methods.
+
+* Request URIs.
+
+* HTTP headers.
+
+* Cookies.
+
+* Request and response data.
+
+* HTTP status codes.
+
+That allows you to write rules based on HTTP fields rather than just searching raw packet bytes. GitHub +1
+
+### E. Traffic normalisation
+
+Snort can normalise certain traffic representations before inspection.
+
+This helps reduce evasion techniques where different interpretations of network traffic might cause a security device and destination system to interpret the same traffic differently.
+
+Wireshark helps you inspect and understand packets; it is not an inline traffic-normalisation security engine.
+
+### F. Automated event logging and monitoring
+
+Snort can:
+
+* Generate alerts when rules match.
+
+* Record events for later investigation.
+
+* Track rule-triggering activity.
+
+* Integrate with other monitoring and security systems.
+
+* Monitor traffic continuously when properly deployed.
+
+### G. Custom security detection
+
+You can write your own rules to detect patterns relevant to your network.
+
+For example, you can create rules for:
+
+* Suspicious HTTP methods.
+
+* Requests to sensitive paths.
+
+* Unusual DNS queries.
+
+* Suspicious TCP connection patterns.
+
+* Specific known exploit signatures.
+
+* Traffic to or from selected IP addresses.
+
+Remember: detecting a suspicious request does not prove that the website is vulnerable.
+
+### 3\. Things Wireshark does better
+
+It is important not to underestimate Wireshark.
+
+| Task                                             | Better choice |
+| ------------------------------------------------ | ------------- |
+| Inspect individual packets                       | Wireshark     |
+| Examine packet headers in detail                 | Wireshark     |
+| Follow TCP streams interactively                 | Wireshark     |
+| Investigate DNS queries                          | Both          |
+| Troubleshoot network problems                    | Wireshark     |
+| Apply display filters interactively              | Wireshark     |
+| Detect attacks using custom IDS rules            | Snort         |
+| Block malicious network traffic                  | Snort         |
+| Run an inline IPS                                | Snort         |
+| Continuously generate rule-based security alerts | Snort         |
+
+Important: Neither tool automatically decrypts HTTPS traffic. Snort's HTTP inspection requires access to plaintext HTTP, such as after TLS decryption by an appropriately configured inspection system. Wireshark can also decrypt supported TLS traffic when supplied with suitable session secrets.
+
+### 4\. What Snort can help you investigate in offensive security
+
+For authorised penetration testing and bug bounty work, Snort can help you observe:
+
+| Security area                | What you can monitor                                     |
+| ---------------------------- | -------------------------------------------------------- |
+| Network scanning             | Port scans and unusual connection attempts               |
+| Firewall testing             | Whether suspicious traffic reaches a monitored interface |
+| Web security                 | Suspicious HTTP requests and known attack patterns       |
+| DNS security                 | Unusual DNS traffic and matching suspicious patterns     |
+| Malware analysis             | Known malicious network communication                    |
+| Exploit detection            | Traffic matching known exploit signatures                |
+| Data exfiltration monitoring | Suspicious outbound traffic patterns                     |
+| Protocol security            | Abnormal or unexpected protocol behaviour                |
+| Network access               | Connections to restricted services                       |
+| Traffic anomalies            | Unusual patterns covered by configured detection rules   |
+
+However, Snort alone cannot reliably discover business-logic vulnerabilities such as IDOR, broken access control, or account takeover. For those, use Burp Suite and manual testing.
+
+### 5\. The best combination: Snort + Wireshark
+
+![SNORT. INTRODUCTION | by SarahAgnave | Medium](https://images.openai.com/static-rsc-4/xKX2TILO1Zjks8tScB0eUO32FI_XN2pDRR7zvBHg2nphDQxnBLBw9P82_QN1e857-CvF8Lu5HHxv0C11aSnufCGVVlgvU2SGXR-xrwQo0e7rBmZAXDc6d0d_pAhqiO9wrahv-a-rl_r_WC-rV_iF4NRmYlkjJufTMI2Y2AlHvl8aEEDkJIDP_hOmSOLnzL-T?purpose=fullsize)
+
+Snort
+
+Detects suspicious traffic and generates security alerts.
+
+![Wireshark · Go Deep.](https://images.openai.com/static-rsc-4/fVscVS9IzUk-CqnVQD3wRkTE6Yptvw2Qr5ScQhOiwL_FZ6s2-Cw-g2bM7LCRxKsm7oz-PgrFFnTvrRr6VWwZqg5nuAITleuify7EI2_KVNpP2ToUX_jHOb6NEK4rQFEYWLUugzK6NVCS7CU2IfBlLYdirl1HmKIsudCts7S2D5WgCKv--yf6_y1dpxlINd6H?purpose=fullsize)
+
+Wireshark
+
+Investigates the packets responsible for those alerts.
+
+![File:BurpSuite logo.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/j4jtHJ61PW-vjr3D1PXIlGXJ43VSnIHXfo-0aiKdFmlg5341LhXHDdeIsWViPMHR3s7eEAerxWasaaLePwvSOQ3MVRLCtSbnhTgn4Wi_ewSQo0wbFT4d5oU_gPeMF_sQSKU-cvmezuHpwbxxM1hVld0ueXY9xA7fI3P1pL-OeZ1dQmWYldJ_oLA1OnSNpA95?purpose=fullsize)
+
+Burp Suite
+
+Tests website requests, authentication, APIs and application vulnerabilities.
+
+A practical workflow:
+
+* Snort monitors network traffic.
+
+* Snort generates an alert when a configured rule matches.
+
+* Wireshark investigates the relevant packet capture.
+
+* Burp Suite examines the corresponding website request.
+
+* You verify whether there is a genuine vulnerability and document the evidence.
+
+### 6\. My recommendation
+
+Learn Snort 3 properly, especially these areas:
+
+* Rule writing.
+
+* IDS and IPS modes.
+
+* TCP stream inspection.
+
+* HTTP inspection.
+
+* DNS inspection.
+
+* File detection.
+
+* Port scan detection.
+
+* Alert logging.
+
+* Traffic normalisation.
+
+* Custom detection rules.
+
+Official learning material: [Snort 3 documentation](https://docs.snort.org/?utm_source=chatgpt.com).
+
+One important question: Are you using Snort 3 on Ubuntu?
+
+If yes, I can teach you how to configure it so that you can see its alerts, investigate them in Wireshark, and understand exactly what happened to the traffic.
