@@ -1,0 +1,92 @@
+The main difference is that Ettercap and Bettercap are two separate cybersecurity tools. Both are used for network security testing, traffic sniffing and Man-in-the-Middle (MITM) assessments, but they have different features and approaches.
+
+### 1\. Ettercap vs Bettercap
+
+![Peeking Into the Packet Stream — Unlocking the Power of Ettercap for Network Attacks & Defense | by Vijay Kumar Gupta | Medium](https://images.openai.com/static-rsc-4/OxW77B-hf6Na-0yQplPqmqK08pW3TsSW-cUs6W6q7mdUsrJgmNPXPk_HVsWWDXs4pBsgCX-4uIy-YlGsJ1cPf7Ec7N3tNMW-N4E1gfQFIS_Y3u2AHF2pv5EUAEqdu4YMPQRl8uxKDVETOSOMkcFG8OEvAdxYotoAd93hQTz_1nq7Mi6FZMZAJ3uMCqOa2Pg-?purpose=fullsize)
+
+Ettercap
+
+Traditional network MITM tool
+
+![Pen-tester’s Swiss army knife BetterCAP | by David Artykov | Purple Team | Medium](https://images.openai.com/static-rsc-4/hIK9lz4Ym_g5wdbSiTSb1cFHDU7cnXVAh9uxSPKP0lCCHlm1YBUazGNIvmsddZmWvm3JKzIPZ4dik1diLTYwKJvlgCxXTCBKgv9uhzuiYqg6ZeCMDQ29V-a8OxHuHwQt57Gi1VFfufbFebOHcfxl3J5lw21odIz899m_VWeMl_O-EpvQ2wc9XqILAn-5WzMU?purpose=fullsize)
+
+Bettercap
+
+Modern modular network attack and monitoring framework
+
+| Feature                 | Ettercap                       | Bettercap         |
+| ----------------------- | ------------------------------ | ----------------- |
+| Network sniffing        | Yes                            | Yes               |
+| ARP spoofing            | Yes                            | Yes               |
+| MITM testing            | Yes                            | Yes               |
+| DNS spoofing            | Yes                            | Yes               |
+| HTTP traffic monitoring | Yes                            | Yes               |
+| Wi-Fi testing           | Limited                        | More extensive    |
+| Bluetooth LE testing    | No comparable native framework | Yes               |
+| Network reconnaissance  | Yes                            | Yes               |
+| Modular extensions      | Plugins                        | Extensive modules |
+| Interactive terminal    | Yes                            | Yes               |
+| HTTP proxy capabilities | More limited                   | More extensive    |
+
+### 2\. What makes Bettercap special?
+
+Bettercap has modules for several different security-testing areas:
+
+* `net.recon` — network host discovery.
+
+* `net.probe` — discover devices on a network.
+
+* `net.sniff` — monitor network traffic.
+
+* `arp.spoof` — authorised ARP spoofing tests.
+
+* `dns.spoof` — DNS spoofing tests.
+
+* `http.proxy` — HTTP proxy testing.
+
+* `https.proxy` — HTTPS interception testing with an appropriate trusted certificate setup.
+
+* `wifi.recon` — wireless network discovery.
+
+* `ble.recon` — Bluetooth Low Energy discovery.
+
+### 3\. Installation on Ubuntu
+
+Ettercap:
+
+```bash
+sudo apt update
+sudo apt install ettercap-text-only
+```
+
+Bettercap:
+
+```bash
+sudo apt update
+sudo apt install bettercap
+```
+
+Check versions:
+
+```bash
+ettercap --version
+bettercap --version
+```
+
+### 4\. Which one should you learn?
+
+My recommendation
+
+For your offensive security learning:
+
+* Bettercap — modern network and wireless security assessments.
+
+* Ettercap — learn traditional MITM concepts.
+
+* Wireshark — investigate packets and understand traffic.
+
+* Snort — detect suspicious traffic and build IDS rules.
+
+One important distinction: Neither Ettercap nor Bettercap automatically defeats modern HTTPS encryption. HTTPS interception requires an appropriately configured inspection environment and client trust.
+
+Would you like me to teach you Bettercap from beginner to advanced, including every major module and its commands, using an authorised Ubuntu lab?
