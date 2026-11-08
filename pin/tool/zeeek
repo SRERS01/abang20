@@ -1,0 +1,42 @@
+The command which zeek returned nothing because Zeek's binaries are installed in /opt/zeek/bin/ by default, which is not automatically included in your system's search path ($PATH) on Ubuntu.
+To fix this and verify your installation, run the following commands in your terminal:
+
+1. Update your Environment Path
+
+Run these commands to permanently add Zeek to your path and reload your terminal session:
+bash
+# Append Zeek's path to your user configuration
+echo "export PATH=\$PATH:/opt/zeek/bin" >> ~/.bashrc
+
+# Reload the configuration in your current session
+source ~/.bashrc
+Use code with caution.
+
+2. Verify it Works
+
+Now test the paths again. They should successfully point to your new Zeek installation:
+bash
+which zeek
+# Output should be: /opt/zeek/bin/zeek
+
+zeek --version
+# Output should show: zeek version 9.0.1
+Use code with caution.
+
+Next Step: Configure Your Network Interface
+
+Before starting Zeek, you need to tell it which network interface (like Wi-Fi or Ethernet) to listen to.
+1. Find your active interface name:bash
+ip link
+Use code with caution.
+(Look for something like enp1s0, eth0, or wlan0 that shows STATE UP).
+2. Open the node configuration file:bash
+sudo nano /opt/zeek/etc/node.cfg
+Use code with caution.
+3. Update the interface:
+Find the [zeek] section and change interface=eth0 to your actual interface name from step 1. Save and exit (Ctrl+O, Enter, then Ctrl+X).
+4. Deploy and Start Zeek:bash
+sudo zeekctl deploy
+sudo zeekctl status
+Use code with caution.
+Let me know if you run into any error messages when running zeekctl deploy, or if you need help finding your active network interface name!
