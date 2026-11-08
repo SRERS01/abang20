@@ -1,0 +1,168 @@
+As an offensive security professional, you should build a toolkit that helps you discover vulnerabilities, test them safely, verify their impact, and write professional reports.
+
+Since you're learning bug bounty and working with Linux/Ubuntu, I recommend starting with these tools rather than installing dozens of tools at once.
+
+### Top offensive security tools
+
+### 1\. Reconnaissance and information gathering
+
+| Tool         | Main purpose                         |
+| ------------ | ------------------------------------ |
+| Nmap         | Discover hosts, ports and services   |
+| Subfinder    | Find subdomains                      |
+| Amass        | Map an organisation's attack surface |
+| httpx        | Identify live web services           |
+| theHarvester | Collect public OSINT                 |
+| Shodan       | Discover internet-exposed systems    |
+
+### 2\. Web application and API testing
+
+Highest priority for bug bounty
+
+| Tool       | Main purpose                               |
+| ---------- | ------------------------------------------ |
+| Burp Suite | Intercept, modify and replay HTTP requests |
+| OWASP ZAP  | Web application security testing           |
+| Caido      | Web traffic interception and analysis      |
+| Postman    | API testing                                |
+| ffuf       | Content and parameter discovery            |
+| Kiterunner | API endpoint discovery                     |
+| Arjun      | Hidden parameter discovery                 |
+
+### 3\. Vulnerability discovery and validation
+
+| Tool       | Main purpose                           |
+| ---------- | -------------------------------------- |
+| Nuclei     | Template-based vulnerability detection |
+| Nikto      | Web server checks                      |
+| SQLmap     | SQL injection testing                  |
+| Metasploit | Controlled exploit validation          |
+| testssl.sh | TLS/SSL configuration testing          |
+| WPScan     | WordPress security testing             |
+
+### 4\. Network analysis and monitoring
+
+| Tool      | Main purpose                |
+| --------- | --------------------------- |
+| Wireshark | Inspect network packets     |
+| Snort     | Network intrusion detection |
+| tcpdump   | Capture network traffic     |
+| Netcat    | Network connection testing  |
+
+### 5\. Password and authentication security
+
+| Tool            | Main purpose                               |
+| --------------- | ------------------------------------------ |
+| Hashcat         | Password hash auditing                     |
+| John the Ripper | Password hash auditing                     |
+| JWT Tool        | JWT security testing                       |
+| Hydra           | Authorized authentication security testing |
+
+### 6\. Advanced specialist tools
+
+| Tool       | Specialisation                        |
+| ---------- | ------------------------------------- |
+| BloodHound | Active Directory attack-path analysis |
+| Impacket   | Windows network protocol testing      |
+| Ghidra     | Reverse engineering                   |
+| MobSF      | Android/iOS application security      |
+| Frida      | Dynamic application analysis          |
+| Prowler    | Cloud security assessment             |
+
+These tools cover different areas; no single tool can find every vulnerability. OWASP also maintains a testing-tools reference. OWASP Foundation +2
+
+### My recommended starter toolkit
+
+Don't install everything immediately. Start with these ten:
+
+Your first 10 tools
+
+Start here
+
+Track your installation progress
+
+0/10
+
+Burp Suite Community
+
+Nmap
+
+Subfinder
+
+httpx
+
+ffuf
+
+Nuclei
+
+Wireshark
+
+SQLmap
+
+Metasploit Framework
+
+OWASP ZAP
+
+### How the tools work together
+
+For an authorised bug bounty target, your workflow should look like this:
+
+1\. Reconnaissance
+
+Subfinder · Amass · Nmap
+
+2\. Discover services and endpoints
+
+httpx · ffuf · Kiterunner
+
+3\. Manual security testing
+
+Burp Suite · Caido · Postman
+
+4\. Vulnerability validation
+
+Nuclei · SQLmap · Metasploit
+
+5\. Evidence and reporting
+
+Burp evidence · screenshots · reproduction steps
+
+Only test assets explicitly included in your bug bounty programme's scope. Keep automated scans within its rate limits and rules.
+
+### Let me tailor your offensive security environment
+
+Which area do you want to specialise in first?
+
+1\. Your specialisation
+
+Web application bug bounty
+
+API penetration testing
+
+Network penetration testing
+
+Wireless penetration testing
+
+Active Directory and red teaming
+
+Mobile application penetration testing
+
+2\. Your operating system
+
+Ubuntu
+
+Kali Linux
+
+Parrot OS
+
+Windows
+
+3\. Your experience
+
+Beginner
+
+Intermediate
+
+Advanced
+
+Build my security toolkit
