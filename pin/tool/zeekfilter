@@ -1,0 +1,309 @@
+### Complete guide to Zeek functions and capabilities
+
+Zeek is much more than a packet-capturing tool. It is a network analysis framework that examines communications, identifies protocols, creates detailed logs, detects suspicious behaviour and allows you to write your own detection scripts.
+
+For your Ubuntu bug bounty training, I'll explain its major functions, commands, logs, scripting capabilities and practical uses.
+
+First, understand this distinction:
+
+* Wireshark: lets you inspect individual packets.
+
+* Zeek: interprets network activity and turns it into structured security information.
+
+* Snort: detects traffic matching configured detection rules.
+
+Zeek is primarily a passive monitoring and analysis platform, not a firewall or automatic vulnerability scanner. Book of Zeek (8.2.1) +2
+
+### 1\. Zeek's major functions
+
+| No. | Function                | What it does                                         |
+| --- | ----------------------- | ---------------------------------------------------- |
+| 1   | Network monitoring      | Observes network communications                      |
+| 2   | Packet analysis         | Analyses incoming packets                            |
+| 3   | Protocol identification | Identifies protocols being used                      |
+| 4   | Connection tracking     | Records network connections                          |
+| 5   | DNS analysis            | Analyses domain name requests                        |
+| 6   | HTTP analysis           | Records visible HTTP activity                        |
+| 7   | HTTPS/TLS analysis      | Examines TLS handshakes and metadata                 |
+| 8   | FTP analysis            | Analyses FTP sessions                                |
+| 9   | SSH analysis            | Monitors SSH connections                             |
+| 10  | SMTP analysis           | Analyses email protocols                             |
+| 11  | File analysis           | Identifies files transferred over monitored sessions |
+| 12  | Malware investigation   | Supports suspicious-file investigation               |
+| 13  | Anomaly detection       | Identifies unusual network behaviour                 |
+| 14  | Threat intelligence     | Compares activity against intelligence data          |
+| 15  | Security alerting       | Generates notices about suspicious events            |
+| 16  | Network forensics       | Helps reconstruct network activity                   |
+| 17  | Traffic statistics      | Measures communication patterns                      |
+| 18  | Behavioural analysis    | Studies how hosts and services communicate           |
+| 19  | Custom scripting        | Creates your own monitoring and detection logic      |
+| 20  | SIEM integration        | Sends structured logs to security platforms          |
+
+These are major capabilities rather than a complete list of every built-in analyzer and framework. Book of Zeek (8.2.1) +2
+
+### 2\. Protocol analysis functions
+
+Zeek understands many network protocols.
+
+| Protocol | Zeek's analysis                               |
+| -------- | --------------------------------------------- |
+| DNS      | Domain queries and DNS responses              |
+| HTTP     | Requests, URLs, headers and responses         |
+| TLS      | Certificates, versions and handshake metadata |
+| TCP      | Connection establishment and termination      |
+| UDP      | UDP communication                             |
+| SSH      | SSH connection information                    |
+| FTP      | File transfer activity                        |
+| SMTP     | Email communication                           |
+| DHCP     | IP address assignment                         |
+| SMB      | Windows file-sharing activity                 |
+| IRC      | Internet Relay Chat                           |
+| Kerberos | Authentication protocol activity              |
+| NTP      | Network time synchronization                  |
+| MQTT     | IoT messaging                                 |
+| QUIC     | Modern encrypted transport protocol           |
+| SIP      | Voice communication signalling                |
+
+Important: Zeek can identify and log information about encrypted communications, but it cannot automatically read encrypted application contents.
+
+### 3\. Important Zeek log files
+
+One of Zeek's strongest features is its ability to create structured logs.
+
+| Log file      | Information recorded                           |
+| ------------- | ---------------------------------------------- |
+| conn.log      | Source, destination, ports, duration and bytes |
+| dns.log       | Domain queries and answers                     |
+| http.log      | HTTP requests and responses                    |
+| ssl.log       | TLS/SSL connection information                 |
+| x509.log      | Digital certificate information                |
+| ssh.log       | SSH connection details                         |
+| ftp.log       | FTP activity                                   |
+| smtp.log      | SMTP activity                                  |
+| files.log     | File observations                              |
+| weird.log     | Unusual protocol behaviour                     |
+| notice.log    | Security notices                               |
+| software.log  | Software identification                        |
+| dhcp.log      | DHCP activity                                  |
+| ntp.log       | NTP activity                                   |
+| smb_files.log | SMB file activity                              |
+
+Not every log is generated in every capture. It depends on the protocols and events Zeek observes. Book of Zeek (8.2.1) +1
+
+### What these logs mean for bug bounty
+
+* `dns.log`: Discover which domains your test machine requests.
+
+* `http.log`: Examine visible HTTP requests.
+
+* `conn.log`: Understand which servers your machine communicates with.
+
+* `ssl.log`: Examine TLS connection metadata.
+
+* `files.log`: Investigate files observed during permitted traffic analysis.
+
+* `notice.log`: Investigate events flagged by Zeek.
+
+### 4\. Zeek detection capabilities
+
+Zeek can help you investigate the following:
+
+| Security activity         | What you investigate                            |
+| ------------------------- | ----------------------------------------------- |
+| Port scanning             | Repeated connection attempts to different ports |
+| SSH brute-force behaviour | Repeated failed SSH authentication attempts     |
+| DNS tunnelling indicators | Unusual DNS query patterns                      |
+| Suspicious file transfers | Unexpected file types and transfers             |
+| Unusual HTTP activity     | Abnormal requests and protocol behaviour        |
+| Beaconing                 | Repeated communications at regular intervals    |
+| Certificate problems      | Unusual or invalid certificate information      |
+| Network reconnaissance    | Host and service discovery patterns             |
+| Malware communications    | Connections to known malicious infrastructure   |
+| Protocol violations       | Unexpected or malformed protocol activity       |
+
+These are investigation and detection use cases. Some require additional scripts, intelligence feeds or external integrations; Zeek does not automatically identify every attack.
+
+### 5\. Zeek scripting functions
+
+This is where Zeek becomes particularly powerful.
+
+You can write your own scripts to monitor network activity and generate alerts.
+
+For example, you can create scripts that:
+
+* Monitor HTTP requests.
+
+* Identify specific domains.
+
+* Track connections to suspicious IP addresses.
+
+* Detect unusual DNS queries.
+
+* Monitor particular ports.
+
+* Record repeated connection attempts.
+
+* Identify unexpected protocol behaviour.
+
+* Generate custom security notices.
+
+* Track activity between multiple hosts.
+
+* Enrich logs with additional information.
+
+Example of a simple Zeek script:
+
+```zeek
+event http_request(c: connection,
+    method: string,
+    original_URI: string,
+    unescaped_URI: string,
+    version: string)
+{
+    print fmt("HTTP request: %s %s",
+        method, original_URI);
+}
+```
+
+Save it as:
+
+```bash
+nano monitor.zeek
+```
+
+Run it against a packet capture:
+
+```bash
+zeek -r capture.pcap monitor.zeek
+```
+
+This script prints HTTP requests observed in the capture.
+
+### 6\. Important Zeek commands on Ubuntu
+
+Here is a practical command reference.
+
+| Command                  | Function                               |
+| ------------------------ | -------------------------------------- |
+| zeek --version           | Check Zeek version                     |
+| zeek -h                  | Display help                           |
+| zeek -i wlan0            | Monitor an interface                   |
+| zeek -r capture.pcap     | Analyse a packet capture               |
+| zeek -C -i wlan0         | Ignore checksum errors during capture  |
+| zeek -N                  | List available plugins                 |
+| zeek -b                  | Compile scripts without executing them |
+| zeek -e 'print "Hello";' | Execute a small Zeek script            |
+| zeekctl status           | Check ZeekControl-managed processes    |
+| zeekctl deploy           | Deploy a ZeekControl configuration     |
+
+Replace `wlan0` with your actual network interface.
+
+### 7\. Advanced Zeek frameworks
+
+Zeek also has specialised frameworks that extend its capabilities.
+
+| Framework                 | Function                                     |
+| ------------------------- | -------------------------------------------- |
+| Logging Framework         | Controls log generation                      |
+| Notice Framework          | Generates security notices                   |
+| Intelligence Framework    | Matches activity against threat intelligence |
+| File Analysis Framework   | Analyses transferred files                   |
+| Signature Framework       | Matches configured traffic signatures        |
+| Input Framework           | Imports external data                        |
+| Broker Framework          | Communication between Zeek processes         |
+| Cluster Framework         | Distributed network monitoring               |
+| NetControl Framework      | Interfaces with supported network controls   |
+| Packet Analysis Framework | Processes packet-level information           |
+| Telemetry Framework       | Collects monitoring metrics                  |
+| TLS Decryption Framework  | Supports configured TLS decryption workflows |
+| Storage Framework         | Supports data storage operations             |
+
+Book of Zeek (v7.2.2) +1
+
+### 8\. What Zeek cannot do by itself
+
+It is important to understand its limitations.
+
+| Zeek cannot automatically                      | Tool or approach to consider                           |
+| ---------------------------------------------- | ------------------------------------------------------ |
+| Exploit website vulnerabilities                | Burp Suite testing tools                               |
+| Crack passwords                                | Dedicated password-auditing tools in authorized labs   |
+| Decrypt arbitrary HTTPS traffic                | Authorized TLS decryption configuration                |
+| Block every malicious connection               | Firewall or IPS                                        |
+| Automatically discover every web vulnerability | Web vulnerability scanners and manual testing          |
+| Intercept and modify browser requests          | Burp Suite Proxy                                       |
+| Guarantee visibility into every device         | Correctly configured network monitoring infrastructure |
+
+### 9\. How I recommend combining your security tools
+
+### Your network security toolkit
+
+![File:Wireshark icon.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/c4p4xtd9Di94z_wdlsbRKsI1EJEjQdVb2zf9j5MFMaB3RgI413pbYOdrfbHtZW7f4oCsbYdd6n8j7mM1Y0FSUs8iKGnL58rhAq-CTPvDNT5eb4G64_4fRRsWxeimQMWVxnFXogNT_hVTFx-Eex-A2p5vMLyiJiY2hrjF6ZkR182F34QjTZxrnYUar2Cc2Fqe?purpose=fullsize)
+
+Wireshark
+
+Inspect individual network packets.
+
+![Zeek is Now a Component of Microsoft Windows](https://images.openai.com/static-rsc-4/doDbM4UlRLknhHksaAI-l-TIonCheLgWOwZRkqcrMmsBTWnwSa2jos-KqwBgHC8VL41e0C474I2CP-3ZuFgL4F8N6nKYLHaicp6GW9BnOy9v1NgTloOPg2qr3W4fiBIA8KKiVjR3KL4aVKgo6XkRTMadm8yT0PW2wLwyERm3CAzddXeywkDON4lEvaSuOjXz?purpose=fullsize)
+
+Zeek
+
+Analyse protocols, connections and network behaviour.
+
+![SNORT. INTRODUCTION | by SarahAgnave | Medium](https://images.openai.com/static-rsc-4/xKX2TILO1Zjks8tScB0eUO32FI_XN2pDRR7zvBHg2nphDQxnBLBw9P82_QN1e857-CvF8Lu5HHxv0C11aSnufCGVVlgvU2SGXR-xrwQo0e7rBmZAXDc6d0d_pAhqiO9wrahv-a-rl_r_WC-rV_iF4NRmYlkjJufTMI2Y2AlHvl8aEEDkJIDP_hOmSOLnzL-T?purpose=fullsize)
+
+Snort
+
+Detect suspicious traffic using configured rules.
+
+![فهرس مسار الـ Jr Penetration Tester | شبكة شل العربية](https://images.openai.com/static-rsc-4/HfKMx5XdbOterXf5BLS8duTOXleSU-6m-TWe4aBA3gVTivOU85S802wrYJyGGuTKIdsJcPzJzzQ99R5jGinwvro51b25mYFqkH3yWsvbey6-1CkjcgNNeykDK7IlZ13YaJ7XzTFJBljNS4OUu-dturpEL7szPwM-lZ1pUK_MghXSgvrVtEM-1pc900O0HUCJ?purpose=fullsize)
+
+Burp Suite
+
+Inspect and test web application requests and responses.
+
+![The Complete Guide to Nmap: Network Scanning Mastery | by Raj Bhatia | Medium](https://images.openai.com/static-rsc-4/NbsickmLT-0jo71Kww4y_eIDDJPcvrBZDgy2EEtki8h_Aqtn06RDYDp6lYDiQFZOZ3rGVmQO992boSZlZzApzxPpJP9GtP8Do12TANBCC6EJg4RqZZ549TbLcY-2663YUVDx6GfNTc91GjA5b5N9jO8EXPhHMel9GmEtrirxmyzTEW84R-SW4bSsV4oL-wcM?purpose=fullsize)
+
+Nmap
+
+Discover hosts and services within authorized scope.
+
+### 10\. Your practical Zeek training roadmap
+
+I recommend learning these topics in this order:
+
+Your learning progress
+
+0/11 completed
+
+1. Zeek installation and configuration
+
+2. Live network traffic monitoring
+
+3. DNS analysis and domain identification
+
+4. HTTP and HTTPS analysis
+
+5. Connection and port analysis
+
+6. File extraction and file analysis
+
+7. Security notices and anomaly detection
+
+8. Zeek scripting
+
+9. Custom detection rules
+
+10. Zeek + Wireshark + Snort integration
+
+11. Bug bounty traffic analysis in an authorized lab
+
+Official learning resources:
+
+* [Zeek documentation](https://docs.zeek.org/en/current/?utm_source=chatgpt.com)
+
+* [Zeek log reference](https://docs.zeek.org/en/current/logs/index.html?utm_source=chatgpt.com)
+
+* [Zeek GitHub repository](https://github.com/zeek/zeek?utm_source=chatgpt.com)
+
+My recommendation: Start with DNS analysis. Learn how Zeek identifies domains, records DNS responses and correlates domain activity with network connections. This gives you a strong foundation before moving into HTTP, TLS and custom detection scripts.
