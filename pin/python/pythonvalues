@@ -1,0 +1,528 @@
+### Complete Python variable values – all major types and examples
+
+In Python, a variable can be assigned almost any Python object. This includes numbers, text, Boolean values, collections, functions, classes, files, objects and even other variables.
+
+Python is dynamically typed, meaning you do not have to declare a variable's type before assigning a value.
+
+For example:
+
+```python
+x = 100
+x = "Hello"
+x = True
+x = [1, 2, 3]
+```
+
+All four assignments are valid. The variable `x` simply refers to a different object each time.
+
+Let's explore the different values Python supports.
+
+### 1\. Numeric values
+
+| Type     | Example          | Description                |
+| -------- | ---------------- | -------------------------- |
+| int      | 100              | Whole numbers              |
+| float    | 10.5             | Decimal numbers            |
+| complex  | 3+4j             | Complex numbers            |
+| bool     | True             | Boolean values             |
+| Decimal  | Decimal("10.50") | Precise decimal arithmetic |
+| Fraction | Fraction(3, 4)   | Rational numbers           |
+
+Code:
+
+```python
+a = 100
+b = 10.5
+c = 3 + 4j
+d = True
+
+from decimal import Decimal
+from fractions import Fraction
+
+e = Decimal("10.50")
+f = Fraction(3, 4)
+
+print(type(a))
+print(type(b))
+print(type(c))
+print(type(d))
+print(type(e))
+print(type(f))
+```
+
+### 2\. String and text values
+
+| Type                    | Example             |
+| ----------------------- | ------------------- |
+| str                     | "Hello"             |
+| Empty string            | ""                  |
+| Single-character string | "A"                 |
+| Multiline string        | """Hello world"""   |
+| Unicode string          | "Cameroon 🇨🇲"     |
+| Raw string              | r"C:\\Users\\Admin" |
+| Formatted string        | f"Age: {25}"        |
+
+Code:
+
+```python
+name = "David"
+empty = ""
+letter = "A"
+multiline = """Hello
+Welcome
+Python"""
+
+unicode_text = "Cameroon 🇨🇲"
+raw_text = r"C:\Users\Admin"
+age = 25
+formatted = f"My age is {age}"
+```
+
+### 3\. Boolean values
+
+Python has two Boolean values:
+
+```python
+a = True
+b = False
+```
+
+Boolean values are commonly used for:
+
+* Authentication decisions.
+
+* Permission checks.
+
+* Validation.
+
+* Conditional statements.
+
+* Application status.
+
+### 4\. Empty and missing values
+
+| Value | Example   | Meaning          |
+| ----- | --------- | ---------------- |
+| None  | x = None  | No value         |
+| False | x = False | False Boolean    |
+| 0     | x = 0     | Integer zero     |
+| 0.0   | x = 0.0   | Float zero       |
+| ""    | x = ""    | Empty string     |
+| []    | x = []    | Empty list       |
+| {}    | x = {}    | Empty dictionary |
+| ()    | x = ()    | Empty tuple      |
+| set() | x = set() | Empty set        |
+| b""   | x = b""   | Empty bytes      |
+
+These values are not interchangeable. For example, `None` means absence of a value, whereas `0` is a numerical value.
+
+### 5\. Collection values
+
+These allow a variable to store multiple values.
+
+![Python Lists:](https://images.openai.com/static-rsc-4/qtRcOb84cx5ajpOpn6qzjQGUGoLTpM9Ecp_fTsoWA-nMY2egVheT1WCVFvG0-WhKPdGlu1XfQ_dNZ3eeRMM1q0QSBUhHf_Afo8YiCLec-R-iJvhRagZdVMX6-T9SRjCEZuCvJIkrWxKqfmIJYxSbKkkSDHktXkwkn17m-fJy3jp0l8ft6yp1ZDqKVEc5ZEzs?purpose=fullsize)
+
+1\. List (`list`)
+
+```python
+users = ["admin", "john", "mary"]
+```
+
+Ordered and mutable.
+
+![Python Tuples: The Immutable Data Structure Explained | TopicTrick](https://images.openai.com/static-rsc-4/N1k0Dkvg7kGQH5dlP88z6M5U9QCgVkR8e_CqwWCJWIfXF9lcQSJwLl4udy-Xo7RbKOHZ-1AsG4kjF9DOMKtFSG9nX9io8Q6kb6cpuZ_xZPCvyKUTDFoH45NSEYqX5RjtLq-aeEJvQ38VjidWFuxl4cNGC1bWkjjKyNcT2AbyLCLki724m-f1lyJzT4Nkkzop?purpose=fullsize)
+
+2\. Tuple (`tuple`)
+
+```python
+coordinates = (10, 20, 30)
+```
+
+Ordered and immutable.
+
+![Data Structures | Python | QuickLearnPro](https://images.openai.com/static-rsc-4/IGI1dJSkNeMFTaveHaiQhQW2yMWlAuJmAdfFxwJDpN_R0_ptgCmR2xzNjGDc7C3kmkfSobIZZ8xvBY00JKzKR6rUbVu5VJta3pYlKLJYojzVtQdB7BOebVxMKY6cMeerIcVJt9IUs1YIr5ZF1gDDbgDdWamyT-W7HhNsxL5yyqnZ4quvWoZy2xSwp5-Rpvwv?purpose=fullsize)
+
+3\. Set (`set`)
+
+```python
+ports = {22, 80, 443}
+```
+
+Stores unique elements.
+
+![Dict in Python - Scaler Topics](https://images.openai.com/static-rsc-4/8Fab9VCJjLlbxKe0Tgd4mfCxFxKDjGDi3M41R_ntJIcmXvn03wl-j9xRxFYk_e1DixU4lwtM0-a3YRlls1T09yqvP8vpChRursgmPFv7-ZrAP6WizFGA_wvihyhvCBfLRfQ5AKjfbiBz851qlHpdavdPjsMxA_HVGuFtRvS6hJuuqfxad00iKRJKyVna8a-f?purpose=fullsize)
+
+4\. Dictionary (`dict`)
+
+```python
+user = {
+    "name": "David",
+    "role": "admin"
+}
+```
+
+Stores key-value pairs.
+
+Other collection types:
+
+* `frozenset`
+
+* `range`
+
+* `collections.deque`
+
+* `collections.Counter`
+
+* `collections.defaultdict`
+
+* `collections.OrderedDict`
+
+* `collections.ChainMap`
+
+* `collections.namedtuple`
+
+### 6\. Binary values
+
+These are particularly important in networking, file processing and cybersecurity.
+
+| Type       | Example              |
+| ---------- | -------------------- |
+| bytes      | b"Hello"             |
+| bytearray  | bytearray(b"Hello")  |
+| memoryview | memoryview(b"Hello") |
+
+Example:
+
+```python
+packet = b"\x45\x00\x00\x54"
+data = bytearray(b"Hello")
+view = memoryview(packet)
+
+print(type(packet))
+print(type(data))
+print(type(view))
+```
+
+Binary values are useful when analysing network packets, HTTP data, file contents and encoded information.
+
+### 7\. Date and time values
+
+Python's `datetime` module provides several date and time objects.
+
+* `date`
+
+* `time`
+
+* `datetime`
+
+* `timedelta`
+
+* `timezone`
+
+Example:
+
+```python
+from datetime import date, time, datetime, timedelta, timezone
+
+today = date.today()
+current_time = time(12, 30)
+current_date = datetime.now()
+duration = timedelta(days=7)
+utc = timezone.utc
+```
+
+### 8\. Functions and executable values
+
+A variable can hold a function.
+
+```python
+def greet():
+    return "Hello"
+
+my_function = greet
+
+print(my_function())
+```
+
+Other examples:
+
+* Built-in functions: `print`, `len`, `type`
+
+* Lambda functions
+
+* Generator functions
+
+* Async functions
+
+* Methods
+
+* Bound methods
+
+* Classes
+
+### 9\. Object and class values
+
+Python variables can reference objects created from classes.
+
+```python
+class User:
+    def __init__(self, name):
+        self.name = name
+
+account = User("David")
+
+print(account.name)
+```
+
+Other object-related values include:
+
+* Objects
+
+* Class objects
+
+* Instances
+
+* Modules
+
+* Properties
+
+* Static methods
+
+* Class methods
+
+* Descriptors
+
+### 10\. Iterator and asynchronous values
+
+| Type             | Description                       |
+| ---------------- | --------------------------------- |
+| Iterator         | Produces values one at a time     |
+| Generator        | Produces values lazily            |
+| Generator object | Result of calling a generator     |
+| Coroutine        | Represents asynchronous execution |
+| Async generator  | Produces values asynchronously    |
+| Async iterator   | Supports asynchronous iteration   |
+| Async iterable   | Can be iterated asynchronously    |
+| Future           | Represents an eventual result     |
+| Task             | Schedules asynchronous work       |
+
+Example:
+
+```python
+numbers = iter([10, 20, 30])
+
+print(next(numbers))
+print(next(numbers))
+```
+
+### 11\. Special Python values and objects
+
+Other values you can assign include:
+
+| Value or object      | Example                                    |
+| -------------------- | ------------------------------------------ |
+| Ellipsis             | x = ...                                    |
+| NotImplemented       | x = NotImplemented                         |
+| slice                | x = slice(1, 10, 2)                        |
+| property             | x = property()                             |
+| staticmethod         | x = staticmethod(print)                    |
+| classmethod          | x = classmethod(print)                     |
+| super object         | x = super() inside a suitable class method |
+| type object          | x = int                                    |
+| Module               | import os; x = os                          |
+| Exception object     | x = ValueError("Invalid")                  |
+| Compiled code object | x = compile("2+2", "<string>", "eval")     |
+
+### 12\. Python built-in special constants
+
+Python has several special predefined values:
+
+| Value          | Meaning                                       |
+| -------------- | --------------------------------------------- |
+| True           | Boolean true                                  |
+| False          | Boolean false                                 |
+| None           | Absence of a value                            |
+| NotImplemented | Unsupported operation indicator               |
+| Ellipsis       | Ellipsis object (...)                         |
+| __debug__      | Indicates whether Python debugging is enabled |
+
+Example:
+
+```python
+a = True
+b = False
+c = None
+d = NotImplemented
+e = ...
+f = __debug__
+```
+
+### 13\. File and system-related objects
+
+A variable can also hold objects representing files and operating-system resources.
+
+```python
+file = open("test.txt", "w")
+
+import os
+system = os
+
+import pathlib
+path = pathlib.Path("test.txt")
+```
+
+Other examples:
+
+* File objects
+
+* Directory paths
+
+* Socket objects
+
+* Process objects
+
+* Environment variables
+
+* Network connections
+
+* Locks and threads
+
+### 14\. Regular expressions and specialized objects
+
+```python
+import re
+
+pattern = re.compile(r"\d+")
+
+import uuid
+identifier = uuid.uuid4()
+
+from decimal import Decimal
+amount = Decimal("100.50")
+
+from fractions import Fraction
+ratio = Fraction(1, 3)
+```
+
+Other specialized objects include:
+
+* Regex patterns and match objects
+
+* UUID objects
+
+* Decimal objects
+
+* Fraction objects
+
+* JSON dictionaries and lists
+
+* Database connections and cursors
+
+* Cryptographic key objects
+
+* Hash objects
+
+* Image objects
+
+* DataFrames
+
+* Machine-learning tensors
+
+### 15\. Complete practical Python type explorer
+
+Here is a program that demonstrates many of the major built-in Python types and displays their actual types.
+
+```python
+import types
+from datetime import datetime
+
+values = {
+    "Integer": 100,
+    "Float": 10.5,
+    "Complex": 3 + 4j,
+    "Boolean": True,
+    "String": "Hello",
+    "List": [1, 2, 3],
+    "Tuple": (1, 2, 3),
+    "Dictionary": {"name": "David"},
+    "Set": {1, 2, 3},
+    "Frozen set": frozenset({1, 2}),
+    "Range": range(10),
+    "Bytes": b"Hello",
+    "Bytearray": bytearray(b"Hello"),
+    "Memoryview": memoryview(b"Hello"),
+    "None": None,
+    "Ellipsis": ...,
+    "Date": datetime.now(),
+    "Function": lambda: "Hello",
+    "Type": int,
+    "Module": types,
+    "Slice": slice(1, 10, 2),
+}
+
+for name, value in values.items():
+    print(
+        f"{name:15} | "
+        f"{type(value).__name__:15} | "
+        f"{repr(value)}"
+    )
+```
+
+### 16\. Important: How many Python data types exist?
+
+There is no fixed total number of Python object types.
+
+Why?
+
+* Python has built-in types.
+
+* Python's standard library introduces additional types.
+
+* Third-party packages introduce more types.
+
+* Programmers can create unlimited custom classes and objects.
+
+For example, you can create your own type:
+
+```python
+class Hacker:
+    pass
+
+class Network:
+    pass
+
+class Scanner:
+    pass
+
+a = Hacker()
+b = Network()
+c = Scanner()
+
+print(type(a))
+print(type(b))
+print(type(c))
+```
+
+All three are valid Python objects.
+
+For your cybersecurity studies, I recommend mastering these 15 first:
+
+| Priority | Python type |
+| -------- | ----------- |
+| 1        | int         |
+| 2        | float       |
+| 3        | str         |
+| 4        | bool        |
+| 5        | NoneType    |
+| 6        | list        |
+| 7        | tuple       |
+| 8        | dict        |
+| 9        | set         |
+| 10       | bytes       |
+| 11       | bytearray   |
+| 12       | memoryview  |
+| 13       | object      |
+| 14       | function    |
+| 15       | type        |
+
+These will give you a strong foundation for Python scripting, network analysis, web security testing and vulnerability research.
