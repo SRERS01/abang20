@@ -1,0 +1,157 @@
+Python has 35 reserved keywords in Python 3. These words have special meanings in the language and cannot be used as ordinary variable names.
+
+Here is the complete list of Python keywords.
+
+### 1\. All Python reserved keywords
+
+| No. | Keyword  | Function                            |
+| --- | -------- | ----------------------------------- |
+| 1   | False    | Boolean false value                 |
+| 2   | None     | Represents no value                 |
+| 3   | True     | Boolean true value                  |
+| 4   | and      | Logical AND                         |
+| 5   | as       | Creates an alias                    |
+| 6   | assert   | Tests a condition                   |
+| 7   | async    | Defines asynchronous operations     |
+| 8   | await    | Waits for an asynchronous operation |
+| 9   | break    | Exits a loop                        |
+| 10  | class    | Defines a class                     |
+| 11  | continue | Skips to the next loop iteration    |
+| 12  | def      | Defines a function                  |
+| 13  | del      | Deletes a reference or item         |
+| 14  | elif     | Adds another conditional branch     |
+| 15  | else     | Defines an alternative branch       |
+| 16  | except   | Handles exceptions                  |
+| 17  | finally  | Executes cleanup code               |
+| 18  | for      | Creates a loop                      |
+| 19  | from     | Imports from a module               |
+| 20  | global   | Declares a global variable          |
+| 21  | if       | Tests a condition                   |
+| 22  | import   | Imports a module                    |
+| 23  | in       | Tests membership                    |
+| 24  | is       | Tests object identity               |
+| 25  | lambda   | Creates an anonymous function       |
+| 26  | nonlocal | Refers to an enclosing variable     |
+| 27  | not      | Logical NOT                         |
+| 28  | or       | Logical OR                          |
+| 29  | pass     | Does nothing                        |
+| 30  | raise    | Raises an exception                 |
+| 31  | return   | Returns a function value            |
+| 32  | try      | Starts exception handling           |
+| 33  | while    | Creates a conditional loop          |
+| 34  | with     | Manages a context                   |
+| 35  | yield    | Produces generator values           |
+
+### 2\. Additional soft keywords
+
+Python also has soft keywords. These are words that have special meaning only in particular language contexts.
+
+| Soft keyword | Purpose                                 |
+| ------------ | --------------------------------------- |
+| match        | Starts pattern matching                 |
+| case         | Defines a pattern-matching case         |
+| _            | Wildcard in pattern matching            |
+| type         | Introduces a type alias in Python 3.12+ |
+
+Unlike reserved keywords, soft keywords can sometimes be used as variable names.
+
+### 3\. How to obtain the complete list directly from Python
+
+Run this program:
+
+```python
+import keyword
+
+print("PYTHON RESERVED KEYWORDS")
+
+for word in keyword.kwlist:
+    print(word)
+
+print("\nTOTAL:", len(keyword.kwlist))
+
+print("\nSOFT KEYWORDS")
+
+for word in keyword.softkwlist:
+    print(word)
+```
+
+### 4\. How to test whether a variable name is reserved
+
+```python
+import keyword
+
+variable = "class"
+
+if keyword.iskeyword(variable):
+    print("Invalid: Reserved keyword")
+else:
+    print("Valid variable name")
+```
+
+Output:
+
+```text
+Invalid: Reserved keyword
+```
+
+### 5\. Practical cybersecurity application
+
+When developing Python security-testing scripts, you can use keyword checking to validate variable names or user-provided identifiers.
+
+For example:
+
+```python
+import keyword
+
+def validate_variable(name):
+
+    if not name.isidentifier():
+        return "Invalid identifier"
+
+    if keyword.iskeyword(name):
+        return "Reserved keyword"
+
+    return "Valid variable name"
+
+print(validate_variable("class"))
+print(validate_variable("username"))
+print(validate_variable("123user"))
+```
+
+Expected output:
+
+```text
+Reserved keyword
+Valid variable name
+Invalid identifier
+```
+
+Practical exercise
+
+Try these variable names and identify which ones are valid:
+
+Select all names that are valid Python identifiers.
+
+admin
+
+class
+
+password
+
+return
+
+user_name
+
+if
+
+match
+
+123user
+
+global
+
+account
+
+Check answers
+
+Important: The exact keyword list can vary between Python versions. The `keyword` module gives you the authoritative list for the Python interpreter installed on your machine.
