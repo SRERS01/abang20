@@ -1,0 +1,616 @@
+### Python reserved keywords – practical code examples
+
+Below are the use cases of all 35 reserved keywords and 4 soft keywords in Python, with explanations and executable examples.
+
+We will use Python 3 and examples you can run directly in Termux or Ubuntu.
+
+Important: Each example is independent. You can copy and run them separately, or combine related examples into one program.
+
+### 1\. Boolean and special values
+
+### 1\. `False`
+
+Represents a false Boolean value.
+
+```python
+is_admin = False
+
+if is_admin:
+    print("Access granted")
+else:
+    print("Access denied")
+```
+
+### 2\. `None`
+
+Represents the absence of a value.
+
+```python
+username = None
+
+if username is None:
+    print("No username supplied")
+```
+
+### 3\. `True`
+
+Represents a true Boolean value.
+
+```python
+is_authenticated = True
+
+if is_authenticated:
+    print("User authenticated")
+```
+
+### 2\. Logical and conditional keywords
+
+### 4\. `and`
+
+Both conditions must be true.
+
+```python
+age = 25
+verified = True
+
+if age >= 18 and verified:
+    print("Access granted")
+```
+
+### 5\. `or`
+
+At least one condition must be true.
+
+```python
+username = "admin"
+email = ""
+
+if username or email:
+    print("Account identifier supplied")
+```
+
+### 6\. `not`
+
+Reverses a Boolean condition.
+
+```python
+is_blocked = False
+
+if not is_blocked:
+    print("User is not blocked")
+```
+
+### 7\. `if`
+
+Executes code when a condition is true.
+
+```python
+password_length = 12
+
+if password_length >= 8:
+    print("Password meets minimum length")
+```
+
+### 8\. `elif`
+
+Checks another condition when the previous condition is false.
+
+```python
+score = 75
+
+if score >= 80:
+    print("Excellent")
+elif score >= 50:
+    print("Passed")
+```
+
+### 9\. `else`
+
+Executes when previous conditions are false.
+
+```python
+score = 30
+
+if score >= 50:
+    print("Passed")
+else:
+    print("Failed")
+```
+
+### 3\. Import and alias keywords
+
+### 10\. `import`
+
+Imports a Python module.
+
+```python
+import os
+
+print(os.getcwd())
+```
+
+### 11\. `from`
+
+Imports a particular object from a module.
+
+```python
+from math import sqrt
+
+print(sqrt(64))
+```
+
+### 12\. `as`
+
+Creates an alias or alternative name.
+
+```python
+import datetime as dt
+
+print(dt.date.today())
+```
+
+It is also used when handling exceptions and context managers.
+
+### 4\. Loop control keywords
+
+### 13\. `for`
+
+Repeats code for each item in a sequence.
+
+```python
+ports = [21, 22, 80, 443]
+
+for port in ports:
+    print("Checking port:", port)
+```
+
+### 14\. `while`
+
+Repeats code while a condition remains true.
+
+```python
+counter = 1
+
+while counter <= 5:
+    print(counter)
+    counter += 1
+```
+
+### 15\. `break`
+
+Immediately terminates a loop.
+
+```python
+for number in range(1, 10):
+    if number == 5:
+        break
+
+    print(number)
+```
+
+### 16\. `continue`
+
+Skips the current iteration and moves to the next.
+
+```python
+for number in range(1, 6):
+    if number == 3:
+        continue
+
+    print(number)
+```
+
+### 17\. `in`
+
+Checks membership in a collection or iterates over its elements.
+
+```python
+blocked_users = ["admin", "guest", "root"]
+
+username = "guest"
+
+if username in blocked_users:
+    print("Username is blocked")
+```
+
+### 5\. Function and class keywords
+
+### 18\. `def`
+
+Defines a function.
+
+```python
+def greet():
+    print("Welcome to Python")
+
+greet()
+```
+
+### 19\. `return`
+
+Returns a result from a function.
+
+```python
+def add(a, b):
+    return a + b
+
+result = add(10, 20)
+
+print(result)
+```
+
+### 20\. `lambda`
+
+Creates a small anonymous function.
+
+```python
+square = lambda x: x * x
+
+print(square(5))
+```
+
+### 21\. `class`
+
+Defines a class.
+
+```python
+class User:
+    def __init__(self, username):
+        self.username = username
+
+user = User("admin")
+
+print(user.username)
+```
+
+### 22\. `yield`
+
+Produces values from a generator one at a time.
+
+```python
+def numbers():
+    yield 1
+    yield 2
+    yield 3
+
+for number in numbers():
+    print(number)
+```
+
+### 6\. Variable scope and deletion
+
+### 23\. `global`
+
+Allows a function to modify a global variable.
+
+```python
+counter = 0
+
+def increase():
+    global counter
+    counter += 1
+
+increase()
+
+print(counter)
+```
+
+### 24\. `nonlocal`
+
+Allows a nested function to modify a variable in its enclosing function.
+
+```python
+def outer():
+    counter = 0
+
+    def inner():
+        nonlocal counter
+        counter += 1
+
+    inner()
+    print(counter)
+
+outer()
+```
+
+### 25\. `del`
+
+Deletes a variable reference or removes an item from a collection.
+
+```python
+username = "David"
+
+del username
+
+# print(username)  # Would raise NameError
+```
+
+Another example:
+
+```python
+users = ["David", "John", "Mary"]
+
+del users[1]
+
+print(users)
+```
+
+### 7\. Exception handling and error control
+
+### 26\. `try`
+
+Starts a block where an exception might occur.
+
+```python
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+```
+
+### 27\. `except`
+
+Handles an exception.
+
+```python
+try:
+    number = int("hello")
+except ValueError:
+    print("Invalid number")
+```
+
+### 28\. `finally`
+
+Executes cleanup code whether an exception occurred or not.
+
+```python
+try:
+    print("Processing")
+finally:
+    print("Operation finished")
+```
+
+### 29\. `raise`
+
+Manually raises an exception.
+
+```python
+age = 15
+
+if age < 18:
+    raise ValueError("Age must be 18 or above")
+```
+
+### 30\. `assert`
+
+Checks whether a condition is true. Raises `AssertionError` if false.
+
+```python
+password_length = 12
+
+assert password_length >= 8
+
+print("Password length accepted")
+```
+
+Use assertions for development checks, not as your only security validation, because Python can disable them with optimization.
+
+### 8\. Other important keywords
+
+### 31\. `pass`
+
+Acts as a placeholder where Python requires a statement.
+
+```python
+def scan_website():
+    pass
+
+print("Function created")
+```
+
+### 32\. `is`
+
+Checks whether two variables refer to the same object.
+
+```python
+a = None
+b = None
+
+print(a is b)
+```
+
+Do not confuse `is` with `==`. Use `==` for comparing values.
+
+### 33\. `with`
+
+Manages resources and ensures proper cleanup.
+
+```python
+with open("test.txt", "w") as file:
+    file.write("Hello Python")
+```
+
+The file is automatically closed when the block ends.
+
+### 34\. `async`
+
+Defines an asynchronous function.
+
+```python
+async def get_data():
+    return "Data received"
+```
+
+### 35\. `await`
+
+Waits for an asynchronous operation inside an async function.
+
+```python
+import asyncio
+
+async def get_data():
+    await asyncio.sleep(1)
+    return "Data received"
+
+async def main():
+    result = await get_data()
+    print(result)
+
+asyncio.run(main())
+```
+
+### 9\. Python soft keywords
+
+Unlike reserved keywords, soft keywords have special meanings only in particular contexts. They can also be used as ordinary variable names in other contexts.
+
+### 36\. `match`
+
+Starts a pattern-matching statement. Available from Python 3.10.
+
+```python
+status = 404
+
+match status:
+    case 200:
+        print("OK")
+    case 404:
+        print("Page not found")
+    case _:
+        print("Unknown status")
+```
+
+### 37\. `case`
+
+Defines a matching pattern inside a `match` statement.
+
+```python
+role = "admin"
+
+match role:
+    case "admin":
+        print("Administrator access")
+    case "user":
+        print("Regular user access")
+    case _:
+        print("Unknown role")
+```
+
+### 38\. `_` (underscore)
+
+Acts as a wildcard pattern that matches anything not matched by earlier cases.
+
+```python
+response_code = 500
+
+match response_code:
+    case 200:
+        print("Success")
+    case 404:
+        print("Not found")
+    case _:
+        print("Other response")
+```
+
+### 39\. `type`
+
+Introduces a type alias in Python 3.12 and later.
+
+```python
+type UserID = int
+
+user_id: UserID = 1001
+
+print(user_id)
+print(type(user_id))
+```
+
+Output:
+
+```text
+1001
+<class 'int'>
+```
+
+Notice that `type` here creates a type alias; it does not create a new data type.
+
+### 10\. Practical project: Python keyword detector
+
+Now let's combine what you've learned into a small programming tool.
+
+This program:
+
+* Accepts a word from the user.
+
+* Checks whether it is a reserved keyword.
+
+* Checks whether it is a soft keyword.
+
+* Checks whether it is a valid Python identifier.
+
+* Displays the result.
+
+```python
+import keyword
+
+print("PYTHON KEYWORD DETECTOR")
+
+word = input("Enter a variable name: ")
+
+if keyword.iskeyword(word):
+    print("Result: Reserved keyword")
+
+elif word in keyword.softkwlist:
+    print("Result: Soft keyword")
+
+elif not word.isidentifier():
+    print("Result: Invalid identifier")
+
+else:
+    print("Result: Valid identifier")
+```
+
+Example:
+
+```text
+Enter a variable name: class
+Result: Reserved keyword
+```
+
+Another test:
+
+```text
+Enter a variable name: username
+Result: Valid identifier
+```
+
+### 11\. Practical exercises
+
+Try these five challenges in your Termux terminal.
+
+Your coding checklist
+
+0/5 completed
+
+Challenge 1: Write a program using \`if\`, \`else\`, and \`and\` to check whether a user is at least 18 and verified.
+
+Hint: Use two Boolean conditions.
+
+Challenge 2: Create a function using \`def\` and \`return\` that multiplies two numbers.
+
+Hint: The function should accept two arguments.
+
+Challenge 3: Create a loop using \`for\` and \`continue\` that prints numbers from 1 to 10 but skips 5.
+
+Hint: Use range(1, 11).
+
+Challenge 4: Create a program using \`try\` and \`except\` that handles invalid integer input.
+
+Hint: Convert the input with int().
+
+Challenge 5: Create a class called User with a username attribute and create one object.
+
+Hint: Use __init__() to initialize the username.
+
+### 0% completed
+
+My recommendation: Don't just memorize these keywords. Learn how they work together to build real applications. The next important topic is Python operators, expressions and control flow, which will help you write your own security-testing scripts.
