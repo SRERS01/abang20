@@ -1,0 +1,12 @@
+user@user-Latitude-3380:~/bidget/ubuntubitget$ ls
+'Bitget Wallet.apk'
+user@user-Latitude-3380:~/bidget/ubuntubitget$ adb devices
+List of devices attached
+emulator-5554	device
+
+user@user-Latitude-3380:~/bidget/ubuntubitget$ adb -s emulator-5554 install 'Bitget Wallet.apk'
+Performing Streamed Install
+Success
+user@user-Latitude-3380:~/bidget/ubuntubitget$ 
+
+
