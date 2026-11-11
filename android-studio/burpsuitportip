@@ -1,0 +1,18 @@
+The command adb shell settings put global http_proxy 10.0.2.2:8080 configures an Android Emulator to route all its internet traffic through a proxy server running on your host computer at port 8080.
+Developers commonly use this command to inspect, debug, or modify network requests (like API calls) made by an Android app using tools like Charles Proxy, Fiddler, Burp Suite, or mitmproxy.
+
+Command Breakdown
+
+• adb shell: Opens a remote command-line shell on your connected Android device or emulator via the Android Debug Bridge (ADB).
+• settings put global http_proxy: Modifies Android's system-wide global settings database to set a device-wide HTTP proxy. Unlike setting a proxy in the Wi-Fi settings UI, this applies globally and persists across reboots.
+• 10.0.2.2: This is a special alias IP address built into the Android Emulator. Inside the emulator, 127.0.0.1 (localhost) refers to the emulator itself. 10.0.2.2 acts as a bridge that points directly to your host computer's 127.0.0.1 (localhost).
+• 8080: The network port on your host computer where your proxy debugging tool is actively listening for incoming traffic.
+
+How to Undo It
+
+Because this setting persists even after restarting the emulator, your emulator will lose internet access once you close your proxy tool on your computer. To clear the proxy and restore normal internet access, run:
+bash
+adb shell settings put global http_proxy :0
+Use code with caution.
+(Note: On some older Android versions, you may also need to run adb shell settings delete global http_proxy and adb shell settings delete global global_http_proxy_host followed by a reboot).
+Are you trying to set up network traffic inspection with a specific tool (like Charles, Burp Suite, or mitmproxy), or are you troubleshooting a connection issue after running this command? Let me know so I can help with the exact next steps.
