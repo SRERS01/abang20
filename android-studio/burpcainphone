@@ -1,0 +1,20 @@
+Your PortSwigger CA certificate (9a5ba575.0) is now active in the emulator's system trust store with the proper permissions (-rw-r--r--).
+You can confirm it visually on the emulator by opening Settings > Security > Encryption & credentials > Trusted credentials > System and scrolling down to PortSwigger. Remember not to reboot the emulator, as tmpfs resides in RAM.
+
+Next Steps: Configure Proxy & Install APKs
+
+• Route emulator traffic through Burp Suite: Run this command in your ~/grey terminal to point the emulator's global proxy to your host machine (10.0.2.2 is the emulator's alias for your Ubuntu localhost):bash
+adb shell settings put global http_proxy 10.0.2.2:8080
+Use code with caution.
+(Make sure Burp Suite is listening on All interfaces or 127.0.0.1:8080 under Proxy > Proxy settings.)
+• Install your APKs: Push your target applications onto the emulator from ~/grey:bash
+adb install "Bitget Wallet.apk"
+adb install MoMo.apk
+adb install OKX.apk
+adb install Phantom.apk
+adb install WhatsApp.apk
+Use code with caution.
+• Clear the proxy when finished: Run this command later if you want to restore normal internet access without Burp Suite running:bash
+adb shell settings put global http_proxy :0
+Use code with caution.
+If you run into APK installation errors (such as split APKs or architecture mismatches) or SSL pinning blocks on any of those apps, paste the error message here and I can help you resolve it.
