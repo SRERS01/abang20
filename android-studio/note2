@@ -1,0 +1,74 @@
+To intercept traffic from your Android Emulator using Burp Suite on Ubuntu, you need to configure Burp's proxy listener, point the emulator's network to it, and install Burp's CA certificate into the Android system.
+Here is the step-by-step guide to get it working:
+
+Step 1: Configure Burp Suite Proxy
+
+1. Open Burp Suite and go to Proxy > Proxy settings.
+2. Click Add under Proxy Listeners.
+3. Set Bind to port to 8082 (or any free port).
+4. Set Bind to address to All interfaces (or select your specific local IP network interface, usually 127.0.0.1 or the specific IP assigned to the emulator bridge like 192.168.x.x). Click OK.
+
+Step 2: Route Emulator Traffic to Burp
+
+You can set the proxy directly through the emulator’s extended menu:
+1. Click the three dots (More) at the bottom of the emulator sidebar menu.
+2. Select Settings > Proxy.
+3. Uncheck Use Android Studio HTTP proxy settings.
+4. Select Manual proxy configuration.
+5. Set Host name to 10.0.2.2 (this is the special alias Android emulators use to route to your host machine's localhost).
+6. Set Port number to 8082.
+7. Click Apply.
+
+Step 3: Install Burp CA Certificate as a System Certificate
+
+Modern Android versions (Android 7+) ignore user-installed certificates for most applications. You must install Burp's certificate as a System certificate via your Ubuntu terminal.
+
+1. Export the Certificate from Burp
+
+• In Burp, go to Proxy > Proxy settings > Import / export CA certificate.
+• Select Certificate in DER format and save it as cacert.der on your desktop.
+
+2. Convert and Rename the Certificate
+
+Open your Ubuntu terminal and run the following commands to convert the certificate to the format Android requires:
+bash
+# Convert DER to PEM
+openssl x509 -inform DER -in ~/Desktop/cacert.der -out cacert.pem
+
+# Get the subject hash old (Android uses this for the filename)
+HASH=$(openssl x509 -inform PEM -subject_hash_old -in cacert.pem | head -n 1)
+
+# Rename the file using the hash value
+cp cacert.pem "$HASH.0"
+Use code with caution.
+
+3. Push the Certificate to the Emulator via ADB
+
+Make sure your emulator is running and accessible via ADB. In your terminal, run:
+bash
+# Restart ADB with root permissions
+adb root
+
+# Remount the system partition as writable
+adb remount
+
+# Push the certificate to the system folder
+adb push <your_hash_value>.0 /system/etc/security/cacerts/
+
+# Fix permissions on the file
+adb shell chmod 644 /system/etc/security/cacerts/<your_hash_value>.0
+
+# Reboot the emulator to apply changes
+adb reboot
+Use code with caution.
+(Note: If adb remount fails due to read-only restrictions, you may need to launch your emulator from the command line using the -writable-system flag: emulator -avd <Your_AVD_Name> -writable-system).
+
+Step 4: Verify & Intercept
+
+1. Once the emulator reboots, go to Settings > Security > Trusted Credentials > System.
+2. Scroll down to verify that PortSwigger CA is listed.
+3. Turn Intercept is ON in Burp Suite's Proxy tab and open a browser or app on the emulator to begin capturing traffic.
+Let me know if you run into any specific blockers:
+• Are you getting an "adb remount failed" or read-only error?
+• Are you trying to capture traffic from a specific app that implements SSL Pinning?
+• Which Android version is this specific virtual device running?

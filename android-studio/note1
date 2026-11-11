@@ -1,0 +1,42 @@
+I can see you are using Ubuntu on a Dell laptop with an Android emulator (emulator-5554) and installing APK files through ADB.
+
+Your screenshot shows:
+
+Successfully installed
+
+* Bybit
+
+* Binance
+
+* BetPawa
+
+* OneKey
+
+* Trust Wallet
+
+* WhatsApp
+
+Installation failed
+
+* Bron.apk
+
+* Keeper.apk
+
+* My Wallet.apk
+
+The reason for the failures:
+
+`INSTALL_FAILED_OLDER_SDK`
+
+Your emulator currently supports SDK version 30, but those APKs require newer Android SDK versions (31 or 32).
+
+What would you like me to help you do next?
+
+* Upgrade the Android emulator to SDK 32 or higher.
+
+* Fix the three APK installation failures.
+
+* Install and configure all APKs through ADB.
+
+* Set up the emulator for Android application security testing and bug bounty.
+*

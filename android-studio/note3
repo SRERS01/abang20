@@ -1,0 +1,19 @@
+Exactly. Frida's primary function is to "hook" the app.
+In software terms, "hooking" means intercepting the app's internal functions while it is running. Think of Frida as an invisible middleman sitting inside the app.
+
+How the Hook Works
+
+When the app executes its security checks, Frida intercepts the conversation:
+1. The App asks the system: "Are we running on an emulator?"
+2. The Emulator answers: "Yes, my hardware name is 'goldfish' or 'vbox86'."
+3. Frida intercepts the answer (The Hook): It changes the answer before the app reads it.
+4. Frida tells the app: "No, we are running on a real Samsung Galaxy phone."
+5. The App says: "Great!" and continues running instead of crashing.
+
+What Frida Hooks to Stop the Crash
+
+To stop a wallet like Bitget from crashing, a Frida script will typically hook into Android's core identity checks:
+• android.os.Build.FINGERPRINT (Changes it from containing generic to a real device string)
+• android.os.Build.HARDWARE (Hides words like goldfish, ranchu, or vbox86)
+• File system checks (Intercepts requests looking for files like /system/bin/su or emulator drivers, lying and saying they don't exist)
+By altering these values on the fly, you stop the app's detection triggers from firing.
