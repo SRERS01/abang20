@@ -1,0 +1,15 @@
+Android Studio is now launching in the background with process ID 18777.
+Because it is a Snap package, it may take a few seconds for the splash screen and main window to appear on your desktop.
+
+Ready for Your Next Commands
+
+While Android Studio loads, you can go ahead and move back into your APK folder so you are ready as soon as your virtual device finishes booting.
+• Navigate to your APK directory. Run:bash
+cd ~/bidget/ubuntubitget
+Use code with caution.
+• Start your emulator. Inside Android Studio, open Virtual Device Manager (found under More Actions on the welcome screen or the phone icon on the right toolbar) and click the Play button next to your device.
+• Verify ADB connection and install. Once the Android home screen loads on the emulator, run:bash
+adb devices
+adb install "Bitget Wallet.apk"
+Use code with caution.
+Once the emulator boots up and you run adb install, let me know if it outputs Success or if you encounter an error message so we can proceed with your Burp Suite proxy setup.

@@ -1,0 +1,31 @@
+Android Studio is now launching in the background with process ID 18777.
+Because it is a Snap package, it may take a few seconds for the splash screen and main window to appear on your desktop.
+
+Ready for Your Next Commands
+
+While Android Studio loads, you can go ahead and move back into your APK folder so you are ready as soon as your virtual device finishes booting.
+• Navigate to your APK directory. Run:bash
+cd ~/bidget/ubuntubitget
+Use code with caution.
+• Start your emulator. Inside Android Studio, open Virtual Device Manager (found under More Actions on the welcome screen or the phone icon on the right toolbar) and click the Play button next to your device.
+• Verify ADB connection and install. Once the Android home screen loads on the emulator, run:bash
+adb devices
+adb install "Bitget Wallet.apk"
+Use code with caution.
+Once the emulator boots up and you run adb install, let me know if it outputs Success or if you encounter an error message so we can proceed with your Burp Suite proxy setup.
+Since which android-studio points to /snap/bin/android-studio, you installed it via Snap and can launch it directly by typing android-studio.
+
+Launch Commands
+
+• Run in the background. Type the command with an & so your terminal prompt stays free for other commands like adb:bash
+android-studio &
+Use code with caution.
+• Detach completely (optional). If you want Android Studio to stay open even if you close this terminal window later, run:bash
+nohup android-studio >/dev/null 2>&1 &
+Use code with caution.
+
+Next Steps for Your APK
+
+• Start your virtual device. Once Android Studio opens, go to More Actions > Virtual Device Manager (or click the Device Manager icon on the right sidebar) and click the Play button next to your emulator.
+• Install the APK. Once the emulator finishes booting up to the home screen, navigate back to ~/bidget/ubuntubitget in your terminal and run adb install "Bitget Wallet.apk".
+Once the emulator is running, let me know if adb install "Bitget Wallet.apk" succeeds or if you hit an architecture (ABIS) or proxy error.
