@@ -1,0 +1,564 @@
+To find the vulnerabilities that Ghidra cannot discover, you need to expand your investigation beyond reverse engineering.
+
+A complete bug-bounty investigation requires examining the APK, backend, APIs, runtime behavior, network traffic, cloud configuration, authentication, and business logic.
+
+For example, an APK might contain no obvious RCE vulnerability, but its backend API might have an authorization flaw that allows one user to access another user's information.
+
+I'll give you a comprehensive security-testing map, including what to look for, where to look, and which tools to use.
+
+### 1\. The complete application attack surface
+
+### Eight areas you need to investigate
+
+### 01
+
+Android application
+
+APK, Java, Kotlin, native libraries and local storage
+
+Tools: JADX, Ghidra, MobSF
+
+### 02
+
+Backend server
+
+Server-side code, frameworks, databases and execution
+
+Tools: Source review, authorized testing
+
+### 03
+
+API endpoints
+
+Authentication, authorization, input validation and business logic
+
+Tools: Burp Suite, Postman
+
+### 04
+
+Runtime behavior
+
+Functions, data flow, dynamic loading and runtime decisions
+
+Tools: Frida, adb, logcat
+
+### 05
+
+Network communication
+
+HTTP, TLS, WebSockets, DNS and protocol handling
+
+Tools: Wireshark, Burp Suite
+
+### 06
+
+Infrastructure and cloud
+
+Storage, access policies, exposed services and configurations
+
+Tools: Authorized configuration review
+
+### 07
+
+Identity and sessions
+
+Login, tokens, permissions, recovery and session lifecycle
+
+Tools: Burp Suite, API testing
+
+### 08
+
+Business logic
+
+Payments, subscriptions, transactions, rewards and workflows
+
+Tools: Manual testing, multiple test accounts
+
+### 2\. Backend vulnerabilities
+
+Ghidra examines compiled binaries. It does not automatically reveal the source code running on a remote server.
+
+You need to investigate the backend separately.
+
+| Vulnerability               | What to investigate                          |
+| --------------------------- | -------------------------------------------- |
+| RCE                         | Unsafe command execution and code evaluation |
+| Insecure deserialization    | Untrusted object reconstruction              |
+| SQL injection               | Unsafe database queries                      |
+| NoSQL injection             | Unsafe query construction                    |
+| SSRF                        | Server-side URL fetching                     |
+| Path traversal              | Access outside intended directories          |
+| File upload vulnerabilities | Unsafe file processing                       |
+| XXE                         | Unsafe XML processing                        |
+| SSTI                        | Unsafe server-side template rendering        |
+| Authentication bypass       | Incorrect identity verification              |
+| Authorization bypass        | Missing permission checks                    |
+| Information disclosure      | Exposed sensitive information                |
+| Race conditions             | Concurrent operations                        |
+| Cache poisoning             | Incorrect cache key or response handling     |
+| Request smuggling           | Inconsistent HTTP request interpretation     |
+
+How to investigate:
+
+* Map the application's API endpoints.
+
+* Identify which endpoints accept user input.
+
+* Identify what operations each endpoint performs.
+
+* Test input validation.
+
+* Test access control.
+
+* Examine error responses.
+
+* Review server-side implementation when available.
+
+### 3\. API vulnerabilities
+
+This is one of the most important areas for bug bounty.
+
+A mobile application may communicate with dozens or hundreds of API endpoints.
+
+Investigate these categories:
+
+| Category                      | What to find                                |
+| ----------------------------- | ------------------------------------------- |
+| BOLA / IDOR                   | Accessing another user's objects            |
+| BFLA                          | Calling functions without permission        |
+| Mass assignment               | Modifying protected properties              |
+| Excessive data exposure       | Receiving unnecessary sensitive fields      |
+| Broken authentication         | Weak identity verification                  |
+| Broken authorization          | Missing access checks                       |
+| Rate-limit bypass             | Excessive requests                          |
+| Improper inventory management | Forgotten or undocumented API versions      |
+| API injection                 | Unsafe processing of supplied values        |
+| GraphQL weaknesses            | Excessive data access or authorization gaps |
+
+For example, imagine:
+
+```http
+GET /api/users/1001
+Authorization: Bearer USER_A_TOKEN
+```
+
+You should investigate whether USER_A can access only their own data or whether the server improperly allows access to another user's information.
+
+Use two accounts that you control to test this safely.
+
+### 4\. Authentication, authorization and session vulnerabilities
+
+Investigate the complete identity lifecycle, not just the login screen.
+
+| Area             | Vulnerabilities to investigate                    |
+| ---------------- | ------------------------------------------------- |
+| Registration     | Account takeover, improper validation             |
+| Login            | Authentication bypass, brute-force protection     |
+| Password reset   | Weak reset tokens, account takeover               |
+| OTP              | Replay, predictable codes, missing attempt limits |
+| MFA              | MFA bypass, recovery weaknesses                   |
+| Sessions         | Session fixation, improper expiration             |
+| JWT              | Incorrect signature or claims validation          |
+| OAuth            | Redirect URI validation, account-linking flaws    |
+| Logout           | Session invalidation failures                     |
+| Permissions      | Privilege escalation                              |
+| Account recovery | Unauthorized recovery operations                  |
+
+A particularly important test is whether the backend checks permissions on every sensitive operation rather than relying on the mobile application's interface.
+
+### 5\. Runtime vulnerabilities
+
+Static analysis tells you what code exists. Runtime analysis tells you what actually happens when the application runs.
+
+Use:
+
+* Frida
+
+* Android Debug Bridge (ADB)
+
+* Logcat
+
+* Android Studio Profiler
+
+* Burp Suite
+
+Investigate:
+
+| Area                   | What to look for                            |
+| ---------------------- | ------------------------------------------- |
+| Dynamic code loading   | Unexpected executable code loading          |
+| Runtime hooks          | Security checks that can be bypassed        |
+| Sensitive memory       | Exposed credentials or tokens               |
+| Debugging              | Production debugging interfaces             |
+| Local authentication   | Security decisions made only on-device      |
+| WebView                | Unsafe JavaScript/native interactions       |
+| Reflection             | Hidden methods and dynamically invoked code |
+| Runtime configuration  | Debug settings and environment switches     |
+| Certificate validation | Incorrect TLS verification                  |
+| Local storage          | Sensitive data exposed at runtime           |
+
+Remember: bypassing a local check in your own emulator does not automatically mean you have a reportable server-side vulnerability.
+
+### 6\. Network and traffic vulnerabilities
+
+You have already been working with Wireshark. This is where you can expand your investigation.
+
+![Déchiffrer les flux TLS (HTTPS - QUIC) avec Wireshark](https://images.openai.com/static-rsc-4/LU9XZgoxj0gsrbsg2VNZMB5zCtYX9-hjGz9W9FJ3lyEr6FLi2n-Gh6OMjwVXYpG7dD2LSz7S_q4WiCf-DwjDFnKE6TcDyHJHlemY6gllBcemzwRzJ1IBOUYpWXAXUgTfyai0pLlosKHVIjQhnTUP0kBvSirU2l6x2q-38G0Du8WhPzORz6mMJP__qnFMi2Vh?purpose=fullsize)
+
+Investigate:
+
+| Area             | What to look for                              |
+| ---------------- | --------------------------------------------- |
+| HTTP             | Sensitive information transmitted without TLS |
+| HTTPS            | Incorrect certificate validation              |
+| WebSocket        | Missing authorization on messages             |
+| DNS              | Unexpected data leakage                       |
+| HTTP headers     | Security header weaknesses                    |
+| Redirects        | Unsafe redirect handling                      |
+| Cookies          | Missing security attributes                   |
+| Compression      | Information leakage through compression       |
+| Protocol parsing | Inconsistent interpretation of requests       |
+| API responses    | Sensitive fields returned unnecessarily       |
+
+A useful approach is to compare what the application sends with what the server actually processes.
+
+### 7\. Database and storage vulnerabilities
+
+Investigate both the device and the backend database.
+
+Android local storage
+
+* SQLite databases.
+
+* SharedPreferences.
+
+* Room databases.
+
+* Internal files.
+
+* External storage.
+
+* Cached responses.
+
+* Application logs.
+
+* Backup files.
+
+Backend storage
+
+* SQL databases.
+
+* NoSQL databases.
+
+* Redis.
+
+* Object storage.
+
+* Cloud buckets.
+
+* File servers.
+
+* Search indexes.
+
+Look for:
+
+* Unauthorized reads.
+
+* Unauthorized writes.
+
+* Exposed credentials.
+
+* Improper access policies.
+
+* Sensitive data retention.
+
+* Missing encryption.
+
+* Cross-account data exposure.
+
+* Unsafe query construction.
+
+### 8\. Cloud and infrastructure vulnerabilities
+
+An application may be secure while its infrastructure is misconfigured.
+
+Investigate these areas when they are included in the bug-bounty scope:
+
+| Area          | What to investigate                     |
+| ------------- | --------------------------------------- |
+| AWS S3        | Publicly accessible sensitive objects   |
+| Firebase      | Database and storage security rules     |
+| Google Cloud  | Incorrect IAM permissions               |
+| Azure         | Exposed storage and access policies     |
+| Kubernetes    | Exposed dashboards and weak permissions |
+| Docker        | Insecure container configuration        |
+| Redis         | Unauthorized access                     |
+| Elasticsearch | Exposed indexes                         |
+| CI/CD         | Exposed build credentials               |
+| DNS           | Subdomain takeover conditions           |
+| CDN           | Cache configuration and isolation       |
+
+Never assume that a publicly reachable service is automatically vulnerable. Verify unauthorized access or another meaningful security impact.
+
+### 9\. Business logic vulnerabilities
+
+These are especially important because they often cannot be discovered by searching for dangerous functions.
+
+Imagine a shopping application.
+
+You should investigate:
+
+| Feature        | What to test                    |
+| -------------- | ------------------------------- |
+| Product prices | Unauthorized price modification |
+| Shopping cart  | Quantity manipulation           |
+| Payments       | Payment-state manipulation      |
+| Refunds        | Unauthorized refunds            |
+| Coupons        | Reuse and stacking weaknesses   |
+| Wallet         | Unauthorized balance changes    |
+| Transfers      | Unauthorized transactions       |
+| Subscriptions  | Access after expiration         |
+| Rewards        | Duplicate reward claims         |
+| Orders         | Unauthorized order modification |
+
+For these tests, use accounts and transactions you control. Avoid real payments or affecting other customers.
+
+### 10\. Application configuration and deployment
+
+Some weaknesses are not in the code itself.
+
+Investigate:
+
+* Debug mode enabled in production.
+
+* Development endpoints exposed.
+
+* Insecure CORS policies.
+
+* Missing security headers.
+
+* Public source maps.
+
+* Exposed backup files.
+
+* Unprotected administrative interfaces.
+
+* Incorrect file permissions.
+
+* Excessive application permissions.
+
+* Insecure Android exported components.
+
+* Insecure backup configuration.
+
+* Outdated dependencies.
+
+* Vulnerable third-party SDKs.
+
+These can be identified through source review, APK inspection, authorized HTTP testing and configuration review.
+
+### 11\. Third-party libraries and dependencies
+
+An APK may contain vulnerable libraries even if the developer's own code is secure.
+
+Investigate:
+
+| Component                | What to investigate                        |
+| ------------------------ | ------------------------------------------ |
+| Android SDK dependencies | Known vulnerable versions                  |
+| Native .so libraries     | Memory corruption and outdated components  |
+| Java libraries           | Deserialization and parser vulnerabilities |
+| JavaScript packages      | Known dependency vulnerabilities           |
+| Crypto libraries         | Weak or outdated implementations           |
+| WebView SDKs             | Unsafe integration                         |
+| Payment SDKs             | Incorrect security integration             |
+
+Useful tools:
+
+* MobSF
+
+* OWASP Dependency-Check
+
+* Syft
+
+* Grype
+
+* Trivy
+
+A vulnerable dependency is a lead, not automatically an exploitable bug. Establish that the vulnerable component is actually used and that the vulnerable conditions are present.
+
+### 12\. Vulnerabilities specific to Android
+
+Here is another important checklist.
+
+| Android area             | What to investigate                      |
+| ------------------------ | ---------------------------------------- |
+| AndroidManifest.xml      | Exported components                      |
+| Activities               | Unauthorized activity access             |
+| Services                 | Unauthorized service invocation          |
+| Broadcast receivers      | Untrusted broadcasts                     |
+| Content providers        | Data exposure                            |
+| Intents                  | Unsafe intent handling                   |
+| Deep links               | Link hijacking and validation            |
+| WebView                  | JavaScript bridge exposure               |
+| Keystore                 | Key-management weaknesses                |
+| Biometric authentication | Incorrect authentication enforcement     |
+| Clipboard                | Sensitive information exposure           |
+| Notifications            | Sensitive data disclosure                |
+| Backups                  | Sensitive data extraction                |
+| Root detection           | Security decisions enforced only locally |
+| Dynamic features         | Unsafe code loading                      |
+
+Useful reference: OWASP Mobile Application Security Testing Guide.
+
+[Read the OWASP Mobile Security Testing Guide](https://mas.owasp.org/MASTG/?utm_source=chatgpt.com).
+
+### 13\. The tools needed for the remaining investigation
+
+### Your security research toolkit
+
+![Reissuing requests with Burp Repeater - PortSwigger](https://images.openai.com/static-rsc-4/sfZK79IzLIjC8tTQmceOKVwE1sWQHAvxIcunSevjRNqiDDF-C5HMTEwXGLmvqmr1OE_jLnBnxoRkaKVHZ88iDnk9LRB1PAwSUUWuWcWZBBi-sOzD6-7a_ijFkIDKZ_2fxcgcu1RhDiaPmKBU97xULSphZ-CMNSStnMtMfTtqdG7j5kmZKaLjLw0y8ltN0U1f?purpose=fullsize)
+
+Burp Suite
+
+API and HTTP security testing
+
+[Website](https://portswigger.net/burp?utm_source=chatgpt.com)
+
+![Reverse engineering an Android app | by Rene Manqueros | Medium](https://images.openai.com/static-rsc-4/IxbB2jPacLnme4VYSHpMnNijd7aiyn5HBRC2fNVOsHwM2NBPetCVUaelOBUfyxV_aemmUnZne-yAUI1UMTZcLHxOzJK5eaJn-1EKzmHhTfx4sZe5EB5AUyVLme57ejsHbZJovizAD04LEe7oyVCgU28Pw1x6Fv9Wq6N7xJCvaUFTVl5zt9KDIaAC0Ijz3jfJ?purpose=fullsize)
+
+Frida
+
+Runtime instrumentation
+
+[Website](https://frida.re/?utm_source=chatgpt.com)
+
+![](https://images.openai.com/static-rsc-4/VHoKariTva5bw_8TYCBCl28hkogZ0q5DsZLsdQA_umNuYmKtUA-ic2-ZwBkTq81NgVqU9ZPmcS3JjEnicBL0KNRuvRBImVsqN372v3Zgol78qBoBidh2MtyJDBITmfhuEv0sreMEbQHrdoge-hNShuXGRqy-L7e4MXyEw9gNKc3KznoMsYplCPCc2p8hn3nS?purpose=fullsize)
+
+MobSF
+
+Automated APK analysis
+
+[GitHub](https://github.com/MobSF/Mobile-Security-Framework-MobSF?utm_source=chatgpt.com)
+
+![3.3. The Main window - Wireshark Documentation](https://images.openai.com/static-rsc-4/IclmdPyzHxwC3wKTvjPzdTI5dtD4gwSoQPIKKkEsryy4NSivB9-TfEC5KmrKf3Ve-5aAnGX9VPZS791P2Ja2AWiqUr74VX5X43tV8ABBM-KCU5i9Xo8Hh2acFUdoQe1X_yagLQD4TLMyjaaYgf-URv3xfyJV0Dja2KPbiD0V2zRLWoUS4StxsdQe7jWI6S2O?purpose=fullsize)
+
+Wireshark
+
+Network analysis
+
+[Website](https://www.wireshark.org/?utm_source=chatgpt.com)
+
+![Decompiling Android apps – Trickster Dev](https://images.openai.com/static-rsc-4/aguJrDyVPFiAY6Lz5eXUXiqxbYY7KR0Q2n9h9A3u2e260kfkCKAcIosqk-EAVpWQaaQplUERt1Zhy-vdUPRcCMEO3q73sTaQ479dG3OxUFMrZ1_MJb20gOT1H_4Pd4hp6-j5GUTHgvuf2ijEsT0WNmYaLnxmGuOj-9dYHeXF7HvBsVuYK90sHD3TjXCH9gmJ?purpose=fullsize)
+
+JADX
+
+Java and Kotlin inspection
+
+[GitHub](https://github.com/skylot/jadx?utm_source=chatgpt.com)
+
+![How I solved a simple CrackMe challenge with the NSA’s Ghidra | by Denis | We’ve moved to freeCodeCamp.org/news | Medium](https://images.openai.com/static-rsc-4/Jq1DJ8yhFs52ssKtKF7vg9O0U1_Uy_Cjal9oZIev55a6OzF81wo3B6CGdOR81hCUPe8p_dpNr3Wo2ymSgYgywhSL_bPJiG764rKFLkYSljctgPrI7A1NtRaOnLgU3fHwfCJbDWhkHk7lHed8Vu2ietoiIzhqI9iMjTqyNOd7r9jxfcEejQTyNFFLzaOhvsft?purpose=fullsize)
+
+Ghidra
+
+Native binary analysis
+
+[Website](https://ghidra-sre.org/?utm_source=chatgpt.com)
+
+![Melihat log dengan Logcat  |  Android Studio  |  Android Developers](https://images.openai.com/static-rsc-4/EBct3FhoZ0ykuWNIcgpAKcI4ahLpLIcybs5rCDFLyD5xy82h1syDX2dSMyCNxFIyhmqlwx5kwyL6g4KnL05Dxz8Z19GXFIQhQ7x5OfQWd1176xpn9INg9H8Z3sn0jJPwD4JtLr6QLvG8sAcwZ1zv387daz9pYRVsJ2nrXpq_KRwHcBiB-zXsrFC131IKU-3L?purpose=fullsize)
+
+ADB / Logcat
+
+Device and runtime analysis
+
+[Documentation](https://developer.android.com/tools/adb?utm_source=chatgpt.com)
+
+![Container Vulnerability Scanning with Trivy](https://images.openai.com/static-rsc-4/ip5YIGfgDWI6udPZKos8YzM6xX5oM0rmxhk9Way52tdABgJxzSvJ5LxIRUK7hVHhG6kYLGL_g7-ulngAuCD0kSSdCzOlwfBcy0Q6ylh0G15fd1fTMaQNEz0c7fKDnGEmxTqS4TvMdAMsTXawL54jmT4djF1b3IQCjnZdL34puFkJ1pEiBqlyG7nk0gW3ZTOO?purpose=fullsize)
+
+Trivy
+
+Dependency and configuration scanning
+
+[Website](https://trivy.dev/?utm_source=chatgpt.com)
+
+### 14\. How to combine everything into one investigation
+
+This is the workflow I recommend for each authorized Android bug-bounty target.
+
+### Complete investigation workflow
+
+* Scope discovery
+
+    Identify authorized domains, APK versions, API hosts and excluded assets.
+
+* APK reconnaissance
+
+    Use JADX, Ghidra and MobSF to discover components, libraries, endpoints and sensitive functions.
+
+* API mapping
+
+    Capture application requests with Burp Suite and document every endpoint and its parameters.
+
+* Authentication testing
+
+    Test login, sessions, tokens, password recovery and account permissions.
+
+* Authorization testing
+
+    Compare two accounts you control and investigate object-level and function-level access.
+
+* Input testing
+
+    Examine validation, injection, parsing, file uploads and deserialization.
+
+* Runtime testing
+
+    Use Frida, ADB and Logcat to investigate actual device behavior.
+
+* Business logic testing
+
+    Test transaction workflows, payments, subscriptions and other sensitive operations.
+
+* Infrastructure review
+
+    Examine permitted cloud resources, configurations and dependencies.
+
+* Evidence and reporting
+
+    Reproduce the issue, establish impact, document affected versions and submit a clear report.
+
+### 15\. What you must understand about finding vulnerabilities
+
+There are three different things you should never confuse:
+
+| Finding                   | Meaning                                          |
+| ------------------------- | ------------------------------------------------ |
+| Suspicious function       | A potentially dangerous API exists               |
+| Vulnerability             | An implementation weakness exists                |
+| Exploitable vulnerability | You can demonstrate unauthorized security impact |
+
+For example:
+
+* Finding `system()` does not prove RCE.
+
+* Finding `ObjectInputStream.readObject()` does not prove insecure deserialization.
+
+* Finding an API endpoint does not prove IDOR.
+
+* Finding a cloud storage bucket does not prove unauthorized access.
+
+You must establish the complete path and impact.
+
+My recommendation: Don't try to scan everything randomly. Build an application map, then investigate each security boundary systematically. No tool or checklist can guarantee every vulnerability, especially when backend source code and infrastructure are unavailable.
+
+### What I recommend we do next
+
+Build a practical Android bug-bounty laboratory on your Ubuntu machine, covering APK analysis, API discovery, backend testing, runtime analysis and business logic.
+
+🔍
+
+Daily Android security practice
+
+Tap to set up
+
+I can also start by teaching you how to build a complete API endpoint inventory from an APK and its network traffic, which gives you a foundation for investigating the backend vulnerabilities that Ghidra cannot see.

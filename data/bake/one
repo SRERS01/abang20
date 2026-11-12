@@ -1,0 +1,632 @@
+Absolutely. If you're using Ghidra for bug bounty research, you need a systematic checklist of things to investigate, not just `system()`, `execve()` and deserialization.
+
+Your objective should be to identify as many security weaknesses as possible in an authorized application, including vulnerabilities that do not involve RCE.
+
+I'll organize this as a reverse-engineering checklist for Android APKs, native libraries and compiled applications.
+
+### 1\. Remote Code Execution (RCE)
+
+High priority
+
+Search for functions and APIs associated with executing code or launching processes.
+
+| Function / API         | What to investigate           |
+| ---------------------- | ----------------------------- |
+| system()               | Shell command execution       |
+| popen()                | Shell process execution       |
+| execve()               | Process execution             |
+| execl()                | Process execution             |
+| execvp()               | Process execution             |
+| Runtime.exec()         | Java process execution        |
+| ProcessBuilder.start() | Java process execution        |
+| dlopen()               | Dynamic library loading       |
+| dlsym()                | Dynamic symbol resolution     |
+| eval()                 | Dynamic code evaluation       |
+| JNI_OnLoad()           | Native library initialization |
+
+Investigate whether untrusted data can control executable code, command arguments or loaded libraries.
+
+### 2\. Command injection
+
+Look for:
+
+```text
+system
+popen
+execve
+execl
+execvp
+posix_spawn
+Runtime.exec
+ProcessBuilder
+```
+
+Investigate:
+
+* User-controlled command arguments.
+
+* Shell interpretation.
+
+* Unsafe string concatenation.
+
+* Environment-variable manipulation.
+
+* Untrusted file paths passed to commands.
+
+* Network data reaching process execution.
+
+### 3\. Insecure deserialization
+
+Look for:
+
+| Technology | Functions / APIs               |
+| ---------- | ------------------------------ |
+| Python     | pickle.loads()                 |
+| PHP        | unserialize()                  |
+| Java       | ObjectInputStream.readObject() |
+| Ruby       | Marshal.load()                 |
+| .NET       | BinaryFormatter.Deserialize()  |
+| C++        | Boost.Serialization            |
+| YAML       | Unsafe object construction     |
+| JSON       | Custom object reconstruction   |
+
+Investigate whether untrusted serialized input can trigger unsafe object reconstruction or unexpected behavior.
+
+### 4\. Memory corruption vulnerabilities
+
+High priority
+
+This is particularly important when analyzing native `.so` libraries.
+
+| Function  | Potential concern           |
+| --------- | --------------------------- |
+| strcpy()  | Buffer overflow             |
+| strcat()  | Buffer overflow             |
+| sprintf() | Buffer overflow             |
+| gets()    | Unbounded input             |
+| memcpy()  | Incorrect copy lengths      |
+| memmove() | Incorrect memory boundaries |
+| scanf()   | Unbounded input             |
+| free()    | Memory-management errors    |
+| malloc()  | Allocation-size errors      |
+| realloc() | Memory-management errors    |
+
+Look for:
+
+* Stack buffer overflow.
+
+* Heap buffer overflow.
+
+* Use-after-free.
+
+* Double free.
+
+* Out-of-bounds read.
+
+* Out-of-bounds write.
+
+* Integer overflow.
+
+* Integer underflow.
+
+* Format-string vulnerabilities.
+
+* Null-pointer dereference.
+
+* Uninitialized memory.
+
+Important: These functions are not automatically vulnerable. Examine sizes, bounds, lifetimes and data flow.
+
+### 5\. Authentication and authorization weaknesses
+
+Search for:
+
+```text
+login
+authenticate
+verifyPassword
+checkPassword
+isAuthenticated
+isAdmin
+hasPermission
+authorize
+validateToken
+verifyToken
+```
+
+Investigate:
+
+* Authentication bypass.
+
+* Hardcoded credentials.
+
+* Hardcoded administrative accounts.
+
+* Weak session validation.
+
+* Missing authorization checks.
+
+* Client-side-only access controls.
+
+* Insecure password reset logic.
+
+* Token validation errors.
+
+* Role manipulation.
+
+* Account takeover paths.
+
+### 6\. Cryptography vulnerabilities
+
+Search for:
+
+| Function / API       | What to investigate                      |
+| -------------------- | ---------------------------------------- |
+| MD5()                | Weak hashing                             |
+| SHA1()               | Weak hashing for security-sensitive uses |
+| DES                  | Weak encryption                          |
+| RC4                  | Weak encryption                          |
+| AES                  | Mode and key management                  |
+| Cipher.getInstance() | Cipher configuration                     |
+| Random()             | Predictability                           |
+| SecureRandom()       | Secure random generation                 |
+| MessageDigest        | Password and data hashing                |
+| KeyStore             | Key storage and access                   |
+
+Look for:
+
+* Hardcoded encryption keys.
+
+* Hardcoded IVs.
+
+* Weak random number generation.
+
+* ECB encryption mode.
+
+* Missing authentication tags.
+
+* Incorrect certificate validation.
+
+* Insecure password storage.
+
+* Reused cryptographic keys.
+
+### 7\. SSL/TLS and certificate validation
+
+Search for:
+
+```text
+X509TrustManager
+checkServerTrusted
+HostnameVerifier
+verify
+SSLContext
+TrustManager
+setHostnameVerifier
+```
+
+Investigate:
+
+* Trusting every certificate.
+
+* Accepting invalid certificates.
+
+* Hostname verification disabled.
+
+* Certificate pinning implemented incorrectly.
+
+* Sensitive information sent over unprotected connections.
+
+* Debug-only certificate bypasses accidentally enabled in production.
+
+### 8\. File-system vulnerabilities
+
+Search for:
+
+```text
+open
+fopen
+fread
+fwrite
+read
+write
+FileInputStream
+FileOutputStream
+rename
+unlink
+chmod
+```
+
+Investigate:
+
+* Path traversal.
+
+* Arbitrary file read.
+
+* Arbitrary file write.
+
+* Insecure temporary files.
+
+* Symlink attacks.
+
+* Insecure file permissions.
+
+* Sensitive files exposed to other applications.
+
+* Unsafe extraction of ZIP archives.
+
+### 9\. Network and communication vulnerabilities
+
+Search for:
+
+```text
+socket
+connect
+send
+recv
+SSL_connect
+SSL_read
+SSL_write
+HttpURLConnection
+OkHttpClient
+WebSocket
+```
+
+Investigate:
+
+* Missing TLS validation.
+
+* Sensitive information exposure.
+
+* Weak authentication of network responses.
+
+* Unsafe protocol parsing.
+
+* Request smuggling opportunities in applicable HTTP implementations.
+
+* SSRF-related client or server logic.
+
+* Insecure network configuration.
+
+### 10\. Android-specific vulnerabilities
+
+This is especially important when your target is an APK.
+
+| Android component/API    | What to investigate         |
+| ------------------------ | --------------------------- |
+| addJavascriptInterface() | WebView bridge exposure     |
+| evaluateJavascript()     | JavaScript injection        |
+| PendingIntent            | Intent security             |
+| sendBroadcast()          | Broadcast exposure          |
+| startActivity()          | Intent handling             |
+| ContentProvider          | Unauthorized data access    |
+| FileProvider             | File-sharing configuration  |
+| DexClassLoader           | Dynamic code loading        |
+| WebView                  | Unsafe web content handling |
+| getIntent()              | Untrusted deep-link input   |
+| getSharedPreferences()   | Sensitive local storage     |
+
+Also investigate:
+
+* Exported activities.
+
+* Exported services.
+
+* Exported broadcast receivers.
+
+* Exported content providers.
+
+* Deep-link hijacking.
+
+* Insecure IPC.
+
+* Sensitive data in logs.
+
+* Backup exposure.
+
+* Insecure local databases.
+
+### 11\. Injection vulnerabilities
+
+Search for functions associated with interpreters, parsers and query construction.
+
+| Category             | Functions / APIs         |
+| -------------------- | ------------------------ |
+| SQL injection        | sqlite3_exec, rawQuery   |
+| Command injection    | system, popen            |
+| Code injection       | eval, exec               |
+| JavaScript injection | evaluateJavascript       |
+| XML injection        | XML parser APIs          |
+| LDAP injection       | LDAP query construction  |
+| Template injection   | Template rendering APIs  |
+| XPath injection      | XPath query construction |
+
+Investigate whether untrusted input is incorporated into executable expressions or queries without appropriate parameterization.
+
+### 12\. Information disclosure and hardcoded secrets
+
+Search for:
+
+```text
+api_key
+secret
+password
+access_token
+private_key
+client_secret
+AWS_ACCESS_KEY
+BEGIN PRIVATE KEY
+Authorization
+Bearer
+```
+
+Investigate:
+
+* API keys.
+
+* Cloud credentials.
+
+* Private cryptographic keys.
+
+* Embedded passwords.
+
+* Internal server addresses.
+
+* Debug endpoints.
+
+* Sensitive logs.
+
+* Personal information.
+
+* Database credentials.
+
+Remember that a public client API key is not automatically a security vulnerability. Check its privileges and intended exposure.
+
+### 13\. Business logic vulnerabilities
+
+These are frequently missed when researchers focus only on dangerous functions.
+
+Search for terms such as:
+
+```text
+balance
+withdraw
+deposit
+transfer
+payment
+discount
+coupon
+quantity
+price
+role
+admin
+subscription
+expiry
+```
+
+Investigate:
+
+* Payment manipulation.
+
+* Price manipulation.
+
+* Negative quantities.
+
+* Duplicate transactions.
+
+* Race conditions.
+
+* Subscription bypass.
+
+* Coupon abuse.
+
+* Unauthorized refunds.
+
+* Repeated reward claims.
+
+* Client-side trust of transaction values.
+
+Ghidra may help you understand the implementation, but these vulnerabilities often require testing the application's API and server-side behavior too.
+
+### 14\. Other important vulnerability classes
+
+Here are additional areas worth including in your investigation.
+
+| Vulnerability              | What to investigate                    |
+| -------------------------- | -------------------------------------- |
+| Race conditions            | Concurrent operations                  |
+| TOCTOU                     | Time-of-check/time-of-use errors       |
+| Integer overflow           | Arithmetic and allocation calculations |
+| Integer truncation         | Unsafe type conversions                |
+| Format-string bugs         | User-controlled formatting             |
+| ZIP Slip                   | Unsafe archive extraction              |
+| SSRF                       | Server-side URL fetching               |
+| XXE                        | Unsafe XML external entities           |
+| Path traversal             | File path manipulation                 |
+| Insecure update mechanism  | Untrusted application updates          |
+| Dependency vulnerabilities | Vulnerable bundled libraries           |
+| Weak access control        | Missing permission checks              |
+| Privacy leakage            | Exposure of sensitive information      |
+
+### 15\. Your complete Ghidra search checklist
+
+Use this as your working audit tracker.
+
+Ghidra security audit tracker
+
+0/55 checked
+
+1. Code execution
+
+system, popen, execve
+
+Runtime.exec, ProcessBuilder
+
+eval, dynamic code execution
+
+Dynamic library loading
+
+2. Deserialization
+
+ObjectInputStream.readObject
+
+Native object reconstruction
+
+Unsafe YAML or XML parsing
+
+Custom JSON object reconstruction
+
+3. Memory safety
+
+Buffer overflow
+
+Use-after-free
+
+Double free
+
+Out-of-bounds access
+
+Integer overflow
+
+Format-string vulnerability
+
+4. Authentication
+
+Hardcoded credentials
+
+Authentication bypass
+
+Token validation
+
+Privilege escalation
+
+Session management
+
+5. Cryptography
+
+Hardcoded keys
+
+Weak algorithms
+
+Insecure random generation
+
+TLS validation
+
+Certificate validation
+
+6. Files and storage
+
+Path traversal
+
+Arbitrary file read/write
+
+Insecure file permissions
+
+Sensitive local storage
+
+Unsafe archive extraction
+
+7. Networking
+
+TLS configuration
+
+Unsafe network parsing
+
+Sensitive data exposure
+
+SSRF-related logic
+
+Protocol validation
+
+8. Android security
+
+Exported components
+
+Deep links
+
+WebView bridges
+
+Content providers
+
+PendingIntent
+
+Dynamic code loading
+
+9. Injection
+
+SQL injection
+
+Command injection
+
+JavaScript injection
+
+XML injection
+
+Template injection
+
+10. Information disclosure
+
+API keys and secrets
+
+Private keys
+
+Passwords
+
+Debug endpoints
+
+Sensitive logging
+
+11. Business logic
+
+Payment manipulation
+
+Race conditions
+
+Coupon abuse
+
+Subscription bypass
+
+Unauthorized transactions
+
+Reset checklist
+
+### 16\. How to investigate each finding in Ghidra
+
+Do not stop after finding a function name.
+
+For every suspicious function:
+
+* Find: Search for the function or API.
+
+* Locate: Identify its address and containing function.
+
+* Cross-reference: Examine XREFs to determine callers.
+
+* Trace backwards: Identify where arguments originate.
+
+* Trace forwards: Determine what the function does with the data.
+
+* Check protections: Look for validation, bounds checks and authorization.
+
+* Verify: Reproduce the security impact safely.
+
+* Document: Record evidence and affected versions.
+
+![A Guide to Reversing Shared Objects with Ghidra | by Craig Young | Medium](https://images.openai.com/static-rsc-4/nVk8vi7Zg5ww7e1xuRr37wsNFIffNsBDkq5ZA4G5AH-XV80t0oARrhapk4eRRmJEsuCKqbnceQPpcadI8NMQvwJ9if1voEnP8BEDZjVPRHXjtP8_SMWbDxKgowUkgnI7Jx6OLur7oADdas5vablPZaBxVTieRP9w5bWVvJimAblTBEzEpESYRMsc7RrsCGGj?purpose=fullsize)
+
+### 17\. Important tools to combine with Ghidra
+
+| Tool       | Best use                           |
+| ---------- | ---------------------------------- |
+| JADX       | Java/Kotlin APK analysis           |
+| Ghidra     | Native binary analysis             |
+| MobSF      | Automated mobile security analysis |
+| Frida      | Runtime instrumentation            |
+| Burp Suite | HTTP and API testing               |
+| Wireshark  | Network traffic analysis           |
+
+One crucial limitation: No Ghidra checklist can guarantee that you will find every bug-bounty vulnerability. Some vulnerabilities exist only in backend code, runtime behavior, application configuration or business logic.
+
+For Android bug bounty, I recommend using JADX and Ghidra together: JADX for Java/Kotlin, Ghidra for native code.
+
+My suggested next step is to build a Ghidra automated security-analysis workflow that searches native APK libraries for these categories, groups the results by vulnerability type, and produces a report containing function names, addresses and cross-references.
