@@ -1,0 +1,14 @@
+Almost always yes — in modern systems, achieving Remote Code Execution (RCE) through type confusion requires corrupting or faking a pointer at some stage.
+To run their own code, an attacker must eventually hijack the CPU's Instruction Pointer (the register that tells the processor which memory address to execute next). Without involving pointers or memory addresses, confusing two plain numbers (like an int and a float) usually just produces garbage math rather than code execution.
+
+Why Pointers Are Essential for RCE
+
+• Hijacking Execution Flow: Code lives at specific memory addresses. To make a program jump to malicious code, an attacker must overwrite a function pointer or a return address in memory.
+• Bypassing Security Protections: Modern operating systems randomize where code lives in memory (a defense called ASLR). Attackers have to confuse a number with a data pointer first so they can read memory and find out where the program is located before they can execute anything.
+
+The Only Exceptions (Indirect Paths)
+
+While direct RCE needs pointers, confusing non-pointer types can occasionally lead to RCE through a secondary bug:
+• Out-of-Bounds (OOB) Access: If a program confuses a small int with a large array length, it might read or write past the end of its allocated memory. That overflow can then reach and corrupt a neighboring pointer stored nearby in memory.
+• Logic Bypasses: Confusing a boolean (true/false) with a user-controlled number might trick the program into skipping a security check, granting access to an admin feature that executes commands.
+Would you like to look at how attackers use pointers to bypass modern memory protections like ASLR and DEP during an exploit?
