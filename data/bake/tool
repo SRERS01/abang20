@@ -1,0 +1,43 @@
+The best single tool to run directly in the Ubuntu terminal for finding exposed keys, dangerous permissions, and risky commands without full decompilation is Trueseeing, followed closely by apkleaks and Quark-Engine.
+All three run natively in the command line, require no GUI, and scan the raw APK directly.
+
+1. Trueseeing (Best All-in-One Terminal Scanner)
+
+Trueseeing analyzes the APK's bytecode and manifest directly from the terminal. It checks for hardcoded API keys, insecure network settings, weak encryption, and dangerous commands in one pass.
+• Install on Ubuntu:bash
+pipx install trueseeing
+Use code with caution.
+(If you don't have pipx, run sudo apt update && sudo apt install pipx first, or use pip install trueseeing.)
+• Run a full security scan in terminal:bash
+trueseeing -qc your_app.apk
+Use code with caution.
+(The -qc flags run a quick scan in quiet mode and print all findings directly to your terminal screen.)
+
+2. apkleaks (Fastest for Exposed Keys & URLs)
+
+If you only want a rapid terminal dump of hardcoded API keys, tokens, and endpoints, apkleaks is the lightest option.
+• Install on Ubuntu:bash
+pipx install apkleaks
+Use code with caution.
+• Run in terminal:bash
+apkleaks -f your_app.apk
+Use code with caution.
+(It prints categorized secrets, Google/AWS keys, and hardcoded URLs right in your terminal output.)
+
+3. Quark-Engine (Best for Dangerous Behaviors & Commands)
+
+If you want to detect dangerous behavior chains (like executing shell commands, reading contacts, or sending silent SMS), Quark-Engine runs a rule-based scan in the terminal.
+• Install on Ubuntu:bash
+pipx install quark-engine
+Use code with caution.
+• Update rules and scan in terminal:bash
+freshquark
+quark -a your_app.apk -s
+Use code with caution.
+(The -s flag prints a clean summary table of dangerous behaviors directly in your terminal.)
+
+Which One Should You Pick?
+
+• Choose Trueseeing if you want one terminal command that catches both exposed keys and code-level security flaws.
+• Choose apkleaks if you want the fastest possible scan strictly for secrets and URLs.
+Would you like help interpreting the scan results once you run one of these tools, or do you need commands to export the terminal output into a clean report file?
