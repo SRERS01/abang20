@@ -1,0 +1,53 @@
+You're very close. That's one of the most important principles in application security.
+
+When user-controlled data is interpreted as executable code, you may have an injection vulnerability. But it doesn't automatically mean RCE or that the system is compromised.
+
+Consider these distinctions:
+
+| User data interpretation                    | Potential vulnerability        |
+| ------------------------------------------- | ------------------------------ |
+| Data treated as ordinary text               | Usually safe                   |
+| Data treated as a mathematical expression   | Expression injection           |
+| Data treated as SQL                         | SQL injection                  |
+| Data treated as JavaScript                  | JavaScript injection           |
+| Data treated as an operating-system command | OS command injection           |
+| Data treated as a serialized object         | Insecure deserialization       |
+| Data treated as a template                  | Server-side template injection |
+
+### The critical security principle
+
+Consider this Python example:
+
+```python
+user_input = "10 + 20"
+
+result = eval(user_input)
+```
+
+The application is interpreting user input as Python code rather than ordinary text.
+
+Compare it with:
+
+```python
+user_input = "10 + 20"
+
+result = user_input
+```
+
+Here, the input remains ordinary text.
+
+### When is it actually game over?
+
+You need to establish three things:
+
+* Attacker-controlled input reaches an interpreter or execution function.
+
+* The attacker can influence what that interpreter executes.
+
+* The execution has security impact within the application's permissions and environment.
+
+Remember this
+
+Data should remain data, not become instructions.
+
+This principle is fundamental to finding injection vulnerabilities in Python, PHP, JavaScript, Java, C# and other languages.

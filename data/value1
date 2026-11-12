@@ -1,0 +1,230 @@
+Absolutely. This is a very important concept in application security, especially when performing source-code review and bug bounty testing.
+
+User-controlled data can be interpreted in many different ways. Each interpretation creates a different attack surface.
+
+Below is a security-focused classification of the major ways data can be treated by an application.
+
+### 1\. Data treated as executable code
+
+Code injection attack surface
+
+| Interpretation        | Associated vulnerability       |
+| --------------------- | ------------------------------ |
+| Python code           | Python code injection          |
+| JavaScript code       | JavaScript injection           |
+| PHP code              | PHP code injection             |
+| Java code             | Java code injection            |
+| Ruby code             | Ruby code injection            |
+| Shell commands        | OS command injection           |
+| PowerShell commands   | PowerShell injection           |
+| SQL statements        | SQL injection                  |
+| NoSQL queries         | NoSQL injection                |
+| LDAP filters          | LDAP injection                 |
+| XPath expressions     | XPath injection                |
+| Regular expressions   | ReDoS / regex injection        |
+| Expression language   | Expression injection           |
+| Template instructions | Server-side template injection |
+
+### 2\. Data treated as mathematical expressions
+
+| Interpretation              | Potential vulnerability      |
+| --------------------------- | ---------------------------- |
+| Arithmetic expressions      | Expression injection         |
+| Dynamic calculations        | Unsafe expression evaluation |
+| Mathematical formulas       | Formula injection            |
+| Symbolic expressions        | Unsafe symbolic evaluation   |
+| Custom operator expressions | Operator-related logic flaws |
+
+Example:
+
+```python
+result = eval(user_input)
+```
+
+### 3\. Data treated as serialized objects
+
+Deserialization attack surface
+
+| Data format          | Potential security issue                       |
+| -------------------- | ---------------------------------------------- |
+| Python Pickle        | Insecure deserialization                       |
+| Java Serialization   | Deserialization vulnerabilities                |
+| PHP Serialization    | PHP object injection                           |
+| Ruby Marshal         | Unsafe deserialization                         |
+| YAML                 | Unsafe object construction                     |
+| JSON                 | Mass assignment and unsafe object binding      |
+| XML                  | XML deserialization and parser vulnerabilities |
+| .NET BinaryFormatter | Unsafe deserialization                         |
+
+Important: JSON is not inherently dangerous. The risk depends on how the application maps and processes the resulting objects.
+
+### 4\. Data treated as markup or document instructions
+
+| Interpretation            | Potential vulnerability          |
+| ------------------------- | -------------------------------- |
+| HTML                      | HTML injection                   |
+| XML                       | XML injection                    |
+| SVG                       | Script injection / XSS           |
+| Markdown                  | Unsafe HTML rendering            |
+| CSS                       | CSS injection                    |
+| Email HTML                | Email injection / HTML injection |
+| PDF document instructions | Unsafe document processing       |
+
+### 5\. Data treated as file paths or filenames
+
+| Interpretation          | Potential vulnerability |
+| ----------------------- | ----------------------- |
+| Filesystem path         | Path traversal          |
+| Filename                | File overwrite          |
+| Directory name          | Directory traversal     |
+| Archive extraction path | Zip Slip                |
+| Configuration file path | Local file inclusion    |
+| Template filename       | Template injection      |
+| Log filename            | Log manipulation        |
+
+### 6\. Data treated as network instructions
+
+| Interpretation      | Potential vulnerability      |
+| ------------------- | ---------------------------- |
+| URL                 | SSRF                         |
+| HTTP headers        | HTTP header injection        |
+| HTTP request        | HTTP request smuggling       |
+| DNS name            | DNS rebinding-related issues |
+| Proxy configuration | Proxy abuse                  |
+| WebSocket messages  | Protocol injection           |
+| SMTP commands       | SMTP injection               |
+| FTP commands        | FTP injection                |
+
+### 7\. Data treated as database instructions
+
+| Interpretation                | Potential vulnerability              |
+| ----------------------------- | ------------------------------------ |
+| SQL query                     | SQL injection                        |
+| NoSQL query object            | NoSQL injection                      |
+| Database table or column name | Unsafe query construction            |
+| Stored procedure parameters   | Injection through unsafe dynamic SQL |
+| Database connection string    | Connection-string injection          |
+
+### 8\. Data treated as authentication or authorization instructions
+
+| Interpretation           | Potential vulnerability               |
+| ------------------------ | ------------------------------------- |
+| User role                | Privilege escalation                  |
+| is_admin property        | Mass assignment                       |
+| User ID                  | IDOR                                  |
+| JWT claims               | Authentication or authorization flaws |
+| Session identifiers      | Session manipulation                  |
+| Access-control flags     | Authorization bypass                  |
+| Account ownership fields | Broken object-level authorization     |
+
+### 9\. Data treated as configuration
+
+| Interpretation        | Potential vulnerability         |
+| --------------------- | ------------------------------- |
+| YAML configuration    | Unsafe configuration parsing    |
+| JSON configuration    | Configuration manipulation      |
+| Environment variables | Environment injection           |
+| Application settings  | Security misconfiguration       |
+| Build configuration   | Build pipeline compromise       |
+| CI/CD configuration   | Pipeline injection              |
+| Feature flags         | Unauthorized feature activation |
+
+### 10\. Data treated as programming-language objects and types
+
+| Interpretation   | Potential vulnerability                |
+| ---------------- | -------------------------------------- |
+| Object           | Unsafe object manipulation             |
+| Class name       | Unsafe dynamic class loading           |
+| Method name      | Unsafe reflection                      |
+| Function name    | Dynamic function invocation            |
+| Property name    | Prototype pollution or mass assignment |
+| Type identifier  | Type confusion                         |
+| Object reference | Reference manipulation                 |
+| Callback         | Unsafe callback invocation             |
+
+### 11\. Data treated as binary or protocol instructions
+
+| Interpretation    | Potential vulnerability            |
+| ----------------- | ---------------------------------- |
+| Raw bytes         | Parser vulnerabilities             |
+| Binary structures | Integer overflow                   |
+| Length fields     | Buffer overflow                    |
+| Memory pointers   | Memory corruption                  |
+| Protocol opcodes  | Protocol manipulation              |
+| Image metadata    | Unsafe image processing            |
+| Archive metadata  | Archive extraction vulnerabilities |
+| File signatures   | Parser confusion                   |
+
+### 12\. Data treated as browser instructions
+
+| Interpretation          | Potential vulnerability        |
+| ----------------------- | ------------------------------ |
+| DOM content             | DOM-based XSS                  |
+| JavaScript URL          | XSS                            |
+| Event-handler attribute | XSS                            |
+| Browser storage values  | Client-side logic manipulation |
+| PostMessage data        | Origin-validation flaws        |
+| HTML attributes         | Attribute injection            |
+| Browser navigation URL  | Open redirect                  |
+
+### The big picture: Your application security map
+
+One attacker-controlled input can travel through multiple interpreters.
+
+Attacker-controlled data
+
+Code
+
+Code injection
+
+Database
+
+SQL / NoSQL injection
+
+Shell
+
+Command injection
+
+Template
+
+SSTI
+
+Browser
+
+XSS
+
+Object
+
+Deserialization
+
+Filesystem
+
+Path traversal
+
+Network
+
+SSRF
+
+Security impact
+
+Data disclosure · Account takeover · Privilege escalation · Remote code execution
+
+### What I recommend learning next
+
+For bug bounty, don't memorize every vulnerability name independently. Learn to recognize the interpreter that processes the data.
+
+I would prioritize these five areas:
+
+* Code execution: `eval`, `exec`, dynamic function invocation.
+
+* Command execution: `system`, `exec`, `subprocess`, `child_process`.
+
+* Database execution: SQL and NoSQL query construction.
+
+* Object construction: deserialization, reflection and mass assignment.
+
+* Browser interpretation: HTML, JavaScript and DOM manipulation.
+
+One important distinction: not every interpretation is automatically vulnerable. The vulnerability occurs when the application gives attacker-controlled data unintended meaning or authority.
+
+The ultimate skill in source-code auditing is tracing data from its entry point (source), through transformations, to its final interpreter or security-sensitive operation (sink).

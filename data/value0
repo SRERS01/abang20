@@ -1,0 +1,200 @@
+Yes. In application security and bug bounty, you need to recognize the functions that can allow attacker-controlled input to reach operating-system command execution.
+
+These functions are commonly associated with OS Command Injection and Remote Code Execution (RCE).
+
+Below are the important languages and their dangerous functions.
+
+### 1\. Python
+
+High-risk functions
+
+| Function             | Purpose                                                  |
+| -------------------- | -------------------------------------------------------- |
+| os.system()          | Executes a system command                                |
+| os.popen()           | Executes a command and reads output                      |
+| subprocess.call()    | Runs an external command                                 |
+| subprocess.run()     | Runs an external command                                 |
+| subprocess.Popen()   | Creates a subprocess                                     |
+| commands.getoutput() | Executes a command and captures output (legacy Python 2) |
+
+Example:
+
+```python
+import subprocess
+
+subprocess.run(["whoami"])
+```
+
+### 2\. PHP
+
+| Function     | Purpose                                           |
+| ------------ | ------------------------------------------------- |
+| system()     | Executes a command and displays output            |
+| exec()       | Executes a command                                |
+| shell_exec() | Executes a command and returns output             |
+| passthru()   | Executes a command and passes output              |
+| popen()      | Opens a process                                   |
+| proc_open()  | Starts a process with configurable pipes          |
+| pcntl_exec() | Replaces the current process with another program |
+
+Example:
+
+```php
+<?php
+echo shell_exec("whoami");
+?>
+```
+
+### 3\. JavaScript / Node.js
+
+Node.js provides command execution through its `child_process` module.
+
+| Function       | Purpose                             |
+| -------------- | ----------------------------------- |
+| exec()         | Executes a command through a shell  |
+| execSync()     | Synchronous shell command execution |
+| spawn()        | Starts a process                    |
+| spawnSync()    | Synchronous process execution       |
+| execFile()     | Executes a program directly         |
+| execFileSync() | Synchronous direct execution        |
+| fork()         | Starts another Node.js process      |
+
+Example:
+
+```javascript
+const { execFile } = require("child_process");
+
+execFile("whoami", [], (error, stdout) => {
+    console.log(stdout);
+});
+```
+
+### 4\. Java
+
+| Function                    | Purpose                                 |
+| --------------------------- | --------------------------------------- |
+| Runtime.getRuntime().exec() | Starts an operating-system process      |
+| ProcessBuilder.start()      | Starts a process                        |
+| ProcessBuilder.command()    | Configures the executable and arguments |
+
+Example:
+
+```java
+Process process =
+    new ProcessBuilder("whoami").start();
+```
+
+### 5\. C / C++
+
+| Function        | Purpose                             |
+| --------------- | ----------------------------------- |
+| system()        | Executes a shell command            |
+| popen()         | Executes a command and opens a pipe |
+| execve()        | Replaces the current process        |
+| execvp()        | Executes a program using PATH       |
+| execl()         | Executes a program                  |
+| fork()          | Creates a process                   |
+| CreateProcess() | Starts a process on Windows         |
+
+Important: `fork()` alone does not execute a system command.
+
+### 6\. Ruby
+
+| Function   | Purpose                                    |
+| ---------- | ------------------------------------------ |
+| system()   | Executes a command                         |
+| exec()     | Replaces the current process               |
+| spawn()    | Starts a subprocess                        |
+| IO.popen() | Opens a process pipe                       |
+| Backticks  | Execute a shell command and capture output |
+| %x()       | Executes a shell command                   |
+
+### 7\. Perl
+
+| Function  | Purpose                                |
+| --------- | -------------------------------------- |
+| system()  | Executes a command                     |
+| exec()    | Replaces the current process           |
+| qx()      | Executes a command and captures output |
+| Backticks | Execute a command                      |
+| open()    | Can open a process pipe                |
+
+### 8\. C#
+
+| Function          | Purpose                                |
+| ----------------- | -------------------------------------- |
+| Process.Start()   | Starts a process                       |
+| ProcessStartInfo  | Configures process execution           |
+| Process.StartInfo | Provides process startup configuration |
+
+Example:
+
+```csharp
+using System.Diagnostics;
+
+Process.Start("whoami");
+```
+
+### 9\. Go
+
+| Function             | Purpose                            |
+| -------------------- | ---------------------------------- |
+| exec.Command()       | Creates a command                  |
+| cmd.Start()          | Starts command execution           |
+| cmd.Run()            | Starts and waits for execution     |
+| cmd.Output()         | Executes and captures output       |
+| cmd.CombinedOutput() | Captures standard output and error |
+
+Example:
+
+```go
+cmd := exec.Command("whoami")
+output, err := cmd.Output()
+```
+
+### 10\. PowerShell
+
+| Function          | Purpose                               |
+| ----------------- | ------------------------------------- |
+| Invoke-Expression | Evaluates a string as PowerShell code |
+| Start-Process     | Starts a process                      |
+| Invoke-Command    | Executes commands on a computer       |
+| &                 | Call operator for executing commands  |
+
+### The most important distinction for bug bounty
+
+Knowing the function is only the beginning. You must establish whether attacker-controlled input can reach it.
+
+Typical command-injection data flow
+
+Attacker-controlled HTTP input
+
+Query parameter, header, JSON body or form field
+
+Application input processing
+
+Validation, concatenation, conversion or interpolation
+
+Command execution function
+
+system(), exec(), exec(), Process.Start(), etc.
+
+Operating system process
+
+Potential RCE
+
+### What you should remember
+
+Three things determine whether these functions create a vulnerability:
+
+* Attacker control: Can an attacker influence the command or its arguments?
+
+* Execution context: Does the application execute the input through a shell or another dangerous interpreter?
+
+* Security controls: Are inputs validated, safely passed as separate arguments, and restricted?
+
+For example, Python's `subprocess.run(["whoami"])` is not automatically vulnerable. Passing attacker input into a shell command through unsafe string construction is much more dangerous.
+
+My recommendation: Learn to identify these functions during source-code review, then trace input from HTTP requests to the execution point in authorized bug-bounty targets.
+
+I can teach you how to build a Python, PHP, Node.js and Java source-code scanner that detects these dangerous functions and traces potentially attacker-controlled input.
