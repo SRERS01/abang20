@@ -1,0 +1,52 @@
+You can install Mobile Security Framework (MobSF) on Ubuntu using Docker for the fastest static analysis setup or directly from GitHub if you need full dynamic analysis support. Once running, you can access the web interface at http://localhost:8000 using the default credentials mobsf and mobsf. [1] (https://www.bordergate.co.uk/mobsf/), [2] (https://infosecwriteups.com/mobsf-simplifying-mobile-app-security-testing-b3103739eb76), [3] (https://www.youtube.com/watch?v=PyWC_HcXw28&t=115), [4] (https://medium.com/@kemalptn2023/practical-setup-of-mobile-penetration-testing-environments-android-focused-440f33085c12)
+
+Option 1: Docker Installation (Fastest for Static Analysis)
+
+Running the official container from Docker Hub avoids dependency conflicts and works well for quick static scans. [1] (https://hub.docker.com/r/opensecurity/mobile-security-framework-mobsf/dockerfile), [2] (https://medium.com/@kemalptn2023/practical-setup-of-mobile-penetration-testing-environments-android-focused-440f33085c12)
+• Install Docker Engine. Update your package index and install Docker if it is not already on your system:bash
+sudo apt update && sudo apt install -y docker.io
+Use code with caution.
+• Pull the official MobSF image. Download the latest release from the repository:bash
+sudo docker pull opensecurity/mobile-security-framework-mobsf:latest
+Use code with caution.
+• Run the MobSF container. Start the service and map port 8000 to your local machine: [1] (https://www.youtube.com/watch?v=LU4mYcLUIaM), [2] (https://www.youtube.com/watch?v=0wwBCjBZPUc)
+bash
+sudo docker run -it --rm -p 8000:8000 opensecurity/mobile-security-framework-mobsf:latest
+Use code with caution.
+
+Option 2: Manual Installation (Best for Dynamic Analysis)
+
+Installing directly from the MobSF GitHub Repository gives MobSF direct access to local Android emulators like Genymotion or Android Studio. [1] (https://github.com/mobsf/mobile-security-framework-mobsf), [2] (https://www.bordergate.co.uk/mobsf/), [3] (https://wiki.elvis.science/index.php?title=Install_Mobile-Security-Framework-MobSF)
+• Install required system dependencies. Update your system and install Python, Java, Git, and build tools:bash
+sudo apt update && sudo apt install -y git python3-dev python3-venv python3-pip build-essential libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev wkhtmltopdf default-jre
+Use code with caution.
+• Clone the MobSF repository. Download the source code and enter the directory:bash
+git clone https://github.com/MobSF/Mobile-Security-Framework-MobSF.git
+cd Mobile-Security-Framework-MobSF
+Use code with caution.
+• Run the setup script. Execute the installer to create a virtual environment and configure dependencies:bash
+./setup.sh
+Use code with caution.
+• Start the MobSF server. Launch the web dashboard once the installation finishes: [1] (https://gist.github.com/reintakura/217f789e6430213f45bc7c09f6432144), [2] (https://wiki.elvis.science/index.php?title=Install_Mobile-Security-Framework-MobSF)
+bash
+./run.sh
+Use code with caution.
+
+Quick Comparison
+
+
+Feature	Docker Installation	Manual GitHub Installation
+Setup Speed	Very fast (single image pull)	Slower (compiles local dependencies)
+Static Analysis (APK/IPA)	Fully supported	Fully supported
+Dynamic Analysis	Limited without extra network bridges	Fully supported with local emulators
+Data Persistence	Resets on exit when using --rm	Saves scan history locally
+
+
+Accessing MobSF
+
+• Open your browser. Navigate to http://localhost:8000 once the terminal shows the server is listening.
+• Log in to the dashboard. Enter mobsf as both the username and password. [1] (https://infosecwriteups.com/mobsf-simplifying-mobile-app-security-testing-b3103739eb76), [2] (https://medium.com/@kemalptn2023/practical-setup-of-mobile-penetration-testing-environments-android-focused-440f33085c12), [3] (https://www.youtube.com/watch?v=PyWC_HcXw28&t=115)
+If you'd like, let me know:
+• Which Ubuntu version you are running
+• Whether you need dynamic analysis with an Android emulator
+I can help you configure persistent Docker storage or connect an emulator like Genymotion or Android Studio.
