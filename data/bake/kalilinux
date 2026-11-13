@@ -1,0 +1,36 @@
+You can run Kali Linux inside Ubuntu using Docker by pulling the official kalilinux/kali-rolling image from Docker Hub. The base Docker image is minimal and comes with no pre-installed security tools, so you will need to install tool packages inside the container after launching it.
+
+Step 1: Pull and Start Kali Linux
+
+Make sure Docker is installed on your Ubuntu system, then download and launch the container.
+• Pull the official Kali image. Download the latest rolling release from Docker Hub:bash
+sudo docker pull kalilinux/kali-rolling
+Use code with caution.
+• Run an interactive container. Start the container with a name so you can easily return to it later without losing your installed tools:bash
+sudo docker run -it --name my-kali kalilinux/kali-rolling /bin/bash
+Use code with caution.
+
+Step 2: Install Kali Tools Inside the Container
+
+Once you are inside the Kali root@# prompt, update the package list and install the tools you need.
+• Update package repositories. Refresh the APT cache before installing anything:bash
+apt update && apt upgrade -y
+Use code with caution.
+• Install individual tools. Add specific utilities like Nmap, Metasploit, or SQLMap to keep the container lightweight:bash
+apt install -y nmap sqlmap metasploit-framework
+Use code with caution.
+• Install a full Kali toolset (optional). Use Kali metapackages if you want the standard suite of penetration testing tools (this requires several gigabytes of disk space):bash
+apt install -y kali-linux-headless
+Use code with caution.
+
+Step 3: Manage Your Kali Container
+
+Avoid using the --rm flag when running Kali so your installed tools stay saved when you exit.
+• Exit the container. Type exit inside the Kali terminal to stop and leave the container.
+• Restart your saved container. Bring your Kali environment back online anytime with its installed tools intact:bash
+sudo docker start -ai my-kali
+Use code with caution.
+If you'd like, let me know:
+• Which specific Kali tools you plan to run
+• Whether you need GUI/desktop access inside the container
+I can help you set up port forwarding, persistent shared folders, or a browser-based desktop for Kali.
