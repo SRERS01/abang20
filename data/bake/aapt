@@ -1,0 +1,136 @@
+AAPT (Android Asset Packaging Tool) is used to inspect and analyze Android APK resources, package information, manifests, and compiled resource tables.
+
+When you run AAPT against an APK, it can inspect several types of files and information.
+
+### 1\. Files inside an APK that AAPT can inspect
+
+| APK file            | What AAPT can inspect                                                          |
+| ------------------- | ------------------------------------------------------------------------------ |
+| AndroidManifest.xml | Package, permissions, activities, services, receivers, providers, SDK versions |
+| resources.arsc      | Compiled resource table, resource IDs, configurations and values               |
+| res/                | Android application resources                                                  |
+| res/layout/*.xml    | Layout resources and references                                                |
+| res/values/*.xml    | Strings, colors, styles, dimensions and themes                                 |
+| res/drawable/       | Drawable resources                                                             |
+| res/mipmap/         | Application launcher icons                                                     |
+| res/menu/           | Menu resources                                                                 |
+| res/xml/            | XML resource files                                                             |
+| res/raw/            | Raw resource entries                                                           |
+| assets/             | Asset files (limited resource/package inspection)                              |
+| META-INF/           | Not normally interpreted as Android resources                                  |
+| classes.dex         | Not decompiled or analyzed as Java code                                        |
+| lib/                | Native libraries are not analyzed internally                                   |
+| kotlin/             | Not analyzed as Kotlin source code                                             |
+
+Important: AAPT does not understand every file in an APK. It primarily understands Android's resource and packaging structures.
+
+### 2\. AAPT commands to inspect an APK
+
+Assume your APK is named `target.apk`.
+
+1\. Display package information
+
+```bash
+aapt dump badging target.apk
+```
+
+2\. Display the manifest
+
+```bash
+aapt dump xmltree target.apk AndroidManifest.xml
+```
+
+3\. Display resource information
+
+```bash
+aapt dump resources target.apk
+```
+
+4\. Display resource configurations
+
+```bash
+aapt dump configurations target.apk
+```
+
+5\. Display APK strings
+
+```bash
+aapt dump strings target.apk
+```
+
+6\. Display XML file contents
+
+```bash
+aapt dump xmltree target.apk res/xml/example.xml
+```
+
+### 3\. What AAPT can help you discover during bug bounty
+
+| Information                               | Security relevance                            |
+| ----------------------------------------- | --------------------------------------------- |
+| Permissions                               | Identify sensitive permissions                |
+| Exported activities                       | Potentially accessible application components |
+| Exported services                         | Potential component exposure                  |
+| Exported receivers                        | Potential broadcast attack surface            |
+| Content providers                         | Potential data exposure                       |
+| Deep links                                | Potential intent-handling weaknesses          |
+| SDK versions                              | Identify outdated platform compatibility      |
+| Debuggable flag                           | Identify debug configuration                  |
+| Network security configuration references | Investigate network security settings         |
+| Backup configuration                      | Investigate backup exposure                   |
+
+Remember: discovering an exported component or permission does not automatically mean a vulnerability exists.
+
+### 4\. AAPT vs APKTool vs JADX vs Ghidra
+
+![Android adb的常用命令 - pple - 博客园](https://images.openai.com/static-rsc-4/EzvKilrwnado5AnLz5NYROGP2WDLGM4y30cJYWKgrMx5YVMOmjBhLBUxPfx_T0nO75UwEZN7FegqbTuM5qRQHhs-NJYmY9mhtm_hlf8TCs_lhXPvrOKP9sJSP_egNAYhM3E2tPLHfHNGTdtISUuDtTaj1V-U12TAXGenOenYf4lODHkFVBoS-ry-45KqRyiM?purpose=fullsize)
+
+AAPT
+
+Inspects Android resources, manifest information and package metadata.
+
+![Download Apktool 2.11.1 for Windows - Filehippo.com](https://images.openai.com/static-rsc-4/xa35jmoR5NECpftA8dGvwCXMAoPGbgEBe1af4eAJ7fxVviVQQLnQCK_JttA6d-0_kqymXbZEp8rE8uJWxtXNOBXR_aRD-M5JoHoLv9gWZRomU37K5MFnKbMgI28ZXnw5EECpfFcMe0LmktJdN3pHhN7_Q7YbeWixojihEn23htQPLy6rO-RlHEslg7bPcWCX?purpose=fullsize)
+
+APKTool
+
+Decodes resources and manifest and disassembles DEX into Smali.
+
+![Jadx | Resources](https://images.openai.com/static-rsc-4/E9oYKbVCNLuTOzqWVFCujI0j2Tn9L80bXTLj7Ia2FiWj33XLBgl7vhmJpEUPYdvz9aHjNf5CzLvcvEMpjZ4_Ot5c27Xg49HjnAzIsJXMfo7Zyhn5cTTvojRQmoh3p37mwGM3zeNUM0PH9a144N2zgIUa0FB1lMFQG6HCOoZRgTKOmWyocBHmQxsJvFPBRGJg?purpose=fullsize)
+
+JADX
+
+Converts DEX bytecode into readable Java-like source code.
+
+![File:Ghidra logo.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/09YxZ77MlfuON3ooruJ6k7vpSr0nbvMEKNUkF0Ez6TQLxV7N6rMO3gdi6PsePbU3fbjZ2H2Ai0smnA1ssg99NCHpXlOgCIbGI6RXHPqkd9ubXS-b4l8TysY5msNXO1gH19-_9etxMDUwK6YzBU97OeoAAvynjeG-FwrGP76HwIKGqS3Gi9S32tziMNqiELza?purpose=fullsize)
+
+Ghidra
+
+Analyzes native binaries such as `.so` libraries.
+
+### 5\. My recommended APK inspection workflow
+
+For authorized bug-bounty testing:
+
+```bash
+# 1. Inspect package information
+aapt dump badging target.apk
+
+# 2. Inspect manifest
+aapt dump xmltree target.apk AndroidManifest.xml
+
+# 3. Inspect resources
+aapt dump resources target.apk
+
+# 4. Decode APK
+apktool d target.apk -o decoded/
+
+# 5. Decompile Java-like code
+jadx -d jadx_output target.apk
+
+# 6. Extract native libraries
+unzip target.apk 'lib/*' -d native_libs/
+```
+
+The important distinction: AAPT tells you what resources and package information exist. JADX helps you investigate application logic. APKTool helps you inspect Smali and resources. Ghidra helps you investigate native code.
+
+I can also teach you how to build a complete APK security checklist covering every file type, what to search for, and which tool to use for each during bug bounty.
