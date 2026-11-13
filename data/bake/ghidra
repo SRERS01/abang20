@@ -1,0 +1,27 @@
+jadx only decompiles Dalvik bytecode (.dex files) into Java/Kotlin, so it cannot decompile .so (Shared Object) native libraries. These .so files are compiled C/C++ binaries (ELF format) located inside the APK's lib/ folder, which require a dedicated native disassembler or decompiler.
+
+1. How to Extract .so Files from the APK
+
+Since an APK is just a standard ZIP archive, you can pull the native libraries out directly without waiting for jadx to finish:
+bash
+unzip Wolt.apk "lib/*" -d wolt_native_libs
+Use code with caution.
+• Architecture folders: Inside wolt_native_libs/lib/, you will usually see folders like arm64-v8a, armeabi-v7a, or x86_64. Focus on arm64-v8a, as it is the standard 64-bit architecture for modern Android devices and generally produces cleaner decompilation output.
+
+2. Tools to Inspect and Decompile .so Files
+
+Once extracted, use one of the following tools depending on how deep you need to look:
+• Ghidra (Best Free Decompiler): Developed by the NSA, Ghidra disassembles ARM64/x86 binaries and decompiles them back into readable C-like pseudocode. You can install it on Ubuntu and import the .so file directly into a new project.
+• Radare2 / Cutter: Cutter is a free, open-source GUI powered by Radare2 that offers fast disassembly, string searching, and decompilation via the Ghidra decompiler plugin.
+• Quick Command-Line Inspection: If you only want to check exported functions, linked libraries, or hardcoded strings without opening a heavy GUI, use standard Linux binary utilities:
+	• Check strings: strings -n 6 libexample.so | less
+	• List exported JNI functions: nm -D libexample.so | grep Java_ or readelf -Ws libexample.so
+
+3. Understanding How Java Connects to .so
+
+• JNI Bridges: Look in your jadx output for methods marked with the native keyword (e.g., public native String getSignature();) and calls to System.loadLibrary("name").
+• Matching Functions: A Java method like com.wolt.app.NativeHelper.init() maps to a C function named Java_com_wolt_app_NativeHelper_init inside libname.so, unless it is registered dynamically inside JNI_OnLoad.
+If you'd like specific guidance, let me know:
+• Which .so file you are trying to inspect (e.g., a specific library name)
+• Whether you prefer a GUI decompiler like Ghidra or command-line tools
+I can walk you through setting up the analysis environment or finding the JNI entry points.

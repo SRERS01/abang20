@@ -1,0 +1,24 @@
+The jadx command is likely hanging due to insufficient Java heap memory or decompiling a very large multi-dex APK, which takes significant time after the INFO - loading ... stage. Notice also the typo in your output folder name (wolt_decomipled), though that does not stop the process.
+Large commercial apps like Wolt contain tens of thousands of classes and heavy obfuscation, causing jadx to stall or silently run out of memory on laptops like a Dell Latitude 3380.
+
+Quick Fixes to Try
+
+• Increase Java memory allocation: jadx defaults to a low RAM limit. Run it with explicit heap memory flags so the JVM does not freeze while parsing large DEX files:bash
+JAVA_OPTS="-Xmx4G" jadx -d wolt_decompiled Wolt.apk
+Use code with caution.
+• Skip resources to speed it up: Decoding XML layouts and assets often causes hangs. If you only need the Java/Kotlin source code, use the -r flag:bash
+JAVA_OPTS="-Xmx4G" jadx -r -d wolt_decompiled Wolt.apk
+Use code with caution.
+• Limit thread count: On dual-core or older mobile CPUs, too many threads cause severe thrashing. Limit the jobs with -j:bash
+JAVA_OPTS="-Xmx4G" jadx -j 2 -r -d wolt_decompiled Wolt.apk
+Use code with caution.
+• Verify the APK integrity: Make sure Wolt.apk is not a split APK wrapper or a corrupted download. Run file Wolt.apk or unzip -l Wolt.apk | head to confirm it is a valid archive containing classes.dex.
+
+Checking if It Is Frozen or Working
+
+• Monitor CPU and RAM: Open a second terminal and run htop or top. If java is using high CPU, jadx is still actively working and just needs more time.
+• Enable verbose logging: Add -v (or --log-level DEBUG) to see the exact class or resource where jadx gets stuck.
+If it still fails or throws an error, could you share:
+• The exact error message or output when running with -v
+• How much total RAM your system has
+I can help you adjust the memory flags or extract the DEX files manually.

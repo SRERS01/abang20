@@ -1,0 +1,23 @@
+All of the lines in this batch are benign standard library noise flagged under the [security-log] (low{tentative}) signature. None of these indicate actual security flaws in the application logic.
+
+What These Specific Classes Are
+
+Because the APK has been minified with R8/ProGuard, standard Android framework and Jetpack support libraries have been renamed to short obfuscated identifiers (LN/U;, LV0/c;, etc.). You can identify them directly from their log strings:
+• LN/U;->e() (androidx.core.view.WindowInsetsCompat): Standard AndroidX compatibility code checking via reflection if WindowInsets.CONSUMED exists on older Android versions.
+• LV0/c;->e() (androidx.loader.app.LoaderManagerImpl): Standard dump() method used by Android's dumpsys utility to print loader states (Loaders:, mId=, mStarted=) during system diagnostics.
+• LM3/h;->f() & LT4/a;->g() (Firebase Crashlytics / Analytics): Standard SDK initialization messages registering breadcrumb receivers.
+• LM3/c;->c(), LM4/a;->run(), LS3/f;->b(), LU4/b;->c(): Standard exception handling and debug logging calls inside minified SDKs.
+
+Recommended Next Steps
+
+Since trueseeing prints every low{tentative} log call in alphabetical order across thousands of classes, reading the raw terminal stream line-by-line will mostly show R8-minified Jetpack and Google Play Services code.
+• Save the full scan to a file first so you don't have to scroll through terminal output:bash
+trueseeing -eQc "s;gt" betPawa.apk > scan_results.txt
+Use code with caution.
+• Check the severity breakdown across the entire file:bash
+grep -oE ":(info|low|medium|high|critical)\{" scan_results.txt | sort | uniq -c
+Use code with caution.
+• Inspect only medium, high, or critical findings:bash
+grep -E ":(medium|high|critical)\{" scan_results.txt
+Use code with caution.
+Once you run the severity count or filter for medium/high issues from scan_results.txt, share those lines here and we can analyze the actual high-signal findings!
