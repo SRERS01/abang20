@@ -1,0 +1,24 @@
+Here is the complete reference combining each APK component, its common security vulnerability, and the best tool to detect or inspect that vulnerability.
+
+Core Files: Vulnerabilities & Detection Tools
+
+
+Component	Common Vulnerability	How It Happens	Best Tool to Detect / Inspect
+AndroidManifest.xml	Exported Components & Over-Privileged Permissions	Setting android:exported="true" without permission checks lets malicious apps launch private activities or read data from content providers.	APKTool (to decode XML) or Drozer (to test exported components)
+classes.dex	Hardcoded Secrets & Weak Cryptography	Storing API keys, passwords, or encryption keys directly in Java/Kotlin code allows attackers to extract them using a decompiler.	JADX (jadx-gui) (for manual code search) or MobSF (for automated secret scanning)
+resources.arsc	Exposed Build Secrets & Internal URLs	Build tools like Gradle often inject API keys, Firebase URLs, or staging server endpoints into string resources where anyone can read them.	Android Studio APK Analyzer or APKLeaks
+
+
+Core Directories: Vulnerabilities & Detection Tools
+
+
+Component	Common Vulnerability	How It Happens	Best Tool to Detect / Inspect
+res/	Insecure Network Security Config	Misconfigured XML files in res/xml/ (like network_security_config.xml) can allow unencrypted HTTP traffic or trust user-installed certificates, enabling Man-in-the-Middle attacks.	APKTool (to read res/xml/) + mitmproxy / Burp Suite (to intercept traffic)
+assets/	Unencrypted Sensitive Files	Leaving unencrypted SQLite databases, private certificates, configuration files, or vulnerable local HTML/JavaScript files inside assets/ exposes them to trivial extraction.	7-Zip (to extract files) + DB Browser for SQLite (to read local databases)
+lib/ (.so files)	Memory Corruption & Hidden Keys	Native C/C++ code is prone to buffer overflows and memory leaks. Developers also frequently hide secret keys inside .so files assuming they cannot be decompiled.	Ghidra (for static binary decompilation) or Frida (for dynamic runtime hooking)
+META-INF/	Weak Signing Schemes (Janus Vulnerability)	Signing an APK only with the legacy v1 scheme allows attackers to append malicious code to the archive without breaking the cryptographic signature.	apksigner (run apksigner verify --verbose app.apk to check v1/v2/v3/v4 schemes)
+
+If you'd like to put this into practice, let me know:
+• Whether you want an automated all-in-one scanner (like setting up MobSF)
+• Which specific vulnerability you want to test or fix first
+I can walk you through the exact commands and setup steps.
