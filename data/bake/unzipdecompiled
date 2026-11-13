@@ -1,0 +1,163 @@
+Yes. To access the `.so` native libraries inside an APK, you can unzip the APK first.
+
+### Step 1: Extract the APK
+
+```bash
+unzip app.apk -d extracted_apk
+```
+
+### Step 2: Locate all `.so` files
+
+```bash
+find extracted_apk -type f -name "*.so"
+```
+
+You may see:
+
+```text
+extracted_apk/lib/arm64-v8a/libnative.so
+extracted_apk/lib/armeabi-v7a/libnative.so
+extracted_apk/lib/x86/libnative.so
+extracted_apk/lib/x86_64/libnative.so
+```
+
+### Step 3: Analyze a `.so` file
+
+You can use:
+
+* Ghidra: Disassemble and analyze native code.
+
+* IDA: Reverse engineer native binaries.
+
+* strings: Find readable strings.
+
+* readelf: Inspect ELF headers and symbols.
+
+For example:
+
+```bash
+strings extracted_apk/lib/x86_64/libnative.so
+```
+
+Important: You don't need JADX to extract `.so` files. Unzipping is sufficient.
+
+Remember:
+
+* JADX → DEX code.
+
+* APKTool → Smali and resources.
+
+* Ghidra → Native `.so` code.
+*Yes! Unzipping an APK and decompiling an APK are two different operations, although both help you inspect an Android application.
+
+### 1\. Unzipping an APK
+
+An APK is essentially a ZIP-based package containing application files.
+
+When you unzip it, you extract its contents without converting its compiled code back into readable source code.
+
+For example:
+
+```bash
+unzip app.apk -d extracted_apk
+```
+
+You may find:
+
+| File/folder         | Purpose                             |
+| ------------------- | ----------------------------------- |
+| AndroidManifest.xml | App configuration and permissions   |
+| classes.dex         | Compiled Android application code   |
+| resources.arsc      | Compiled resource information       |
+| res/                | Images, layouts and other resources |
+| assets/             | Application assets                  |
+| lib/                | Native libraries (.so files)        |
+| META-INF/           | Signing-related metadata            |
+
+### 2\. Decompiling an APK
+
+Decompiling attempts to reconstruct a more readable representation of the compiled application code.
+
+For example, using JADX:
+
+```bash
+jadx -d decompiled_app app.apk
+```
+
+You can potentially inspect:
+
+* Java/Kotlin-like source code.
+
+* API endpoints.
+
+* Authentication logic.
+
+* Hardcoded secrets.
+
+* Encryption implementations.
+
+* Database operations.
+
+* Network communication logic.
+
+* Input validation.
+
+* WebView configurations.
+
+* Insecure coding patterns.
+
+### 3\. The difference
+
+Unzipping
+
+APK → Extracted files
+
+Extracts the original packaged contents. Does not reconstruct source code.
+
+Decompiling
+
+DEX → Readable code representation
+
+Attempts to reconstruct source-like code from compiled bytecode.
+
+### 4\. Tools used in Android security testing
+
+| Tool    | Main purpose                            |
+| ------- | --------------------------------------- |
+| Unzip   | Extract APK contents                    |
+| JADX    | Decompile DEX into Java-like code       |
+| APKTool | Decode resources and disassemble Smali  |
+| Ghidra  | Analyze native binaries                 |
+| Frida   | Inspect and instrument runtime behavior |
+| MobSF   | Automated Android security analysis     |
+
+Important: These tools complement each other. JADX cannot necessarily recover the original source code, variable names or comments.
+
+### Practical bug bounty workflow
+
+```text
+APK
+  |
+  v
+Unzip APK
+  |
+  v
+Inspect files and libraries
+  |
+  +----> JADX: Java-like code
+  |
+  +----> APKTool: Smali/resources
+  |
+  +----> Ghidra: Native libraries
+  |
+  v
+Static security analysis
+  |
+  v
+Frida: Runtime testing
+  |
+  v
+Validate vulnerabilities
+```
+
+My recommendation: Learn JADX, APKTool and Ghidra together. They reveal different layers of an Android application. Test only applications you own or are authorized to assess.
