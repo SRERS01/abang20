@@ -1,0 +1,70 @@
+For your Android emulator and Burp Suite to work together, the most important thing that must match is the proxy port. The other settings must be compatible.
+
+### 1\. Settings that must match
+
+| Setting            | Burp Suite (Ubuntu)                | Android emulator                          |
+| ------------------ | ---------------------------------- | ----------------------------------------- |
+| Proxy port         | 8082                               | 8082                                      |
+| Host address       | 0.0.0.0 (listen on all interfaces) | 10.0.2.2 (standard emulator host address) |
+| Network connection | Must be reachable                  | Must reach Ubuntu                         |
+| Proxy protocol     | HTTP proxy                         | HTTP proxy                                |
+
+### 2\. Configure Burp Suite
+
+Go to:
+
+Proxy → Proxy settings → Proxy Listeners.
+
+Configure:
+
+```text
+Bind address: 0.0.0.0
+Port: 8082
+```
+
+### 3\. Configure Android emulator
+
+Go to:
+
+Settings → Network & Internet → Wi-Fi → Proxy → Manual.
+
+Enter:
+
+```text
+Proxy hostname: 10.0.2.2
+Proxy port: 8082
+```
+
+### 4\. Test the connection
+
+On Ubuntu, run:
+
+```bash
+sudo ss -lntp | grep 8082
+```
+
+You should see Burp listening on port `8082`.
+
+Then, from the emulator browser, visit:
+
+```text
+http://burp
+```
+
+You should see Burp's built-in page if the proxy connection is working.
+
+### 5\. Important: HTTPS interception
+
+For HTTPS traffic to be inspected:
+
+* Install Burp's CA certificate in the emulator.
+
+* Configure the Android trust settings appropriately.
+
+* Remember that some applications use certificate pinning and may reject Burp's certificate.
+
+Key takeaway
+
+The port number must match. The IP addresses do not have to match; they must point to the correct reachable interfaces.
+
+I can also walk you through testing your Android emulator with Burp Suite step by step, including HTTP, HTTPS and certificate installation.
