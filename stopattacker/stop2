@@ -1,0 +1,36 @@
+The seven points above cover the core code-level logic for validating transactions, but no, they are not the complete picture. To fully protect a financial system from theft, you must also secure the infrastructure, API keys, and business logic surrounding that endpoint.
+Here are the remaining critical defenses you need to put in place, along with why each one is essential.
+
+1. Store Aggregator API Keys Only on the Backend Server
+
+• How to stop it: Keep your PawaPay, MTN MoMo, and Orange Money API tokens and secret keys strictly in server-side environment variables (.env), never inside your mobile app, frontend JavaScript, or public Git repositories.
+• Why you must do it: If an attacker decompiles your Android APK (like the Android Studio setup seen in your terminal) and finds your live PawaPay payout key, they do not even need to exploit your endpoint—they can call PawaPay directly to drain your entire merchant wallet.
+
+2. Verify Exact Currency and Amount Matching on Callbacks
+
+• How to stop it: When a payment confirmation arrives from PawaPay, verify that both the amount and the currencyCode (XAF) reported by the payment provider match the exact amount and currency of the pending order in your database.
+• Why you must do it: Without currency and amount matching, an attacker could initiate a deposit for 50,000 XAF, manipulate the payment request to pay 50 units in a much weaker currency (or pay 50 XAF instead of 50,000 XAF), and still get credited for the full 50,000 XAF balance.
+
+3. Enforce Strict Rate Limiting and Bot Protection
+
+• How to stop it: Configure rate limits (via Cloudflare or your backend middleware) on all login, PIN verification, deposit, and withdrawal endpoints to block rapid repeated requests from the same IP address or user account.
+• Why you must do it: Attackers use automated scripts to brute-force user PINs/OTPs or flood withdrawal endpoints with thousands of requests per second to trigger race conditions or exhaust your server resources.
+
+4. Require Step-Up Authentication (OTP or PIN) for Withdrawals
+
+• How to stop it: Before processing any payout or money transfer, require the user to verify a short-lived One-Time Password (OTP), transaction PIN, or biometric check that is validated on your server.
+• Why you must do it: Even if an attacker steals a user's session token via phishing or an insecure Wi-Fi network, step-up authentication stops them from immediately cashing out the victim's Mobile Money balance.
+
+5. Protect Against Server-Side Request Forgery (SSRF)
+
+• How to stop it: Never allow user-supplied URLs (such as custom callback URLs or redirect links in the JSON payload) to dictate where your backend sends payment notifications or fetches configuration files.
+• Why you must do it: If an attacker can overwrite the callback URL or make your server fetch data from an address they control, they can redirect sensitive authentication headers to their own server or force your backend to read internal cloud credentials.
+
+6. Implement Immutable Audit Logs and Anomaly Alerts
+
+• How to stop it: Record every deposit, withdrawal, fee calculation, and configuration change in an append-only audit log, and set up automated alerts for unusual spikes (such as large withdrawals or repeated failed transactions).
+• Why you must do it: Even with strong preventive controls, real-time monitoring lets you detect suspicious behavior immediately and freeze affected accounts before significant funds leave your merchant wallet.
+If you are building this payment flow in Android Studio alongside a local backend, let me know:
+• How your Android app authenticates with your backend (JWT tokens, API keys, etc.)
+• Which backend stack you are running locally
+I can help you review how to safely bridge your mobile client and backend without exposing sensitive keys.

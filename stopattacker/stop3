@@ -1,0 +1,28 @@
+To make sure you have the complete picture, yes, when combined with the previous lists, these defenses represent the full industry-standard security lifecycle—often called Defense in Depth—for protecting a payment API endpoint.
+However, there is one final layer covering the mobile app and network connection (especially relevant since you are running Android Studio) that closes the last remaining gaps.
+
+The Final Layer: Mobile App & Network Defenses
+
+
+1. Enforce Certificate Pinning in Your Android App
+
+• How to stop it: Configure your Android app (via Android's network_security_config.xml or OkHttp's CertificatePinner) to only trust your server's exact SSL/TLS certificate rather than any certificate installed on the user's phone.
+• Why you must do it: Attackers often use proxy tools on rooted phones or public Wi-Fi to intercept and modify traffic between the mobile app and your server (a Man-in-the-Middle attack). Certificate pinning ensures your app refuses to send or receive payment JSONs if anyone is listening in.
+
+2. Verify App Integrity (Google Play Integrity API)
+
+• How to stop it: Require your Android app to pass Google Play Integrity checks before your backend accepts deposit or withdrawal requests.
+• Why you must do it: Attackers frequently decompile Android apps, remove security checks, or run automated bots inside emulators to abuse endpoints. App integrity verification ensures your server only talks to your genuine, unmodified mobile app running on a real device.
+
+3. Restrict Database User Permissions (Principle of Least Privilege)
+
+• How to stop it: Ensure the database account used by your API server only has permission to run SELECT, INSERT, and UPDATE on specific tables—never administrative commands like DROP TABLE or access to system files.
+• Why you must do it: Even if an attacker discovers an unexpected injection flaw in a JSON field, a restricted database account limits the damage they can do and prevents them from reading or altering unrelated financial records.
+
+Complete Security Checklist Summary
+
+If you combine all three layers we have covered, you have addressed every standard attack vector against a Mobile Money API:
+1. Endpoint & Input Layer: Strict GET-only routing, type/range validation, and whitelisting active providers (CAMEROON_PAWAPAY_MTN_MOMO, etc.).
+2. Transaction & Logic Layer: Server-side fee/amount calculation, session-based user ownership, database row locking, idempotency keys, and step-up PIN/OTP checks.
+3. Provider & Infrastructure Layer: Backend-only API keys, webhook HMAC signature verification, rate limiting (Cloudflare), certificate pinning, and immutable audit logs.
+Since you have Android Studio open on your machine, would you like a quick example of how to configure network_security_config.xml to enforce HTTPS and certificate pinning for your local-to-production setup?

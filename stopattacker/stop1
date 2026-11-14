@@ -1,0 +1,38 @@
+To stop an attacker from stealing money in a payment flow that uses this configuration JSON, you must enforce strict rules on your backend server. The JSON itself is just read-only display data, so protection comes from how your server handles the actual deposit, withdrawal, and payment confirmation requests that follow it.
+Here are the essential defensive controls you must implement, along with why each one is critical to stopping financial theft.
+
+1. Never Trust Financial Rules Sent by the Client
+
+• How to stop it: Ignore any feeValue, chargeableFeeValue, minDepositAmount, maxDepositAmount, or currencyCode sent back from the mobile app or browser during a transaction. Always look up those values fresh from your own secure database on the backend.
+• Why you must do it: A user can easily intercept and edit the JSON on their own phone before sending a payment request. If your server trusts the client's numbers, an attacker could set their fee to 0, send a negative deposit amount (-50000) to add money instead of deducting it, or bypass deposit limits.
+
+2. Validate Amount Data Types and Ranges Strictly
+
+• How to stop it: On your backend deposit and withdrawal endpoints, verify that the requested amount is a valid positive integer or decimal greater than zero. Reject requests containing negative numbers, NaN, null, arrays, or numbers outside your server's stored minDepositAmount and maxDepositAmount. Since fractionalSupported is false for XAF in your JSON, reject decimal amounts (like 100.50) on the server as well.
+• Why you must do it: Weak type checking can cause math errors in your backend code—for example, subtracting a negative withdrawal amount (balance - (-10000)) actually increases the attacker's wallet balance instead of reducing it.
+
+3. Lock the Configuration Endpoint to Read-Only (GET)
+
+• How to stop it: Configure your API routing so the endpoint returning this configuration JSON strictly accepts GET requests. Ensure POST, PUT, PATCH, and DELETE requests return 405 Method Not Allowed, and require strong administrative authentication if you have an internal endpoint for updating these settings.
+• Why you must do it: If an attacker can send a PUT or POST request to update the live configuration, they could change status or alter fee structures for everyone using your platform.
+
+4. Authenticate Users via Server Sessions, Not JSON Fields
+
+• How to stop it: Identify who is making the deposit or withdrawal using a verified, signed session token (like a JWT or secure HTTP-only cookie) on the server. Never rely on a userId, accountId, or phoneNumber field inside the JSON payload to decide whose balance to credit or debit.
+• Why you must do it: If your server trusts a userId inside the JSON body, an attacker can simply change that ID to someone else's account number and trigger unauthorized withdrawals from victim wallets.
+
+5. Verify Cryptographic Signatures on Payment Webhooks
+
+• How to stop it: When PawaPay, MTN MoMo, or Orange Money sends a callback (webhook) to your server saying a deposit succeeded, verify the cryptographic signature (such as an HMAC header) using your secret webhook key. Additionally, confirm the transaction status directly with the provider's API before crediting the user's wallet.
+• Why you must do it: Without signature verification, an attacker who discovers your webhook URL can send a fake JSON message claiming "status": "COMPLETED", tricking your server into crediting their account with real money when they never actually paid.
+
+6. Enforce Idempotency and Database Locking
+
+• How to stop it: Assign a unique transactionId or depositId to every payment and enforce a UNIQUE constraint on it in your database. Wrap all balance checks and updates inside an atomic database transaction using row-level locking (such as SELECT ... FOR UPDATE).
+• Why you must do it: Attackers often send dozens of identical withdrawal requests at the exact same millisecond (a race condition) or replay a valid webhook multiple times. Without unique ID checks and row locking, your server could pay out the same balance multiple times before the database finishes updating.
+
+7. Whitelist Allowed Payment Providers (depositTypeName)
+
+• How to stop it: Check that the depositTypeName (e.g., CAMEROON_PAWAPAY_MTN_MOMO) and paymentProvider sent in a transaction request match an active, OPERATIONAL provider in your backend database.
+• Why you must do it: If an attacker submits a disabled, deprecated, or misspelled provider name, an improperly handled switch statement on your backend might skip payment verification entirely while still marking the order or deposit as successful.
+If you are ready to test these protections in your local lab, share the backend language you are using (such as Node.js/Express, Python/Django/FastAPI, or PHP/Laravel), and I can give you a safe validation middleware template to drop into your project.

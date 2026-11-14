@@ -1,0 +1,18 @@
+nohup android-studio > /dev/null 2>&1
+HTTP/2 200 OK
+Date: Sat, 14 Nov 2026 13:49:43 GMT
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Vary: Accept-Encoding
+Cf-Cache-Status: DYNAMIC
+Server: cloudflare
+Cf-Ray: a5a67b28fe067492-DLA
+Alt-Svc: h3=":443"; ma=86400
+
+{"data":[{"depositTypeName":"CAMEROON_PAWAPAY_MTN_MOMO","pageUrl":"/deposit-mtn","text":"MTN","paymentProvider":"MTN","status":"OPERATIONAL","minDepositAmount":50.000,"maxDepositAmount":500000.000,"sorting":1,"phoneOperatorDescription":"MTN_CM","currencyCode":"XAF","webAvailable":true,"ussdAvailable":false,"applicableForUserTelco":true,"feeStructure":"","feeValue":0,"minDepositAmountForFeeCompensation":0,"chargeableFeeStructure":"","chargeableFeeValue":0,"chargeableFeeName":"","fractionalSupported":false,"walletType":"MOMO","extraData":null},{"depositTypeName":"CAMEROON_PAWAPAY_ORANGE","pageUrl":"/deposit-orange","text":"Orange","paymentProvider":"ORANGE","status":"OPERATIONAL","minDepositAmount":100.000,"maxDepositAmount":500000.000,"sorting":2,"phoneOperatorDescription":"ORANGE_CM","currencyCode":"XAF","webAvailable":true,"ussdAvailable":false,"applicableForUserTelco":false,"feeStructure":"","feeValue":0,"minDepositAmountForFeeCompensation":0,"chargeableFeeStructure":"","chargeableFeeValue":0,"chargeableFeeName":"","fractionalSupported":false,"walletType":"MOMO","extraData":null}]}

@@ -1,0 +1,32 @@
+Even when practicing in a local lab environment, I cannot provide step-by-step instructions, exploit payloads, or actionable methods for attacking or stealing Mobile Money.
+However, I can explain the defensive architecture and server-side validation controls you should implement and verify in your local codebase to ensure your payment integration resists tampering.
+
+1. Enforce Server-Side Source of Truth
+
+In a secure payment integration, the JSON configuration you shared earlier is strictly for displaying options in the UI. When your local client sends a deposit or withdrawal request to your server, your backend code must ignore any pricing or limit rules sent by the client.
+• What to verify in your server code:
+	• Amount & Limits: Check that the requested amount is a positive number and falls strictly between the server's stored minDepositAmount and maxDepositAmount. Reject negative numbers, zero, or non-numeric strings.
+	• Fee Calculation: Calculate feeValue and chargeableFeeValue directly on the server using your own database configuration. Never accept a fee field from the client's JSON request.
+	• Currency Locking: Validate that the currencyCode (e.g., XAF) matches the allowed currency for the selected paymentProvider on the backend.
+
+2. Implement Strict Authorization & Ownership Checks
+
+Your local server must ensure that a user can only initiate transactions for their own authenticated account.
+• What to verify in your server code:
+	• Session-Based Identity: Extract the user's ID from a verified JWT or server-side session rather than trusting a userId or accountId field inside the JSON body.
+	• Phone Number / Wallet Binding: If your platform restricts withdrawals to verified numbers, confirm on the server that the target MoMo number belongs to the authenticated user before calling the payment aggregator API.
+
+3. Secure Your Callback / Webhook Handler
+
+When a payment provider (like PawaPay) sends an asynchronous confirmation back to your local server, your endpoint must confirm the message is authentic and has not been processed already.
+• What to verify in your server code:
+	• Signature Verification: Check the cryptographic signature header (such as an HMAC-SHA256 signature using your shared webhook secret) before trusting the JSON body.
+	• Status Verification: Double-check the transaction status directly against the payment provider's status API if needed, ensuring the status is genuinely COMPLETED before crediting a user's balance.
+	• Idempotency: Store every processed depositId or transactionId in your database with a unique constraint so that replaying the same webhook payload twice cannot credit the balance multiple times.
+
+4. Prevent Concurrency Flaws (Race Conditions)
+
+When multiple requests arrive simultaneously, databases without proper locking can miscalculate balances.
+• What to verify in your server code:
+	• Atomic Database Transactions: Wrap balance checks and balance updates inside a single database transaction using row-level locking (e.g., SELECT ... FOR UPDATE in SQL) so two simultaneous withdrawal requests cannot read the same starting balance.
+If you would like to review your local server implementation, you can paste the server-side code snippet (such as your Node.js, Python, or PHP handler) that processes the deposit or webhook request, and I can point out any missing validation or concurrency checks.
