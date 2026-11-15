@@ -1,0 +1,32 @@
+Aha! If you opened PortSwigger CA from the USER tab (where the button at the bottom says Remove) rather than the SYSTEM tab (where the button says Disable), then your certificate is currently installed only as a User certificate!
+On Android 11, Chrome trusts User certificates, while third-party apps ignore User certificates unless they are moved into /system/etc/security/cacerts/.
+Follow these exact commands in your Ubuntu terminal right now to move your existing User certificate straight into the System store (you don't even need to export anything from Burp Suite because the file is already on your emulator!):
+
+1. Disable Verity & Reboot Once
+
+Run these four commands in your open terminal (>_ icon):
+bash
+adb root
+adb shell avbctl disable-verification
+adb disable-verity
+adb reboot
+Use code with caution.
+• Wait 20–30 seconds until the Pixel 5 finishes rebooting back to the home screen.
+
+2. Copy Your Existing Certificate Into /system/etc/security/cacerts/
+
+Because you already installed PortSwigger CA as a User certificate, Android stored it inside /data/misc/user/0/cacerts-added/. Copy it directly into the System folder and reboot:
+bash
+adb root
+adb remount
+adb shell cp /data/misc/user/0/cacerts-added/* /system/etc/security/cacerts/
+adb shell chmod 644 /system/etc/security/cacerts/*
+adb reboot
+Use code with caution.
+(Note: If adb remount asks you to reboot once before mounting, run adb reboot, wait for the home screen, and re-run those five lines).
+
+3. Verify It Now Appears in the SYSTEM Tab
+
+• Check Trusted Credentials: After the reboot finishes, open Settings > Security > Encryption & credentials > Trusted credentials > SYSTEM tab on the emulator and scroll down to PortSwigger—you will now see PortSwigger CA listed under SYSTEM with its blue toggle enabled!
+Run Step 1 and Step 2 in your Ubuntu terminal—let me know if adb remount succeeds or if it outputs any error message!
+Copying...
