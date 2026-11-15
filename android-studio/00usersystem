@@ -1,0 +1,48 @@
+On Android 11 (API 30), system certificates are stored directly in /system/etc/security/cacerts/, so the standard adb remount method works cleanly without needing any Android 14+ workarounds.
+Make sure your API 30 virtual device is a Google APIs image (not Google Play) and that your Burp Suite certificate (cacert.der) is saved in your current directory.
+
+Complete Setup Commands for Android 11 (API 30)
+
+
+1. Launch Emulator & Unlock System Partition
+
+Run these commands in your Ubuntu terminal after closing any open emulator windows:
+bash
+# List your AVDs to get the exact name
+~/Android/Sdk/emulator/emulator -list-avds
+
+# Launch your API 30 emulator with writable system access (replace <AVD_NAME>)
+~/Android/Sdk/emulator/emulator -avd <AVD_NAME> -writable-system &
+
+# Wait for the emulator to boot completely to the home screen, then run:
+adb root
+adb shell avbctl disable-verification
+adb reboot
+
+# Wait for the reboot to finish, then remount as read-write
+adb wait-for-device
+adb root
+adb remount
+Use code with caution.
+
+2. Format & Push the PortSwigger Certificate
+
+Once adb remount prints remount succeeded, run these commands to install the certificate:
+bash
+# Convert DER to PEM and rename using the old subject hash
+openssl x509 -inform DER -in cacert.der -out cacert.pem
+HASH=$(openssl x509 -inform PEM -subject_hash_old -in cacert.pem | head -1)
+mv cacert.pem ${HASH}.0
+
+# Push to the Android 11 system store and set proper permissions
+adb push ${HASH}.0 /system/etc/security/cacerts/
+adb shell chmod 644 /system/etc/security/cacerts/${HASH}.0
+
+# Reboot to load the certificate
+adb reboot
+Use code with caution.
+
+Verify Installation
+
+After the final reboot, open Settings > Security > Encryption & credentials > Trusted credentials on your emulator. Under the System tab, scroll down to PortSwigger to confirm the toggle is enabled.
+Would you like help configuring the Wi-Fi proxy settings on the emulator so your traffic routes straight into Burp Suite?
