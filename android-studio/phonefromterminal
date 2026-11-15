@@ -1,0 +1,25 @@
+To launch your Android 11 (API 30) Pixel_5 emulator directly from the terminal without opening Android Studio, run:
+bash
+~/Android/Sdk/emulator/emulator -avd Pixel_5 -gpu swiftshader_indirect
+Use code with caution.
+
+Helpful Launch Options
+
+• Keep using your terminal while it runs (Background Mode): Add & at the end so your terminal prompt stays free for adb commands:bash
+~/Android/Sdk/emulator/emulator -avd Pixel_5 -gpu swiftshader_indirect &
+Use code with caution.
+• Force a clean startup (if it ever freezes on a black/white screen): Add -no-snapshot-load to bypass a corrupted quick-boot state:bash
+~/Android/Sdk/emulator/emulator -avd Pixel_5 -gpu swiftshader_indirect -no-snapshot-load
+Use code with caution.
+• Launch with Burp Suite HTTP proxy automatically attached: You can pass the proxy directly from the terminal instead of changing Wi-Fi settings inside the phone:bash
+~/Android/Sdk/emulator/emulator -avd Pixel_5 -gpu swiftshader_indirect -http-proxy http://127.0.0.1:8080
+Use code with caution.
+
+Optional: Create a Short Terminal Shortcut
+
+If you don't want to type that long path every time, run this command once to create a short start-pixel command:
+bash
+echo 'alias start-pixel="~/Android/Sdk/emulator/emulator -avd Pixel_5 -gpu swiftshader_indirect &"' >> ~/.bashrc && source ~/.bashrc
+Use code with caution.
+After running that once, you can launch your Android 11 emulator anytime simply by typing start-pixel and pressing Enter.
+Would you like to set up that start-pixel shortcut or create a one-line script that launches the emulator and automatically injects your PortSwigger certificate on every boot?

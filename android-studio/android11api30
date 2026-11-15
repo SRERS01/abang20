@@ -1,0 +1,26 @@
+Your terminal is running adb wait-for-device && adb root && adb remount, which means it is waiting for the emulator to finish booting before executing adb root and adb remount.
+However, notice the emulator window on the left is still white/blank—when -writable-system is combined with -gpu angle_indirect or swiftshader_indirect on API 30 after disable-verity, Android's overlayfs setup during boot sometimes freezes the GUI if hardware virtualization (/dev/kvm) or RAM is tight, or it is still finishing its boot sequence.
+
+How to Check What Is Happening Right Now
+
+1. Give it 1 more minute: If the terminal suddenly prints restarting adbd as root and remount succeeded (or Now reboot your device...), it finished booting!
+2. If it stays stuck on wait-for-device after 2 minutes: Open a third terminal tab (Ctrl + Shift + T) and run:bash
+~/Android/Sdk/platform-tools/adb devices
+Use code with caution.
+
+	• If adb devices lists nothing at all (or offline indefinitely), angle_indirect + -writable-system stalled during early kernel boot.
+
+Guaranteed Workaround If -writable-system Keeps Stalling on Boot
+
+On Android 11 (API 30) with google_apis, you actually do not need -writable-system or adb remount at all to install a system CA certificate! Because adb root works out-of-the-box on a google_apis image even in normal mode, you can mount a temporary in-memory tmpfs over /system/etc/security/cacerts without modifying the system image or disabling verity:
+1. Boot the emulator normally (fast, no -writable-system):bash
+pkill -9 -f qemu-system; rm -rf ~/.android/avd/Pixel_5.avd/*.lock
+~/Android/Sdk/emulator/emulator -avd Pixel_5 -gpu swiftshader_indirect
+Use code with caution.
+2. Once it boots to the home screen, inject the PortSwigger certificate into /system/etc/security/cacerts via tmpfs:bash
+~/Android/Sdk/platform-tools/adb root
+~/Android/Sdk/platform-tools/adb shell "mkdir -p /data/local/tmp/cacerts && cp /system/etc/security/cacerts/* /data/local/tmp/cacerts/ && cp /data/misc/user/0/cacerts-added/* /data/local/tmp/cacerts/ && mount -t tmpfs tmpfs /system/etc/security/cacerts && cp /data/local/tmp/cacerts/* /system/etc/security/cacerts/ && chmod 644 /system/etc/security/cacerts/* && chcon u:object_r:system_file:s0 /system/etc/security/cacerts/*"
+Use code with caution.
+(This takes 2 seconds, works immediately without rebooting, and makes Android trust your PortSwigger certificate as a system CA).
+Check if your current terminal prints remount succeeded in the next minute—if it stays stuck on wait-for-device, let me know and we can use the 2-second tmpfs method instead!
+Copying...
