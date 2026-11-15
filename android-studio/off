@@ -1,0 +1,45 @@
+Since you are launching from Android Studio's Device Manager (visible in your previous screenshot), Android Studio automatically passes serial console flags to the emulator by default on many Linux setups.
+You can easily override this without touching the terminal by creating a single configuration file or adjusting your AVD settings.
+
+1. Disable the Serial Console via advancedFeatures.ini (Permanent Fix)
+
+Because Android Studio hides the serial console toggle in the UI, creating a simple configuration file tells the emulator to turn it off every time you click Play in Device Manager.
+• Open your Linux Terminal: Click the >_ icon on your left dock.
+• Run this command: Paste the following line and press Enter to disable the serial console feature globally for your emulators:bash
+echo "SerialConsole = off" >> ~/.android/advancedFeatures.ini
+Use code with caution.
+• Verify it was added: Run cat ~/.android/advancedFeatures.ini to make sure SerialConsole = off is listed on its own line.
+• (Note: If the notification still appears on certain system images because it is baked into the read-only bootloader, you can safely ignore it—its real-world slowdown is minor compared to graphics and RAM settings).
+
+2. Optimize Your Pixel 5 Hardware Profile in Device Manager
+
+Right now, while you are on the Device Manager screen before booting up, lock in the fastest hardware settings:
+• Open Edit Menu: Click the three vertical dots (⋮) on the far right of the Pixel 5 row and select Edit.
+• Show Advanced Settings: Scroll down and click Show Advanced Settings.
+• Set Graphics: Ensure Graphics is set to Hardware - GLES 2.0 (or Automatic).
+• Balance RAM & CPU: Set RAM to 2048 MB (or 3072 MB if your laptop has 8 GB+ of RAM) and Multi-Core CPU to 4 cores so Burp Suite and the emulator run smoothly together.
+• Save Changes: Click Finish.
+
+3. Cold Boot Once to Apply Everything
+
+• Launch cleanly: Click the three vertical dots (⋮) next to Pixel 5 again and select Cold Boot Now so Android starts fresh with your updated settings instead of loading an old sluggish snapshot.
+After running the advancedFeatures.ini command and doing a Cold Boot, let me know how fast the Pixel 5 feels and whether Burp Suite is capturing your traffic now.
+Aha—my mistake! Looking closely at the zoomed-in photo, the Ubuntu top bar says Nov 15 20:22 (8:22 PM, not the year 2022), which matches the exact current date and time! Your laptop's clock is already completely accurate, so you do not need to run timedatectl.
+You are all set to launch and test your emulator right now:
+
+1. Cold Boot Your Pixel 5
+
+• Open Android Studio: Click the Android Studio icon on your left dock.
+• Cold Boot: In Device Manager, click the three vertical dots (⋮) next to Pixel 5 and select Cold Boot Now so your new SerialConsole = off setting takes effect.
+
+2. Connect AndroidWifi to Burp Suite
+
+• Turn Wi-Fi ON: Once the phone boots up, swipe down from the top bar and tap the Wi-Fi icon to turn on AndroidWifi.
+• Confirm Manual Proxy: On AndroidWifi, tap the gear icon > pencil icon (Edit) > Advanced options, and make sure Proxy is set to Manual with Proxy hostname: 10.0.2.2 and Proxy port: 8080.
+• Check Burp Listener: Make sure Burp Suite is open on your laptop with its proxy listener on port 8080 running and bound to All interfaces.
+
+3. Test Interception
+
+• Open Chrome inside the emulator and visit http://burpsuite or https://example.com.
+• Check Burp Suite: Look at Proxy > HTTP history to confirm traffic is flowing cleanly, then turn Intercept is on whenever you are ready to inspect packets.
+Go ahead and Cold Boot the Pixel 5—let me know if http://burpsuite loads in Chrome or if you hit any errors in Burp Suite's Event log.
