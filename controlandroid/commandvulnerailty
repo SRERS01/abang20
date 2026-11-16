@@ -1,0 +1,33 @@
+These commands are diagnostic and configuration interfaces rather than vulnerability scanners—they do not find vulnerabilities on their own, but they let you uncover specific network, application, and OS flaws while bypassing common mobile testing roadblocks.
+For an offensive security researcher, each command maps directly to what security weakness it helps expose and what client-side or network-side restriction it bypasses.
+
+Vulnerabilities Exposed & Restrictions Bypassed by Command
+
+
+Command / Setting	Vulnerabilities It Helps Find	Restrictions / Defenses It Bypasses
+captive_portal_mode 0
+(and captive_portal_detection_enabled 0)	Cleartext telemetry leaks & background chatter in mobile apps (by isolating app traffic from OS noise during packet captures) and unauthenticated local IoT/router APIs on offline networks.	OS auto-disconnects & network switching when testing air-gapped hardware, offline routers, or local intercepting proxies that lack upstream internet.
+captive_portal_mode 1	Privileged WebView / Custom Tab flaws in Android's CaptivePortalLogin handler (e.g., XSS, URL spoofing, intent scheme abuse, or file-access leaks when rendering untrusted portal pages).	Silent portal suppression, forcing the OS to expose its native login container so you can inspect how it parses untrusted network redirects.
+captive_portal_mode 2	Rogue AP / Evil Twin presence in wireless audits (by showing which access points attempt unauthorized HTTP/DNS hijacking before granting egress).	Client-side credential harvesting & Evil Twin latching by dropping unauthenticated networks before a user or automated script interacts with a phishing portal.
+captive_portal_http_url
+captive_portal_https_url	SSL/TLS stripping & MitM susceptibilities in how apps handle network state transitions, as well as improper portal redirect handling on target gateways.	Google endpoint dependency & TLS pinning on connectivity checks, letting you validate an offline Burp/mitmproxy setup using your own controlled HTTP 204 listener.
+captive_portal_other_http_urls
+captive_portal_other_https_urls	Incomplete walled-garden egress filtering (e.g., portals that block standard domains like gstatic.com while leaving alternate ports, CDNs, or cloud ranges unrestricted).	Single-endpoint DNS sinkholing, allowing you to probe multiple hosts/ports concurrently to locate allowed egress paths out of a restricted network.
+captive_portal_fallback_url
+captive_portal_other_fallback_urls	DNS-only captive portal enforcement (where the gateway blocks DNS resolution for Google domains but permits direct IP routing or secondary domains).	Primary probe blackholing, letting your test device fall back to raw IP addresses or alternate hosts to confirm whether Layer 3 IP forwarding is open.
+captive_portal_fallback_probe_specs	Improper HTTP response injection & transparent proxy tampering (by matching specific status codes or injected HTML/JS signatures returned by middleboxes).	Strict HTTP 204 No Content validation, allowing you to force Android into a VALIDATED network state even when a middlebox alters headers or status codes.
+captive_portal_user_agent	User-Agent-based access control flaws on captive portals and WAFs (where gateways grant free internet access to non-browser devices like smart TVs, consoles, or IoT appliances).	Mobile-OS fingerprinting & browser enforcement, letting your Android test device masquerade as an exempted device class to bypass portal authentication.
+captive_portal_use_https 0
+(Legacy Android 5.0–6.0)	Downgrade & cleartext interception weaknesses in legacy embedded Android systems and older kiosk/POS terminals.	HTTPS probe enforcement, forcing legacy targets to validate connectivity over plain HTTP where traffic can be trivially modified without CA certificates.
+device_config put connectivity <key>	Configuration drift & remote flag overrides in Android's updatable NetworkStack Mainline module.	Mainline server-flag precedence, bypassing Google's remote Phenotype / DeviceConfig defaults that silently ignore legacy settings put global commands on Android 10+.
+network_avoid_bad_wifi 0	Interface routing leaks & split-tunnel flaws when mobile apps bind to the wrong network socket during local Wi-Fi assessments.	Silent cellular data fallback, preventing Android from routing your test packets over LTE/5G when a target Wi-Fi access point lacks internet access.
+pm disable-user --user 0 com.android.captiveportallogin	Background network-layer exposure without UI interference when fuzzing or scanning hostile wireless networks.	Automatic WebView execution, neutralizing drive-by browser exploits triggered by malicious captive portal redirects during wireless reconnaissance.
+cmd connectivity airplane-mode ...	Race conditions in network state transitions (e.g., apps leaking auth tokens or cleartext credentials in the brief window before a VPN or portal lock engages).	Manual UI throttling & cached validation states, letting you programmatically trigger rapid re-authentication probes in automated test loops.
+dumpsys connectivity	Misclassified network trust states (e.g., when a gateway tricks Android into marking a hijacked network as VALIDATED despite active DNS/HTTP interception).	UI status ambiguity, exposing the exact internal capability flags (CAPTIVE_PORTAL vs. VALIDATED) and HTTP response codes hidden behind the Wi-Fi icon.
+
+
+Important Caveat on Legal & Defensive Context
+
+• Authorized testing only: Probing captive portals for walled-garden bypasses (such as User-Agent spoofing or unauthenticated egress leaks) should only be performed on networks and hardware you own or have explicit written authorization to assess.
+• Client-side focus: Because these commands run on the Android client via ADB, their primary offensive security value is controlling your test rig during mobile application penetration tests, IoT hardware assessments, and authorized wireless audits.
+Would you like to examine how captive portal walled-garden bypasses work from an architectural defense perspective (such as how gateways prevent User-Agent or DNS tunneling leaks), or explore mobile app network-transition vulnerabilities?

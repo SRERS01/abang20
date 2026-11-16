@@ -1,0 +1,57 @@
+An offensive security researcher uses these commands to eliminate noise, force traffic through intercepting proxies, prevent accidental network drops, and simulate or audit captive portal behavior.
+Every setting serves a specific tactical purpose across four primary research workflows: Mobile App & Proxy Testing, Walled-Garden & Portal Auditing, Rogue AP / OpSec Defense, and Lab Automation.
+
+1. Controlling Detection & Device OpSec
+
+These commands dictate how your test device reacts when it encounters an unauthenticated or offline network.
+• captive_portal_mode (0, 1, 2)
+	• How you use it: Set to 0 when running an air-gapped IoT lab or routing traffic through Burp Suite/mitmproxy without an internet uplink. Set to 1 when auditing a captive portal's login interface. Set to 2 when carrying a research device into the field.
+	• Why it matters: Mode 0 stops Android from dropping your offline test Wi-Fi or cluttering Wireshark captures with Google connectivity probes. Mode 2 protects your device from Evil Twin or Karma attacks by instantly disconnecting from any rogue AP that tries to serve a malicious login page.
+• captive_portal_detection_enabled (0 or 1)
+	• How you use it: Set to 0 when testing legacy Android 5.0–6.0 devices or older embedded Android IoT hardware.
+	• Why it matters: Older Android versions ignore captive_portal_mode, so this legacy toggle is required to stop background connectivity checks and keep legacy devices locked onto offline test networks.
+• network_avoid_bad_wifi (0 or 1)
+	• How you use it: Set to 0 during local network assessments or hardware hacking.
+	• Why it matters: By default, if a Wi-Fi network fails internet validation, Android keeps the Wi-Fi icon visible while silently routing your tool traffic over cellular data. Setting this to 0 forces packets to stay on wlan0 so your exploits and scans hit the local target instead of leaking over LTE/5G.
+• pm disable-user --user 0 com.android.captiveportallogin
+	• How you use it: Run this to disable Android's built-in captive portal browser package on your research phone.
+	• Why it matters: Android renders captive portals inside a privileged system WebView (CaptivePortalLogin). Disabling it prevents untrusted networks from automatically launching a browser window on your device, reducing your attack surface against browser-based 0-days when probing unknown wireless networks.
+
+2. Redirecting & Spoofing Connectivity Probes
+
+These commands let you hijack where Android sends its connectivity checks and how it validates them.
+• captive_portal_http_url & captive_portal_https_url
+	• How you use it: Point these URLs to an IP address and port controlled by your local listener (e.g., http://192.168.1).
+	• Why it matters: When testing mobile apps through an intercepting proxy with a custom CA certificate, pointing probes to your own mock HTTP 204 endpoint tricks Android into marking the network as VALIDATED (full internet) without ever sending traffic to Google's servers.
+• captive_portal_other_http_urls & captive_portal_other_https_urls
+	• How you use it: Supply a comma-separated list of target domains or IP addresses across different ports.
+	• Why it matters: Allows you to test how a target network's firewall or walled garden filters outbound egress across multiple endpoints simultaneously, helping identify whitelisted domains or DNS/HTTP leaks in captive portals.
+• captive_portal_fallback_url & captive_portal_other_fallback_urls
+	• How you use it: Configure secondary IP-based or alternate-domain URLs as fallbacks when primary domains fail.
+	• Why it matters: Useful for testing whether a target captive portal only blocks standard domains via DNS sinkholing while leaving direct IP egress or non-standard domains open.
+• captive_portal_fallback_probe_specs
+	• How you use it: Define custom validation rules using the format http://url@@/status_regex@@/body_regex.
+	• Why it matters: Lets you fingerprint how a captive portal modifies HTTP responses. You can configure Android to treat a specific portal response body or status code as "valid," allowing you to automate state transitions while testing walled-garden bypasses.
+• captive_portal_user_agent
+	• How you use it: Set a custom string (such as a desktop browser, smart TV, or custom curl User-Agent) for Android's probe requests.
+	• Why it matters: Many captive portals, hotel gateways, and Web Application Firewalls (WAFs) inspect the User-Agent header to serve different login pages or grant automatic bypasses to non-browser devices (like gaming consoles or IoT gear). Spoofing this header lets you test for User-Agent-based access control flaws.
+• captive_portal_server & captive_portal_use_https
+	• How you use it: Set a custom hostname and toggle HTTPS (0 or 1) on Android 5.0–6.0 test targets.
+	• Why it matters: Setting captive_portal_use_https 0 forces legacy devices to validate connectivity over cleartext HTTP, allowing you to intercept, modify, or spoof connectivity checks without dealing with TLS certificate pinning or warnings.
+
+3. Modern Overrides, Debugging & Automation
+
+These commands help you bypass modern OS restrictions and rapidly cycle tests via CLI scripts.
+• device_config put connectivity <key> <value>
+	• How you use it: Apply any of the captive_portal_* keys directly to the connectivity namespace on Android 10 and newer.
+	• Why it matters: On modern Android versions, Google's updatable NetworkStack Mainline module pulls remote flags that can silently override traditional settings put global changes. Using device_config ensures your research overrides actually take effect on newer devices.
+• cmd connectivity airplane-mode enable && cmd connectivity airplane-mode disable
+	• How you use it: Execute this one-liner inside your bash or Python test scripts after changing portal settings or firewall rules.
+	• Why it matters: Forces Android's NetworkMonitor state machine to immediately drop and re-evaluate the network interface, triggering an instant captive portal probe without requiring manual screen interaction.
+• dumpsys connectivity | grep -i -E "captive|validated"
+	• How you use it: Run this after connecting to a target AP or modifying your local proxy setup.
+	• Why it matters: Gives you immediate ground-truth telemetry on whether the OS classified the connection as CAPTIVE_PORTAL or VALIDATED, and reveals the exact probe URLs and HTTP response codes Android observed.
+• settings list global | grep captive_portal & settings delete global <key>
+	• How you use it: Audit active overrides before starting an engagement and delete custom keys afterward.
+	• Why it matters: Ensures clean test hygiene so leftover proxy URLs or disabled checks from a previous assessment do not skew results on your next target.
+Would you like a ready-to-use Python or Bash automation script that spins up a mock HTTP 204/portal server and configures an ADB-connected test device in one command?

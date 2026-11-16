@@ -1,0 +1,33 @@
+Here is the complete, consolidated reference table of all 12 AOSP captive_portal_* global settings, along with the device_config equivalents, companion routing settings, and system/package ADB commands used to control and inspect captive portal behavior on Android.
+
+Complete Android Captive Portal ADB Reference
+
+
+Category	Command / Setting Key	Valid Values / Syntax	Version & Research Use Case
+Core Mode	settings put global captive_portal_mode	0 (Ignore)
+1 (Prompt - default)
+2 (Avoid)	Android 7.0+. 0 disables checks for air-gapped labs/proxies; 1 triggers portal prompts for WebView/Custom Tab testing; 2 drops rogue/portal APs immediately.
+Legacy Toggle	settings put global captive_portal_detection_enabled	0 (Off)
+1 (On - default)	Android 5.0–6.0. Legacy boolean switch to disable or enable captive portal detection entirely.
+Primary HTTP	settings put global captive_portal_http_url	http://<host>/generate_204	Android 7.0+. Sets the primary cleartext HTTP probe URL. Point this to your local Burp Suite, mitmproxy, or mock HTTP 204 listener.
+Primary HTTPS	settings put global captive_portal_https_url	https://<host>/generate_204	Android 7.0+. Sets the primary encrypted HTTPS probe URL used to verify unrestricted internet egress.
+Multi-HTTP	settings put global captive_portal_other_http_urls	Comma-separated HTTP URLs	Android 9.0+. Additional HTTP URLs probed concurrently with the primary HTTP URL to test multi-host firewall/egress rules.
+Multi-HTTPS	settings put global captive_portal_other_https_urls	Comma-separated HTTPS URLs	Android 9.0+. Additional HTTPS URLs probed concurrently with the primary HTTPS URL.
+First Fallback	settings put global captive_portal_fallback_url	http://<host>/generate_204	Android 7.0+. Secondary probe URL queried if primary HTTP/HTTPS probes time out or fail DNS resolution.
+Extra Fallbacks	settings put global captive_portal_other_fallback_urls	Comma-separated URLs	Android 8.0+. Additional backup URLs cycled through when both primary and first-fallback probes fail.
+Regex Probes	settings put global captive_portal_fallback_probe_specs	http://url@@/status_regex@@/body_regex	Android 9.0+. Custom fallback probes that validate connectivity via regex matching on HTTP status and response body instead of HTTP 204.
+User-Agent	settings put global captive_portal_user_agent	Custom User-Agent string	Android 7.0+. Spoofs the User-Agent header sent during portal probes to test WAF/portal filtering rules.
+Legacy Server	settings put global captive_portal_server	Domain or IP (e.g., 192.168.1.1)	Android 5.0–6.0. Sets the hostname used to build default /generate_204 probe URLs on legacy builds.
+Legacy HTTPS	settings put global captive_portal_use_https	0 (HTTP)
+1 (HTTPS)	Android 5.0–6.0. Forces legacy devices to probe over HTTPS (1) or fall back to cleartext HTTP (0).
+Mainline Override	device_config put connectivity <key>	Same keys/values as above (e.g., captive_portal_mode 0)	Android 10+. Overrides NetworkStack Mainline module flags directly when settings put global is superseded by server flags.
+Traffic Routing	settings put global network_avoid_bad_wifi	0 (Stay on Wi-Fi)
+1 (Switch to cellular)	Android 7.0+. Setting to 0 stops Android from silently routing packets over mobile data when a lab Wi-Fi AP lacks internet.
+Disable Portal UI	pm disable-user --user 0 com.android.captiveportallogin	Package name (enable to restore)	All versions. Kills the privileged system CaptivePortalLogin app so untrusted portal pages cannot auto-launch.
+Force Re-probe	cmd connectivity airplane-mode enable && cmd connectivity airplane-mode disable	Shell command	Android 9.0+. Toggles radio state via CLI to trigger an immediate captive portal check without touching the screen.
+Inspect State	dumpsys connectivity | grep -i -E "captive|validated"	Shell command	All versions. Displays live interface tags (NET_CAPABILITY_CAPTIVE_PORTAL vs. VALIDATED) and recent probe results.
+Audit / Reset	settings list global | grep captive_portal
+settings delete global <key>	Shell commands	All versions. Lists all modified captive portal keys or deletes a custom key to revert to AOSP defaults.
+
+(Note: Prefix every command above with ~/Android/Sdk/platform-tools/adb shell  when running from your host terminal.)
+Would you like a quick one-liner shell script to automate toggling between your "Lab/Proxy Mode" and "Field OpSec Mode" over ADB?
