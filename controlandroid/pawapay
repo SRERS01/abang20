@@ -1,0 +1,49 @@
+Payment theft during a pawaPay integration occurs mainly when API tokens are leaked, request parameters are tampered with, or incoming webhooks are not verified. Understanding the full communication lifecycle helps you secure every handoff between your user, your backend server, and pawaPay's API.
+
+1. Communication Flow & Theft Points
+
+text
+[User Browser] ---> (1) Payment Request ---> [Your Backend Server]
+                                                    |
+                                            (2) API Call + Bearer Token
+                                                    v
+[User Phone]   <--- (3) Mobile Money Prompt --- [pawaPay API]
+
+     |                                              |
+(4) PIN Approval                                    |
+     +------------> (5) Mobile Network ------------>+
+                                                    |
+                                            (6) Webhook Callback
+                                                    v
+                                             [Your Backend Server]
+Use code with caution.
+
+2. Breakdown of Each Step & Attack Vectors
+
+• Step 1: User Initiates Payment (Frontend to Backend)
+	• Normal Flow: The user clicks "Pay" on your website, sending the item ID and phone number to your backend.
+	• Where Theft Occurs (Price Manipulation): If your frontend sends the price or currency directly and your backend blindly trusts it, an attacker can intercept the request and change 10000 XAF to 10 XAF.
+	• Defense: Only accept product IDs and quantities from the frontend, and calculate the final price strictly on your backend server.
+• Step 2: Backend Calls pawaPay API (Server to pawaPay)
+	• Normal Flow: Your server sends a POST request (e.g., to /deposits or /payouts) authenticated with your secret Authorization: Bearer <API_TOKEN> header.
+	• Where Theft Occurs (API Key Leak & Unauthorized Payouts): If you make this API call directly from your frontend JavaScript or leak your token in an exposed .env or .git file, attackers can steal the token and call pawaPay's Payouts API to drain your merchant wallet into their own mobile money numbers.
+	• Defense: Keep your pawaPay API token strictly on your backend server, rotate it immediately if exposed, and enable IP whitelisting in your pawaPay dashboard so only your server's IP can trigger payouts.
+• Step 3 & 4: Mobile Money Prompt & PIN Entry (pawaPay to User)
+	• Normal Flow: pawaPay triggers a USSD push prompt on the user's phone, and the user enters their Mobile Money PIN to authorize the charge.
+	• Where Theft Occurs (Social Engineering / Prompt Bombing): Attackers may spam a victim's phone with payment prompts hoping they accidentally enter their PIN, or trick users into approving a request under false pretenses.
+	• Defense: Implement rate limiting and CAPTCHA on your checkout endpoint so bots cannot spam USSD prompts to random phone numbers.
+• Step 5 & 6: Webhook Callback (pawaPay to Your Backend)
+	• Normal Flow: Once the mobile operator confirms the transaction, pawaPay sends an asynchronous HTTP POST webhook to your callback URL with the final status (COMPLETED or FAILED).
+	• Where Theft Occurs (Spoofed Webhooks & Replay Attacks): If your webhook URL is publicly guessable and lacks verification, an attacker can send a fake {"status": "COMPLETED"} payload directly to your server to unlock goods or credit an account without paying. Alternatively, an attacker might resend a valid old webhook payload (replay attack) to claim the same payment twice.
+	• Defense: Verify the cryptographic signature (or mutual TLS / IP whitelist) on every incoming webhook, check that the depositId exists in your database as PENDING, and confirm the transaction status directly via pawaPay's GET /deposits/{depositId} endpoint before delivering goods.
+
+3. Summary Checklist to Prevent Theft
+
+• Never put pawaPay API tokens in frontend code, mobile apps, or public repositories.
+• Always lock down your pawaPay Payouts API using server IP whitelisting.
+• Always verify webhook authenticity and cross-check transaction amounts and statuses before fulfilling orders.
+• Always use unique, non-predictable depositId values (like UUIDv4) to prevent duplicate processing.
+If you want to secure your specific setup, let me know:
+• Which backend language or framework you are using (e.g., Node.js, PHP/Laravel, Python/Django)
+• Whether you are integrating Deposits (collecting money) or Payouts (sending money)
+I can provide the exact backend code to validate requests and verify pawaPay webhooks safely.

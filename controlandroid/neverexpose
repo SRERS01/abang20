@@ -1,0 +1,23 @@
+Environment configuration files (.env) and version control folders (.git) are the most critical files and folders that should never be exposed on a website or inside a mobile app. Leaving these accessible gives attackers direct access to your secret keys, database passwords, and full source code.
+
+Critical Files Never to Expose
+
+• .env (Environment Files): These files store sensitive variables like database passwords, payment gateway secrets, and third-party API keys. Exposing them allows attackers to take over your servers, steal user data, or run up massive bills on your cloud accounts.
+• Configuration & Credential Files (config.php, wp-config.php, settings.py, credentials.json): These contain hardcoded secrets, encryption salts, and database connection strings. Anyone who reads them can bypass your application logic and connect straight to your backend systems.
+• Private Cryptographic Keys (.pem, .key, .p12, .jks): These files include SSH keys, SSL certificates, and mobile app signing keystores. If leaked, attackers can impersonate your servers, decrypt user traffic, or push malicious updates to your mobile app.
+• Database Dumps & Backups (.sql, .bak, .tar.gz, dump.rdb): Developers often leave temporary backups in public web folders during migrations. Downloading a single backup file exposes your entire user database, including hashed passwords and personal records.
+
+Critical Folders Never to Expose
+
+• .git/ (Version Control History): If your web server serves the hidden .git folder, attackers can download your entire commit history and reconstruct your full backend source code. It also exposes older commits where secrets might have been accidentally added and later deleted.
+• Server & Error Logs (/logs/, error_log, debug.log): Log files frequently record raw request headers, session tokens, internal file paths, and user inputs. Attackers use these details to hijack active user sessions or map out server vulnerabilities.
+• Admin & Internal Panels (/admin/, /phpmyadmin/): Leaving administrative interfaces publicly accessible without IP restrictions or strict authentication exposes them to automated credential-stuffing and brute-force attacks.
+
+Mobile App Specific Risks
+
+• Hardcoded Secrets in Compiled Code: Mobile apps (.apk or .ipa files) are downloaded directly onto user devices and can be easily decompiled. Never store backend admin keys or private secrets inside strings.xml, Info.plist, or bundled .env files, as anyone can extract them from the app package.
+• Debug Files & Source Maps (.map, .dSYM): Shipping source maps or debug symbols in production builds makes it easy for attackers to reverse-engineer your app's business logic and security checks.
+If you are securing a specific project, let me know:
+• Your tech stack (e.g., Node.js, PHP, React, Android/iOS)
+• Your hosting setup (e.g., Nginx, Apache, AWS, Vercel)
+I can give you the exact configuration rules to block access to these files.
