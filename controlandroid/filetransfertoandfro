@@ -1,0 +1,33 @@
+Here is the complete, step-by-step flow for Option 1 (Using the Ubuntu File Manager) from start to finish in both directions.
+
+Part 1: Initial Setup (Do This First for Both Directions)
+
+Before moving any files, you must connect your phone so it appears in your Ubuntu sidebar:
+1. Unlock your phone: Make sure your TECNO SPARK 30 is unlocked and on the home screen.
+2. Plug in the USB cable: Connect your phone to your Ubuntu laptop using a data-capable USB cable.
+3. Switch to File Transfer mode: Swipe down from the top of your phone screen, tap the "Charging this device via USB" notification, and select File Transfer (or MTP).
+4. Open Ubuntu Files: Click the Files icon on your Ubuntu dock. Confirm TECNO SPARK 30 appears in the left sidebar.
+
+Part 2: Sending Files from Phone to Ubuntu
+
+1. Open Phone Storage: In the Ubuntu Files window, click TECNO SPARK 30 in the left sidebar.
+2. Enter Internal Storage: Double-click Internal shared storage (or your SD card).
+3. Find Your Files: Open the folder containing your files (for example, Download, ExtractedApks, DCIM, or Documents).
+4. Copy the Files: Click to select the file(s) you want (hold Ctrl to select multiple), then press Ctrl + C (or right-click and choose Copy).
+5. Choose Destination on Ubuntu: Click Downloads (or Home / Desktop) in the left sidebar of the Files window.
+6. Paste the Files: Press Ctrl + V (or right-click in an empty space and choose Paste). Wait for the copy circle at the top of the window to finish.
+
+Part 3: Sending Files from Ubuntu to Phone
+
+1. Find Your Files on Ubuntu: In the Ubuntu Files window, click Downloads (or the folder where your file is saved) in the left sidebar.
+2. Copy the Files: Select the file(s) you want to send, then press Ctrl + C (or right-click and choose Copy).
+3. Open Phone Storage: Click TECNO SPARK 30 in the left sidebar, then double-click Internal shared storage.
+4. Open Target Folder: Open the folder where you want to store the file on your phone (such as Download).
+5. Paste the Files: Press Ctrl + V (or right-click in an empty space and choose Paste). Wait for the transfer to finish.
+6. (Optional) Install APK on Phone: If you transferred an .apk file, open the Files app on your phone, go to Downloads, tap the .apk, and select Install.
+
+Part 4: Safe Disconnect (Do This When Finished)
+
+1. Eject the Phone: In the Ubuntu Files left sidebar, click the small Eject icon (⏏) next to TECNO SPARK 30.
+2. Unplug: Once TECNO SPARK 30 disappears from the sidebar, safely unplug your USB cable.
+Would you like me to also write out the complete start-to-end flow for Option 2 (ADB commands in the terminal), or are you ready to try transferring your files with this guide?
