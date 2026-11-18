@@ -1,0 +1,133 @@
+Part 1: Complete End-to-End Ubuntu Lab Setup (Multi-Hop Topology)
+
+In a real ad hoc network, distant devices cannot talk directly; they rely on intermediate nodes to relay traffic. By adding wmediumd (a wireless medium simulator) to mac80211_hwsim, you can force a multi-hop topology on a single Ubuntu machine:
+[Node 1 (Victim)] <---> [Node 2 (Relay / Attacker)] <---> [Node 3 (Gateway / Victim)]
+(Warning: Because batman-adv and mac80211 run in kernel space, run this inside an Ubuntu VM with KASAN (Kernel Address Sanitizer) enabled if you plan to fuzz, so memory corruption triggers an immediate crash report instead of silently failing.)
+
+Step 1: Install Dependencies & Build wmediumd
+
+Open a terminal on your Ubuntu VM and install the required networking tools, Scapy, and wmediumd:
+bash
+sudo apt update && sudo apt install -y \
+    batctl iw iproute2 tcpdump wireshark python3-scapy \
+    git build-essential pkg-config libnl-3-dev libnl-genl-3-dev libconfig-dev
+
+git clone https://github.com
+cd wmediumd
+make
+sudo make install
+cd ..
+Use code with caution.
+
+Step 2: Create the Multi-Hop Signal Configuration
+
+Create a wmediumd.cfg file that places Node 1 and Node 3 out of radio range of each other (-95 dBm), forcing both to communicate through Node 2 (-50 dBm):
+bash
+cat << 'EOF' > wmediumd.cfg
+ifaces :
+{
+    ids = [
+        "02:00:00:00:00:00",
+        "02:00:00:00:01:00",
+        "02:00:00:00:02:00"
+    ];
+
+    links = (
+        (0, 1, -50.0),
+        (1, 2, -50.0),
+        (0, 2, -95.0)
+    );
+};
+EOF
+Use code with caution.
+
+Step 3: Spin Up the Lab (start_lab.sh)
+
+Save this complete automation script as start_lab.sh, make it executable (chmod +x start_lab.sh), and run it with sudo ./start_lab.sh:
+bash
+#!/bin/bash
+set -e
+
+# Clean any leftover state
+for i in 1 2 3; do ip netns del node$i 2>/dev/null || true; done
+pkill wmediumd 2>/dev/null || true
+modprobe -r batman-adv mac80211_hwsim 2>/dev/null || true
+
+# Load virtual Wi-Fi radios and batman-adv kernel module
+modprobe mac80211_hwsim radios=3
+modprobe batman-adv
+
+# Start wmediumd in the background to enforce multi-hop distance
+wmediumd -c wmediumd.cfg &
+sleep 1
+
+# Map virtual PHYs to isolated network namespaces
+PHYS=($(ls /sys/class/ieee80211/))
+for i in 1 2 3; do
+    IDX=$((i-1))
+    PHY=${PHYS[$IDX]}
+    WLAN=$(ls /sys/class/ieee80211/$PHY/device/net/)
+    
+    ip netns add node$i
+    iw phy $PHY set netns name node$i
+    
+    ip netns exec node$i ip link set lo up
+    ip netns exec node$i ip link set $WLAN down
+    ip netns exec node$i iw dev $WLAN set type ibss
+    ip netns exec node$i ip link set $WLAN up
+    ip netns exec node$i iw dev $WLAN ibss join mesh-lab 2412
+    
+    # Attach ad hoc radio to batman-adv mesh interface
+    ip netns exec node$i batctl if add $WLAN
+    ip netns exec node$i ip link set bat0 up
+    ip netns exec node$i ip addr add 10.10.10.$i/24 dev bat0
+done
+
+echo "[+] Lab ready. Waiting 5 seconds for OGM route convergence..."
+sleep 5
+ip netns exec node1 batctl o
+Use code with caution.
+
+Step 4: Verify Multi-Hop Routing & Capture Traffic
+
+1. Verify the multi-hop path: Check that Node 1 (10.10.10.1) reaches Node 3 (10.10.10.3) via Node 2's MAC address (02:00:00:00:01:00):bash
+sudo ip netns exec node1 batctl tr 10.10.10.3
+Use code with caution.
+2. Capture live mesh frames: Open Wireshark on the global monitor interface (hwsim0) to inspect raw 802.11 and batman-adv frames in real time:bash
+sudo ip link set hwsim0 up
+sudo wireshark -i hwsim0 -k &
+Use code with caution.
+
+Step 5: Teardown Script (stop_lab.sh)
+
+bash
+#!/bin/bash
+pkill wmediumd 2>/dev/null || true
+for i in 1 2 3; do sudo ip netns del node$i 2>/dev/null || true; done
+sudo modprobe -r batman-adv mac80211_hwsim
+echo "[+] Lab cleaned up."
+Use code with caution.
+
+Part 2: How to Apply This in Real Bug Bounty & Vulnerability Research
+
+Traditional web bug bounties (HackerOne/Bugcrowd) rarely include RF hardware, so ad hoc research pays off in three specific bug bounty and vulnerability research tracks:
+
+1. Consumer Mesh Routers & Smart Home Hubs (Hardware / IoT Bounties)
+
+Many commercial mesh Wi-Fi systems (such as OpenWrt-based enterprise APs, eero, Google Nest Wifi, TP-Link Deco, and Netgear Orbi) use batman-adv, 802.11s, or custom Layer-2/UDP mesh daemons under the hood for wireless backhaul.
+• Target Scope: Look for hardware and IoT programs on Bugcrowd, HackerOne, YesWeHack, or vendor-run programs (like TP-Link, Ubiquiti, Netgear, and ASUS).
+• How Your Lab Helps: Download the target router's open-source GPL firmware tarball, extract its mesh routing binary or kernel patch (e.g., modified batman-adv or olsrd), and run that exact daemon inside node1 and node2 of your Ubuntu lab. You can audit and fuzz the vendor's custom TLV extensions without needing physical access to their hardware first.
+
+2. Linux Kernel & Open-Source Infrastructure Bounties (KernelCTF / SSD / ZDI)
+
+Because batman-adv and mac80211 (802.11s/IBSS) live inside the upstream Linux kernel, memory corruption bugs (heap overflows, use-after-free, out-of-bounds reads) in packet parsing are high-severity vulnerabilities.
+• Target Scope: Google KernelCTF, Zero Day Initiative (ZDI), SSD Secure Disclosure, and Crowdfense offer substantial payouts for Linux kernel LPE/RCE or remote pre-auth wireless/mesh vulnerabilities.
+• How Your Lab Helps: Compile an upstream Linux kernel with CONFIG_KASAN=y and CONFIG_BATMAN_ADV=m, boot it in QEMU/KVM, and run a coverage-guided or mutational fuzzer (like Syzkaller or a custom Scapy script injecting malformed EtherType 0x4305 batman-adv frames from node2). Historical CVEs in batman-adv (such as CVE-2018-10322 and CVE-2022-4842) stemmed directly from improper length validation in received mesh packets.
+
+3. Drone, Industrial IoT, & Off-Grid Radio Ecosystems
+
+Enterprise drone controllers (DJI, PX4/MAVLink mesh radios), industrial sensor networks, and off-grid emergency communicators (Meshtastic, ATAK plugins) rely on ad hoc routing protocols over Wi-Fi, 900MHz, or LoRa.
+• What to Look For:
+	• Unauthenticated Route Hijacking (Sinkhole/MitM): Many ad hoc implementations deploy routing protocols without cryptographic authentication (e.g., olsrd without the secure plugin or unencrypted batman-adv over open IBSS). Demonstrating that an adjacent attacker can silently intercept or alter telemetry between two nodes—especially when upper-layer protocols (like MAVLink or CoAP) lack TLS—is a valid high-impact finding.
+	• Pre-Auth Denial of Service (Kernel Panic / Daemon Crash): Sending a single malformed mesh control packet that crashes the routing daemon or triggers a kernel panic across all nearby nodes in range.
+Copying...

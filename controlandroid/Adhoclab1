@@ -1,0 +1,66 @@
+You can build and attack a complete multi-node ad hoc mesh network on a single Ubuntu machine without buying extra radios. By combining the Linux kernel's virtual Wi-Fi simulator (mac80211_hwsim), Network Namespaces, and B.A.T.M.A.N. Advanced (batman-adv), you can isolate multiple virtual wireless nodes, run real routing daemons, capture raw 802.11/mesh frames, and test exploits locally.
+
+1. Lab Architecture on Ubuntu
+
+To simulate distant devices on one host, you stack three Linux networking features:
+• mac80211_hwsim: A kernel module that creates virtual Wi-Fi radios (wlan0, wlan1, wlan2) capable of real 802.11 IBSS (ad hoc) and 802.11s mesh frames.
+• Network Namespaces (ip netns): Isolates each virtual radio into its own independent network stack so they cannot cheat by talking over lo.
+• wmediumd (Optional): A user-space medium simulator that lets you drop packets or adjust signal strength between virtual nodes to simulate distance and hidden-node topologies.
+
+2. Setting Up a 3-Node Virtual Ad Hoc Mesh
+
+Run these commands on your Ubuntu machine to spin up three isolated wireless nodes (node1, node2, node3) running IBSS and batman-adv:
+bash
+# 1. Install required mesh and wireless tools
+sudo apt update && sudo apt install -y batctl iw iproute2 tcpdump wireshark
+
+# 2. Load the virtual Wi-Fi driver with 3 radios and the batman-adv kernel module
+sudo modprobe mac80211_hwsim radios=3
+sudo modprobe batman-adv
+
+# 3. Create 3 isolated network namespaces
+for i in 1 2 3; do sudo ip netns add node$i; done
+
+# 4. Move each virtual PHY radio into its own namespace
+# (Check 'iw dev' first to verify phy0, phy1, phy2 map to wlan0, wlan1, wlan2)
+sudo iw phy phy0 set netns name node1
+sudo iw phy phy1 set netns name node2
+sudo iw phy phy2 set netns name node3
+
+# 5. Configure IBSS (Ad Hoc) + batman-adv inside each namespace
+for i in 1 2 3; do
+    WLAN="wlan$((i-1))"
+    sudo ip netns exec node$i ip link set lo up
+    sudo ip netns exec node$i ip link set $WLAN down
+    sudo ip netns exec node$i iw dev $WLAN set type ibss
+    sudo ip netns exec node$i ip link set $WLAN up
+    sudo ip netns exec node$i iw dev $WLAN ibss join adhoc-lab 2412
+    
+    # Attach the ad hoc radio to a bat0 mesh interface
+    sudo ip netns exec node$i batctl if add $WLAN
+    sudo ip netns exec node$i ip link set bat0 up
+    sudo ip netns exec node$i ip addr add 10.10.10.$i/24 dev bat0
+done
+Use code with caution.
+To verify your mesh routing table and confirm the nodes see each other over virtual RF:
+bash
+sudo ip netns exec node1 batctl o   # View OGM originator table
+sudo ip netns exec node1 ping -c 3 10.10.10.3
+Use code with caution.
+
+3. Offensive Security & Vulnerability Research Targets
+
+Once the lab is running, you can attach Wireshark, Scapy, or custom C fuzzers directly to hwsim0 (the global monitor interface created automatically by mac80211_hwsim) or inside a rogue namespace (node3).
+• Routing Protocol Fuzzing (batman-adv / OLSRd / Babel): Ad hoc protocols parse untrusted Layer-2 or UDP control frames (such as batman-adv Originator Messages/OGMs or olsrd HELLO/TC packets) directly in kernel space or privileged daemons. Inject malformed TLV headers, oversized packet lengths, or invalid sequence numbers from node3 using Scapy to hunt for kernel panics, out-of-bounds reads, or memory corruption.
+• Blackhole & Sinkhole Routing Attacks: Configure node3 to advertise fake sequence numbers or artificially low metric costs so node1 and node2 route all traffic through your attacker node for interception.
+• Wormhole & Replay Attacks: Capture valid routing advertisements from node1 on hwsim0 and replay them inside node3 to poison neighbor tables and cause routing loops or denial of service.
+• 802.11 IBSS / 802.11s Frame Parsing Bugs: Because mac80211_hwsim passes frames through the real Linux mac80211 wireless stack, fuzzing management frames (beacons, probe responses, peering frames) tests the host kernel's wireless parser directly. (Note: Run this inside an Ubuntu VM if you are actively fuzzing kernel modules so a kernel panic does not crash your primary workstation.)
+
+4. Cleanup Command
+
+When you finish testing, tear down the lab cleanly with:
+bash
+for i in 1 2 3; do sudo ip netns del node$i; done
+sudo modprobe -r batman-adv mac80211_hwsim
+Use code with caution.
+Would you like a Scapy packet-injection script targeting batman-adv OGM frames, or a setup script using wmediumd to simulate multi-hop distance where node1 can only reach node3 through node2?
