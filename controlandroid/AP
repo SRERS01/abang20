@@ -1,0 +1,30 @@
+Enabling AP Isolation turns on a digital wall between your Wi-Fi devices so they cannot see each other, while disabling it removes that wall so your devices can talk directly.
+Here is what happens inside your router in both modes:
+
+What Enabling AP Isolation Means ("Privacy Wall On")
+
+• Internet Only: Every device connected to your Wi-Fi can still go online, browse websites, and use apps normally.
+• Devices Are Invisible to Each Other: Your router blocks all direct data between connected devices. Your laptop cannot detect, ping, or send files to your phone, and your phone cannot reach your laptop.
+• Protects Against Local Attacks: If a stranger or an infected device joins your Wi-Fi, they cannot scan or hack your personal devices on that same network.
+
+What Disabling AP Isolation Means ("Direct Sharing On")
+
+• Devices Can See Each Other: Your router allows devices on the same Wi-Fi to discover and communicate directly with one another.
+• Enables Local Tools & Features: Your laptop can scan your phone with nmap, your phone can send web traffic to Burp Suite on your laptop, and you can cast videos to a TV or print over Wi-Fi.
+• Requires Network Trust: Because devices can talk directly, you should only disable AP Isolation on private networks where you trust everyone connected.
+Would you like help finding the AP Isolation setting in your router, or testing the connection between your phone and laptop?
+AP Isolation (Access Point Isolation) is a Wi-Fi security setting that prevents devices on the same network from seeing or communicating with each other. When enabled, your laptop and phone can both access the internet, but they cannot detect, ping, or send data directly to one another.
+
+How to Turn Off AP Isolation
+
+Your earlier scan showed your gateway is ://baseline.com (192.168.1.1), which is a cellular/LTE CPE router. Follow these steps to disable AP Isolation:
+1. Open the Router Page: Open your web browser on Ubuntu and go to http://192.168.1.1.
+2. Sign In: Enter the admin username and password (usually found on the label underneath or behind the CPE router).
+3. Go to Wi-Fi Settings: Look for Wi-Fi, WLAN, or Wireless in the main menu, then open Advanced Settings or Security.
+4. Disable Isolation: Find AP Isolation, Client Isolation, or User Isolation, switch it to Disabled / Off, and click Save or Apply.
+
+Alternative: Use a Mobile Hotspot
+
+• Quick Workaround: If your CPE router is locked by your internet provider and does not let you change AP Isolation, turn on the Wi-Fi Hotspot on your phone and connect your Ubuntu laptop to it.
+• Why It Works: Phone hotspots normally allow local traffic between the phone and connected laptops, letting nmap and Burp Suite communicate immediately.
+Are you able to log into 192.168.1.1 to check the Wi-Fi settings, or would you like to try the phone hotspot workaround instead?
