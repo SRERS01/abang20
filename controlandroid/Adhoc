@@ -1,0 +1,96 @@
+Here is a list of network communication technologies and methods that can operate without a traditional Wi-Fi Access Point (AP).
+
+### 1\. Wireless communication
+
+| Technology                 | How it communicates                     |
+| -------------------------- | --------------------------------------- |
+| Bluetooth Classic          | Direct device-to-device                 |
+| Bluetooth Low Energy (BLE) | Direct low-power wireless communication |
+| Wi-Fi Direct               | Direct Wi-Fi connection                 |
+| Wi-Fi Ad hoc (IBSS)        | Device-to-device wireless network       |
+| Wi-Fi Aware (NAN)          | Discovers and connects nearby devices   |
+| Wi-Fi Mesh                 | Devices relay data between nodes        |
+| Wi-Fi Neighbor Awareness   | Peer discovery and communication        |
+| NFC                        | Very short-range communication          |
+| Infrared (IR)              | Direct optical communication            |
+| Zigbee                     | Device-to-device or mesh communication  |
+| Thread                     | IPv6-based mesh networking              |
+| Z-Wave                     | Wireless mesh networking                |
+| LoRa                       | Long-range radio communication          |
+| LoRaWAN                    | Long-range star-based radio networking  |
+| UWB                        | Short-range wireless communication      |
+| Wireless USB               | Direct wireless device communication    |
+
+### 2\. Radio communication
+
+| Technology                 | How it communicates                       |
+| -------------------------- | ----------------------------------------- |
+| HF radio                   | Long-distance radio communication         |
+| VHF radio                  | Radio communication, often line-of-sight  |
+| UHF radio                  | Wireless radio communication              |
+| Amateur radio (HAM)        | Direct or repeater-assisted communication |
+| CB radio                   | Citizen-band radio communication          |
+| FRS/GMRS                   | Two-way radio communication               |
+| Digital Mobile Radio (DMR) | Digital radio communication               |
+| TETRA                      | Professional digital radio communication  |
+
+### 3\. Wired communication without an AP
+
+| Technology              | How it communicates                       |
+| ----------------------- | ----------------------------------------- |
+| Ethernet                | Direct cable connection                   |
+| USB networking          | Direct device connection                  |
+| Serial communication    | Direct data exchange                      |
+| RS-232                  | Serial communication                      |
+| RS-485                  | Multi-device wired communication          |
+| CAN bus                 | Communication between electronic devices  |
+| Fiber optic             | Long-distance wired optical communication |
+| Powerline communication | Data through electrical wiring            |
+
+### 4\. Network architectures and protocols
+
+These describe how devices communicate rather than necessarily being physical transmission technologies.
+
+* Peer-to-Peer (P2P)
+
+* Ad hoc networking
+
+* Mesh networking
+
+* TCP/IP
+
+* UDP/IP
+
+* IPv6 Neighbor Discovery
+
+* Multicast networking
+
+* Broadcast networking
+
+* MANET (Mobile Ad hoc Network)
+
+* VANET (Vehicular Ad hoc Network)
+
+* Delay-Tolerant Networking (DTN)
+
+* Bluetooth Mesh
+
+* Zigbee Mesh
+
+### Important distinction
+
+No Access Point does not necessarily mean no infrastructure.
+
+For example:
+
+* Wi-Fi Direct: no traditional AP.
+
+* Bluetooth: no Wi-Fi AP.
+
+* LoRa: can communicate directly between LoRa devices, while LoRaWAN commonly uses gateways.
+
+* Mesh: can operate without a central AP, but may use relay nodes.
+
+* Internet communication: can work without your own AP, but still relies on internet infrastructure.
+
+For your networking and cybersecurity learning, I recommend studying Wi-Fi Direct, Bluetooth, Ad hoc networking, MANET, Mesh networking, TCP/IP and UDP/IP first.
