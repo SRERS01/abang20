@@ -1,0 +1,26 @@
+If your setup only accepts 127.0.0.1 (likely a typo for 227.0.0.1) and your machine's IP while rejecting 10.0.2.2, your emulator is using a bridged network (common in BlueStacks, Nox, MEmu, or custom VirtualBox setups) rather than standard Android Studio NAT networking.
+Because the virtual phone acts like a separate device directly on your Wi-Fi/AP network, it does not recognize the 10.0.2.2 alias.
+
+Method 1: Use adb reverse to Force 127.0.0.1 (Best & Permanent)
+
+Instead of forcing the emulator to accept 10.0.2.2, you can create a direct USB/ADB tunnel so the emulator sends traffic to its own 127.0.0.1, which automatically forwards straight to Burp Suite on your computer. This completely bypasses router and AP IP changes.
+1. Bind Burp Suite to Loopback. In Burp Suite, go to Proxy > Proxy Listeners, edit your listener, and bind it to 127.0.0.1 (or All interfaces) on port 8080.
+2. Create the ADB Tunnel. Open your computer's terminal or command prompt and run:bash
+adb reverse tcp:8080 tcp:8080
+Use code with caution.
+3. Set Emulator Proxy to 127.0.0.1. Inside your virtual phone's Wi-Fi settings, set the Proxy hostname to 127.0.0.1 and Proxy port to 8080.
+4. Verify the Connection. Your emulator will now route all traffic through the ADB cable/bridge directly into Burp Suite, regardless of whether AP mode is on or your router changes your IP. (Note: You only need to re-run the adb reverse command if you completely restart the emulator).
+
+Method 2: Check Why 10.0.2.2 Was Rejected (If Using Android Studio)
+
+If you are using the official Android Studio Emulator and 10.0.2.2 fails, two settings usually block it:
+• Burp Suite Listener Scope. In Burp Suite under Proxy > Proxy Listeners, if your listener is strictly bound to your Wi-Fi IP (192.168.x.x), it will reject 10.0.2.2 because 10.0.2.2 arrives via 127.0.0.1. Change the Burp listener binding to All interfaces or 127.0.0.1.
+• No Spaces in the IP. Ensure there are no accidental spaces when typing 10.0.2.2 into the Android Wi-Fi proxy box, as Android's Save button will gray out or reject the input.
+
+Method 3: Add a Virtual Loopback Adapter (If ADB Reverse Fails)
+
+If your emulator blocks ADB reverse tunneling, you can give your computer a permanent secondary IP address that never changes.
+• Windows. Open Device Manager, add a legacy Microsoft KM-TEST Loopback Adapter, and assign it a static IP like 10.10.10.10.
+• macOS / Linux. Run sudo ifconfig lo0 alias 10.10.10.10 (Mac) or sudo ip addr add 10.10.10.10/24 dev lo (Linux).
+• Connect. Bind Burp Suite to All interfaces and point your emulator's proxy to 10.10.10.10.
+If you run adb reverse tcp:8080 tcp:8080, let me know if your terminal returns a success/port number or an error message (like device not found), and I can help you finish linking it to Burp Suite.
