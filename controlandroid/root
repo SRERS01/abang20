@@ -1,0 +1,115 @@
+To root the TECNO SPARK 20 (Model: TECNO KJ5, Android 13, Helio G85) using an Ubuntu PC, you must first unlock the bootloader and then patch and flash the boot image. Because this device runs on a MediaTek Helio G85 processor, there are two distinct methods to accomplish this on Linux: the standard ADB & Fastboot method and the hardware-level MTKClient (BROM mode) method. [1] (https://github.com/bkerler/mtkclient), [2] (https://www.youtube.com/watch?v=zGyh_9OCnSo&vl=en), [3] (https://www.youtube.com/watch?v=AMc3KDIhZLY), [4] (https://droidwin.com/unlock-bootloader-tecno-spark/)
+⚠️ Crucial Warning Before Starting:
+• Data Loss: Unlocking the bootloader will completely wipe all data on your phone (factory reset). Back up everything first.
+• Firmware Match: You must obtain the stock boot.img and vbmeta.img matching your exact build number (KJ5-H6931A...GHI-T-OP-241009V1507) to prevent bootloops.
+ [1] (https://xdaforums.com/t/guide-rooting-tecno-spark-20-kj5n-twrp-custom-recovery.4667636/), [2] (https://www.youtube.com/watch?v=zGyh_9OCnSo&vl=en)
+
+Phase 1: Preparation (Required for Both Methods)
+
+1. Enable Developer Options on the Phone:
+	• Go to Settings > My Phone.
+	• Scroll down to Build number and tap it 7 times until you see "You are now a developer".
+	• Go back to Settings > System > Developer options.
+	• Toggle ON OEM unlocking and USB debugging. (Note: On newer Tecno firmware, you may also need to sign into a Tecno ID in Developer Options and wait up to 14 days for OEM unlocking permission). [1] (https://xdaforums.com/t/guide-rooting-tecno-spark-20-kj5n-twrp-custom-recovery.4667636/page-3), [2] (https://www.youtube.com/watch?v=zGyh_9OCnSo&vl=en), [3] (https://www.reddit.com/r/androidroot/comments/1wuwx4m/can_i_use_mtk_client_to_unlock_bootloader_on/)
+2. Install Magisk on the Phone:
+	• Download the latest official Magisk APK and install it on your TECNO SPARK 20. [1] (https://www.youtube.com/watch?v=gTd3CUT-6EE), [2] (https://www.youtube.com/watch?v=W7zUja0tzeA&t=516)
+3. Prepare Your Stock Firmware Files:
+	• Download the exact stock firmware ROM matching build KJ5-H6931A...GHI-T-OP-241009V1507.
+	• Extract boot.img and vbmeta.img from the firmware package onto your Ubuntu machine. (If you don't have the firmware downloaded, Method 2 below lets you extract boot.img directly from your phone). [1] (https://xdaforums.com/t/guide-rooting-tecno-spark-20-kj5n-twrp-custom-recovery.4667636/)
+
+Method 1: The Standard ADB & Fastboot Way (Recommended)
+
+This is the safest and cleanest route if your phone allows standard fastboot unlocking. [1] (https://droidwin.com/unlock-bootloader-tecno-spark/)
+
+Step 1: Set Up ADB & Fastboot on Ubuntu
+
+Open your Ubuntu terminal (Ctrl + Alt + T) and install the Android platform tools: [1] (https://www.youtube.com/watch?v=YLLQyiRvBkg), [2] (https://linuxhint.com/install-use-adb-fastboot-ubuntu/)
+bash
+sudo apt update
+sudo apt install android-tools-adb android-tools-fastboot -y
+Use code with caution.
+
+Step 2: Patch the Boot Image
+
+1. Copy the stock boot.img to your phone's internal storage (e.g., Downloads folder).
+2. Open the Magisk app on your phone.
+3. Tap Install (next to Magisk) > Select and Patch a File, then choose the boot.img.
+4. Once finished, copy the newly created magisk_patched-xxxxx.img back to your Ubuntu computer. [1] (https://www.youtube.com/watch?v=gTd3CUT-6EE), [2] (https://www.youtube.com/watch?v=W7zUja0tzeA&t=516)
+
+Step 3: Unlock the Bootloader
+
+1. Connect your phone to your Ubuntu PC via USB cable and accept the "Allow USB debugging" prompt on your phone screen.
+2. In the Ubuntu terminal, verify the connection and reboot to fastboot:bash
+adb devices
+adb reboot bootloader
+Use code with caution.
+3. Once the phone enters Fastboot mode, verify fastboot sees it:bash
+fastboot devices
+Use code with caution.
+4. Unlock the bootloader:bash
+fastboot flashing unlock
+Use code with caution.
+5. Look at your phone screen—press the Volume Up button to confirm unlocking. Your phone will wipe its data and reboot.
+6. Complete the initial Android setup again, re-enable USB debugging in Developer Options, and reboot back into fastboot (adb reboot bootloader). [1] (https://www.youtube.com/watch?v=zGyh_9OCnSo&vl=en), [2] (https://www.youtube.com/watch?v=W7zUja0tzeA&t=516), [3] (https://droidwin.com/unlock-bootloader-tecno-spark/)
+
+Step 4: Disable Verification & Flash Root
+
+Navigate to the folder on Ubuntu containing your vbmeta.img and magisk_patched.img, then run:
+bash
+# Disable dm-verity so the phone boots with modified images
+fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
+
+# Flash the Magisk-patched boot image
+fastboot flash boot magisk_patched-xxxxx.img
+
+# Reboot the device
+fastboot reboot
+Use code with caution.
+Once booted, open the Magisk app—it may ask to complete a quick environment setup and reboot once more. [1] (https://www.youtube.com/watch?v=W7zUja0tzeA&t=516)
+
+Method 2: The Hardware BROM Way via MTKClient (No Firmware Download Needed)
+
+Because your phone uses a MediaTek Helio G85, you can use MTKClient on Ubuntu to unlock the bootloader, dump your own boot.img directly from the phone, and flash it back without needing to hunt down a firmware ZIP online. (Note: If Tecno patched BROM access in the October 2024 security update 241009V1507, this method may fail to connect, requiring Method 1). [1] (https://github.com/bkerler/mtkclient)
+
+Step 1: Install MTKClient on Ubuntu
+
+Run the following commands in your Ubuntu terminal:
+bash
+sudo apt update
+sudo apt install python3 git libusb-1.0-0 python3-pip -y
+git clone https://github.com/bkerler/mtkclient
+cd mtkclient
+pip3 install -r requirements.txt
+sudo usermod -a -G plugdev $USER
+sudo cp Setup/Linux/*.rules /etc/udev/rules.d/
+sudo udevadm control -R
+Use code with caution.
+(Log out and log back into Ubuntu if USB permissions fail).
+
+Step 2: Unlock Bootloader & Dump Stock boot.img
+
+1. Power off your TECNO SPARK 20 completely. [1] (https://github.com/bkerler/mtkclient)
+2. Run the unlock command in your terminal:bash
+python3 mtk da seccfg unlock
+Use code with caution.
+3. Hold Volume Up + Volume Down simultaneously on the powered-off phone and plug in the USB cable. Release the buttons as soon as the terminal detects the device. [1] (https://github.com/bkerler/mtkclient)
+4. Once unlocked, disconnect the cable, power off the phone if it started booting, and dump your exact boot and vbmeta partitions:bash
+python3 mtk r boot,vbmeta boot.img,vbmeta.img
+Use code with caution.
+(Hold Volume Up + Volume Down and plug in the USB cable again when prompted). [1] (https://github.com/bkerler/mtkclient)
+
+Step 3: Patch & Flash via MTKClient
+
+1. Boot the phone up normally (it will factory reset from the unlock).
+2. Copy the dumped boot.img to your phone, install the Magisk APK, and patch boot.img inside Magisk.
+3. Copy the resulting magisk_patched.img back into your mtkclient folder on Ubuntu.
+4. Power off your phone completely.
+5. Flash the patched boot image and blank vbmeta using MTKClient:bash
+python3 mtk w boot magisk_patched.img
+Use code with caution.
+6. Hold Volume Up + Volume Down and plug in the USB cable. Once the write finishes, unplug the cable and hold the Power button to boot into your rooted system. [1] (https://github.com/bkerler/mtkclient), [2] (https://www.youtube.com/watch?v=W7zUja0tzeA&t=516), [3] (https://www.youtube.com/watch?v=gTd3CUT-6EE)
+
+Optional Alternative: KernelSU (Instead of Magisk)
+
+Some users on the r/androidroot subreddit note that the TECNO SPARK 20 can also be rooted using KernelSU if you prefer kernel-level root hiding over Magisk. The steps on Ubuntu are identical to Method 1 or 2, except you patch your boot.img using the KernelSU Manager app instead of Magisk before flashing. [1] (https://www.reddit.com/r/androidroot/comments/1n1zsi0/i_want_to_root_my_tecno_spark_20_kn5_but_its_my/)
+Would you like help finding the exact stock firmware for your 241009V1507 build, or are you running into a specific error with ADB or MTKClient on Ubuntu?
