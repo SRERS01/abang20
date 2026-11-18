@@ -1,0 +1,23 @@
+The top three essential tools for a web bug bounty hunter are Burp Suite, ffuf, and Nuclei. Together, these tools form the core workflow for intercepting traffic, discovering hidden attack surfaces, and automating vulnerability checks.
+
+1. Burp Suite (Web Proxy & Manual Testing)
+
+Burp Suite is the industry-standard web proxy used to intercept, inspect, and modify HTTP/S traffic between your browser and the target application. Every serious web bug bounty hunter relies on it as their central workbench.
+• Traffic Interception. It lets you pause requests in real time to alter parameters, headers, and cookies before they reach the server.
+• Repeater for Exploitation. You can resend modified requests dozens of times to test for logic flaws, IDORs, SQL injection, and access control issues.
+• Extensive Ecosystem. The BApp Store offers community extensions like Autorize and Logger++ that automate complex authorization and session testing.
+
+2. ffuf (Web Fuzzing & Content Discovery)
+
+ffuf (Fuzz Faster U Fool) is a high-speed web fuzzer written in Go that discovers hidden files, directories, subdomains, and parameters. Since you already have it set up with SecLists, it will be one of your most frequently used command-line tools.
+• Hidden Attack Surface. It brute-forces unlinked endpoints, backup files, and admin panels that normal web crawlers miss.
+• Parameter Discovery. It fuzzes GET and POST parameter names to uncover hidden functionality vulnerable to XSS or SSRF.
+• Speed and Filtering. It handles thousands of requests per second and provides smart response filtering by status code, word count, and line count to eliminate noise.
+
+3. Nuclei (Template-Based Vulnerability Scanner)
+
+Nuclei is a fast, customizable vulnerability scanner that uses YAML templates to detect known security issues across large sets of targets. It bridges the gap between reconnaissance and manual exploitation.
+• Massive Template Library. Maintained by ProjectDiscovery and the security community, it scans for thousands of known CVEs, misconfigurations, exposed panels, and leaked API keys.
+• Low False Positives. Unlike noisy legacy scanners, Nuclei templates send targeted requests that verify exact conditions before reporting a finding.
+• Custom Automation. You can write simple YAML templates to hunt for newly disclosed vulnerabilities across hundreds of subdomains within minutes.
+If you'd like to set up a daily recon workflow combining these tools, let me know your target scope type (single domain or wildcard subdomains) and I can share the exact command pipeline.

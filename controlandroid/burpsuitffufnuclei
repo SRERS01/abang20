@@ -1,0 +1,24 @@
+Mostly yes—for standard HTTP/S testing, Nuclei accepts almost all the same inputs as ffuf and Burp Suite, including URLs, headers, cookies, POST/JSON bodies, raw request files, and proxy settings. However, each tool handles those inputs differently because they are built for different jobs.
+
+What All Three Tools Share
+
+• HTTP Elements. All three accept custom methods (GET, POST, PUT), custom headers, session cookies, body data (form-encoded, JSON, XML, multipart), and upstream proxies.
+• Raw Request Files. Just like ffuf -request req.txt and Burp Repeater, Nuclei accepts saved raw HTTP request files via -r req.txt or Burp XML exports via -im burp.
+
+Where They Differ (Why You Still Need All Three)
+
+Even though Nuclei accepts the same raw inputs, it cannot completely replace ffuf or Burp Suite:
+
+Feature / Input	Nuclei	ffuf	Burp Suite
+Primary Strength	Automated vulnerability detection using YAML templates	Ultra-fast brute-forcing and content/parameter discovery	Manual traffic interception, session handling, and logic testing
+Wordlist Brute-Forcing	Limited (slower, designed for vulnerability checks rather than massive wordlists)	Best (built specifically to blast 100,000+ wordlist entries per second with FUZZ keywords)	Slower in Community Edition (throttled Intruder)
+Multi-Step Browser Flows	Supports basic multi-step YAML requests and headless browser scripts	Single-request stateless fuzzing only	Best (handles complex CSRF tokens, OAuth logins, and interactive browser clicks)
+Non-HTTP Protocols	Best (supports DNS, TCP, SSL, WebSockets, WHOIS, and local files)	HTTP/HTTPS only	HTTP/HTTPS and WebSockets only
+
+
+How They Fit Together in Your Workflow
+
+• Use Burp Suite first to browse the app manually, capture authenticated requests, and save interesting requests to a file.
+• Use ffuf second to brute-force hidden directories, subdomains, and parameter names using your SecLists wordlists.
+• Use Nuclei third to scan discovered endpoints (or exported Burp requests) for known CVEs, misconfigurations, and injection flaws.
+If you want to practice chaining them together, would you like to see how to export a request from Burp Suite and pass it directly into both ffuf and Nuclei?
