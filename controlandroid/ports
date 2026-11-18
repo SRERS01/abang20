@@ -1,0 +1,40 @@
+To check active network ports in Ubuntu, use the built-in ss (socket statistics) command in your terminal.
+
+1. List All Listening Ports & Programs
+
+Run this command to see every open port waiting for connections along with the program using it:
+bash
+sudo ss -tulnp
+Use code with caution.
+• -t shows TCP ports.
+• -u shows UDP ports.
+• -l shows only listening (active) ports.
+• -n shows raw port numbers (like 80 or 22) instead of service names.
+• -p displays the Process ID (PID) and application name (requires sudo to view all apps).
+
+2. Check a Specific Port
+
+To see if a specific port (such as port 8080) is currently active, filter the output with grep:
+bash
+sudo ss -tulnp | grep :8080
+Use code with caution.
+• If it returns a line, that port is active and the output will show the program using it.
+• If it returns nothing, the port is currently free and inactive.
+
+3. View All Established Connections
+
+If you want to see ports with active, ongoing data transfers rather than just waiting/listening ports, run:
+bash
+sudo ss -tunap
+Use code with caution.
+• Look for ESTAB in the State column to find live connections between your Ubuntu machine and external servers or devices.
+
+4. Alternative Command (lsof)
+
+If you prefer checking ports by file usage, you can also use lsof:
+bash
+sudo lsof -i -P -n | grep LISTEN
+Use code with caution.
+• Clear readability. This displays the application name, user, PID, and exact port number in clean columns.
+Are you trying to free up a port that is already in use, or verify that a new service (like a web server or database) is running? Let me know the port number or app name, and I can share the next steps.
+Copying...
