@@ -1,0 +1,13 @@
+Pulling the files directly from your phone is the safest and most reliable choice, because you are guaranteed to get the exact files matching your current software build and security patch.
+Downloading firmware online always carries a small risk of grabbing the wrong region or build version, which can cause a bootloop when flashed. Pulling directly from the device eliminates that risk completely.
+
+Best Practices When Pulling boot.img and vbmeta.img
+
+• Keep Unmodified Backups: Before patching or editing anything, copy the pulled boot.img and vbmeta.img to your PC or cloud storage as clean backups. You can flash them back if anything goes wrong.
+• Check Active Slots (A/B Devices): Many modern Android phones have two copies of these partitions (boot_a/boot_b and vbmeta_a/vbmeta_b). Make sure you pull from the currently active slot so the files match the system you are running.
+• Verify File Sizes: Check that the pulled files are not 0 bytes. A normal boot.img is usually between 32 MB and 128 MB, while vbmeta.img is very small—typically 4 KB to 64 KB (though some tools pad it to several megabytes).
+• Check for init_boot.img: If your phone shipped with Android 13 or newer, pull init_boot.img alongside boot.img, as newer devices store the ramdisk needed for Magisk inside init_boot instead of boot.
+If you're ready to pull the files now, let me know:
+• Which method you plan to use (Root/Termux, TWRP recovery, or a PC tool like MTK Client/EDL)
+• Your phone model
+I can give you the exact commands to verify your active slot and pull the files cleanly.
