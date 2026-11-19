@@ -1,0 +1,553 @@
+Yes, friend. Let's make this a proper technical reference for your Ubuntu security laboratory.
+
+First, a small correction: when you say "types of sickness", I understand you mean types of security weaknesses or vulnerabilities.
+
+There is an important distinction:
+
+* Ettercap is primarily a network sniffer, protocol analyzer and man-in-the-middle testing tool.
+
+* Bettercap is a modular network reconnaissance and security-testing framework.
+
+Neither tool can automatically find every vulnerability. They help you investigate network weaknesses, collect evidence and validate security controls.
+
+### PART A — ETTERCAP COMPLETE USAGE GUIDE
+
+![Man-in-the-middle (MITM) Attacks using Ettercap - HackBlue](https://images.openai.com/static-rsc-4/Rd6X3KJYz9_HvhTVZhyrPQ5ALGxUQBlmwm9LX_NnUqbCRNHFLmiiVuFLv6qWpKFwOQgPX7EXoYbrvuZViXXY-Z-YDDlgGcd46BH2R2YM9wbmjfbUqcWEYhKYYYm7mvzgPZO6CJzci0hb7dvu5pvGOJOaZ6fnOQWGzMiBgFoRWyUWHR6zXt2iPDTG9a2mI7XI?purpose=fullsize)
+
+### 1\. Installation and verification
+
+```bash
+sudo apt update
+sudo apt install ettercap-text-only -y
+```
+
+Verify:
+
+```bash
+ettercap --version
+ettercap --help
+man ettercap
+```
+
+Find the installed executable:
+
+```bash
+which ettercap
+whereis ettercap
+```
+
+Find available network interfaces:
+
+```bash
+sudo ettercap --iflist
+```
+
+### 2\. Ettercap command-line options
+
+These are the principal options. Your installed version's `ettercap --help` and manual remain authoritative.
+
+| Command | Purpose                           |
+| ------- | --------------------------------- |
+| -h      | Display help                      |
+| -v      | Display version                   |
+| -T      | Text interface                    |
+| -C      | Curses interface                  |
+| -G      | GTK interface, if supported       |
+| -i      | Select network interface          |
+| -I      | List interfaces                   |
+| -p      | Disable promiscuous mode          |
+| -z      | Disable initial ARP scan          |
+| -t      | Select TCP, UDP or all protocols  |
+| -f      | Apply a packet-capture filter     |
+| -r      | Read a PCAP capture               |
+| -w      | Write captured packets to PCAP    |
+| -L      | Save Ettercap binary logs         |
+| -l      | Log passive information           |
+| -m      | Log messages                      |
+| -c      | Compress logs                     |
+| -d      | Resolve IP addresses to hostnames |
+| -q      | Quiet mode                        |
+| -s      | Execute console commands          |
+| -D      | Run as a daemon                   |
+| -B      | Bridge sniffing                   |
+| -R      | Reverse target matching           |
+| -u      | Unoffensive mode                  |
+| -P      | Load or list plugins              |
+| -M      | Select a MITM method              |
+
+Source: GitHub +2
+
+### 3\. Safe Ettercap usage commands
+
+Assume your interface is `eth0`. Replace it with the interface shown by `ip -br addr`.
+
+A. Start text-mode inspection
+
+```bash
+sudo ettercap -T -i eth0
+```
+
+B. Observe only your own host's traffic
+
+```bash
+sudo ettercap -T -i eth0 -p
+```
+
+C. Read a previously recorded PCAP file
+
+```bash
+sudo ettercap -T -r capture.pcap
+```
+
+D. Save a packet capture
+
+```bash
+sudo ettercap -T -i eth0 -w capture.pcap
+```
+
+E. Inspect TCP traffic
+
+```bash
+sudo ettercap -T -i eth0 -t tcp
+```
+
+F. Inspect UDP traffic
+
+```bash
+sudo ettercap -T -i eth0 -t udp
+```
+
+G. Inspect all supported traffic
+
+```bash
+sudo ettercap -T -i eth0 -t all
+```
+
+H. List available plugins
+
+```bash
+ettercap -P list
+```
+
+I. Inspect Ettercap logs
+
+```bash
+etterlog -h
+man etterlog
+```
+
+Important correction: `-t` selects TCP/UDP protocol types; it does not select ARP. For more specific packet filtering, use `-f` with a valid capture filter.
+
+### 4\. Ettercap target syntax
+
+Ettercap supports target expressions involving MAC addresses, IPv4 addresses, IPv6 addresses and ports.
+
+General structure:
+
+```text
+MAC/IP/IPv6/PORTS
+```
+
+For example, a target expression can identify a particular IP address or port range.
+
+Do not confuse target selection with a packet-capture filter: they serve different purposes.
+
+### 5\. Ettercap plugin investigation
+
+Run:
+
+```bash
+ettercap -P list
+```
+
+Then investigate a particular plugin:
+
+```bash
+man ettercap_plugins
+```
+
+Plugin availability varies with the installed build.
+
+For your research, concentrate on understanding what each plugin observes, what it changes and what evidence it produces. Avoid activating interception, credential collection or traffic-modification plugins against other people's devices.
+
+### PART B — BETTERCAP COMPLETE USAGE GUIDE
+
+![Web UI Version of Bettercap | Pristine InfoSolutions](https://images.openai.com/static-rsc-4/dCEeQ3qeAxnR7WLFwe7z3cKjR0RTeuyk4AIrNIOhdL8cubG_wV8qlOUWiCSjtjVUbD0DroTT553dxXrG9lD2KALnd63AYyr70n3mRc-1W9AZWpyHpfaG4n0Qwmy9zQJs7xkd0fHsWWMQBgcm8C3lTf2KX9KvhXkPm0y6bs3cpMADeO5TBtknNXe9ZuXCRDqi?purpose=fullsize)
+
+Bettercap has a different architecture. It uses modules, parameters, commands and caplets.
+
+### 1\. Installation and verification
+
+```bash
+sudo apt update
+sudo apt install bettercap -y
+```
+
+Check installation:
+
+```bash
+bettercap -version
+bettercap -h
+which bettercap
+```
+
+Start Bettercap:
+
+```bash
+sudo bettercap
+```
+
+Start with a particular interface:
+
+```bash
+sudo bettercap -iface eth0
+```
+
+### 2\. Bettercap core commands
+
+These commands are entered inside the Bettercap console.
+
+| Command        | Purpose                          |
+| -------------- | -------------------------------- |
+| help           | Show available commands          |
+| help MODULE    | Show module-specific help        |
+| active         | Show active modules              |
+| get            | Display parameters               |
+| get *          | Display all available parameters |
+| get NAME       | Read a parameter                 |
+| set NAME VALUE | Change a parameter               |
+| clear          | Clear console                    |
+| sleep 10       | Wait 10 seconds                  |
+| quit           | Exit Bettercap                   |
+| q              | Exit Bettercap                   |
+| include FILE   | Load another caplet              |
+| !COMMAND       | Execute a shell command          |
+| alias MAC NAME | Assign an endpoint alias         |
+
+bettercap +1
+
+### 3\. Network reconnaissance module
+
+Safe discovery in an authorized lab
+
+Start:
+
+```text
+net.recon on
+```
+
+Display discovered hosts:
+
+```text
+net.show
+```
+
+Show information about a particular address:
+
+```text
+net.show 192.168.1.10
+```
+
+Show endpoint metadata:
+
+```text
+net.show.meta 192.168.1.10
+```
+
+Stop discovery:
+
+```text
+net.recon off
+```
+
+Clear discovered endpoints:
+
+```text
+net.clear
+```
+
+The `net.recon` module periodically reads the operating system's ARP table to discover network devices. bettercap
+
+### 4\. Network probing module
+
+The `net.probe` module sends discovery probes to IP addresses on the current subnet.
+
+Start:
+
+```text
+net.probe on
+```
+
+Stop:
+
+```text
+net.probe off
+```
+
+Inspect its configuration:
+
+```text
+help net.probe
+```
+
+Read its parameters:
+
+```text
+get net.probe
+```
+
+Its discovery mechanisms include mDNS, NBNS, UPnP and WSD. bettercap +1
+
+### 5\. Event monitoring
+
+Start event monitoring:
+
+```text
+events.stream on
+```
+
+Stop:
+
+```text
+events.stream off
+```
+
+Events can help you understand which activities Bettercap is reporting.
+
+### 6\. Module discovery
+
+One of the most important Bettercap commands is:
+
+```text
+help
+```
+
+It displays the modules available in your installed build.
+
+For individual module documentation:
+
+```text
+help net.recon
+help net.probe
+```
+
+Use this to discover the remaining modules instead of assuming every installation supports exactly the same commands.
+
+### 7\. Bettercap command-line options
+
+| Option        | Purpose                     |
+| ------------- | --------------------------- |
+| -h            | Help                        |
+| -version      | Version information         |
+| -iface        | Select network interface    |
+| -caplet       | Load a caplet               |
+| -caplets-path | Specify caplet directory    |
+| -eval         | Execute console commands    |
+| -script       | Load a session script       |
+| -autostart    | Automatically start modules |
+| -debug        | Enable debugging            |
+| -silent       | Suppress non-error logs     |
+
+Examples:
+
+Start an interactive session:
+
+```bash
+sudo bettercap -iface eth0
+```
+
+Run a discovery session:
+
+```bash
+sudo bettercap -iface eth0 \
+-eval "net.recon on; net.show"
+```
+
+Display available caplets:
+
+```bash
+find /usr/share/bettercap -type f -name '*.cap'
+```
+
+Load a caplet:
+
+```bash
+sudo bettercap -caplet /path/to/lab.cap
+```
+
+The caplet must exist and contain valid commands.
+
+bettercap
+
+### 8\. Bettercap modules and what to investigate
+
+| Module family | Research purpose              |
+| ------------- | ----------------------------- |
+| net.recon     | Network device discovery      |
+| net.probe     | Device discovery probing      |
+| net.sniff     | Traffic inspection            |
+| net           | Network endpoint information  |
+| events.stream | Event monitoring              |
+| wifi          | Wireless security assessment  |
+| ble           | Bluetooth Low Energy research |
+| http          | HTTP-related testing          |
+| https         | HTTPS-related testing         |
+| dns           | DNS-related testing           |
+| arp           | ARP-related testing           |
+| gateway       | Gateway information           |
+
+Module availability and exact commands depend on the installed version and platform. Check `help MODULE` before using a module.
+
+### PART C — WHAT SECURITY WEAKNESSES CAN THEY FIND?
+
+This is the most important distinction: the tools can expose evidence of a weakness, but they do not necessarily prove that a vulnerability exists.
+
+Ettercap: network weaknesses
+
+![计算机网络实验2_Wireshark实验_wireshark过滤ipv6-CSDN博客](https://images.openai.com/static-rsc-4/YHjbDFzrhBzKnJoJPzZ5ed9s7MYdcflXnXlGvFeun5tIv0zE64IfmiVpjIh-2ABhYPuznmhf6o9SdhVMujGkQbTQL7O_5mxq3h-9ZGY7bJdkK31UKzTSqDjLjUqOrbKB29nbniIrSq0vfKL4eRPJVC2oent1O2zJkeOYhAvrc2OoapE_8EPkMATBCquXLjh8?purpose=fullsize)
+
+1\. ARP security weaknesses
+
+Investigate insecure ARP trust and inadequate network protections.
+
+![Wireshark Labs(3): DNS v7.0_wireshark lab: dns v7.0-CSDN博客](https://images.openai.com/static-rsc-4/y0ZDuncRqzn7KtroGnrdVH8ZSGtcEkHEjFNPnE5jIhwYXcEM5G3m9AUuq3GKTOhpTNTu12S4RNdd7qx7jvt1Ms5itZD4KVkpd3mDOGk8_kikAeiucCW2HMYT4PYY0nzPJ-OfUGnGGG0AgaLeErPed9ksf7PHNPbFuDDiEZ56hJyiLSGP5mVrL5nyVmm5aBQG?purpose=fullsize)
+
+2\. DNS security weaknesses
+
+Investigate DNS response validation and unexpected resolver behaviour.
+
+![HTTP프로토콜 분석(Wireshark)](https://images.openai.com/static-rsc-4/8h0nHlbthYzOSGmYSGb8-qak8madD3X1h0bgo2z98b0Coj36YyZY8nD-3SLqeij4InM9wZuybEVpzkRGsO2JzAPQmYJRbZj9E600GcGXxfaMJ9Fhu_ucq04jjxvv9BD6U1w1-YAGibSlJlDjhP1HnuO_X7o3-nWcSSQgZEP--Lt4SSLmWWbEGo7D3vGNfPLq?purpose=fullsize)
+
+3\. Cleartext communication
+
+Identify sensitive information transmitted without adequate encryption.
+
+![Wireshark Q&A](https://images.openai.com/static-rsc-4/eXqznMQ07f-RWtAUPSnc9ng68jPUDpUzJOXp0RVNoE30Rfxy_QoGb7FNm1Zc8xeal1UCi4UcsMFjWTP3reNyM-HJS0cIeNiE844I2f7CsaXyf3I49M99Eb5m0mIA5npOiToU-U9WVw-EHtsKHh-9eK9T85zT4shfUozFBOUwsLcA1LtdtFyfluuCkqUSLqa4?purpose=fullsize)
+
+4\. TLS configuration weaknesses
+
+Investigate certificate handling and insecure communication configurations.
+
+![Free Network Diagram Maker | Create Network Topology Online - ConceptViz](https://images.openai.com/static-rsc-4/Oqzo0YUSsBYOKMbM6KSBt39yUK0o3jv5yf0wdYQUXKNpVpoe-i85kh-OGqKTJa6-OWvvy-ftPKFXAkpgFTfgZXEoaooyRAvenJ_S1f4q3pf8p25dDl8b1Xl7cuOQp8muTd7-Csv0CPHqw_R1ajgvVEmXEtRtz3YjpAJ4Vk9gmUGeG0Dc2f_ZJreyku1S6O9N?purpose=fullsize)
+
+5\. Network segmentation weaknesses
+
+Investigate whether devices can communicate across boundaries they should not cross.
+
+Bettercap: network and protocol weaknesses
+
+| Research target    | What to investigate                       |
+| ------------------ | ----------------------------------------- |
+| ARP                | Network trust and spoofing resistance     |
+| DNS                | Resolver behaviour and DNS trust          |
+| DHCP               | Rogue server protections                  |
+| HTTP               | Unencrypted traffic and proxy behaviour   |
+| HTTPS              | TLS and certificate validation            |
+| Wi-Fi              | Wireless authentication and configuration |
+| Bluetooth LE       | Pairing and communication security        |
+| Network discovery  | Unexpectedly exposed devices              |
+| Gateway            | Routing and segmentation                  |
+| Traffic inspection | Sensitive-data exposure                   |
+
+Important: Bettercap can help investigate these areas, but it is not a complete vulnerability scanner for all of them.
+
+### PART D — WHICH TOOL IS BETTER FOR WHICH VULNERABILITY?
+
+| Vulnerability/research area | Ettercap       | Bettercap |
+| --------------------------- | -------------- | --------- |
+| ARP spoofing resistance     | Strong         | Strong    |
+| Network reconnaissance      | Yes            | Strong    |
+| DNS weaknesses              | Yes            | Yes       |
+| Cleartext traffic           | Yes            | Yes       |
+| TLS configuration           | Limited        | Limited   |
+| Wi-Fi security              | Limited        | Stronger  |
+| Bluetooth LE                | No major focus | Yes       |
+| HTTP traffic analysis       | Yes            | Yes       |
+| API authorization           | No             | No        |
+| SQL injection               | No             | No        |
+| Insecure deserialization    | No             | No        |
+| RCE                         | No             | No        |
+| IDOR                        | No             | No        |
+| Race conditions             | No             | No        |
+
+Do not confuse network observation with vulnerability discovery. For example, seeing an HTTP request does not prove that the application has an exploitable vulnerability.
+
+### PART E — ADDITIONAL TOOLS YOU SHOULD COMBINE WITH THEM
+
+![Wireshark](https://images.openai.com/static-rsc-4/ck7e2nY97v9m7C0wgLjsbo8DKILQtREeisewFiv61QD9Mbr99-Ubtr6fnqKTVBu4ktekWUWiM3RiboWn7SS2dOCH5GCxzywPME-LRw6bsv2N0XW9e9tjw9HaMOh3NZHUwrQrkrvdwAmTtyHMiHyCrDhGvuO8HnD5OOGCt9L9L8ItYsmuoTEfoyEdbNTkWzY8?purpose=fullsize)
+
+Wireshark
+
+Detailed packet and protocol investigation.
+
+`sudo wireshark`
+
+![Images of Nmap - JapaneseClass.jp](https://images.openai.com/static-rsc-4/7rId9F8rGOb5zyu2MK5xHp1Ujnw2f9XzGMSZ_NyAravkStjLdh91kBpz9l9ZKvFbGB4bFCdxwQ-49XvAM33XKgbrk2Bro14P9HJdiuitYagBvSaSeXY78YToFRLo5zaHqWg_tPpknRZxOdn6Voo03IpKKtQsy9NTN0n8wUgg9EUA-j-S_ZkxgMSjHhCKM6ER?purpose=fullsize)
+
+Nmap
+
+Discover hosts, ports and services.
+
+`nmap -sV 192.168.1.10`
+
+![SkillHigh – Learn Skills. Get Hired. Grow Fast.](https://images.openai.com/static-rsc-4/TDF7I1O5Q5uThAV3cEeosXyU8669m2gEV5GUTYydR1_x3ZDJqdasl4sjdGNc4BsQfpQcUimhMa7dpwt-zfawtWZf7pcQKk3-hxbcTTTe49c464l61Ob4orXZXYmTxDf5SQR5oYsCddeswlWaGZiyhW8ast5HSTDs2n6n9nP8wLic1ZqPBGl3fgDhZk5-n3Zj?purpose=fullsize)
+
+Burp Suite
+
+HTTP requests, API testing and authorization research.
+
+![Learn tcpdump Filter Quick Guide - howtouselinux](https://images.openai.com/static-rsc-4/Q8nRJBf4j1ZPwwZgqIcSSV2QsJdYvwRCFpiyAVGrTasPjO60tQ5NlGU7ME3oiWMO-K-e-3V2FHzvN9O9yPAxwBh0N9xIMJcxEDrwLw8b1H5qdbvKFfvXO_YHTnOnZjva0MljFurJRseOC1sjFARaEgDcrAiFrBHfuc9iDb6mbKYmvgJlPGTjm1npYSmGBp6z?purpose=fullsize)
+
+tcpdump
+
+Command-line packet capture.
+
+`sudo tcpdump -i eth0`
+
+### PART F — YOUR PRACTICAL CHECKLIST
+
+Use this checklist in your authorized laboratory:
+
+Research progress
+
+0/10 completed
+
+Install Ettercap and Bettercap
+
+Identify Ubuntu network interfaces
+
+Understand the IP address and gateway
+
+Perform passive packet inspection
+
+Discover devices on your isolated network
+
+Inspect ARP and DNS behaviour
+
+Examine HTTP and HTTPS traffic
+
+Investigate TLS certificate validation
+
+Check network segmentation
+
+Document findings and reproduce results
+
+Reset checklist
+
+### Official documentation
+
+* [Ettercap official command reference](https://github.com/Ettercap/ettercap/blob/master/man/ettercap.8.in?utm_source=chatgpt.com)
+
+* [Ettercap Debian manual](https://manpages.debian.org/trixie/ettercap-common/ettercap.8.en.html?utm_source=chatgpt.com)
+
+* [Bettercap interactive console documentation](https://www.bettercap.org/usage/interactive_session/?utm_source=chatgpt.com)
+
+* [Bettercap network reconnaissance](https://www.bettercap.org/modules/ethernet/netrecon/?utm_source=chatgpt.com)
+
+* [Bettercap network probing](https://www.bettercap.org/modules/ethernet/netprobe/?utm_source=chatgpt.com)
+
+One limitation: I have covered the main commands, options and research modules, rather than claiming this is every command in every plugin or version. I have also excluded operational instructions for intercepting other people's communications or harvesting credentials.
+
+My recommendation: Learn Bettercap's modules and Ettercap's packet analysis first. Then use Wireshark and Burp Suite to investigate what you discover.
+
+The real skill is not knowing 200 commands. It is knowing what evidence indicates a genuine security vulnerability and how to prove it safely.
