@@ -1,0 +1,10 @@
+Here is how the five security principles apply specifically to a password or account reset endpoint workflow:
+• Architecture: Map how reset requests flow from the user's browser through the API and backend, how tokens are generated and stored in the database, and how the email, SMS, or push service delivers the recovery link or code.
+• Logic: Understand how the system verifies user identity, generates cryptographically random tokens, enforces expiration windows, invalidates tokens after a single use, and revokes active sessions once a reset succeeds.
+• Mathematics: Define the invariant rules that must always hold—such as ensuring each reset token has sufficient entropy (unpredictability), maps strictly to a single user ID, can be redeemed at most once (uses ≤ 1), and becomes permanently invalid once its expiration timestamp passes (\(t_{now} > t_{exp}\)).
+• Diagnostics: Trace reset request payloads, token creation events, outbound notification logs, and password update queries across components to spot discrepancies like leaked tokens in URLs/logs, timing differences in user responses, or unrevoked sessions.
+• Adversarial testing: In an authorized lab environment, test whether reset assumptions break under token reuse, brute-forcing short OTP codes, race conditions (submitting a token simultaneously to bypass single-use checks), host header poisoning, parameter tampering (e.g., supplying multiple email addresses), or user enumeration via response timing and error messages.
+Would you like me to:
+• Format this into a ready-to-save command for your terminal
+• Expand on specific reset vulnerabilities (like host header poisoning or token prediction)
+• Adapt these five points for login, registration, or OAuth flows

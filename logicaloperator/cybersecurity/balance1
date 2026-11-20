@@ -1,0 +1,221 @@
+To understand how a financial application can develop a negative balance despite rejecting negative inputs, you need to study all the possible failure categories across its transaction lifecycle.
+
+There is no finite universal list of every implementation-specific bug, but the following is a comprehensive security-research taxonomy.
+
+### 1\. Transaction and business-logic vulnerabilities
+
+| No. | Vulnerability                         | What can go wrong                                  |
+| --- | ------------------------------------- | -------------------------------------------------- |
+| 1   | Insufficient-funds validation failure | Withdrawal exceeds available balance               |
+| 2   | Incorrect balance calculation         | System calculates available funds incorrectly      |
+| 3   | Stale balance                         | Transaction uses an outdated balance               |
+| 4   | Missing transaction limits            | Withdrawal exceeds permitted limits                |
+| 5   | Incorrect transaction ordering        | Debit occurs before a required credit              |
+| 6   | Incorrect reversal                    | Reversal creates an extra debit                    |
+| 7   | Refund inconsistency                  | Refund is calculated or applied incorrectly        |
+| 8   | Fee calculation error                 | Fees cause the balance to become negative          |
+| 9   | Interest calculation error            | Incorrect interest adjustment changes the balance  |
+| 10  | Overdraft-rule error                  | System applies an unintended overdraft             |
+| 11  | Pending transaction omission          | Reserved funds are treated as available            |
+| 12  | Authorization-state error             | Transaction executes without valid approval        |
+| 13  | Transaction-state inconsistency       | Failed, pending and completed states are confused  |
+| 14  | Duplicate transaction                 | One operation is accounted for more than once      |
+| 15  | Partial transaction failure           | Some financial operations commit while others fail |
+
+### 2\. Concurrency and race conditions
+
+These occur when multiple operations interact with the same account.
+
+| No. | Vulnerability              | What can go wrong                                           |
+| --- | -------------------------- | ----------------------------------------------------------- |
+| 16  | Race condition             | Two operations make decisions using the same balance        |
+| 17  | TOCTOU                     | Balance changes between checking and using it               |
+| 18  | Missing database locking   | Concurrent withdrawals are not properly coordinated         |
+| 19  | Lost update                | One balance update overwrites another                       |
+| 20  | Write skew                 | Concurrent transactions violate a balance constraint        |
+| 21  | Isolation-level weakness   | Database transactions see inconsistent data                 |
+| 22  | Distributed race condition | Multiple application servers process competing transactions |
+| 23  | Replication lag            | A service reads an outdated database replica                |
+| 24  | Event-processing race      | Financial events are processed out of order                 |
+| 25  | Double spending            | The same available funds are committed more than once       |
+
+### 3\. Database and ledger vulnerabilities
+
+| No. | Vulnerability                    | What can go wrong                                        |
+| --- | -------------------------------- | -------------------------------------------------------- |
+| 26  | Missing database constraint      | Invalid balances can be stored                           |
+| 27  | Ledger imbalance                 | Debits and credits do not reconcile                      |
+| 28  | Incorrect ledger aggregation     | Balance is calculated from incomplete entries            |
+| 29  | Incorrect account mapping        | Transaction affects the wrong account                    |
+| 30  | Duplicate ledger entry           | An entry is recorded multiple times                      |
+| 31  | Missing ledger entry             | A financial operation is not recorded                    |
+| 32  | Incorrect database trigger       | Automatic updates produce wrong balances                 |
+| 33  | Stored procedure defect          | Database-side transaction logic is incorrect             |
+| 34  | Transaction rollback failure     | Partial changes remain after an error                    |
+| 35  | Cache inconsistency              | Cached and authoritative balances disagree               |
+| 36  | Database migration error         | A schema or data conversion changes balances incorrectly |
+| 37  | Backup restoration inconsistency | Restored records do not match later transactions         |
+
+### 4\. Numerical and mathematical vulnerabilities
+
+| No. | Vulnerability                | What can go wrong                                    |
+| --- | ---------------------------- | ---------------------------------------------------- |
+| 38  | Floating-point precision     | Financial calculations lose precision                |
+| 39  | Decimal rounding             | Repeated rounding produces discrepancies             |
+| 40  | Integer overflow             | Numeric values exceed the supported range            |
+| 41  | Integer underflow            | Arithmetic goes below the supported minimum          |
+| 42  | Numeric truncation           | Decimal digits are discarded                         |
+| 43  | Incorrect type conversion    | Values change when converted between types           |
+| 44  | Currency precision mismatch  | Different currencies use different decimal precision |
+| 45  | Exchange-rate error          | Conversion produces an incorrect debit               |
+| 46  | Negative fee adjustment      | A fee or adjustment has an incorrect sign            |
+| 47  | Percentage calculation error | Incorrect percentage calculations affect balances    |
+| 48  | Unit conversion error        | Major and minor currency units are confused          |
+
+### 5\. API and protocol-level vulnerabilities
+
+| No. | Vulnerability                     | What can go wrong                                       |
+| --- | --------------------------------- | ------------------------------------------------------- |
+| 49  | API business-logic defect         | API accepts an invalid transaction state                |
+| 50  | Missing server-side authorization | A transaction is not properly authorized                |
+| 51  | Inconsistent endpoint validation  | Different endpoints enforce different rules             |
+| 52  | Replay vulnerability              | An old transaction request is accepted again            |
+| 53  | Idempotency failure               | Repeated requests create duplicate operations           |
+| 54  | Webhook duplication               | A notification causes repeated processing               |
+| 55  | Webhook authenticity failure      | Untrusted events are treated as legitimate              |
+| 56  | Message queue duplication         | The same financial event is consumed more than once     |
+| 57  | Message ordering failure          | Events are processed in the wrong order                 |
+| 58  | Retry-handling defect             | A failed operation is incorrectly repeated              |
+| 59  | Request timeout inconsistency     | Client and server disagree about transaction completion |
+| 60  | Inconsistent serialization        | Numeric values change during data conversion            |
+
+### 6\. Payment gateway and external-system vulnerabilities
+
+| No. | Vulnerability                   | What can go wrong                                             |
+| --- | ------------------------------- | ------------------------------------------------------------- |
+| 61  | Gateway synchronization failure | Internal and external balances disagree                       |
+| 62  | Settlement mismatch             | Settled amount differs from recorded amount                   |
+| 63  | Chargeback processing error     | A reversal is incorrectly applied                             |
+| 64  | Refund synchronization failure  | Refund is recorded inconsistently                             |
+| 65  | Delayed payment notification    | Account state changes at the wrong time                       |
+| 66  | External provider timeout       | Transaction outcome is uncertain                              |
+| 67  | Incorrect reconciliation        | Differences between systems remain undetected                 |
+| 68  | Duplicate settlement            | A payment is settled more than once                           |
+| 69  | Incorrect exchange-rate feed    | Conversion uses an invalid rate                               |
+| 70  | Third-party service failure     | A dependent service returns incorrect transaction information |
+
+### 7\. Authentication and transaction authorization
+
+| No. | Vulnerability                     | What can go wrong                                        |
+| --- | --------------------------------- | -------------------------------------------------------- |
+| 71  | Weak transaction authorization    | Transaction is approved without sufficient verification  |
+| 72  | Authorization binding failure     | Approval is not tied to the exact amount                 |
+| 73  | Session-state inconsistency       | Transaction uses an incorrect session state              |
+| 74  | Privilege escalation              | An account receives unauthorized transaction permissions |
+| 75  | Broken object-level authorization | A user accesses another account's transaction            |
+| 76  | Incorrect approval workflow       | Required approval steps are skipped                      |
+| 77  | Expired authorization accepted    | An old authorization remains valid                       |
+| 78  | Multi-factor verification failure | Required verification is not properly enforced           |
+
+### 8\. Distributed systems and infrastructure
+
+| No. | Vulnerability                  | What can go wrong                                          |
+| --- | ------------------------------ | ---------------------------------------------------------- |
+| 79  | Microservice inconsistency     | Services disagree about the account balance                |
+| 80  | Eventual consistency           | Updates take time to propagate                             |
+| 81  | Failed distributed transaction | Some services commit while others fail                     |
+| 82  | Incorrect saga compensation    | A failed operation is not properly reversed                |
+| 83  | Message broker failure         | Financial events are lost or duplicated                    |
+| 84  | Clock synchronization error    | Time-dependent transaction ordering becomes unreliable     |
+| 85  | Failover inconsistency         | A replacement server uses outdated data                    |
+| 86  | Cache invalidation failure     | Old account values remain in use                           |
+| 87  | Deployment regression          | A new version introduces incorrect balance logic           |
+| 88  | Configuration error            | Transaction limits or overdraft policies are misconfigured |
+
+### 9\. Mobile application and frontend-specific problems
+
+| No. | Vulnerability                       | What can go wrong                                      |
+| --- | ----------------------------------- | ------------------------------------------------------ |
+| 89  | Client/server calculation mismatch  | Displayed balance differs from authoritative balance   |
+| 90  | Offline transaction synchronization | Queued operations are processed incorrectly            |
+| 91  | Local storage inconsistency         | Local transaction information is outdated              |
+| 92  | Incorrect retry behavior            | Mobile application resubmits a transaction             |
+| 93  | UI state defect                     | Application displays success when processing failed    |
+| 94  | Background synchronization defect   | Transactions are processed unexpectedly                |
+| 95  | Application version mismatch        | Old and new clients follow different transaction rules |
+
+### 10\. Operational and human-related failures
+
+| No. | Vulnerability                | What can go wrong                                         |
+| --- | ---------------------------- | --------------------------------------------------------- |
+| 96  | Incorrect manual adjustment  | Staff make an erroneous account adjustment                |
+| 97  | Administrative error         | Incorrect transaction limits are configured               |
+| 98  | Fraudulent insider activity  | Authorized personnel misuse access                        |
+| 99  | Poor reconciliation controls | Balance discrepancies go unnoticed                        |
+| 100 | Incorrect incident recovery  | Restoring a service introduces accounting inconsistencies |
+
+### 11\. How to organize your security research
+
+Rather than testing these 100 categories randomly, organize your assessment around five major questions.
+
+### Negative-balance security assessment
+
+* Input integrity
+
+    Can invalid amounts enter the transaction system?
+
+* Balance integrity
+
+    Is the available balance calculated correctly?
+
+* Transaction integrity
+
+    Are withdrawals, refunds and reversals processed exactly once?
+
+* Concurrency integrity
+
+    Can simultaneous operations violate account limits?
+
+* Accounting integrity
+
+    Does the final balance agree with the authoritative ledger?
+
+### 12\. Tools for diagnosing these categories
+
+| Tool          | Main research purpose                               |
+| ------------- | --------------------------------------------------- |
+| Burp Suite    | Inspect application requests and responses          |
+| OWASP ZAP     | Web application security testing                    |
+| FFUF          | Discover exposed endpoints and resources            |
+| Postman       | Test APIs and controlled transaction workflows      |
+| Python        | Model financial calculations and transaction states |
+| PostgreSQL    | Examine transactions, constraints and isolation     |
+| Docker        | Build isolated testing environments                 |
+| JMeter        | Controlled concurrency testing                      |
+| k6            | API load and concurrency testing                    |
+| Wireshark     | Examine network communication                       |
+| OpenTelemetry | Trace distributed transaction flows                 |
+| Semgrep       | Identify insecure application code patterns         |
+| CodeQL        | Analyze source-to-sink and business-logic paths     |
+
+These tools help diagnose different layers; no single tool can detect all 100 categories.
+
+### 13\. The most important distinction
+
+A negative balance does not automatically mean an RCE, authentication bypass or input-validation vulnerability exists.
+
+It may be:
+
+* A business-logic vulnerability.
+
+* An accounting-integrity failure.
+
+* A concurrency vulnerability.
+
+* A numerical implementation defect.
+
+* An operational error.
+
+For bug bounty research, prioritize reproducible security impact, use only test accounts and sandbox funds, and never manipulate real withdrawals or other people's balances.
+
+Recommended next subject: Study the 10 highest-impact categories first: race conditions, TOCTOU, double spending, idempotency failure, stale balances, ledger inconsistency, transaction rollback failure, distributed transaction failure, rounding errors and authorization-binding failure.

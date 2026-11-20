@@ -1,0 +1,2293 @@
+### Complete Digital Forensics Course – Beginner to Professional
+
+Digital forensics is the science of identifying, collecting, preserving, examining, analysing and presenting digital evidence.
+
+It helps investigators answer questions such as:
+
+* What happened?
+
+* How did it happen?
+
+* When did it happen?
+
+* Which devices or systems were involved?
+
+* Which accounts, files or processes were affected?
+
+* Where did the evidence originate?
+
+* Has the evidence been modified?
+
+* Can the findings be independently verified?
+
+There isn't just one type of digital forensics. There are multiple specialisations covering computers, networks, mobile devices, applications, cloud environments, memory, databases and other digital systems.
+
+Below is a comprehensive course organised from foundations to specialist-level investigation.
+
+### PART 1 – Foundations of digital forensics
+
+### Module 1: Introduction to digital forensics
+
+* Definition of digital forensics.
+
+* History of digital forensics.
+
+* Importance of digital forensics.
+
+* Objectives of digital investigations.
+
+* Types of digital evidence.
+
+* Physical versus digital evidence.
+
+* Direct versus circumstantial evidence.
+
+* Volatile versus non-volatile evidence.
+
+* Live versus dead acquisition.
+
+* Forensic investigation lifecycle.
+
+* Evidence identification.
+
+* Evidence collection.
+
+* Evidence preservation.
+
+* Evidence examination.
+
+* Evidence analysis.
+
+* Evidence interpretation.
+
+* Evidence presentation.
+
+* Forensic reporting.
+
+* Investigator responsibilities.
+
+* Ethical and legal considerations.
+
+### Module 2: Computer architecture for forensic investigators
+
+* CPU architecture.
+
+* Registers.
+
+* RAM.
+
+* ROM.
+
+* Cache memory.
+
+* Virtual memory.
+
+* Storage devices.
+
+* HDD architecture.
+
+* SSD architecture.
+
+* Flash memory.
+
+* USB storage.
+
+* Motherboard components.
+
+* BIOS.
+
+* UEFI.
+
+* Bootloaders.
+
+* Interrupts.
+
+* Processes.
+
+* Threads.
+
+* Memory allocation.
+
+* Input/output operations.
+
+### Module 3: Binary and data representation
+
+* Binary numbers.
+
+* Decimal numbers.
+
+* Hexadecimal numbers.
+
+* Octal numbers.
+
+* Binary conversion.
+
+* Hexadecimal conversion.
+
+* Bits and bytes.
+
+* Signed integers.
+
+* Unsigned integers.
+
+* Two's complement.
+
+* Floating-point representation.
+
+* Endianness.
+
+* ASCII.
+
+* Unicode.
+
+* UTF-8.
+
+* Base64 encoding.
+
+* Hexadecimal encoding.
+
+* File signatures.
+
+* Magic bytes.
+
+* Data structures.
+
+* Binary file formats.
+
+* Metadata representation.
+
+* Character encoding.
+
+* Data corruption.
+
+* Data integrity.
+
+### Module 4: Operating system forensics fundamentals
+
+Windows
+
+* Windows architecture.
+
+* Windows registry.
+
+* NTFS.
+
+* FAT32.
+
+* exFAT.
+
+* Windows event logs.
+
+* Windows Prefetch.
+
+* Windows services.
+
+* Windows scheduled tasks.
+
+* Windows user accounts.
+
+* Windows authentication.
+
+* Windows Defender logs.
+
+Linux
+
+* Linux architecture.
+
+* Linux file systems.
+
+* Inodes.
+
+* File permissions.
+
+* System logs.
+
+* Bash history.
+
+* User accounts.
+
+* Process information.
+
+* System services.
+
+* Cron jobs.
+
+* SSH logs.
+
+* Authentication logs.
+
+Android
+
+* Android architecture.
+
+* Linux kernel.
+
+* Android file systems.
+
+* Application sandboxing.
+
+* APK structure.
+
+* Android permissions.
+
+* Android logs.
+
+* Application data.
+
+* Android backups.
+
+macOS
+
+* APFS.
+
+* HFS+.
+
+* Unified logs.
+
+* Keychain.
+
+* Launch agents.
+
+* Launch daemons.
+
+* macOS permissions.
+
+* Application artefacts.
+
+### PART 2 – All major types of digital forensics
+
+The following are the major specialisations you should study.
+
+### 1\. Computer forensics
+
+![File:Digital forensics lab.jpg - Wikimedia Commons](https://images.openai.com/static-rsc-4/pYiH4VXmiIAZtPbSQ-M8AZlWM_t2Wn3oWhfBinnLrAtajZ_VzRNsg2QHMJcaOGCReXaskKLW0qpc_FmNBY691_7qSqte1On1Bn6BOOEhUkQqJGOmnjMswj2UrdyVQMa9iaQlI04NVnkuBBzTmtTmFd8UmkHWzJps7WumoA5li55moHz8gLzx-A1cDD4iIwEw?purpose=fullsize)
+
+![Forensic Imaging Workflows with FTK Imager : Course Digital Forensics for Beginners: Collecting, Preserving, and Analyzing Evidence on Windows, Mobile, and Cloud | Cursa](https://images.openai.com/static-rsc-4/On4JlmdiE55HwUcJELnetGyecYRWiPXgKZGOX6ev6TGbA2aJjiPItdYkR8L0ZCVRUlDmpO2uK6zmMS2_znbDhrbXcmOLoHV2GQNPM9fqF_c6pqVsv3rV8cxfEFEY9NZ-RpmEoWzqLPcWvMnCnuqW0RV-4VfDmxW2Zm96impcHMlJkOMW79Qjgbb1zJ46Fmpw?purpose=fullsize)
+
+![What Is a Forensic Image? Definition & Court Standards](https://images.openai.com/static-rsc-4/r__z6Y6swh7opXaUP_SrWjpU_gEQsOIQbj8jk8Symi5bw1J8IZXm6_3R0Faj5GH2UvSen3i7z_xl2hAeTbWIKerQPm8eqDab8ZSlkyiGEJb5nK9UiZSN1aKnXOHAFIMUYdieSgPfMCLSXKysZpQmtu68M0WaRb2SDMgV7YKU_KnIaGUBnCP0R0_qWkd-9Wyb?purpose=fullsize)
+
+![FBI — Computer Forensics Labs](https://images.openai.com/static-rsc-4/QFts5u6Fc4TyzNzI8ZhyfdeVBQWd3gsKMAUfrOYKdT92IOv9mBifZanW2SJv3eSEoN4RtP8krqa9jj2Pjg7Xc-QUYTQgorTSr2T3W0UmtHOj57lhgKHLAYxkPm2nLypUoA-yGk0PrRarBXyHNDkMDDFuUCUAYKrF5wAvxdJXrEhD-zDQmlQrO8QcyzKK8OP-?purpose=fullsize)
+
+![How to use FTK Imager and Autopsy for digital forensics | Kulbhashkar D. posted on the topic | LinkedIn](https://images.openai.com/static-rsc-4/VEz9di2MDKZ7WKH-NJUehfizXEa4IWzKXFLFr8LprB5pXmzYGYX-FLXTATLteWtYDtIY_1YppF9KkbBRIXcHngy6AmIGRB4SEloaq-h8SJXpI-NsLA3CT_91QNebrFfjuNFi9KIFan0PqGpNxcDzdM6Q8X7HHTN2OF6ogggp7LMG8g71k3D_O2e2ezNUZhgz?purpose=fullsize)
+
+![Image 3 source drives simultaneously in Atola Insight Forensic](https://images.openai.com/static-rsc-4/6xpnNtcFjtYAuN5sHk-j_bl1KhLrJsOMM1r6NgpIj41EGMDWMcvpbkRBmTSF_wEozekP2QrpH5x3826mrz8o0aJ3--XCB7l1PHcbUxZKaVz72H0EpYYxh4pCeJOrLk-nBKEkkTg4_Y0DiJs1upSpRZ-4gTV35GcZO32XcFt66Rcm-yilGPNl3PtPcE7a-Cz6?purpose=fullsize)
+
+![Forensic Data Laboratory Analysis](https://images.openai.com/static-rsc-4/tC25iZGxu__41HbfgQiG1UXfiGFvAU00Zzv_1f35ulZbQdZU_j0jbPOwmFQQCeLCRVBaKJz78EfeTjhd8qJGfpQ3b8Ik2zQIILFqH4ZFoLjOIMZEf4YZFO4UoPxYiukv-87mdXsRCEUSZQFQDCfnFufvzr7M7johwW-_HS8hOoannO71AHppjriMhKiwIMoD?purpose=fullsize)
+
+![Role of Forensic Analysis in Court: Why It Matters for Defence](https://images.openai.com/static-rsc-4/UofFhSPKbYI_4g1hf2xlkoAT6s9K8UPhpB91k98mAK0xLaKmjbMsbz6Hh3I4h_fFgTXmiRX0mezOS67eMgDV80qaBWQB1utugA1bd2y5qNGmVW-Z3cO9lojXIZuRC2qcTdWhqzOKGHHkZCVLQ17PMGiCPf1Zax5kpnpVOKRL0oE-JxBALGqYew0FJVeYrtkJ?purpose=fullsize)
+
+![Cyber Crimes Center | ICE](https://images.openai.com/static-rsc-4/hTpeHCaOCos_VFt7fv2WwlUoKizxeehmTNWHuLDxt7jdo0H8OubYS0mI_0D9Xkgxx-b-34kVobIjJsY_MI-X9GMEmvLzmNdZ1CVBsWCVpgYiAYXUHi0L7HtTvocmTx8FJJQnYVnH38YrN8u0_DJJV8Y_LYB5FV1BHf-zRpPNhj_8A2MsxxkL23YgmqrBdl8I?purpose=fullsize)
+
+![SuperImager Plus Desktop XL | Supreme Forensic Lab für umfassende Datenanalysen – Arina](https://images.openai.com/static-rsc-4/wrHewsHF94V6ozjtqz-ws3ZTqMKekqEF20UzO2pFBeiw2Ls2JpLOtigjwpI0u0yCBancYRK2TuBKjnt1RJfIZR9Wp_bAX_ANnM2dgcF_f9mwRvexggRUrPCzsP_e3FZcww9eC4yLYppTY1p2C9z5sNKJ9c_Merv2_iQ52GTQCMe8knWFTVGePcD4SsmAwByk?purpose=fullsize)
+
+![Así trabaja la Unidad Central de Ciberdelincuencia de la Policía Nacional para velar por nuestra seguridad](https://images.openai.com/static-rsc-4/-fa7XKoXOl4-snbuu5VNuXHKQ1clr0Bw5NbswdmpncpP5X0LBrFla7DtY2eJ-970zGJ6PPZVE4KEf4p3uhGZQrT_qDqiOjqveT9QgANiP0-qGbyNFaDR2Ks0mvFLY3kZg0XdlqKz-WrMaArjtOGkbwLxevRS6LC3vYujPha5TRuHCpgsxcSFpMoqyVylEQwI?purpose=fullsize)
+
+!["FBI 안 부럽다"..국과수, 디지털포렌식실 업무 공간 '혁신'](https://images.openai.com/static-rsc-4/Li31TeP30OeqgUiZ8UxLx0QaEDigP7LFrUw3C-eh1WFFs3bROcAQ9j77ejrajFUUfRjVBrJB8prMI5_2qRrb6yn19bm-ZDykRW0Yvt3f1BsJElLWgSl78AIjvS0lx2W9bYFMVNhGDQIVjQL_Mp7nS7FrUzJp-QW7X0xY3-ousDsrae-IPq0Ibk79S97VVPwu?purpose=fullsize)
+
+![Цифровая криминалистика (Digital Forensics): основы и применение | ibcourses.ru](https://images.openai.com/static-rsc-4/iKJiwRVoVVJ_gCyro-9IjIZHLOYQ6amtwzhNyYYos1rI6fPYg7L9Wg8iDTd__y2l4Qybct21mmwYnwymcmrsgQ2s-KBiegNmsvMapXGe51GLepGluvdBhy8HGYg7D2_S_XWbrsHUWsuh6V_GspnG7OdQ3_KSssK1Pa0ftCUF4sjkvKMJilI0rNcufywyREvL?purpose=fullsize)
+
+Purpose: Investigating computers, laptops, workstations and servers.
+
+### Complete syllabus
+
+* Computer forensic investigation methodology.
+
+* Hard disk acquisition.
+
+* SSD acquisition.
+
+* USB forensic examination.
+
+* External storage examination.
+
+* Partition analysis.
+
+* File-system analysis.
+
+* NTFS forensic examination.
+
+* FAT32 and exFAT analysis.
+
+* EXT4 analysis.
+
+* APFS analysis.
+
+* Deleted file recovery.
+
+* File carving.
+
+* Hidden file identification.
+
+* File metadata examination.
+
+* File timestamp analysis.
+
+* User activity reconstruction.
+
+* Windows registry examination.
+
+* Windows event log analysis.
+
+* Linux log examination.
+
+* Browser artefact examination.
+
+* Download history examination.
+
+* Application artefact examination.
+
+* Installed software examination.
+
+* USB connection history.
+
+* Recent file analysis.
+
+* Recycle Bin examination.
+
+* Shortcut file examination.
+
+* System restore analysis.
+
+* Timeline reconstruction.
+
+Practical tools:
+
+* Autopsy.
+
+* The Sleuth Kit.
+
+* FTK Imager.
+
+* EnCase.
+
+* X-Ways Forensics.
+
+* Magnet AXIOM.
+
+### 2\. Disk and storage forensics
+
+![The Process of Imaging Hard Drives in Digital Forensics](https://images.openai.com/static-rsc-4/0DJQhBTI0vgHEsxkRjlbLyMF_jxIwIV1IDeWGVdS8H7Htuk4qFjs995wSFj0L-wrN07cOptZEFyV9fg4N7KuA1jJ2rJAJcEZRuovWzdjOmSbk7B2z0goK9yhEW474OtD4UNbUzw8Scrw7I5av6E1nYVuqJ0DG4U6neFbVioifykDWdyHBlupWNwvEs8zA-h6?purpose=fullsize)
+
+Purpose: Investigating information stored on physical and logical storage media.
+
+### Complete syllabus
+
+* HDD forensic examination.
+
+* SSD forensic examination.
+
+* USB flash drive forensics.
+
+* SD and microSD card forensics.
+
+* External hard drive forensics.
+
+* RAID forensic examination.
+
+* Disk imaging.
+
+* Bit-by-bit acquisition.
+
+* Logical acquisition.
+
+* Physical acquisition.
+
+* Write blockers.
+
+* Hash verification.
+
+* Partition tables.
+
+* MBR.
+
+* GPT.
+
+* Boot sectors.
+
+* File-system structures.
+
+* Allocation tables.
+
+* Inodes.
+
+* Metadata structures.
+
+* Unallocated space.
+
+* Slack space.
+
+* Deleted partitions.
+
+* File carving.
+
+* Fragmented file recovery.
+
+* Encrypted storage.
+
+* Storage sanitisation verification.
+
+* Evidence integrity verification.
+
+Practical tools: FTK Imager, Guymager, Autopsy, The Sleuth Kit and X-Ways.
+
+### 3\. Memory forensics
+
+![Memory Forensics for Incident Response](https://images.openai.com/static-rsc-4/4_nZ5SxLs6NIOeHVPwuwYJjjVbU-D80c5D9wFinIqTu0XFo7jmkg9ozepHK6XapWyTroabqYPyY8kph0T0aPRKbdapb0SU8Vlzx_PDCXvF1G173UgghRM9lqVw7VAdsUHqhtLXiKAuKV9PGAS_rAO-YNzqURCTuRTJVu38nl72dnPe_AoIHvhBYc5FVaRxds?purpose=fullsize)
+
+Purpose: Examining volatile information stored in RAM.
+
+This is particularly important when investigating fileless malware, suspicious processes and active intrusions.
+
+### Complete syllabus
+
+* RAM architecture.
+
+* Volatile memory.
+
+* Non-volatile memory.
+
+* Memory allocation.
+
+* Virtual address spaces.
+
+* Physical memory.
+
+* Kernel memory.
+
+* User-space memory.
+
+* Memory acquisition.
+
+* Memory dump formats.
+
+* Memory integrity.
+
+* Process enumeration.
+
+* Thread examination.
+
+* Loaded modules.
+
+* Dynamic libraries.
+
+* Network connection analysis.
+
+* Open handles.
+
+* Memory injection indicators.
+
+* Rootkit indicators.
+
+* DLL examination.
+
+* Command history artefacts.
+
+* Registry artefacts in memory.
+
+* Encryption key artefacts.
+
+* Fileless malware investigation.
+
+* Malware execution traces.
+
+* Memory timeline reconstruction.
+
+* Memory evidence reporting.
+
+Practical tools:
+
+* Volatility 3.
+
+* MemProcFS.
+
+* WinPmem.
+
+* LiME.
+
+* Redline.
+
+### 4\. Network forensics
+
+![Wireshark Packet Analysis: From Raw Traffic to Meaningful Insights (TryHackMe Walkthrough) | by Rishit Goel | Apr, 2026 | Medium](https://images.openai.com/static-rsc-4/8AoEE_twKATnz6xP4QfiCKDgo0zrX2q6FPnYFSWGX5d2G8MKDXUrQgUKfkW5UXmt2NTRYOmv96w7rPw3wHweMryXtuHGqqjfyTwOUr7BMXBMEsGJD6zHJn37H8ZEEaOsYbY5t_wcl-0amAl4d-o-94TGppTbBwXXpZL-XBy1Um0DNCi9ZiqmbU9_xc0MqvT9?purpose=fullsize)
+
+Purpose: Investigating communications between computers, servers, applications and networks.
+
+### Complete syllabus
+
+* Network forensic fundamentals.
+
+* Network traffic acquisition.
+
+* Packet capture.
+
+* Packet analysis.
+
+* TCP analysis.
+
+* UDP analysis.
+
+* IP header analysis.
+
+* Ethernet frame analysis.
+
+* ARP investigation.
+
+* DNS investigation.
+
+* DHCP investigation.
+
+* HTTP investigation.
+
+* HTTPS and TLS investigation.
+
+* FTP investigation.
+
+* SSH investigation.
+
+* SMTP investigation.
+
+* POP3 investigation.
+
+* IMAP investigation.
+
+* SMB investigation.
+
+* DNS tunnelling indicators.
+
+* Network flow analysis.
+
+* Firewall log analysis.
+
+* Router log analysis.
+
+* Proxy log analysis.
+
+* VPN log analysis.
+
+* IDS/IPS log analysis.
+
+* Intrusion reconstruction.
+
+* Command-and-control traffic analysis.
+
+* Data exfiltration investigation.
+
+* Lateral movement investigation.
+
+* Network timeline reconstruction.
+
+* Incident evidence reporting.
+
+Practical tools:
+
+* Wireshark.
+
+* tcpdump.
+
+* Zeek.
+
+* NetworkMiner.
+
+* Arkime.
+
+* Suricata.
+
+* Snort.
+
+### 5\. Mobile device forensics
+
+![Mobile Phone Forensics - DIGITPOL](https://images.openai.com/static-rsc-4/3J-qBZbub_LX86_jBNuTqFoVvTCeJtH6HbmfzJMwApWINQME_aeWBGoTpFUoQ_gpAPjcFkAtwQFDnXUr315ctI9qbhU7ieT8-6LVGGqvUM9MoyaQV8PPnF6l67eUQLExDBFo-KQLN5_hgletsK_JWy9JKzG54i3NJngvA84JC6VmBNHzJdovHZP3pn70Ja_J?purpose=fullsize)
+
+![Nicole Orphan - St. Louis Metropolitan Police Department | LinkedIn](https://images.openai.com/static-rsc-4/KJz7eU0udPYhiKim1m_iGnH1JT9pAlJnn338RaiCqbMNDqdm8k5zAsETLqVcqJMdcLRa7UVTR_xhXaCMUnZ13_9YNOvWmh0lZK7YCjiG-9Azb8Dvb1kIL6ChnhybigiA6wrgTnENwgCHpU3QVTCJd2H_rUTboiC_sdNClEGioPLn-wGvIavmTqWKHwEesEQ1?purpose=fullsize)
+
+![\[경찰팀 24/7\] 지우고 숨겨도 찾는다, 범인이 남긴 '디지털 흔적'](https://images.openai.com/static-rsc-4/gVDXKngSa7G5x7eQBA9EHvBl13qPMLgkn66-6tpCM3fdtAbQ6V86k-V74YB2Kh2lsSarDn6W8yIJWo832X-rDFV80W7IGawo1u9tl2h5DPhYpRZ7F4rkbzATpTRcNz2amXnB1BJPRqwYDTA37g_YjTpuwK0UTn4TchWSHjBgaHEwRo7l_LWiFp9y866G25az?purpose=fullsize)
+
+![ISRAEL-INTERNET-TECHNOLOGY-SECURITY-ECONOMY](https://images.openai.com/static-rsc-4/JWMV6tk8cMWiApqDNTw2CDXRjEB_EYtY7HEKF6SsYDWogsAz-X47pYA-lf6MxHZslmV4wzOTc-RJWt-VNhANNzL2OSeq4n866yY4o-WnvnHRCgYaDdtYJyp9mRj0QSaTBPxKmQ30sA3WoKZ_PnWmjuU3Vn3byzzzoz3s_n2j-K37TfActIV7s_pILzTM9wAx?purpose=fullsize)
+
+![Governo de MT amplia capacidade técnica e potencializa perícias em computação forense da Politec | Juína News - A notícia certa, na hora certa](https://images.openai.com/static-rsc-4/1mEuawIgFfX2J2tLHoYtdjuC1VcF29mHvJjWANDKID8QzvYiMbo689pstn9vE-C6gxmWErG-WaYEGwsmWO1u6GotfEpjtkBeEVVtnaLv2wa-HOkKHun3jU5fDGfTBUdq_RFnoBZHv5JWJA5YxVEbabdWJJIIR489fS1czFaIcsY6uyg51eajUIG0sFWEqbB0?purpose=fullsize)
+
+![查緝詐欺及資通犯罪督導中心  數位鑑識實驗室 (圖)](https://images.openai.com/static-rsc-4/NYy5JxA2yonbuPw9YnN80Y18NQVXr54dhD8fD_5yoTz85-YPSzEh57feqxNqahBlbyT36Qj7GY3mY94F3RCK_SlmfTAxPcS4CDT4smKBRwvFJ4Mar6TdLubJZI3uRx4u1S5SjIUPGCt6WiuCjqks0XnNmBGjhiflJN_bM1xpP0jQbKZp8Bk9kJVvlPs_k8k_?purpose=fullsize)
+
+![仪器设备-湖南大学司法鉴定中心](https://images.openai.com/static-rsc-4/bI-gpI_DbP8jZgx6uSqpekfgH7WVGfinprk-zg678AsbdzQUWvq7kfyowFuAyrIK78B7L9P0SD0N2QxEkig9Xg-_vdm8Fcb46BR7av0bovcjShiE6NftR1uYJ5d9cVvSedRzEhav2Q1u-E8IVr-zFs5pcYruhGVd2mDCu4EEVknTO7hStcD6OEbyDg0x7wWA?purpose=fullsize)
+
+![数字取证：诞生在笼子里的“黑科技”-数字取证技术](https://images.openai.com/static-rsc-4/Xt9vRzV4cGZOKgdUxdNxPezpp4-Xzrfzd7rL7R83qe7LHj9RpD3tC4eQa6ivGU10Kns9wRSX_IzuNjJZxHEHwIDaqDFYaVLprdETcLr0BC1iU-4aFv9UeKhhigsqv5ynrs0qNc2G-oyKV6dCkzTQGHSjUluitalwZwNciN4b3TORfFKv8-iZ8SBZEARONRjb?purpose=fullsize)
+
+![Android Data Recovery Services | Deleted Files & Photos Recovery](https://images.openai.com/static-rsc-4/GhmMQxQCYqJ3WGITc_Wa4ZN1BwuLqXn1Lj4EqwBrlu1aYqJQgPkhPY-5aDjgoUloQTqeT_IyRpnlOeMwKsDTUDQ9E2cnDRQ9XugH0INDtfscAvkKaqF9VXHKxPwiC-FE3DMdPwFVx6uJGXzGupRDsP0UJ9-bRwLoOP15ihyqQED272DKBYb9vLsTOiJy2J84?purpose=fullsize)
+
+![How to Unlock Android Phone Without Losing Data | Data Engineers](https://images.openai.com/static-rsc-4/uGRLbpLWxgeeZCyFxPDk9KH7SPNXywXGZiZBb2MoIQgfE--y8mW08Du0v3rf7QwTf67uKyvBhQdQFDxtnBuioo4oux06Rc3hxV4aqBaJ-CMZK6mxrV7fo9kEq0Dw6i8V5FJBvZVSTfOru9TWoXJk1Bk_64aRVyKt5q4Fqg-grZBuPZijUIlG1TeZ61g97bD4?purpose=fullsize)
+
+![Qué pasa con tu información cuando un juez secuestra tu celular: los pasos de la pericia forense explicados   - Infobae](https://images.openai.com/static-rsc-4/D8SYKWJTyCld4fcHhDxaAsDek2v9koW_90UvLXZ8mYnxFqNgrbnYZBHSjzKaO7oPoxDGoUuiLfM-xNJ7jsPri0i_QfnYiNz0ZWubhMUrM7pudbB5z-XhhX6K_N_gfwt5yKi1yuyum_0ucv7V58WMlokBhxeH0F_mQQAgV7Q7S47O3YLYdD2ujioqegutd1HG?purpose=fullsize)
+
+![Commissioner Online - Throwback 20 years A time for Changes, Responsiveness and Perseverance](https://images.openai.com/static-rsc-4/kHp7_1NqPa-1vy2sHMa8Co_nZNkEriJcTMQ_eP4hh9xO9Phdt6BPZjqko9gdazv2zsibwLdX9nl_9IxYmw9ieTw82VHNiJpp0bA_jNmZyQV1M9Gs393G_DgmpQm_ehWYSO6gjULz0vmAz2qibXGToQhSKAcXEgZ1bMu9BRzH2jBauMy3zMUGNvXZYtCriD1s?purpose=fullsize)
+
+Purpose: Investigating smartphones, tablets, SIM cards and mobile applications.
+
+### Complete syllabus
+
+* Mobile forensic fundamentals.
+
+* Android architecture.
+
+* iOS architecture.
+
+* Android file systems.
+
+* iOS file systems.
+
+* SIM card forensics.
+
+* SD card forensics.
+
+* Mobile device acquisition.
+
+* Logical extraction.
+
+* File-system extraction.
+
+* Physical extraction concepts.
+
+* Call log examination.
+
+* SMS examination.
+
+* MMS examination.
+
+* Contact examination.
+
+* Messaging application forensics.
+
+* WhatsApp artefact examination.
+
+* Telegram artefact examination.
+
+* Signal artefact examination.
+
+* Browser history.
+
+* Download history.
+
+* GPS location history.
+
+* Location metadata.
+
+* Wi-Fi connection history.
+
+* Bluetooth connection history.
+
+* Application databases.
+
+* Android application packages.
+
+* Notifications and system logs.
+
+* Mobile backup examination.
+
+* Deleted data recovery limitations.
+
+* Mobile encryption.
+
+* Mobile evidence reporting.
+
+Practical tools:
+
+* ALEAPP.
+
+* iLEAPP.
+
+* Andriller.
+
+* Autopsy.
+
+* MOBILedit Forensic.
+
+* Cellebrite UFED.
+
+* Magnet AXIOM.
+
+### 6\. Cloud forensics
+
+![Connect Cado Security + Wiz | Wiz](https://images.openai.com/static-rsc-4/_j6n8WTE9eye-sQKU1Te-_hOx-hyq4RYiHMxu1EXa5zZg4ngv8RGTTXXHn2PvDRkaTbg5lMvKr43OSud0bzakEP9KTF4CYnn7rer4a8g-QreiCfm2gBxDq4t67trFQHMT_I0cW161_p-QdQYcCmhZWE-m3qyVumXul7Pb1XEciA5H7yTlERdZQBtAxYSGmDF?purpose=fullsize)
+
+Purpose: Investigating evidence stored or generated in cloud infrastructure.
+
+### Complete syllabus
+
+* Cloud forensic fundamentals.
+
+* Cloud computing architecture.
+
+* AWS architecture.
+
+* Microsoft Azure architecture.
+
+* Google Cloud architecture.
+
+* Cloud evidence acquisition.
+
+* Cloud storage examination.
+
+* Virtual machine forensics.
+
+* Container forensics.
+
+* Cloud audit logs.
+
+* Identity and access logs.
+
+* API activity examination.
+
+* Authentication investigations.
+
+* Cloud network logs.
+
+* Cloud database examination.
+
+* Object storage examination.
+
+* Cloud backup investigation.
+
+* Cloud snapshot examination.
+
+* SaaS forensics.
+
+* PaaS forensics.
+
+* IaaS forensics.
+
+* Cloud malware investigation.
+
+* Cloud data breach reconstruction.
+
+* Multi-cloud investigations.
+
+* Evidence preservation.
+
+* Data sovereignty.
+
+* Cloud chain of custody.
+
+* Cloud forensic reporting.
+
+Practical tools: AWS CloudTrail, AWS CloudWatch, Azure Monitor, Microsoft Sentinel, Prowler and cloud-native audit tools.
+
+### 7\. Database forensics
+
+![SQL Log Analyzer Tool - Transaction Log Forensics | Univik](https://images.openai.com/static-rsc-4/QTp9uNgh9kAQKj0ZI49VnjWjOF2QrZArFU8XzbqXZdfRgpXnRD_48GkG5B5fycHl7vMVrxtJ-yqwPmn9RzIiwW26ttpUVZaoRKyYX-zF6bFFQPKnmGMDUiCvbvglgXIu90iG1l03UjOkSZT2DQI5reYRc6eU_GaxqHI8i-Qa83aScKgJE1vQd28MjbcDBQqm?purpose=fullsize)
+
+Purpose: Investigating database activities, unauthorised modifications, deleted records and data manipulation.
+
+### Complete syllabus
+
+* Database architecture.
+
+* Relational databases.
+
+* Non-relational databases.
+
+* SQL fundamentals.
+
+* Database transactions.
+
+* Database logs.
+
+* Transaction logs.
+
+* Audit trails.
+
+* Database metadata.
+
+* Database schema examination.
+
+* User account examination.
+
+* Privilege examination.
+
+* Access history.
+
+* Record modification analysis.
+
+* Record deletion analysis.
+
+* Database recovery.
+
+* Backup examination.
+
+* Database integrity.
+
+* SQL injection evidence analysis.
+
+* Database intrusion reconstruction.
+
+* Stored procedure examination.
+
+* Trigger examination.
+
+* Database timeline reconstruction.
+
+* Data exfiltration investigation.
+
+* Database evidence reporting.
+
+Practical tools: SQLite Browser, DB Browser for SQLite, PostgreSQL logs, MySQL logs and SQL Server auditing tools.
+
+### 8\. Email forensics
+
+![¿Son válidas las capturas de pantalla como prueba en un proceso judicial ?](https://images.openai.com/static-rsc-4/A6kjaw6Bnseu-ukpAQkqDpe0mXuFaAaS1ejbeDkkDQH99YmYra25bqluug3QQB6oXyzBhT_vpfZCZnvbNWeCT8pxx49JvdzxEDhNcwgqEcNm32nlu7IvTBrAWaLG29-Ndi4iMVxvOJ6ohjueuo5BzdA_K0sN30uEjh7YCf-tunY2aTk3EVPADkPNvBiwqYvU?purpose=fullsize)
+
+Purpose: Investigating email communications, phishing, impersonation and business email compromise.
+
+### Complete syllabus
+
+* Email architecture.
+
+* SMTP.
+
+* POP3.
+
+* IMAP.
+
+* Email header analysis.
+
+* Sender identification.
+
+* Recipient identification.
+
+* Message-ID analysis.
+
+* Received headers.
+
+* IP address examination.
+
+* Email routing.
+
+* SPF.
+
+* DKIM.
+
+* DMARC.
+
+* Email authentication.
+
+* Attachment examination.
+
+* Malicious attachment indicators.
+
+* URL examination.
+
+* Phishing investigation.
+
+* Email spoofing.
+
+* Business Email Compromise.
+
+* Mailbox artefacts.
+
+* Deleted email investigation.
+
+* Email metadata.
+
+* Email timeline reconstruction.
+
+* Email evidence reporting.
+
+Practical tools: Thunderbird, Microsoft Purview eDiscovery, MxToolbox, Autopsy and email-header analysers.
+
+### 9\. Malware forensics
+
+![GitHub - nabirudd/Malware-Analysis-Lab: This repository provides a complete walkthrough for setting up secure, isolated virtual lab environments. It includes step-by-step configuration instructions, reproducible commands, and professional documentation enriched with screenshots, making it easy to follow and replicate the entire setup process from scratch. · GitHub](https://images.openai.com/static-rsc-4/REOrJ0I-yagVcMpjfkn3aCaFowWU9zcHGQxzzZldKrv33GXQHDKNqUatc3eRukr--iA6sTUT5xpODDPJ2hCsSJSG2Ysapzc1ggEnBmxAOkkMxS5BDo8IWMshf1hujj2pgPrNDkRv1wPgt5gXEhOI590hfEZ9xPJnlbE9hTwE8SnFCoFvZw6VO2m76KydVzzC?purpose=fullsize)
+
+Purpose: Investigating malicious software to determine what it does, how it executes and what evidence it leaves behind.
+
+### Complete syllabus
+
+* Malware fundamentals.
+
+* Malware classification.
+
+* Malware acquisition and preservation.
+
+* Malware hashing.
+
+* Static malware analysis.
+
+* Dynamic malware analysis.
+
+* Behavioural analysis.
+
+* File format examination.
+
+* PE file structure.
+
+* ELF file structure.
+
+* APK file structure.
+
+* Strings analysis.
+
+* Import table examination.
+
+* Export table examination.
+
+* Process behaviour.
+
+* Persistence mechanisms.
+
+* Registry modifications.
+
+* Scheduled task examination.
+
+* Network communication.
+
+* Command-and-control analysis.
+
+* Malware configuration extraction.
+
+* Obfuscation.
+
+* Packing.
+
+* Anti-analysis techniques.
+
+* Rootkit investigation.
+
+* Ransomware investigation.
+
+* Trojan investigation.
+
+* Spyware investigation.
+
+* Worm investigation.
+
+* Malware indicators of compromise.
+
+* Malware timeline reconstruction.
+
+* Malware forensic reporting.
+
+Practical tools: Ghidra, IDA Free, Detect It Easy, PE-bear, YARA, capa, REMnux and FLARE-VM.
+
+### 10\. Web application forensics
+
+![Detecting AD Initial Access (TryHackMe)](https://images.openai.com/static-rsc-4/MbsP2S4bgABEC4annkdu0HjkfWvIX0zL-M3-ZCN9qhXJBsDZUoA2_aXEhwvKznW-tuQNzDQDS9Lw1iPnuij18W6G4QL7G_iSZIMnvDucqcTD5B8n8_ZXqSOSkcoNLBvaiCqno8luD1E4f-JTzlMiTncJ6CA7xasiSLa3Z0gFH1vD-_mZ18pVAGB-K2dNjS6I?purpose=fullsize)
+
+Purpose: Investigating attacks and suspicious activity involving websites, web servers and APIs.
+
+### Complete syllabus
+
+* Web architecture.
+
+* Client-server communication.
+
+* HTTP request analysis.
+
+* HTTP response analysis.
+
+* HTTPS and TLS.
+
+* Web server logs.
+
+* Application logs.
+
+* Reverse proxy logs.
+
+* Browser artefacts.
+
+* Cookies.
+
+* Session identifiers.
+
+* Authentication logs.
+
+* API logs.
+
+* Database interaction logs.
+
+* File upload records.
+
+* Web shell investigation.
+
+* SQL injection evidence.
+
+* XSS evidence.
+
+* Directory traversal evidence.
+
+* SSRF evidence.
+
+* Authentication bypass investigation.
+
+* Session hijacking indicators.
+
+* Web defacement investigation.
+
+* Website compromise reconstruction.
+
+* Web attack timeline.
+
+* Evidence reporting.
+
+Practical tools: Burp Suite, OWASP ZAP, Autopsy, Splunk and server log analysers.
+
+### 11\. Email and social media communication forensics
+
+This is a broader specialisation that includes communications beyond traditional email.
+
+### Complete syllabus
+
+* Social media evidence fundamentals.
+
+* Account identification.
+
+* Account ownership verification.
+
+* Message metadata.
+
+* Conversation reconstruction.
+
+* Timestamp examination.
+
+* Media attachment examination.
+
+* Public profile examination.
+
+* Platform audit logs.
+
+* Account access history.
+
+* Impersonation investigations.
+
+* Online fraud investigations.
+
+* Cyberbullying evidence.
+
+* Harassment evidence.
+
+* Evidence preservation.
+
+* Platform data export examination.
+
+* Cross-platform timeline reconstruction.
+
+* Reporting and legal considerations.
+
+### 12\. Image forensics
+
+![Sherloq : An Open-Source Digital Image Forensic Toolset](https://images.openai.com/static-rsc-4/6AvA8z5Vt5TAuNFe1me6rR8k4PIEnSultkM-Gs8M8M2geEcju66PkMofOqZTQtB8eai_uALH-uEiBE4ze2y5Ce0yduHE2-zFOgeu43O7iCEzdO4-M0SP8bWGpUPBACZgsHZ2xpvmdi2pusO9QGSY4TQRuDtjXH3aEJVkp1VWxYm_JN3vYX9b_3PNkpzlw5BJ?purpose=fullsize)
+
+Purpose: Determining whether digital images are authentic, manipulated or altered.
+
+### Complete syllabus
+
+* Digital image fundamentals.
+
+* Raster images.
+
+* Vector images.
+
+* JPEG.
+
+* PNG.
+
+* GIF.
+
+* TIFF.
+
+* RAW image formats.
+
+* Image metadata.
+
+* EXIF metadata.
+
+* GPS metadata.
+
+* Camera identification.
+
+* Image timestamps.
+
+* Image compression.
+
+* Image resizing.
+
+* Image cropping.
+
+* Image splicing.
+
+* Copy-move detection.
+
+* Image manipulation detection.
+
+* Error Level Analysis (ELA) limitations.
+
+* Image provenance.
+
+* AI-generated image detection limitations.
+
+* Image authenticity assessment.
+
+* Forensic reporting.
+
+Practical tools: ExifTool, ImageMagick, Ghiro and Amped Authenticate.
+
+### 13\. Video forensics
+
+![Real Truth About Video Enhancement in Digital Evidence](https://images.openai.com/static-rsc-4/wZDqrk1msr2_dq__X2SxBtSEkqXBnIukfOChzIzY38cqdeOmHLsclHNbe9lFafVjWz6cWmR7L8echoeOlRUTIGTqkDDgtz_6zUdu15dwGSpNtXuPMuBWVGca-yePr8whyXFGsNI16qhhQgWoH1To4OySh7vLQ81vZUrW-q1YCWl8n8jxNJESJAy0ngXqaRpZ?purpose=fullsize)
+
+### Complete syllabus
+
+* Video fundamentals.
+
+* Digital video formats.
+
+* Video codecs.
+
+* Containers.
+
+* Frame rates.
+
+* Resolution.
+
+* Video metadata.
+
+* Timestamp examination.
+
+* Frame extraction.
+
+* Video reconstruction.
+
+* Video editing detection.
+
+* Compression analysis.
+
+* CCTV examination.
+
+* DVR examination.
+
+* NVR examination.
+
+* Video authenticity.
+
+* Video synchronisation.
+
+* Video enhancement limitations.
+
+* AI-generated video assessment.
+
+* Video evidence reporting.
+
+Tools: FFmpeg, MediaInfo, Amped FIVE and ExifTool.
+
+### 14\. Audio forensics
+
+![Audio Forensics | 4D Forensics](https://images.openai.com/static-rsc-4/olAy5SzgxTVNS0a1nAAam0S0niID_bInBrUqAcuOFanKYfFnlzGKhByECfDy__akb387QE7zCq-C5smZz2d9E8sNgyyRuM01MmG1V-_mRQpZlCi-8L46I2oNqGFn2YvQoFiJT2EaJaV5ceoIoDPVpo6tBoU0GZXdoaOwIjjYlfj96JTKZnbQnSPVGFeFZtIz?purpose=fullsize)
+
+### Complete syllabus
+
+* Audio fundamentals.
+
+* Analog versus digital audio.
+
+* Sampling rates.
+
+* Bit depth.
+
+* Audio formats.
+
+* WAV.
+
+* MP3.
+
+* AAC.
+
+* FLAC.
+
+* Audio metadata.
+
+* Waveform analysis.
+
+* Spectrogram analysis.
+
+* Noise identification.
+
+* Background sound analysis.
+
+* Audio editing detection.
+
+* Voice recording authenticity.
+
+* Audio synchronisation.
+
+* Speaker comparison fundamentals.
+
+* Voice deepfake investigation.
+
+* Audio enhancement limitations.
+
+* Audio evidence reporting.
+
+Tools: Audacity, Sonic Visualiser, FFmpeg and Praat.
+
+### 15\. IoT forensics
+
+![IoT Forensics | ForensicSpot](https://images.openai.com/static-rsc-4/kHB1xFP183j-qgopyFh4-dqSIiIe2qQ6HN0BSqvqMtxp07wHjHoKYKDL0dB3sQHEjpnHmhTyTEUOyVqLWApZdSNvLTvgND4x-HO8w1ynVfrLpMmDCYyQwucpAOhJ5deEUREvtG_lilMOZktcvOA08xs4mmMc1QL3O-FQdI1s0z92BlsRMoxa3JD1F_w1lh32?purpose=fullsize)
+
+Purpose: Investigating evidence from connected devices.
+
+### Complete syllabus
+
+* IoT architecture.
+
+* Embedded systems.
+
+* Firmware analysis.
+
+* Device logs.
+
+* Sensor data.
+
+* Smart home devices.
+
+* Smart cameras.
+
+* Smart televisions.
+
+* Smart locks.
+
+* Smart speakers.
+
+* Wearable devices.
+
+* Smart appliances.
+
+* IoT network protocols.
+
+* MQTT.
+
+* CoAP.
+
+* Zigbee.
+
+* Z-Wave.
+
+* Bluetooth Low Energy.
+
+* Firmware acquisition.
+
+* Firmware analysis.
+
+* Flash memory examination.
+
+* Device communication logs.
+
+* Cloud-connected IoT investigation.
+
+* IoT evidence preservation.
+
+* IoT reporting.
+
+### 16\. Vehicle forensics
+
+![Car Forensics Data Chip Memory NAND Reading Service Calgary](https://images.openai.com/static-rsc-4/9oNdVAwOmzx1_keOiaTRc-3GqCVTJZFy_epp-T1iBxb_fo5sX-Jp1mVBdt-TdNeF8z_7tCatMWhkefU2u4YC8cVgb49mFZSB0A7ltWXfuRZj-WmpyUWXDhBF269e8JQL8-d7CqrynBe7kQfFKX50_MK3M_qIYjfyIUDipcJqHUgjQuRs69h-cuO1aasiVLq6?purpose=fullsize)
+
+### Complete syllabus
+
+* Automotive electronic architecture.
+
+* Electronic Control Units (ECUs).
+
+* Event Data Recorders (EDRs).
+
+* Vehicle infotainment systems.
+
+* GPS navigation systems.
+
+* Vehicle communication networks.
+
+* CAN bus fundamentals.
+
+* LIN bus fundamentals.
+
+* Automotive Ethernet.
+
+* Vehicle diagnostic systems.
+
+* Vehicle location records.
+
+* Bluetooth pairing records.
+
+* Infotainment logs.
+
+* Vehicle telemetry.
+
+* EDR evidence interpretation.
+
+* Vehicle data preservation.
+
+* Vehicle forensic reporting.
+
+### 17\. Software forensics
+
+Purpose: Investigating software behaviour, code history, program execution and software authenticity.
+
+### Complete syllabus
+
+* Software architecture.
+
+* Source code examination.
+
+* Binary analysis.
+
+* Executable formats.
+
+* PE files.
+
+* ELF files.
+
+* Mach-O files.
+
+* DLL analysis.
+
+* Shared libraries.
+
+* Static analysis.
+
+* Dynamic analysis.
+
+* Software dependencies.
+
+* Package examination.
+
+* Software provenance.
+
+* Code signing.
+
+* Digital signatures.
+
+* Compiler artefacts.
+
+* Debug symbols.
+
+* Software version analysis.
+
+* Build artefacts.
+
+* Software tampering.
+
+* Backdoor investigation.
+
+* Supply chain investigation.
+
+* Software evidence reporting.
+
+### 18\. Application forensics
+
+Purpose: Examining the digital traces left by applications.
+
+### Complete syllabus
+
+* Application architecture.
+
+* Application installation records.
+
+* Application execution artefacts.
+
+* Application logs.
+
+* Configuration files.
+
+* Cache files.
+
+* Temporary files.
+
+* Application databases.
+
+* Local storage.
+
+* Session data.
+
+* Authentication tokens.
+
+* API communication records.
+
+* Application permissions.
+
+* Background processes.
+
+* Application updates.
+
+* Application crashes.
+
+* Application deletion artefacts.
+
+* Application timeline reconstruction.
+
+### 19\. Cloud and virtual machine memory forensics
+
+This is a specialist extension of memory and cloud forensics.
+
+### Complete syllabus
+
+* Virtual machine memory architecture.
+
+* Hypervisor fundamentals.
+
+* VM snapshots.
+
+* VM memory acquisition.
+
+* Virtual disk acquisition.
+
+* Guest operating system artefacts.
+
+* Host operating system artefacts.
+
+* Container memory.
+
+* Container logs.
+
+* Kubernetes event records.
+
+* Virtual network evidence.
+
+* Cloud workload investigation.
+
+* Cross-VM incident reconstruction.
+
+* Evidence integrity.
+
+* Reporting.
+
+### 20\. Blockchain and cryptocurrency forensics
+
+![Why Enforcement Needs Blockchain Intel](https://images.openai.com/static-rsc-4/R0oxpWdOjFjQxmelSqWlMPujMpYFIbVFqh5UD8EljmqBmUsj3H8HsrKKe7Cj8Hgq79HGmz8D4iO_iz5rl63cs8Nbkx4p_zLXjn3aKu0lKH9LYoQgrweB8ysi3ciRpIJjv8sakmkQaC2VxbCxKA31D9dshiqFNW5h49CUjkH4cltEFQESYAS1-4-8mO09q-Xp?purpose=fullsize)
+
+### Complete syllabus
+
+* Blockchain fundamentals.
+
+* Distributed ledger technology.
+
+* Cryptocurrency fundamentals.
+
+* Wallet architecture.
+
+* Public and private keys.
+
+* Addresses.
+
+* Transactions.
+
+* Transaction hashes.
+
+* Blocks.
+
+* Block explorers.
+
+* Transaction tracing.
+
+* UTXO model.
+
+* Account-based model.
+
+* Smart contracts.
+
+* Token transfers.
+
+* Exchange records.
+
+* Cryptocurrency fraud investigation.
+
+* Ransomware payment tracing.
+
+* Blockchain analytics.
+
+* Evidence preservation.
+
+* Legal limitations.
+
+* Forensic reporting.
+
+Tools: Bitcoin Core, Blockchair, Etherscan and Chainalysis investigation products.
+
+### 21\. Drone forensics
+
+### Complete syllabus
+
+* Drone architecture.
+
+* Flight controllers.
+
+* GPS modules.
+
+* Flight logs.
+
+* Flight history.
+
+* Flight path reconstruction.
+
+* Camera metadata.
+
+* SD card examination.
+
+* Firmware examination.
+
+* Telemetry analysis.
+
+* Remote controller examination.
+
+* Drone communication protocols.
+
+* Battery and sensor data.
+
+* Evidence preservation.
+
+* Drone forensic reporting.
+
+### 22\. Gaming and virtual-world forensics
+
+### Complete syllabus
+
+* Gaming system architecture.
+
+* Console storage.
+
+* User profiles.
+
+* Game save files.
+
+* Game activity logs.
+
+* Online gaming communications.
+
+* In-game purchases.
+
+* Transaction history.
+
+* Gaming account authentication.
+
+* Cloud gaming records.
+
+* VR and AR device artefacts.
+
+* Virtual-world activity reconstruction.
+
+* Evidence preservation.
+
+* Forensic reporting.
+
+### 23\. Wireless forensics
+
+Purpose: Investigating wireless communications and wireless security incidents.
+
+### Complete syllabus
+
+* Wireless network architecture.
+
+* Wi-Fi standards.
+
+* IEEE 802.11.
+
+* Wireless authentication.
+
+* WPA, WPA2 and WPA3.
+
+* Wireless encryption.
+
+* Access point investigation.
+
+* Wireless client identification.
+
+* Wireless connection logs.
+
+* Rogue access point investigation.
+
+* Evil twin attack evidence.
+
+* Wireless intrusion detection.
+
+* Bluetooth investigation.
+
+* Bluetooth pairing records.
+
+* NFC communications.
+
+* RFID systems.
+
+* Wireless packet capture.
+
+* Wireless traffic reconstruction.
+
+* Wireless evidence preservation.
+
+* Investigation reporting.
+
+Tools: Wireshark, Kismet, Aircrack-ng and BlueZ.
+
+### 24\. Browser forensics
+
+Purpose: Investigating traces left by web browsers.
+
+### Complete syllabus
+
+* Browser architecture.
+
+* Browser profiles.
+
+* Browsing history.
+
+* Search history.
+
+* Download history.
+
+* Cookies.
+
+* Cache examination.
+
+* Session restoration.
+
+* Bookmarks.
+
+* Saved passwords and credential artefacts.
+
+* Autofill records.
+
+* Browser extensions.
+
+* Local storage.
+
+* IndexedDB.
+
+* Web storage.
+
+* Service workers.
+
+* Browser databases.
+
+* Private browsing limitations.
+
+* Browser synchronisation.
+
+* Browser timeline reconstruction.
+
+* Browser evidence reporting.
+
+Tools: Hindsight, BrowsingHistoryView, Autopsy and browser-specific forensic parsers.
+
+### 25\. Geospatial and GPS forensics
+
+Purpose: Investigating location-related digital evidence.
+
+### Complete syllabus
+
+* GPS fundamentals.
+
+* Satellite positioning.
+
+* Location coordinates.
+
+* Latitude and longitude.
+
+* GPS metadata.
+
+* Geotagged images.
+
+* Mobile location records.
+
+* Location history.
+
+* Geofencing records.
+
+* Navigation application data.
+
+* Vehicle GPS records.
+
+* Location timestamp analysis.
+
+* Mapping and coordinate systems.
+
+* Location correlation.
+
+* Movement timeline reconstruction.
+
+* Geospatial evidence preservation.
+
+* Reporting and limitations.
+
+Tools: QGIS, ExifTool and GIS analysis software.
+
+### 26\. E-discovery and legal forensics
+
+Purpose: Identifying, preserving, collecting and reviewing electronic information for legal proceedings.
+
+### Complete syllabus
+
+* E-discovery fundamentals.
+
+* Electronically Stored Information (ESI).
+
+* Legal preservation.
+
+* Litigation holds.
+
+* Data identification.
+
+* Data collection.
+
+* Data processing.
+
+* Deduplication.
+
+* Metadata preservation.
+
+* Document review.
+
+* Email review.
+
+* Search and filtering.
+
+* Privileged information.
+
+* Production formats.
+
+* Chain of custody.
+
+* Evidence admissibility.
+
+* Legal reporting.
+
+* Expert witness preparation.
+
+Tools: Microsoft Purview eDiscovery, Relativity and Nuix.
+
+### 27\. Industrial and OT forensics
+
+Purpose: Investigating incidents involving industrial control systems and critical infrastructure.
+
+### Complete syllabus
+
+* Industrial Control Systems (ICS).
+
+* Operational Technology (OT).
+
+* SCADA architecture.
+
+* Programmable Logic Controllers (PLC).
+
+* Human Machine Interfaces (HMI).
+
+* Industrial networks.
+
+* Modbus.
+
+* DNP3.
+
+* OPC UA.
+
+* Industrial network traffic.
+
+* Controller logs.
+
+* Historian databases.
+
+* Engineering workstation investigation.
+
+* Firmware analysis.
+
+* Industrial malware.
+
+* Safety system investigation.
+
+* Evidence preservation in operational environments.
+
+* Incident reconstruction.
+
+* Industrial forensic reporting.
+
+### 28\. Digital identity and authentication forensics
+
+Purpose: Investigating account compromise, identity abuse and authentication events.
+
+### Complete syllabus
+
+* Digital identity architecture.
+
+* Authentication systems.
+
+* Authorization systems.
+
+* Active Directory.
+
+* LDAP.
+
+* Kerberos.
+
+* OAuth.
+
+* OpenID Connect.
+
+* SAML.
+
+* Single Sign-On.
+
+* Multifactor authentication.
+
+* Authentication logs.
+
+* Failed login investigation.
+
+* Account takeover investigation.
+
+* Privileged account investigation.
+
+* Session token investigation.
+
+* Identity federation logs.
+
+* Service account investigation.
+
+* Identity timeline reconstruction.
+
+* Forensic reporting.
+
+### 29\. Data forensics and forensic analytics
+
+Purpose: Examining large volumes of information to discover patterns, anomalies, relationships and evidence.
+
+### Complete syllabus
+
+* Data acquisition.
+
+* Data validation.
+
+* Data integrity.
+
+* Data cleaning.
+
+* Data normalisation.
+
+* Data transformation.
+
+* Metadata analysis.
+
+* Statistical analysis.
+
+* Anomaly detection.
+
+* Timeline analysis.
+
+* Correlation analysis.
+
+* Pattern identification.
+
+* Outlier detection.
+
+* Log analytics.
+
+* User behaviour analysis.
+
+* Transaction analysis.
+
+* Financial fraud analysis.
+
+* Visualisation.
+
+* Automated forensic analysis.
+
+* Analytical reporting.
+
+Tools: Python, Pandas, SQL, Jupyter Notebook, Splunk and Excel.
+
+### 30\. Artificial intelligence and machine-learning forensics
+
+Purpose: Investigating AI systems, AI-generated content and incidents involving machine-learning models.
+
+### Complete syllabus
+
+* AI architecture.
+
+* Machine-learning fundamentals.
+
+* Neural networks.
+
+* Training data.
+
+* Model artefacts.
+
+* Model provenance.
+
+* Model integrity.
+
+* Training-data examination.
+
+* Data poisoning investigation.
+
+* Model extraction evidence.
+
+* Prompt injection investigation.
+
+* Model manipulation.
+
+* AI-generated image investigation.
+
+* AI-generated audio investigation.
+
+* Deepfake video examination.
+
+* Synthetic identity investigation.
+
+* Model behaviour analysis.
+
+* AI audit logs.
+
+* Explainability.
+
+* AI evidence reporting.
+
+### PART 3 – The universal forensic investigation process
+
+Regardless of which specialisation you choose, you need to master the investigation lifecycle.
+
+Digital forensic investigation workflow
+
+* Identification
+
+    Identify potential evidence, devices, accounts, systems and relevant data sources.
+
+* Preservation
+
+    Protect original evidence from alteration, contamination or destruction.
+
+* Collection
+
+    Collect evidence using authorised and documented procedures.
+
+* Acquisition
+
+    Create forensic copies or obtain appropriate exports and captures.
+
+* Examination
+
+    Extract, recover, organise and inspect relevant information.
+
+* Analysis
+
+    Interpret the evidence, correlate events and reconstruct what happened.
+
+* Verification
+
+    Check integrity, reproducibility and alternative explanations.
+
+* Reporting
+
+    Document methods, findings, limitations and conclusions.
+
+* Presentation
+
+    Explain findings to technical teams, management or legal authorities.
+
+The workflow reflects established digital investigation principles described by NIST. NIST Publications +1
+
+### PART 4 – Essential forensic techniques
+
+These are cross-disciplinary techniques you should learn.
+
+| Technique            | What it does                                  |
+| -------------------- | --------------------------------------------- |
+| Disk imaging         | Creates a forensic copy of storage            |
+| Hashing              | Verifies data integrity                       |
+| File carving         | Recovers files using their content structures |
+| Metadata analysis    | Examines information about files              |
+| Timeline analysis    | Reconstructs events chronologically           |
+| Log analysis         | Investigates recorded system activities       |
+| Memory acquisition   | Captures volatile memory                      |
+| Packet capture       | Records network communications                |
+| String analysis      | Finds readable text in data                   |
+| Registry analysis    | Examines Windows configuration artefacts      |
+| Signature analysis   | Identifies file formats                       |
+| Correlation          | Connects evidence from different sources      |
+| Static analysis      | Examines files without executing them         |
+| Dynamic analysis     | Observes behaviour during execution           |
+| Reverse engineering  | Studies internal program structure            |
+| Statistical analysis | Identifies patterns and anomalies             |
+
+### PART 5 – Complete forensic toolset
+
+Here is a consolidated tool reference.
+
+| Specialisation | Important tools               |
+| -------------- | ----------------------------- |
+| Computer       | Autopsy, EnCase, FTK          |
+| Disk           | Guymager, FTK Imager          |
+| Memory         | Volatility 3, MemProcFS       |
+| Network        | Wireshark, Zeek, NetworkMiner |
+| Mobile         | ALEAPP, iLEAPP, Cellebrite    |
+| Cloud          | CloudTrail, Azure Monitor     |
+| Database       | SQLite Browser, SQL tools     |
+| Email          | Thunderbird, Purview          |
+| Malware        | Ghidra, YARA, REMnux          |
+| Web            | Burp Suite, OWASP ZAP         |
+| Image          | ExifTool, Ghiro               |
+| Video          | FFmpeg, MediaInfo             |
+| Audio          | Audacity, Praat               |
+| IoT            | Binwalk, Ghidra               |
+| Vehicle        | CAN analysis tools            |
+| Software       | Ghidra, IDA Free              |
+| Blockchain     | Blockchair, Etherscan         |
+| Drone          | Flight-log analysis tools     |
+| Browser        | Hindsight                     |
+| Wireless       | Kismet, Wireshark             |
+| Geospatial     | QGIS                          |
+| E-discovery    | Relativity, Nuix              |
+| Data analytics | Python, Pandas, SQL           |
+| AI forensics   | Python, model auditing tools  |
+
+### PART 6 – Forensic laboratory setup
+
+![File:Digital forensics lab.jpg - Wikimedia Commons](https://images.openai.com/static-rsc-4/pYiH4VXmiIAZtPbSQ-M8AZlWM_t2Wn3oWhfBinnLrAtajZ_VzRNsg2QHMJcaOGCReXaskKLW0qpc_FmNBY691_7qSqte1On1Bn6BOOEhUkQqJGOmnjMswj2UrdyVQMa9iaQlI04NVnkuBBzTmtTmFd8UmkHWzJps7WumoA5li55moHz8gLzx-A1cDD4iIwEw?purpose=fullsize)
+
+![Servizi forensi | Service Point s.a.s.](https://images.openai.com/static-rsc-4/spt1kIhm_CWxhksEj0LNztYQC1b_txIWCHjHD6nbGiCtpuLPeGMUtyWCD1Lpj-9Rmfp0JvTHiJZj8DdxWI-EFDe7KMsdUSOPzliRIRUxlCzeMZwn1OiW0Y8-iNcROwFDdR1SgSgXdLthMJer7YqgLNNVZbG-48QGebz8jPEi8RxHCHtEN7y75-uVxi3tC2iu?purpose=fullsize)
+
+![Digital Forensics RF Shielding | Lab and Room Builds
+ – National Shielding](https://images.openai.com/static-rsc-4/hQi-TaaUAfkjGOiNYKh7RGR7LzWJwWYDwgo7fmIsz8HrvgE9z8RV9gJv4uNgbMg9ApYBfL0DgA4TopWYVTAqNWb9mTnl9_CwHK9zuI2qzNKRkw2nYj5eXY6nZW48UW6PPYykiw85sK7dP1WXmYPxlongUaTD6AAnaZIQvTyPRcgieTRmDPf2QLWXb-JB3loc?purpose=fullsize)
+
+![FBI — Computer Forensics Labs](https://images.openai.com/static-rsc-4/QFts5u6Fc4TyzNzI8ZhyfdeVBQWd3gsKMAUfrOYKdT92IOv9mBifZanW2SJv3eSEoN4RtP8krqa9jj2Pjg7Xc-QUYTQgorTSr2T3W0UmtHOj57lhgKHLAYxkPm2nLypUoA-yGk0PrRarBXyHNDkMDDFuUCUAYKrF5wAvxdJXrEhD-zDQmlQrO8QcyzKK8OP-?purpose=fullsize)
+
+![How Digital Forensic Labs Should Compare Modern Digital Forensics Software](https://images.openai.com/static-rsc-4/I60m8tpr90yLi89Ie8TGlu-b-82FYyXdzxElTIw6pB9Q8HI9IV26B16f-sqcHtz892f2LsPHsybhyJZNidH5aTJmPVfCPE0nD1afwJux9M8TiTd0rhDJeZb9iQEhnohNNZfptiIvQBqJRfhapZjnpUo5vxyOef6-gGuJ_qQQj5IhMx0TGWPDc_u5aHQIyi8a?purpose=fullsize)
+
+![SANS Digital Forensics and Incident Response Blog | Report Writing for Digital Forensics: Part II | SANS Institute](https://images.openai.com/static-rsc-4/cwgh0OC6mL_hpLCkuUMoqUYYvGwFLGMCHc7Lzoe8ktnk0MwlG8wfbfkFbsmNcjpd-ccmw5Qk7LapIJTVknIS5dU6eMI6HAVXyKhO2F5VEv_DrHPW0I6zD4y2eps7zbtMl-6HKbihuiQmsw921R44hFN8W9CpXCjb-x5hOSv255vKtdv9TF9VU-zvWT0amBPF?purpose=fullsize)
+
+![Digital evidence preservation checklist UK investigations 2026](https://images.openai.com/static-rsc-4/GbFEL3X7oqpfTk6p7wTD5BQtStqn6zJUuB9OQO9KrRUPTpUe7E9S8DmOo9qsrxu1mRTZwa3WaSqpLZHQJcOvUHY1wpT9DT26Z0K-9VSqHmt8M0oKe9vkjlE7ZhoFnq9_uZ6l-bKb6Tq1lo1gOWKmcJdfEnKP4AEq2cRmMD8Iw2fsNnkqkF3J8fTNrscLZYZ_?purpose=fullsize)
+
+![Training on Introduction to Computer Forensics and Digital Investigation - ForElite Training Institute](https://images.openai.com/static-rsc-4/tn9q06zx0Z1RRXnEPg-kBzoRaCGzfC9ylZYr3i5KcQ4_DykwfRlquMGTgpVTrYBtcbE5V7ahKI87WoL3iOTWwHykBa6LPRWx4ORGduwWeDnnNG4Btz_2PfhfAAOKltbgo_HCy0XG7sqxLyzzUmITH13cU_4xA17WiRC6YgW4vw61c6ct4S_1-1CudUTmOx53?purpose=fullsize)
+
+![Cyberen Technologies | Cybersecurity & Forensics Solutions](https://images.openai.com/static-rsc-4/aCqEKBsIvJ_N0f0DxKSqTnZ80OSBfM-wSgaumXjPARvfJAEB9S7rLU83Ll63gKnVx40F2hYi75OtJge5znZcmQWqZT-o4QWYXXmaUvnuvpUqSapBeII8te-BF85fAmH1t5FRnMmSyxySl6CWbOwV4kOnr23h6FHm-DaO9ifgDhvUpWvt3BTHN6ptdopsGQJ_?purpose=fullsize)
+
+![Foundation for Business Records in Digital Forensics: What Makes Evidence Admissible in Court](https://images.openai.com/static-rsc-4/VBwYVGRhoqEmNmf9PbtdJbYMlxf_MG7SlMmQIhYN_-NBpPDNNuD6izEC5TDnLaGuYbBL7yBBjOtiC5ZEuLNSC3l9UbBrFhjNi3XQk-M4UZi3OwD4aPRhgSFj7u_buyUg5RvhslPHcUJdypwhuoHqiaMh91h9-4kgnREYmGpoioIivp5IKESbw13B47RQxPA_?purpose=fullsize)
+
+![Forensic Hardware - Dr. Mike Murphy](https://images.openai.com/static-rsc-4/OL4RO-xGsW331DQxNVcZIT6v1q2tPSCHNL6hkbbBiRfNgeZI1zYuJXs9uNPXzOLacflNsKXoPWpCg6ujvRwEx8i5nHglKhRmIuOU-mLjaKp_V0LNmJg185mI8ggeo5dvl9Zvm_11H6cFcBMBbvQbuSALdvBDbqJdyGYbE4cc9kjCLyZE_2bsqTabqZBMzFUf?purpose=fullsize)
+
+![Digital Forensics Services in BC and Across Canada | Teradrive Forensics](https://images.openai.com/static-rsc-4/z7ZXAtzXawPvbztZrJIZp6v2dH40MWAi6BTqoYW7idRaQ0Z25u2XZgsEAGrD4vSfQD-VGGWXfTN5vuTkp1yq63vhphLcAq6VYJupIcp0KWoc7fzx-KB9xZEg06q5EPv5LAP_tvdl0LLIvUM7ks4Aje24xRa4R4xrGmElTmcvG8ws0IPqUtXH2sfj3wLvFX_r?purpose=fullsize)
+
+![Role of Forensic Labs: Complete Guide for Legal Cases](https://images.openai.com/static-rsc-4/gvKn4ac4bdJJ4YFzDusxucZkSkmav4wgttvouSCjcLeNbQa3V5dstRwDedUkyDJf6EVF-5YodoHcSjN71Y3BCERKwEvG3Qh0vPRXVl4_ET7YOvxtH7lJuAbixs2OqCYHrmstPCANsi9C1YcBO3pCBw1JUIaeGKMIt96VlW4Opdvc1_0D1OCoj_Dy_AeAEm4L?purpose=fullsize)
+
+You can build a learning laboratory using your Ubuntu computer and Android phone.
+
+### Recommended software
+
+* Ubuntu.
+
+* Kali Linux.
+
+* Autopsy.
+
+* The Sleuth Kit.
+
+* Wireshark.
+
+* Volatility 3.
+
+* Ghidra.
+
+* ExifTool.
+
+* FFmpeg.
+
+* Python.
+
+* SQLite Browser.
+
+* REMnux.
+
+* Docker.
+
+* VirtualBox.
+
+### Practical laboratory projects
+
+| Project                | Expected outcome                            |
+| ---------------------- | ------------------------------------------- |
+| Disk investigation     | Produce a verified forensic image           |
+| File recovery          | Recover test files from a prepared image    |
+| Memory investigation   | Identify processes in a RAM capture         |
+| Network investigation  | Reconstruct a controlled network event      |
+| Mobile investigation   | Examine an authorised Android backup        |
+| Email investigation    | Identify suspicious email indicators        |
+| Malware investigation  | Analyse a harmless training sample          |
+| Image investigation    | Inspect EXIF and image authenticity         |
+| Database investigation | Identify changes in a test database         |
+| Cloud investigation    | Reconstruct activity from sample audit logs |
+
+Always work with devices, accounts, data and laboratory images you own or have explicit authority to investigate. Preserve originals and document every action.
+
+### PART 7 – Recommended professional learning order
+
+You do not need to master all 30 specialisations simultaneously. Build a broad foundation, then specialise.
+
+### Your forensic learning roadmap
+
+* Foundation level
+
+    Computer architecture, operating systems, binary, file systems, networking and Python.
+
+* Core forensic level
+
+    Computer, disk, file-system, memory and network forensics.
+
+* Device forensic level
+
+    Mobile, browser, application, email and IoT forensics.
+
+* Advanced forensic level
+
+    Malware, software, cloud, database and wireless forensics.
+
+* Multimedia forensic level
+
+    Image, audio, video, GPS and drone forensics.
+
+* Specialist forensic level
+
+    Blockchain, vehicle, industrial, AI and identity forensics.
+
+* Professional investigation level
+
+    E-discovery, legal evidence, chain of custody, expert reporting and courtroom presentation.
+
+### PART 8 – Track your forensic education
+
+Forensic mastery tracker
+
+0/42
+
+1. Foundations
+
+Computer architecture
+
+Binary and hexadecimal
+
+Operating systems
+
+File systems
+
+Networking
+
+Python and scripting
+
+Forensic methodology
+
+2. Core specialisations
+
+Computer forensics
+
+Disk forensics
+
+Memory forensics
+
+Network forensics
+
+Mobile forensics
+
+Cloud forensics
+
+Database forensics
+
+3. Application and software
+
+Email forensics
+
+Web forensics
+
+Browser forensics
+
+Application forensics
+
+Software forensics
+
+Malware forensics
+
+Identity forensics
+
+4. Multimedia and devices
+
+Image forensics
+
+Video forensics
+
+Audio forensics
+
+IoT forensics
+
+Vehicle forensics
+
+Drone forensics
+
+Wireless forensics
+
+5. Advanced specialisations
+
+Blockchain forensics
+
+Geospatial forensics
+
+E-discovery
+
+Industrial forensics
+
+Data analytics forensics
+
+AI forensics
+
+Gaming and virtual-world forensics
+
+6. Professional skills
+
+Evidence acquisition
+
+Evidence preservation
+
+Hash verification
+
+Chain of custody
+
+Timeline reconstruction
+
+Forensic reporting
+
+Legal presentation
+
+Reset tracker
+
+### PART 9 – Authoritative forensic learning resources
+
+These are useful starting points for studying forensic methodology and practical investigations.
+
+* [NIST Digital Investigation Techniques](https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8354.pdf?utm_source=chatgpt.com) – scientific foundations of digital investigation.
+
+* [Open University Digital Forensics](https://www.open.edu/openlearn/mod/oucontent/view.php?id=31361&section=4.3&utm_source=chatgpt.com) – introduction to forensic specialisations.
+
+* [DHS Digital Forensics Tools](https://www.dhs.gov/sites/default/files/publications/Digital-Forensics-Tools-TN_0716-508.pdf?utm_source=chatgpt.com) – forensic tools and evidence collection.
+
+* [IBM Digital Forensics](https://www.ibm.com/think/topics/digital-forensics?utm_source=chatgpt.com) – branches and applications of digital forensics.
+
+* [Digital Forensics Subdomains Research](https://pure.port.ac.uk/ws/portalfiles/portal/94821476/Digital_forensics_subdomains.pdf?utm_source=chatgpt.com) – academic overview of specialist forensic fields.
+
+### My recommendation for your offensive security career
+
+Learn the relationship between three disciplines:
+
+Offensive security
+
+Discover and validate security weaknesses.
+
+Digital forensics
+
+Understand what happened and establish evidence.
+
+Incident response
+
+Contain threats and restore secure operations.
+
+An exceptional security researcher should understand not only how a vulnerability is discovered, but also how to reconstruct the events, identify the affected components, preserve evidence and verify the impact.
+
+One important distinction: The 30 areas above are a comprehensive learning taxonomy, not an official universal list. Some overlap or are sub-specialisations of others; professional investigations frequently combine multiple branches. Pure Portsmouth +2
+
+My suggested next step is to study Computer Forensics from absolute beginner to advanced, including its theory, commands, tools, practical investigations and Python automation, before moving to memory and network forensics.

@@ -1,0 +1,9 @@
+* Architecture: Understand how the browser, API, backend, database and payment processor communicate.
+
+* Logic: Understand how the system calculates, approves and processes withdrawals.
+
+* Mathematics: Identify the rules that must always hold, regardless of transaction sequence.
+
+* Diagnostics: Trace how data moves through components and identify inconsistencies.
+
+* Adversarial testing: In an authorized laboratory, test whether those assumptions remain true under unusual inputs, concurrency, failures and recovery.

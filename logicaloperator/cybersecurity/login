@@ -1,0 +1,10 @@
+Here is how the five security principles apply specifically to a login workflow:
+• Architecture: Map how credentials move from the user's browser through the API and backend, how the authentication service queries the database for password hashes and MFA secrets, and how session tokens or cookies are issued and stored.
+• Logic: Understand how the system normalizes user identifiers, verifies password hashes using constant-time comparison, enforces multi-factor authentication (MFA), applies rate limiting or account lockouts, and rotates session identifiers upon success.
+• Mathematics: Define the invariant rules that must always hold—such as ensuring authentication succeeds if and only if all required factors (password + MFA) validate, failed attempt counters increment monotonically until a valid login resets them, and each active session token maps cryptographically to a single authenticated user identity.
+• Diagnostics: Trace login payloads, authentication logs, failed-attempt counters, and session creation events across components to spot discrepancies like plaintext credential logging, response-time differences between valid and invalid usernames, or stale session tokens remaining valid.
+• Adversarial testing: In an authorized lab environment, test whether login assumptions break under credential stuffing, brute-force attacks (bypassing rate limits via IP spoofing headers or case variations), MFA bypass (skipping the second step directly to an authenticated endpoint), session fixation, or injection payloads in username/password fields.
+Would you like me to:
+• Format this into a ready-to-save command for your terminal
+• Expand on specific login vulnerabilities (like MFA bypass or session fixation)
+• Adapt these five points for registration, OAuth, or API key authentication

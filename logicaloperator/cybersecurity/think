@@ -1,0 +1,292 @@
+### 15\. Think Beyond the Expected Use: 100 Unanticipated Conditions to Test
+
+The objective is to identify situations that developers may have overlooked when designing a component, API, application, website, APK or distributed system.
+
+A useful principle is:
+
+Do not only test whether a component works as designed. Test whether it remains correct when its assumptions are challenged.
+
+Below are 100 categories of unexpected conditions to investigate in an authorised security-testing environment.
+
+### A. Input and data conditions
+
+* Very large inputs — Extremely long strings, files, arrays or requests.
+
+* Very small inputs — Empty strings, zero-byte files and minimum-size values.
+
+* Boundary values — Values immediately below, at and above permitted limits.
+
+* Unusual Unicode — Accented characters, non-Latin scripts and combining characters.
+
+* Unicode normalization — Different representations of visually identical text.
+
+* Emoji and special symbols — Multi-code-point characters and unusual symbols.
+
+* Null bytes — Embedded null characters in supported input formats.
+
+* Control characters — Tabs, newlines, carriage returns and other control characters.
+
+* Whitespace variations — Leading, trailing, repeated and non-breaking spaces.
+
+* Mixed character encodings — UTF-8, UTF-16 and invalid encoding sequences.
+
+### B. Data types and numerical conditions
+
+* Negative numbers — Negative integers and floating-point values.
+
+* Zero values — Zero where a positive value is expected.
+
+* Very large integers — Values near or beyond numeric type limits.
+
+* Very small decimals — Tiny fractional values.
+
+* Floating-point precision — Rounding and representation errors.
+
+* Scientific notation — Inputs such as `1e6` where accepted.
+
+* Integer overflow — Arithmetic exceeding the permitted numeric range.
+
+* Integer underflow — Arithmetic falling below the permitted range.
+
+* Type confusion — Numbers supplied where strings or objects are expected.
+
+* Boolean confusion — `true`, `false`, `0`, `1`, `"true"` and `"false"` handled inconsistently.
+
+### C. File and format conditions
+
+* Unexpected file extensions — Extension differs from the actual file content.
+
+* Mismatched file signatures — File extension and internal signature disagree.
+
+* Malformed files — Incomplete or structurally invalid files.
+
+* Truncated files — Files cut off during transfer or upload.
+
+* Empty files — Valid upload mechanisms receiving empty content.
+
+* Unusual metadata — Unexpected metadata fields or values.
+
+* Nested archives — Archives containing other archives.
+
+* Large archive expansion — Compressed files that expand dramatically.
+
+* Duplicate filenames — Multiple files with identical names.
+
+* Path variations — Unicode paths, unusual separators and platform-specific paths.
+
+### D. Network and communication conditions
+
+* Network interruption — Connection disappears during an operation.
+
+* High latency — Responses arrive much later than expected.
+
+* Packet loss — Some network packets never arrive.
+
+* Connection reset — A connection terminates unexpectedly.
+
+* Slow responses — A service takes unusually long to respond.
+
+* Duplicate requests — The same request is submitted more than once.
+
+* Out-of-order responses — Responses arrive in a different order from requests.
+
+* Partial responses — A response is incomplete.
+
+* Unexpected HTTP status codes — Components receive statuses they do not normally handle.
+
+* Protocol differences — HTTP/1.1, HTTP/2 and HTTP/3 behave differently.
+
+### E. Concurrency and simultaneous operations
+
+* Simultaneous submissions — Multiple requests arrive together.
+
+* Race conditions — Operations compete over shared state.
+
+* Double submission — A user submits the same action twice.
+
+* Concurrent withdrawals — Multiple transactions attempt to use the same balance.
+
+* Read/write conflicts — One operation reads while another modifies the same record.
+
+* Lock contention — Multiple operations compete for a resource lock.
+
+* Deadlocks — Operations wait indefinitely for one another.
+
+* Lost updates — One update unintentionally overwrites another.
+
+* Out-of-order transaction completion — Later operations finish before earlier ones.
+
+* Concurrent session changes — Several sessions modify the same account or resource.
+
+### F. State and workflow conditions
+
+* Unexpected state transitions — A component moves into an invalid state.
+
+* Repeated state transitions — An operation is performed repeatedly.
+
+* Skipped workflow steps — A required step is missing.
+
+* Reversed workflow order — Steps occur in an unexpected sequence.
+
+* Stale state — A component uses outdated information.
+
+* Expired state — A session, token or transaction expires during processing.
+
+* Partially completed state — Only some steps of an operation succeed.
+
+* State restoration — A component resumes from a previous state.
+
+* State disagreement — Two components believe different things about the same transaction.
+
+* Invalid state recovery — A component resumes in a state that should not be allowed.
+
+### G. API and integration conditions
+
+* Unexpected API response fields — Additional fields appear.
+
+* Missing API fields — Required or optional fields disappear.
+
+* Null API values — Fields contain `null` instead of ordinary values.
+
+* Changed response structure — An API changes its JSON structure.
+
+* Different API versions — Old and new versions behave differently.
+
+* Inconsistent API validation — Different endpoints validate the same data differently.
+
+* Unexpected redirects — API requests are redirected.
+
+* Dependency timeout — An external service does not respond in time.
+
+* Dependency failure — A connected service becomes unavailable.
+
+* Inconsistent integration data — Connected services return conflicting information.
+
+### H. Client, platform and compatibility conditions
+
+* Different client versions — Old and new application versions interact with the same backend.
+
+* Different operating systems — Android, iOS, Windows and Linux handle components differently.
+
+* Different browsers — Browser implementations produce different results.
+
+* Different screen sizes — Interface behaviour changes across display sizes.
+
+* Different locales — Regional settings affect formatting and validation.
+
+* Different time zones — Date and time calculations produce inconsistent results.
+
+* Different calendar formats — Date interpretation changes.
+
+* Different decimal separators — `1.50` versus `1,50`.
+
+* Different language settings — Localisation changes labels and data handling.
+
+* Different device capabilities — Memory, storage and processing limitations affect behaviour.
+
+### I. Authentication, permissions and trust conditions
+
+* Expired authentication — Credentials expire during an operation.
+
+* Revoked credentials — A previously valid credential is no longer trusted.
+
+* Permission changes — User permissions change while a session remains active.
+
+* Session replacement — A new login replaces or modifies an existing session.
+
+* Multiple active sessions — Several sessions operate on the same account.
+
+* Identity disagreement — Components associate an operation with different identities.
+
+* Untrusted client data — The backend receives values it should independently verify.
+
+* Stale authorization — A previously approved permission is incorrectly reused.
+
+* Incomplete logout — Some session-related state remains active after logout.
+
+* Trust boundary confusion — One component assumes another component has already validated something.
+
+### J. Failure, recovery and unusual environmental conditions
+
+* Application crash — The application stops during an operation.
+
+* Server restart — A server restarts while processing requests.
+
+* Database outage — The database becomes unavailable.
+
+* Storage exhaustion — Disk space runs out during processing.
+
+* Memory exhaustion — The application runs out of available memory.
+
+* Power interruption — A device or server loses power unexpectedly.
+
+* Clock changes — System time moves forward or backward.
+
+* Retry behaviour — A failed operation is automatically attempted again.
+
+* Backup restoration — Data is restored from an older backup.
+
+* Disaster recovery — Multiple services recover at different times and may temporarily disagree.
+
+### How to test these 100 possibilities systematically
+
+Do not simply submit random inputs. For each condition, investigate five things:
+
+The five-part diagnostic method
+
+* Assumption: What does the developer expect to happen?
+
+* Experiment: What unusual but controlled condition can challenge that expectation?
+
+* Observation: What does the component actually do?
+
+* Invariant: Does the system still obey its essential rules?
+
+* Evidence: Can you reproduce and document the result?
+
+### Example: Testing a withdrawal component
+
+Suppose the financial system has this invariant:
+
+\\text{Withdrawal} \\leq \\text{Available Balance}
+
+| Unanticipated condition  | What to investigate                                          |
+| ------------------------ | ------------------------------------------------------------ |
+| Network interruption     | Does the transaction complete, fail or remain pending?       |
+| Duplicate request        | Is the transaction processed twice?                          |
+| Simultaneous withdrawals | Does the balance remain correct?                             |
+| Server restart           | Is transaction state recovered correctly?                    |
+| Delayed API response     | Does the client display an outdated balance?                 |
+| Old application version  | Does it follow the same business rules?                      |
+| Floating-point precision | Are monetary values calculated accurately?                   |
+| Database outage          | Can partial transactions leave inconsistent records?         |
+| Retry behaviour          | Is a previously completed transaction duplicated?            |
+| Backup restoration       | Does the restored ledger reconcile with transaction records? |
+
+For these tests, use a system you own or have explicit permission to assess, preferably a local mock banking application with simulated accounts and test balances.
+
+### Advanced principle: look for combinations, not just individual conditions
+
+Many defects emerge when two or more unexpected conditions happen together.
+
+Examples:
+
+* Network interruption + automatic retry.
+
+* Concurrent withdrawals + delayed database response.
+
+* Expired session + partially completed transaction.
+
+* Old client version + changed API response.
+
+* Server restart + pending transaction.
+
+* Unicode normalization + duplicate-account detection.
+
+* Clock change + token expiration.
+
+* Database outage + automatic recovery.
+
+This creates a much larger testing space than 100 individual conditions.
+
+The mindset to develop: Every component has assumptions. Your job as a researcher is to discover those assumptions, challenge them systematically, and establish whether the system remains correct when those assumptions no longer hold.

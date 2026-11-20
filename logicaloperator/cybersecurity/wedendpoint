@@ -1,0 +1,77 @@
+Here are the five security principles applied across the remaining core endpoint categories found in modern web and financial applications:
+
+1. Transfers & Payments (P2P / Internal Ledger)
+
+• Architecture: Map how transfer requests move from the sender's browser through the API and backend, how internal ledger services lock both accounts, and how the database commits atomic debit/credit entries.
+• Logic: Understand how the system validates sender ownership, checks sufficient funds, prevents self-transfers, enforces transaction limits, and wraps debit and credit operations in a single atomic transaction.
+• Mathematics: Define the invariant rules that must always hold—specifically conservation of value (\(\Delta Balance_{sender} + \Delta Balance_{receiver} = 0\), excluding fees), transfer amounts must be strictly positive (Amount > 0), and sender balance never drops below zero.
+• Diagnostics: Trace transfer IDs, database lock states, ledger journal entries, and notification triggers across components to spot partial commits (sender debited without receiver credited) or orphaned pending transactions.
+• Adversarial testing: Test for race conditions (concurrent transfers draining funds twice), negative transfer amounts (reversing the flow to steal funds), integer overflow/rounding errors, and IDOR (initiating transfers from another user's account ID).
+
+2. Refunds & Chargebacks
+
+• Architecture: Map how refund requests flow from the user or support dashboard through the backend, how the payment processor executes the reversal, and how webhooks update the internal order and balance states.
+• Logic: Understand how the system verifies original transaction eligibility, tracks cumulative refunded amounts against the original charge, revokes associated digital goods or entitlements, and handles partial vs. full refunds.
+• Mathematics: Define the invariant rules that must always hold—total refunded value must never exceed the original settled amount (\(\sum Refunds \le Original\_Payment\)), and a single transaction cannot be refunded more than once beyond its cap.
+• Diagnostics: Trace refund initiation logs, payment gateway reversal IDs, webhook payloads, and inventory/entitlement revocation logs to spot mismatches where money is returned while services remain active.
+• Adversarial testing: Test for race conditions (submitting multiple simultaneous refund requests for one order), refunding already-disputed/charged-back transactions, parameter tampering on refund amounts, and replay attacks on refund webhooks.
+
+3. Profile, Settings & Email/Phone Updates
+
+• Architecture: Map how profile update requests move from the client through the API and backend, how old vs. new contact records are staged in the database, and how verification messages are dispatched.
+• Logic: Understand how the system authenticates the active user, requires re-authentication (current password or MFA) for sensitive changes (email, phone, payout details), and keeps the old identifier active until the new one is verified.
+• Mathematics: Define the invariant rules that must always hold—an authenticated user can modify only records where Record.UserID == Session.UserID, and updated unique identifiers (email/phone) must maintain global one-to-one uniqueness.
+• Diagnostics: Trace PATCH/PUT payloads, audit trail logs, verification token states, and alert notifications sent to old contact addresses to spot silent account takeovers or unauthorized field updates.
+• Adversarial testing: Test for IDOR (changing user_id in the URL or JSON body), mass assignment (overwriting role, kyc_status, or balance), CSRF on profile updates, and email change race conditions.
+
+4. Multi-Factor Authentication (MFA Setup & Verification)
+
+• Architecture: Map how MFA enrollment and verification requests move between the client, API, backend secret store, and external SMS/authenticator/WebAuthn providers.
+• Logic: Understand how the system generates high-entropy TOTP secrets or challenges, requires valid code verification before activating MFA, generates single-use recovery codes, and enforces MFA checks before issuing full session privileges.
+• Mathematics: Define the invariant rules that must always hold—a user session cannot transition to mfa_verified = true without a valid cryptographic proof for that specific user, and each TOTP window or recovery code can be accepted at most once (Uses ≤ 1).
+• Diagnostics: Trace MFA enrollment states, secret storage encryption, verification attempt counters, and session privilege upgrades across logs to spot unencrypted secrets or pre-verified session tokens.
+• Adversarial testing: Test for response manipulation (changing {"verified": false} to true), brute-forcing 6-digit codes without rate limits, reusing a valid TOTP code within the same 30-second window (replay), and skipping the MFA endpoint directly to dashboard APIs.
+
+5. Search, Filtering & Data Export Endpoints
+
+• Architecture: Map how query parameters move from the browser through the API gateway to backend search engines, read-replicas, or background export workers generating CSV/PDF files.
+• Logic: Understand how the system sanitizes query inputs, enforces tenant/user row-level access filters on every query, caps pagination limits, and stores generated export files with short-lived signed URLs.
+• Mathematics: Define the invariant rules that must always hold—every returned record R must satisfy CanAccess(Session.User, R) == true, and query execution resource cost must remain bounded (\(Limit \le Max\_Page\_Size\)).
+• Diagnostics: Trace raw search queries, generated database/ORM queries, export job queues, and file storage access logs to spot slow queries, overly broad data leaks, or publicly accessible export buckets.
+• Adversarial testing: Test for SQL/NoSQL injection in filter/sort fields, IDOR in export download links, wildcard/regex denial-of-service (ReDoS), and inference attacks (extracting restricted fields by sorting or filtering on hidden attributes).
+
+6. File Upload & Media Processing Endpoints
+
+• Architecture: Map how files travel from the client through the API or directly to object storage (e.g., S3 via pre-signed URLs), how background workers scan/resize files, and how CDNs serve them back.
+• Logic: Understand how the system validates MIME types and magic bytes, enforces strict file size limits, strips metadata (EXIF), renames files with random UUIDs, and serves user uploads from isolated, non-executable domains.
+• Mathematics: Define the invariant rules that must always hold—stored file size never exceeds \(Max\_Bytes\), file paths resolve strictly within the designated storage bucket/directory (no traversal), and uploaded content is never executed as server-side or same-origin active code.
+• Diagnostics: Trace upload headers, temporary disk writes, antivirus/parser worker logs, and CDN response headers (Content-Disposition, Content-Type) to spot hanging temp files or executable content types.
+• Adversarial testing: Test for polyglot files (valid image + malicious script), path traversal in filenames (../../shell.php), XML/SVG XXE payloads, decompression bombs (zip bombs), and stored XSS via HTML/SVG uploads.
+
+7. Webhooks & External Callbacks
+
+• Architecture: Map how external third-party services (payment gateways, KYC providers, messaging APIs) send HTTP POST events to public ingress endpoints, how workers queue them, and how internal state updates.
+• Logic: Understand how the system verifies cryptographic HMAC signatures, checks event timestamps to prevent stale replays, deduplicates events using unique event IDs, and returns fast 2xx acknowledgments.
+• Mathematics: Define the invariant rules that must always hold—only payloads with a valid signature matching the shared secret are processed, each unique event_id is applied at most once (\(Processed(event\_id) \le 1\)), and timestamp drift stays within tolerance (\(\vert{}t_{now} - t_{event}\vert{} \le \Delta_{max}\)).
+• Diagnostics: Trace incoming webhook headers, signature verification failures, event deduplication tables, and retry queues to spot spoofed events, dropped callbacks, or infinite retry loops.
+• Adversarial testing: Test for unsigned or forged payloads, replaying captured valid webhooks, timestamp manipulation, SSRF via callback URL parameters, and race conditions when a provider sends duplicate events simultaneously.
+
+8. Admin, Support & Role Management Endpoints
+
+• Architecture: Map how privileged actions flow from internal admin portals or support dashboards through API gateways, RBAC middleware, and backend services to modify user accounts or system configurations.
+• Logic: Understand how the system enforces role-based and attribute-based access control (RBAC/ABAC) on every endpoint, requires elevated authentication/VPN/IP allowlisting, and writes immutable audit logs for every privileged action.
+• Mathematics: Define the invariant rules that must always hold—an action requiring privilege P executes if and only if P ∈ User.EffectiveRoles, and every state-changing admin action produces exactly one immutable audit record (\(Audit\_Count == Action\_Count\)).
+• Diagnostics: Trace admin session tokens, RBAC policy decision logs, database privilege mutations, and SIEM audit streams to spot unauthorized privilege escalations or unlogged administrative overrides.
+• Adversarial testing: Test for broken function-level authorization (calling /api/admin/* endpoints with a standard user token), privilege escalation via role assignment endpoints, CSRF against logged-in admins, and HTTP method tampering (GET vs. POST/DELETE).
+
+9. API Keys, Tokens & OAuth Integrations
+
+• Architecture: Map how developers or third-party apps request, exchange, refresh, and revoke API keys or OAuth tokens across authorization servers, API gateways, and resource backends.
+• Logic: Understand how the system enforces granular scopes (least privilege), hashes stored API keys, rotates refresh tokens on every use, validates OAuth state and redirect_uri parameters strictly, and revokes token families upon suspected reuse.
+• Mathematics: Define the invariant rules that must always hold—a token can only access endpoints within its granted scope (\(Endpoint\_Scope \subseteq Token\_Scopes\)), and each refresh token can be exchanged at most once (\(Exchange\_Count \le 1\)).
+• Diagnostics: Trace token issuance logs, scope evaluation checks, refresh token rotation chains, and revocation lists across gateways to spot overly broad default scopes or leaked tokens in query strings.
+• Adversarial testing: Test for OAuth redirect_uri open redirects, missing state parameter (OAuth CSRF), refresh token replay attacks, scope escalation during token refresh, and horizontal access using valid API keys against another tenant's resources.
+Would you like me to:
+• Combine all of these into a single formatted markdown file you can paste directly into your terminal
+• Create a master checklist or cheat sheet organized by vulnerability class (e.g., race conditions, IDOR, auth bypass)
+• Deep-dive into automated testing scripts or lab setups for any specific endpoint above

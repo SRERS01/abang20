@@ -1,0 +1,6 @@
+Here are the five core principles framed as questions:
+1. Architecture: How do the browser, API, backend, database, and external services communicate?
+2. Logic: How does the system validate, calculate, approve, and process the action?
+3. Mathematics: What invariant rules must always hold true, regardless of transaction sequence?
+4. Diagnostics: How does data move through each component, and where do inconsistencies appear?
+5. Adversarial testing: In an authorized lab, do those assumptions hold under unusual inputs, concurrency, failures, and recovery

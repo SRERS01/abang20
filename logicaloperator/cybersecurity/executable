@@ -1,0 +1,278 @@
+👽### Executable files and formats that can lead to Remote Code Execution (RCE)
+
+Remote Code Execution (RCE) occurs when an attacker can cause a vulnerable application, server, device, or runtime to execute commands or code remotely.
+
+Important: A file format does not automatically create an RCE vulnerability. The risk depends on how the target processes, loads, deserializes, interprets, or executes that file.
+
+For offensive security research, classify the files into these groups.
+
+### 1\. Native executable files
+
+These can contain machine instructions executed directly by a compatible operating system or loaded by another program.
+
+| Format         | Typical platform | Security relevance                             |
+| -------------- | ---------------- | ---------------------------------------------- |
+| .exe, .dll     | Windows          | Executable and loadable PE files               |
+| .elf, .so      | Linux/Android    | Executables and shared libraries               |
+| .dylib, Mach-O | macOS/iOS        | Executables and dynamic libraries              |
+| .bin           | Embedded/Linux   | May contain raw machine code or firmware       |
+| .sys           | Windows          | Kernel drivers                                 |
+| .ko            | Linux            | Kernel modules                                 |
+| .o, .obj       | Multiple         | Object files, normally linked before execution |
+
+### 2\. Script files
+
+These can execute when passed to a compatible interpreter or runtime.
+
+| Format          | Interpreter/runtime         |
+| --------------- | --------------------------- |
+| .sh, .bash      | Bash or another shell       |
+| .py             | Python                      |
+| .js, .mjs, .cjs | JavaScript runtime          |
+| .php            | PHP                         |
+| .rb             | Ruby                        |
+| .pl             | Perl                        |
+| .lua            | Lua                         |
+| .ps1            | PowerShell                  |
+| .bat, .cmd      | Windows command interpreter |
+| .vbs, .vbe      | Windows Script Host         |
+| .tcl            | Tcl                         |
+| .awk            | AWK                         |
+| .groovy         | Groovy                      |
+| .kts            | Kotlin scripting runtime    |
+
+### 3\. Bytecode and virtual-machine files
+
+These contain instructions for a virtual machine or language runtime.
+
+| Format                | Runtime                          |
+| --------------------- | -------------------------------- |
+| .class, .jar          | Java Virtual Machine             |
+| .war, .ear            | Java application servers         |
+| .dex                  | Android Runtime                  |
+| .odex, .vdex, .oat    | Android runtime artifacts        |
+| .pyc                  | Python                           |
+| .wasm                 | WebAssembly runtime              |
+| .beam                 | Erlang/Elixir VM                 |
+| .luac                 | Lua VM                           |
+| .pyo                  | Historical Python bytecode       |
+| .cubin, .ptx          | NVIDIA GPU execution environment |
+| .spv                  | SPIR-V-compatible runtime        |
+| .eBPF / eBPF bytecode | Linux eBPF virtual machine       |
+
+### 4\. Archives and packages that can contain executable code
+
+These are especially important because the outer file may look like ordinary data while containing executable components.
+
+| Format             | Possible executable contents                            |
+| ------------------ | ------------------------------------------------------- |
+| .apk               | DEX, ELF .so, scripts and assets                        |
+| .aab               | Android application modules and executable code         |
+| .apex              | Android system components                               |
+| .zip               | Scripts, libraries, plugins or application packages     |
+| .jar               | Java classes and resources                              |
+| .war               | Java web application                                    |
+| .ear               | Enterprise Java application                             |
+| .phar              | PHP application archive                                 |
+| .whl               | Python package                                          |
+| .egg               | Python package                                          |
+| .gem               | Ruby package                                            |
+| .deb               | Linux package with executables and installation scripts |
+| .rpm               | Linux package with executables and scripts              |
+| .msi               | Windows installer                                       |
+| .cab               | Windows cabinet archive                                 |
+| .7z, .rar, .tar.gz | Archives that may contain executable files              |
+
+### 5\. Web application executable extensions
+
+These are particularly important when testing upload functionality on websites.
+
+| Technology             | Extensions to recognize                               |
+| ---------------------- | ----------------------------------------------------- |
+| PHP                    | .php, .php3, .php4, .php5, .php7, .phtml, .phar, .pht |
+| ASP                    | .asp, .asa, .asax, .ascx, .ashx, .asmx                |
+| ASP.NET                | .aspx, .ashx, .asmx, .ascx                            |
+| Java web               | .jsp, .jspx, .jspf, .jsw, .jsv                        |
+| Python                 | .py, .pyc, .pyw                                       |
+| Ruby                   | .rb, .rbw                                             |
+| Perl                   | .pl, .pm, .cgi                                        |
+| Shell                  | .sh, .bash, .cgi                                      |
+| Server-side JavaScript | .js, .mjs, .cjs                                       |
+| Server configuration   | .htaccess, .user.ini, web.config                      |
+
+These extensions are only relevant if the server has a matching interpreter, handler, plugin, or configuration that processes them. A `.php` file stored as a download does not automatically execute. OWASP specifically identifies upload location and server execution configuration as important conditions. GitHub +1
+
+### 6\. Files that may trigger RCE through vulnerable processing
+
+This category is easy to overlook. The file itself may be data, not executable code, but a vulnerable parser or converter can turn processing it into code execution.
+
+| File type          | Extension examples                          | Potentially vulnerable component               |
+| ------------------ | ------------------------------------------- | ---------------------------------------------- |
+| Images             | .jpg, .jpeg, .png, .gif, .webp, .tiff, .svg | Image decoders, converters, SVG/XML processors |
+| Documents          | .pdf, .doc, .docx, .odt, .rtf               | Document viewers and conversion software       |
+| Office             | .xls, .xlsx, .ppt, .pptx, .docm, .xlsm      | Office applications, macro engines, previewers |
+| Archives           | .zip, .tar, .gz, .7z, .rar                  | Extraction libraries and archive scanners      |
+| Audio              | .mp3, .wav, .flac, .ogg, .m4a               | Audio decoders                                 |
+| Video              | .mp4, .avi, .mkv, .mov, .webm               | Video codecs and transcoding services          |
+| Fonts              | .ttf, .otf, .woff, .woff2                   | Font parsers and rendering engines             |
+| XML                | .xml, .xhtml, .svg                          | XML parsers and external-entity processing     |
+| Database           | .db, .sqlite, .sql                          | Database engines, importers and extensions     |
+| Serialized objects | .ser, .pkl, .pickle, .marshal, .bin         | Object deserialization libraries               |
+
+Key distinction: A malformed image, PDF, archive or audio file is not automatically an RCE. RCE requires a flaw in the software processing it, or an unsafe configuration or execution path. Insecure deserialization is another important route. OWASP Web Security Testing Guide +2
+
+### 7\. Android APK-specific executable components
+
+For Android application security research, prioritize:
+
+| File/component    | What to investigate                             |
+| ----------------- | ----------------------------------------------- |
+| classes.dex       | Application bytecode and unsafe execution paths |
+| classes2.dex etc. | Additional DEX code                             |
+| lib/*.so          | Native code, memory corruption and JNI          |
+| .odex, .oat       | Optimized runtime code                          |
+| .vdex             | Verified DEX-related runtime data               |
+| .wasm             | WebAssembly modules                             |
+| .js               | JavaScript execution                            |
+| .jar              | Java libraries and code                         |
+| .apk              | Package contents and installation behavior      |
+| .apex             | Android system components                       |
+
+Look for dangerous combinations such as downloaded code being dynamically loaded, unsafe native libraries, vulnerable third-party SDKs, and exported components that allow untrusted input to reach sensitive code.
+
+### 8\. The most important RCE pathways to investigate
+
+A file becomes an RCE concern when it reaches a vulnerable execution or processing mechanism.
+
+Common RCE pathways
+
+* Unrestricted file upload
+
+    An application accepts a file that can subsequently be executed by the server.
+
+* Unsafe file inclusion
+
+    User-controlled file paths or remote resources are included as executable code.
+
+* Insecure deserialization
+
+    Untrusted serialized objects trigger dangerous methods or gadget chains.
+
+* Vulnerable file parser
+
+    Processing a specially malformed file exploits a flaw in an image, document, archive or media library.
+
+* Unsafe archive extraction
+
+    Archive paths or extracted files overwrite sensitive locations or application code.
+
+* Dynamic code loading
+
+    An application downloads or loads untrusted scripts, libraries or bytecode.
+
+* Command injection
+
+    File names, metadata or file-processing parameters reach an operating-system command unsafely.
+
+OWASP documents these risks in its file-upload, file-inclusion and insecure-deserialization testing guidance. OWASP Web Security Testing Guide +2
+
+### 9\. How to investigate these files as an offensive security researcher
+
+Only test applications and servers you own or have explicit permission to assess.
+
+Step 1 — Identify the actual file format
+
+On Ubuntu:
+
+```bash
+file suspicious_file
+xxd -l 64 suspicious_file
+strings -a suspicious_file | head -50
+sha256sum suspicious_file
+```
+
+Do not trust the extension alone. Inspect the file's actual content and magic bytes.
+
+Step 2 — Inspect executable structures
+
+For ELF files:
+
+```bash
+readelf -h application
+readelf -S application
+readelf -l application
+readelf -d application
+readelf -s application
+```
+
+For Android:
+
+```bash
+unzip -l target.apk
+jadx -d jadx_output target.apk
+apktool d target.apk -o decoded
+find . -type f -name "*.so"
+find . -type f -name "*.dex"
+```
+
+For WebAssembly:
+
+```bash
+wasm-objdump -h module.wasm
+wasm-tools print module.wasm
+```
+
+Step 3 — Inspect file-processing functionality
+
+Look for:
+
+* Upload endpoints.
+
+* Image resizing and document conversion.
+
+* Archive extraction.
+
+* Import/export functionality.
+
+* Plugin and theme installation.
+
+* Dynamic library loading.
+
+* Deserialization of user-controlled data.
+
+* File paths passed into shell commands.
+
+Step 4 — Validate safely
+
+Use harmless test files and controlled test applications. Confirm whether the file is rejected, stored, parsed, extracted, interpreted or executed. Do not upload a real web shell or destructive payload to a production target.
+
+Step 5 — Establish impact
+
+A successful upload is not proof of RCE. Establish whether untrusted input actually causes server-side code execution, and document the affected component, execution context, reproducibility and impact.
+
+OWASP's testing guidance covers these distinctions and recommended checks. OWASP Web Security Testing Guide +2
+
+### 10\. Your priority list
+
+If your goal is to discover serious RCE vulnerabilities in Android applications and websites, I would study these first:
+
+| Priority | Area                                                  |
+| -------- | ----------------------------------------------------- |
+| 1        | PHP, JSP, ASPX and other server-side script execution |
+| 2        | ELF .so and native libraries                          |
+| 3        | DEX and Android dynamic code loading                  |
+| 4        | ZIP/TAR archive extraction                            |
+| 5        | Java, PHP and Python deserialization                  |
+| 6        | Image and document processing libraries               |
+| 7        | WebAssembly and JavaScript runtimes                   |
+| 8        | Installer, plugin and package processing              |
+| 9        | XML and SVG parsers                                   |
+| 10       | Firmware and embedded executable formats              |
+
+One principle to remember: Don't just ask, "Which executable files does this application accept?" Ask, "Which component processes this file, what privileges does that component have, and can untrusted input influence what it executes?"
+
+That is how you move from identifying executable files to finding genuine RCE vulnerabilities.
+
+Useful official references: [OWASP malicious file upload testing](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/10-Business_Logic/09-Upload_of_Malicious_Files/?utm_source=chatgpt.com) · [OWASP insecure deserialization](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/07-Injection/23-Insecure_Deserialization/?utm_source=chatgpt.com) · [OWASP remote file inclusion](https://wstg.owasp.org/v4.2/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.2-Testing_for_Remote_File_Inclusion/?utm_source=chatgpt.com) · [OWASP Application Security Verification Standard](https://raw.githubusercontent.com/OWASP/ASVS/v5.0.0/5.0/OWASP_Application_Security_Verification_Standard_5.0.0_en.pdf?utm_source=chatgpt.com).
+
+I can next build you a practical RCE file-format testing laboratory on Ubuntu, covering APKs, websites, native libraries, archives and document parsers using safe proof-of-concept files.

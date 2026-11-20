@@ -1,0 +1,478 @@
+### Complete Guide to Input Types a Website Can Support
+
+A website can accept data through HTML forms, URLs, APIs, files, browser interactions, network requests, and external integrations.
+
+There is no finite list of every possible input because developers can create custom input formats. However, the following is a comprehensive classification of the major input types you should understand as an offensive security researcher.
+
+### 1\. Text inputs
+
+Text-based data
+
+| Input type         | Example             |
+| ------------------ | ------------------- |
+| Plain text         | hello               |
+| Username           | researcher01        |
+| Password           | MyPassword123       |
+| Email              | user@example.com    |
+| Telephone          | +237600000000       |
+| URL                | https://example.com |
+| Search text        | laptop              |
+| Address            | Buea, Cameroon      |
+| Multiline text     | A paragraph         |
+| Hidden text field  | A hidden form value |
+| Text with spaces   | hello world         |
+| Special characters | !@#$%^&*()          |
+| Unicode text       | こんにちは               |
+| Emoji              | 🔐                  |
+
+### 2\. Numeric inputs
+
+| Input type          | Example      |
+| ------------------- | ------------ |
+| Positive integer    | 100          |
+| Negative integer    | -100         |
+| Zero                | 0            |
+| Positive decimal    | 100.50       |
+| Negative decimal    | -100.50      |
+| Very large integer  | 999999999999 |
+| Very small decimal  | 0.000001     |
+| Scientific notation | 1e6          |
+| Percentage          | 75%          |
+| Currency amount     | 5000 XAF     |
+| Numeric range       | 1–100        |
+| Hexadecimal         | 0x64         |
+| Binary              | 0b1100100    |
+| Octal               | 0o144        |
+
+### 3\. HTML form input types
+
+HTML provides standard input controls through the `<input>` element.
+
+| HTML type      | Purpose                         |
+| -------------- | ------------------------------- |
+| text           | Ordinary text                   |
+| password       | Password entry                  |
+| email          | Email address                   |
+| number         | Numeric value                   |
+| tel            | Telephone number                |
+| url            | Web address                     |
+| search         | Search query                    |
+| date           | Calendar date                   |
+| time           | Time                            |
+| datetime-local | Local date and time             |
+| month          | Month and year                  |
+| week           | Calendar week                   |
+| range          | Numeric slider                  |
+| color          | Colour selection                |
+| checkbox       | Multiple independent selections |
+| radio          | One selection from a group      |
+| file           | File upload                     |
+| hidden         | Hidden form value               |
+| submit         | Submit form                     |
+| reset          | Reset form                      |
+| button         | Button control                  |
+| image          | Image-based submit control      |
+
+Other HTML form controls include:
+
+* `<textarea>` — multiline text.
+
+* `<select>` — dropdown selection.
+
+* `<option>` — selectable option.
+
+* `<button>` — interactive button.
+
+### 4\. Boolean and logical inputs
+
+| Input        | Example |
+| ------------ | ------- |
+| True         | true    |
+| False        | false   |
+| Zero         | 0       |
+| One          | 1       |
+| String true  | "true"  |
+| String false | "false" |
+| Null         | null    |
+| Empty value  | ""      |
+
+These are particularly important when testing application logic and type handling.
+
+### 5\. Structured data inputs
+
+Websites and APIs frequently accept structured data.
+
+| Format         | Example or extension       |
+| -------------- | -------------------------- |
+| JSON           | {"amount":100}             |
+| XML            | .xml                       |
+| YAML           | .yaml, .yml                |
+| CSV            | .csv                       |
+| TSV            | .tsv                       |
+| HTML           | .html                      |
+| Markdown       | .md                        |
+| SQL data       | SQL statements             |
+| Form data      | URL-encoded form fields    |
+| Multipart data | File and form combinations |
+
+### 6\. URL and HTTP inputs
+
+A website can receive data through different parts of an HTTP request.
+
+| Input location       | Example                     |
+| -------------------- | --------------------------- |
+| URL path             | /users/100                  |
+| Query parameter      | ?id=100                     |
+| URL fragment         | #section1                   |
+| GET parameters       | ?search=phone               |
+| POST body            | Submitted form data         |
+| PUT body             | Updated resource            |
+| PATCH body           | Partial update              |
+| DELETE parameters    | Resource identifier         |
+| HTTP headers         | Content-Type                |
+| Cookies              | Session information         |
+| Authorization header | Authentication credentials  |
+| Custom headers       | Application-specific values |
+
+### 7\. File upload inputs
+
+File-based data
+
+Images
+
+JPG, PNG, GIF, SVG, WebP
+
+Documents
+
+PDF, DOCX, DOC, TXT
+
+Spreadsheets
+
+XLSX, XLS, CSV, ODS
+
+Audio
+
+MP3, WAV, AAC, OGG
+
+Video
+
+MP4, MOV, AVI, WebM
+
+Archives
+
+ZIP, TAR, GZ, 7Z
+
+Code
+
+JS, PY, PHP, HTML, CSS
+
+Executables
+
+EXE, APK, ELF, JAR
+
+Data files
+
+JSON, XML, DB, SQL
+
+Fonts
+
+TTF, OTF, WOFF, WOFF2
+
+A website may also accept:
+
+* Multiple files.
+
+* Empty files.
+
+* Large files.
+
+* Compressed files.
+
+* Files with unusual metadata.
+
+* Files with mismatched extensions and content types.
+
+### 8\. Authentication and identity inputs
+
+* Username
+
+* Password
+
+* Email verification code
+
+* One-time password (OTP)
+
+* Multi-factor authentication code
+
+* Session ID
+
+* Access token
+
+* Refresh token
+
+* API key
+
+* Client certificate
+
+* Security PIN
+
+* Recovery code
+
+* Biometric authentication result
+
+### 9\. Date and time inputs
+
+* Date
+
+* Time
+
+* Date and time
+
+* Timestamp
+
+* Unix timestamp
+
+* Time zone
+
+* Calendar date
+
+* Date range
+
+* Duration
+
+* Expiration date
+
+* Recurring schedule
+
+### 10\. Geographical inputs
+
+* Country
+
+* State or region
+
+* City
+
+* Postal code
+
+* Latitude
+
+* Longitude
+
+* GPS coordinates
+
+* Street address
+
+* IP-based location
+
+* Map coordinates
+
+* Geographical boundaries
+
+### 11\. Browser and user interaction inputs
+
+* Mouse clicks
+
+* Keyboard input
+
+* Mouse movement
+
+* Drag and drop
+
+* Scrolling
+
+* Touch gestures
+
+* Clipboard content
+
+* Camera input
+
+* Microphone input
+
+* Screen selection
+
+* Geolocation permission
+
+* Device orientation
+
+* Browser notifications
+
+* WebSocket messages
+
+### 12\. API and application inputs
+
+* REST API parameters
+
+* GraphQL queries and variables
+
+* WebSocket messages
+
+* Server-Sent Events
+
+* RPC requests
+
+* Webhook payloads
+
+* OAuth callbacks
+
+* Third-party authentication responses
+
+* Payment gateway responses
+
+* External service responses
+
+### 13\. Special character and encoding inputs
+
+This category is particularly important for security research.
+
+| Category                 | Example                          |
+| ------------------------ | -------------------------------- |
+| ASCII                    | ABC123                           |
+| Unicode                  | é                                |
+| Emoji                    | 🔥                               |
+| HTML entities            | &amp;                            |
+| URL encoding             | %20                              |
+| Base64                   | SGVsbG8=                         |
+| Hexadecimal encoding     | 48656c6c6f                       |
+| UTF-8                    | Unicode encoding                 |
+| UTF-16                   | Unicode encoding                 |
+| Null character           | \\0                              |
+| Newline                  | \\n                              |
+| Tab                      | \\t                              |
+| Combining characters     | Accented character sequences     |
+| Bidirectional characters | Right-to-left control characters |
+
+### 14\. Programming and serialized object inputs
+
+Websites can accept complex data structures, especially through APIs.
+
+* Arrays
+
+* Lists
+
+* Dictionaries
+
+* Objects
+
+* Nested objects
+
+* Nested arrays
+
+* Key-value pairs
+
+* Enumerations
+
+* Typed objects
+
+* Serialized objects
+
+* Binary data
+
+* Byte arrays
+
+* Multipart objects
+
+### 15\. Database-related inputs
+
+These are values passed to database-backed application components:
+
+* Record IDs
+
+* User IDs
+
+* Account numbers
+
+* Search terms
+
+* Sorting parameters
+
+* Filtering parameters
+
+* Pagination values
+
+* Database field names
+
+* Database table identifiers
+
+* Date ranges
+
+* Transaction amounts
+
+* Status values
+
+### 16\. Network and protocol inputs
+
+* HTTP requests
+
+* HTTPS requests
+
+* DNS queries
+
+* TCP data
+
+* UDP datagrams
+
+* WebSocket frames
+
+* TLS handshake data
+
+* IP packet data
+
+* Proxy headers
+
+* Forwarded IP information
+
+* Multipart boundaries
+
+### The 10 most important dimensions to test across input types
+
+Understanding the input category is only the beginning. For each category, investigate its possible variations.
+
+| Dimension          | What to investigate                                |
+| ------------------ | -------------------------------------------------- |
+| 1. Type            | Is it a string, integer, object, array or Boolean? |
+| 2. Size            | Empty, small, large or oversized?                  |
+| 3. Range           | Negative, zero, normal or beyond limits?           |
+| 4. Format          | Valid, invalid or unusual representation?          |
+| 5. Encoding        | UTF-8, UTF-16, URL encoding, etc.?                 |
+| 6. Structure       | Flat, nested, missing fields or additional fields? |
+| 7. Timing          | Delayed, duplicated or simultaneous?               |
+| 8. State           | Expired, stale, incomplete or unexpected?          |
+| 9. Origin          | Browser, API, external service or uploaded file?   |
+| 10. Interpretation | Do different components interpret it consistently? |
+
+### Practical Python input-testing laboratory
+
+Here is a small script to explore different representations of data in a controlled local environment.
+
+```python
+
+test_inputs = [
+    100,
+    -100,
+    0,
+    100.50,
+    "100",
+    "mog",
+    "",
+    None,
+    True,
+    False,
+    "🔥",
+    "こんにちは",
+    "1e6",
+    "0x64",
+    [],
+    {},
+]
+
+for value in test_inputs:
+    print(
+        "Value:", repr(value),
+        "| Type:", type(value).__name__,
+        "| Boolean:", bool(value)
+    )
+```
+
+Notice something important: `100`, `"100"`, `True` and `100.0` are different representations. A system must define which representations it accepts and how it processes them.
+
+My recommendation: Study these inputs through five connected disciplines: input validation, data type systems, encoding and serialization, parsing, and application business logic. Together, they will help you discover weaknesses that ordinary form testing misses.

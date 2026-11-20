@@ -1,0 +1,10 @@
+Here is how the five security principles apply specifically to a withdrawal workflow:
+• Architecture: Map how withdrawal requests move from the browser through the API and backend, how the system locks or deducts funds in the database, and how the payment processor or bank payout API executes the external transfer.
+• Logic: Understand how the system checks available balances, enforces daily or per-transaction limits, verifies authorization (such as 2FA), prevents double-spending (idempotency), and handles failed or reversed payouts.
+• Mathematics: Define the invariant rules that must always hold—such as ensuring the user's balance never drops below zero, the new balance equals the previous balance minus the exact withdrawal amount and fees, and total debits never exceed available funds.
+• Diagnostics: Trace withdrawal requests, database balance locks, payout API responses, and audit logs across components to spot mismatches between internal balance deductions and actual funds sent out.
+• Adversarial testing: In an authorized lab environment, test whether withdrawal assumptions break under race conditions (sending multiple simultaneous withdrawal requests to drain more than the balance), negative or floating-point values, parameter tampering, or network timeouts during payout execution.
+Would you like me to:
+• Format this into a ready-to-save command for your terminal
+• Expand on specific withdrawal vulnerabilities (like TOCTOU race conditions)
+• Adapt these five points for peer-to-peer transfers or refunds

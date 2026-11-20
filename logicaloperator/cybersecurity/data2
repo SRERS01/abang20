@@ -1,0 +1,1808 @@
+Let's expand those four headings into a comprehensive study reference for your binary-computing and offensive-security training.
+
+One important distinction: these categories overlap. For example, JSON is a data format, UTF-8 is a character encoding, serialization converts structured data into a transferable or storable form, and binary is the underlying representation used by digital systems.
+
+### 2\. Data structures and formats
+
+Data structures organize information in memory. Data formats define how information is organized in files, messages, or other storage systems.
+
+### A. Fundamental data structures
+
+* Array
+
+* Multidimensional array
+
+* Dynamic array
+
+* Static array
+
+* String
+
+* Character array
+
+* List
+
+* Linked list
+
+* Singly linked list
+
+* Doubly linked list
+
+* Circular linked list
+
+* Tuple
+
+* Set
+
+* Frozen set
+
+* Dictionary
+
+* Map
+
+* Hash map
+
+* Hash table
+
+* Stack
+
+* Queue
+
+* Circular queue
+
+* Priority queue
+
+* Deque
+
+* Tree
+
+* Binary tree
+
+* Binary search tree
+
+* AVL tree
+
+* Red-black tree
+
+* B-tree
+
+* B+ tree
+
+* Heap
+
+* Min-heap
+
+* Max-heap
+
+* Trie
+
+* Radix tree
+
+* Suffix tree
+
+* Graph
+
+* Directed graph
+
+* Undirected graph
+
+* Weighted graph
+
+* Adjacency matrix
+
+* Adjacency list
+
+* Sparse matrix
+
+* Dense matrix
+
+* Record
+
+* Structure
+
+* Union
+
+* Enumeration
+
+* Bit field
+
+* Object
+
+* Class instance
+
+* Abstract data type
+
+* Disjoint-set structure
+
+* Bloom filter
+
+* Skip list
+
+* Segment tree
+
+* Fenwick tree
+
+### B. Text and document formats
+
+* TXT
+
+* RTF
+
+* Markdown (MD)
+
+* HTML
+
+* XHTML
+
+* XML
+
+* JSON
+
+* JSON5
+
+* JSON Lines (JSONL / NDJSON)
+
+* YAML
+
+* TOML
+
+* INI
+
+* CSV
+
+* TSV
+
+* RSS
+
+* Atom
+
+* SGML
+
+* XSD
+
+* DTD
+
+* XSLT
+
+* EPUB
+
+* PDF
+
+* DOC
+
+* DOCX
+
+* ODT
+
+* PPT
+
+* PPTX
+
+* ODP
+
+* XLS
+
+* XLSX
+
+* ODS
+
+### C. Executable and software formats
+
+* ELF
+
+* PE
+
+* COFF
+
+* Mach-O
+
+* a.out
+
+* DEX
+
+* ODEX
+
+* VDEX
+
+* OAT
+
+* ART
+
+* APK
+
+* AAB
+
+* JAR
+
+* WAR
+
+* EAR
+
+* CLASS
+
+* WASM
+
+* WAT
+
+* PYC
+
+* PYO
+
+* SO
+
+* DLL
+
+* DYLIB
+
+* SYS
+
+* EXE
+
+* OBJ
+
+* LIB
+
+* A
+
+* PDB
+
+* MAP
+
+* BIN
+
+* HEX firmware images
+
+### D. Archive and compression formats
+
+* ZIP
+
+* GZIP
+
+* TAR
+
+* 7Z
+
+* RAR
+
+* BZIP2
+
+* XZ
+
+* LZMA
+
+* Zstandard (ZST)
+
+* Brotli
+
+* LZ4
+
+* LZ
+
+* CAB
+
+* AR
+
+* CPIO
+
+* ISO
+
+* DMG
+
+* WIM
+
+* Z
+
+* ZOO
+
+* LZH
+
+* LZ77
+
+* LZ78
+
+* DEFLATE
+
+### E. Image and graphics formats
+
+* BMP
+
+* PNG
+
+* JPEG
+
+* JPG
+
+* GIF
+
+* TIFF
+
+* WebP
+
+* AVIF
+
+* HEIF
+
+* HEIC
+
+* SVG
+
+* ICO
+
+* CUR
+
+* PSD
+
+* AI
+
+* EPS
+
+* RAW
+
+* DNG
+
+* EXR
+
+* HDR
+
+* JP2
+
+* JPEG XL
+
+* DDS
+
+* KTX
+
+* KTX2
+
+* TGA
+
+* PCX
+
+* PNM
+
+* PBM
+
+* PGM
+
+* PPM
+
+### F. Audio and video formats
+
+Audio:
+
+* WAV
+
+* AIFF
+
+* MP3
+
+* AAC
+
+* FLAC
+
+* ALAC
+
+* OGG
+
+* Opus
+
+* Vorbis
+
+* WMA
+
+* AMR
+
+* MIDI
+
+* CAF
+
+* AU
+
+* M4A
+
+Video and containers:
+
+* MP4
+
+* MKV
+
+* MOV
+
+* AVI
+
+* WebM
+
+* MPEG
+
+* MPG
+
+* M4V
+
+* 3GP
+
+* FLV
+
+* WMV
+
+* VOB
+
+* TS
+
+* MTS
+
+* MXF
+
+Video codecs:
+
+* H.264
+
+* H.265
+
+* H.266
+
+* AV1
+
+* VP8
+
+* VP9
+
+* MPEG-2
+
+* MPEG-4
+
+### G. Database and storage formats
+
+* SQLite database
+
+* PostgreSQL data pages
+
+* MySQL storage formats
+
+* InnoDB pages
+
+* MariaDB formats
+
+* BSON
+
+* JSON documents
+
+* Parquet
+
+* ORC
+
+* Apache Avro
+
+* Apache Arrow
+
+* HDF5
+
+* NetCDF
+
+* Feather
+
+* LevelDB
+
+* RocksDB
+
+* LMDB
+
+* Berkeley DB
+
+* SSTable
+
+* CSV database exports
+
+* SQL dump files
+
+* Write-ahead logs (WAL)
+
+* Transaction logs
+
+* B-tree indexes
+
+* Hash indexes
+
+### H. Network and communication formats
+
+* Ethernet frame
+
+* IPv4 packet
+
+* IPv6 packet
+
+* TCP segment
+
+* UDP datagram
+
+* ICMP message
+
+* ICMPv6 message
+
+* ARP packet
+
+* VLAN frame
+
+* GRE packet
+
+* IPsec packet
+
+* DNS message
+
+* DHCP message
+
+* HTTP message
+
+* HTTP/2 frame
+
+* HTTP/3 frame
+
+* TLS record
+
+* SSH packet
+
+* SMB message
+
+* WebSocket frame
+
+* MQTT message
+
+* CoAP message
+
+* AMQP message
+
+* NTP message
+
+* SNMP message
+
+* SIP message
+
+* RTP packet
+
+* RTCP packet
+
+* QUIC packet
+
+* SCTP packet
+
+* CAN frame
+
+* Modbus message
+
+* Bluetooth protocol packets
+
+* USB transfers
+
+### I. Scientific, engineering and specialized formats
+
+* GeoJSON
+
+* Shapefile
+
+* GeoTIFF
+
+* WKT
+
+* KML
+
+* NetCDF
+
+* HDF5
+
+* FITS
+
+* DICOM
+
+* NIfTI
+
+* STL
+
+* OBJ 3D model
+
+* FBX
+
+* GLTF
+
+* GLB
+
+* COLLADA
+
+* STEP
+
+* IGES
+
+* DXF
+
+* DWG
+
+* Gerber
+
+* VCF
+
+* ICS
+
+* FHIR resources
+
+* HL7 messages
+
+### 3\. Encodings and serialization
+
+Encoding defines how information is represented using an agreed set of rules. Serialization converts structured data into a form that can be stored or transmitted and later reconstructed.
+
+### A. Character encodings
+
+* ASCII
+
+* Extended ASCII
+
+* Unicode
+
+* UTF-8
+
+* UTF-16
+
+* UTF-16LE
+
+* UTF-16BE
+
+* UTF-32
+
+* UTF-32LE
+
+* UTF-32BE
+
+* UTF-7
+
+* UCS-2
+
+* UCS-4
+
+* EBCDIC
+
+* ISO-8859-1
+
+* ISO-8859-2
+
+* ISO-8859-5
+
+* ISO-8859-15
+
+* Windows-1250
+
+* Windows-1251
+
+* Windows-1252
+
+* Windows-1256
+
+* Shift JIS
+
+* EUC-JP
+
+* EUC-KR
+
+* GB2312
+
+* GBK
+
+* GB18030
+
+* Big5
+
+* KOI8-R
+
+* KOI8-U
+
+* ISCII
+
+* MacRoman
+
+### B. Binary-to-text encodings
+
+These make binary data representable using text characters.
+
+* Base2
+
+* Base8
+
+* Base10
+
+* Base16
+
+* Hexadecimal encoding
+
+* Base32
+
+* Base32hex
+
+* Base32 Crockford
+
+* Base32 z-base-32
+
+* Base36
+
+* Base45
+
+* Base58
+
+* Base62
+
+* Base64
+
+* Base64URL
+
+* Base64 MIME
+
+* Base85
+
+* ASCII85
+
+* Z85
+
+* Base91
+
+* Base122
+
+* Quoted-printable
+
+* UUencoding
+
+* XXencoding
+
+* BinHex
+
+### C. Numeric encodings
+
+* Unsigned binary
+
+* Sign-and-magnitude
+
+* One's complement
+
+* Two's complement
+
+* Fixed-point
+
+* Floating-point
+
+* IEEE 754 binary16
+
+* IEEE 754 binary32
+
+* IEEE 754 binary64
+
+* IEEE 754 binary128
+
+* BCD
+
+* Packed BCD
+
+* Unpacked BCD
+
+* Excess-3
+
+* Gray code
+
+* Excess-K
+
+* Variable-length integers
+
+* ZigZag encoding
+
+* LEB128
+
+* ULEB128
+
+* SLEB128
+
+* VLQ
+
+* Rice coding
+
+* Golomb coding
+
+* Huffman coding
+
+* Arithmetic coding
+
+* Range coding
+
+### D. Structured data serialization
+
+* JSON
+
+* JSON5
+
+* BSON
+
+* XML
+
+* YAML
+
+* TOML
+
+* CSV
+
+* TSV
+
+* Protocol Buffers
+
+* CBOR
+
+* MessagePack
+
+* Apache Avro
+
+* Apache Thrift
+
+* FlatBuffers
+
+* Cap'n Proto
+
+* ASN.1
+
+* BER
+
+* DER
+
+* CER
+
+* XER
+
+* PER
+
+* UPER
+
+* XDR
+
+* UBJSON
+
+* Smile
+
+* Ion
+
+* FlexBuffers
+
+* Bencode
+
+* S-expressions
+
+* Java Serialization
+
+* Python Pickle
+
+* PHP Serialization
+
+* Ruby Marshal
+
+* .NET BinaryFormatter (legacy)
+
+* SQLite serialization formats
+
+### E. Compression encodings
+
+Compression reduces the amount of space required to store or transmit data.
+
+Lossless compression:
+
+* Run-length encoding (RLE)
+
+* Huffman coding
+
+* LZ77
+
+* LZ78
+
+* LZW
+
+* DEFLATE
+
+* GZIP
+
+* ZIP
+
+* BZIP2
+
+* LZMA
+
+* XZ
+
+* LZ4
+
+* Zstandard
+
+* Brotli
+
+* Arithmetic coding
+
+* Range coding
+
+* PPM
+
+* ANS
+
+* Delta encoding
+
+Lossy compression:
+
+* JPEG compression
+
+* MP3 compression
+
+* AAC compression
+
+* Opus compression
+
+* H.264 compression
+
+* H.265 compression
+
+* AV1 compression
+
+* VP9 compression
+
+* Transform coding
+
+* Quantization
+
+* Chroma subsampling
+
+### F. Cryptographic transformations and representations
+
+These are not ordinary encodings: they protect data or provide integrity and authentication.
+
+* AES
+
+* DES
+
+* 3DES
+
+* ChaCha20
+
+* RSA
+
+* ECC
+
+* Ed25519
+
+* X25519
+
+* SHA-1
+
+* SHA-2
+
+* SHA-3
+
+* BLAKE2
+
+* BLAKE3
+
+* HMAC
+
+* CMAC
+
+* Poly1305
+
+* PBKDF2
+
+* scrypt
+
+* Argon2
+
+* bcrypt
+
+Associated key and certificate representations:
+
+* PEM
+
+* DER
+
+* JWK
+
+* JWS
+
+* JWE
+
+* JWK Set (JWKS)
+
+* PKCS#1
+
+* PKCS#7
+
+* PKCS#8
+
+* PKCS#12
+
+* OpenPGP
+
+* X.509
+
+### G. Network and transmission encodings
+
+* Manchester encoding
+
+* Differential Manchester
+
+* NRZ
+
+* NRZI
+
+* RZ
+
+* 4B/5B
+
+* 8B/10B
+
+* 64B/66B
+
+* PAM-4
+
+* QAM
+
+* PSK
+
+* FSK
+
+* OFDM
+
+* QPSK
+
+* BPSK
+
+* Differential PSK
+
+* Line coding
+
+* Block coding
+
+* Scrambling
+
+* Interleaving
+
+* Forward error correction
+
+* Reed–Solomon coding
+
+* Hamming codes
+
+* BCH codes
+
+* Convolutional coding
+
+* LDPC
+
+* Polar codes
+
+### H. Web and application encoding
+
+* URL encoding
+
+* Percent encoding
+
+* HTML character references
+
+* XML entities
+
+* MIME encoding
+
+* MIME Base64
+
+* Multipart form encoding
+
+* `application/x-www-form-urlencoded`
+
+* `multipart/form-data`
+
+* JSON Web Token (JWT) serialization
+
+* HTTP chunked transfer coding
+
+* Content-Encoding
+
+* Transfer-Encoding
+
+### I. Data framing and delimiting
+
+These specify where a message or field starts and ends.
+
+* Length-prefix framing
+
+* Delimiter-based framing
+
+* Fixed-length framing
+
+* Sentinel-based framing
+
+* Null-terminated strings
+
+* Newline-delimited records
+
+* Netstrings
+
+* TLV (Type-Length-Value)
+
+* Tag-Length-Value
+
+* Chunked framing
+
+* Self-describing formats
+
+* Record-oriented framing
+
+* Bit stuffing
+
+* Byte stuffing
+
+* COBS (Consistent Overhead Byte Stuffing)
+
+* SLIP
+
+* HDLC framing
+
+### 4\. Binary representation
+
+Binary is the representation of information using two possible values: 0 and 1.
+
+### A. Fundamental binary units
+
+* Bit
+
+* Nibble (4 bits)
+
+* Byte (usually 8 bits)
+
+* Octet (8 bits)
+
+* Word
+
+* Half-word
+
+* Double word
+
+* Quad word
+
+* Kilobit
+
+* Megabit
+
+* Gigabit
+
+* Kilobyte
+
+* Megabyte
+
+* Gigabyte
+
+* Terabyte
+
+* Kibibyte
+
+* Mebibyte
+
+* Gibibyte
+
+* Tebibyte
+
+### B. Bit patterns and arrangements
+
+* `0`
+
+* `1`
+
+* `00`
+
+* `01`
+
+* `10`
+
+* `11`
+
+* Bit strings
+
+* Bit vectors
+
+* Bit arrays
+
+* Bit fields
+
+* Bit masks
+
+* Bitmaps
+
+* Bit planes
+
+* Bitsets
+
+* Bit flags
+
+* Bitmaps with multiple channels
+
+* Packed bits
+
+* Unpacked bits
+
+### C. Binary number arrangements
+
+* Unsigned binary
+
+* Signed binary
+
+* Sign-and-magnitude
+
+* One's complement
+
+* Two's complement
+
+* Fixed-width binary
+
+* Arbitrary-precision integer representation
+
+* Binary fractions
+
+* Fixed-point representation
+
+* Floating-point representation
+
+* IEEE 754 representation
+
+* Normalized floating-point
+
+* Subnormal floating-point
+
+* Infinity representation
+
+* NaN representation
+
+* Signed zero
+
+### D. Binary operations
+
+* Bitwise AND
+
+* Bitwise OR
+
+* Bitwise XOR
+
+* Bitwise NOT
+
+* Left shift
+
+* Right shift
+
+* Arithmetic right shift
+
+* Logical right shift
+
+* Bit rotation
+
+* Bit masking
+
+* Bit setting
+
+* Bit clearing
+
+* Bit toggling
+
+* Bit extraction
+
+* Bit insertion
+
+* Bit counting
+
+* Population count
+
+* Leading-zero count
+
+* Trailing-zero count
+
+* Byte swapping
+
+### E. Byte ordering and memory representation
+
+* Big-endian
+
+* Little-endian
+
+* Middle-endian (historical or uncommon arrangements)
+
+* Network byte order
+
+* Host byte order
+
+* Word ordering
+
+* Byte alignment
+
+* Memory padding
+
+* Packed structures
+
+* Structure layout
+
+* Pointer representation
+
+* Address representation
+
+* Offset representation
+
+* Relative addressing
+
+* Absolute addressing
+
+### F. Binary representation of different data types
+
+| Data type           | Example representation         |
+| ------------------- | ------------------------------ |
+| Integer             | 00001100                       |
+| Negative integer    | Two's complement               |
+| Float               | IEEE 754                       |
+| Boolean             | 0 or 1                         |
+| Character           | Character code                 |
+| String              | Sequence of encoded characters |
+| Image               | Pixel values                   |
+| Audio               | Sample values                  |
+| Video               | Encoded frames                 |
+| Machine instruction | Opcode and operands            |
+| Memory address      | Numeric address value          |
+| Network packet      | Header and payload bytes       |
+
+### G. Binary file structures
+
+* Magic numbers
+
+* File signatures
+
+* File headers
+
+* File footers
+
+* Metadata
+
+* Data sections
+
+* Section tables
+
+* Chunk structures
+
+* Records
+
+* Fields
+
+* Offsets
+
+* Lengths
+
+* Checksums
+
+* CRC values
+
+* Padding
+
+* Reserved bits
+
+* Reserved bytes
+
+* Alignment bytes
+
+* Null bytes
+
+* Terminators
+
+* Version fields
+
+* Flags
+
+* Identifiers
+
+* Index tables
+
+* Symbol tables
+
+* Relocation tables
+
+### H. Binary-level representations of instructions
+
+* Opcodes
+
+* Operands
+
+* Immediate values
+
+* Registers
+
+* Addressing modes
+
+* Instruction prefixes
+
+* ModR/M bytes
+
+* SIB bytes
+
+* Displacement fields
+
+* Relative offsets
+
+* Branch instructions
+
+* Call instructions
+
+* Return instructions
+
+* Machine-code bytes
+
+* Bytecode instructions
+
+* Virtual-machine instructions
+
+### I. Binary data in computer memory
+
+* Stack representation
+
+* Heap representation
+
+* Static memory
+
+* Global memory
+
+* Thread-local storage
+
+* Virtual memory
+
+* Physical memory
+
+* Registers
+
+* Cache memory
+
+* Memory pages
+
+* Page tables
+
+* Memory-mapped files
+
+* Shared memory
+
+* Memory-mapped I/O
+
+### 5\. Physical implementation
+
+This is the lowest level: how computers physically store, process and transmit the information represented by bits.
+
+A logical binary `0` or `1` is not necessarily a literal zero or one physically. Hardware uses measurable physical states that circuits interpret as logical values.
+
+### A. Electrical representation
+
+![How to build circuits using CMOS logic ~ VLSI Teacher](https://images.openai.com/static-rsc-4/r_IurkNJ81NbCXOkB1C3oKundsc8eoaAFkOgCcAZCiXHjaOGVnUaP1wRgqTU2lNkuRxiyH1JbcroIew8TdyTB-dKa0488eDLvxPr9osIGg7LDShinpH1aWRW9VT85IBcPhSa_CvKum4hMx6e3hTBZPlI_qY56UDpmPibXDLnRGd7Z24kS25i541GoPcJzI7n?purpose=fullsize)
+
+![CSDL | IEEE Computer Society](https://images.openai.com/static-rsc-4/hfKeIL00IdMKZhiy4NobNYrEUCKCIBgcXNjVW54vHczeEQ7mFLY74YKUHupMBn7H1fd9iAJ8BtVZlmcmA92D9XgIsnpcwGeAMrajXex4yYjXkWWOHpCiHT72VKsMyPQpM3qojfr6mjMz--P3_D53XxYwQFrTikwShNu1Whmv3QjG_PQjFAIF4oM9p1Q1Nu10?purpose=fullsize)
+
+![How to Use a Mixed Signal Oscilloscope to Test Digital Circuits | Tektronix](https://images.openai.com/static-rsc-4/UCSMPxAMjuKBUdWsTgBdJnf_w3DaHIXkiTttG7e_lZ18y3ZYsfPQkPCHwJKd6ShmDWNbk8VVmeHSSbIlgVBct9oH9Ft6bHJaooFgLIa5a-J_6JZGDDlIgrJXMKzKa-ha_PxBnZgSISpB51UwpGkwRkfWlVbq4kVhJid4eVwqJhxhdaBju9PGBel1bshhf7k7?purpose=fullsize)
+
+![Hardware necessary skills, MOS tube composed of basic gate logic circuit](https://images.openai.com/static-rsc-4/W1rJHeBSfK5UaJiDwUyWU2u6HkEmvXbIAixPorzM4WUE_M2CvUeTz4NTAp8cVfz-MnDKe3ZmFcV53lTqoYQjUradokRtKyiVUgbJNKW0EVRt9LoFYfUe1cZCu7wUgGytTNxC0bxunEwTwcKDEkaR3pKg2UoHfcQKkB3DrHtecPWRCcJxPrS71I25KJoyTGte?purpose=fullsize)
+
+![Fundamental Concepts of Electric Circuits and Signals with the Tek 1202B Oscilloscope – Part 5 - element14 Community](https://images.openai.com/static-rsc-4/vhTZLidrOVFO3Zjo641J0I94jYHIxTrniXw-NkE0tfgBxKvO1ErP7mV6W5UJd6NLiK1sXQ8yWrtCJ2dFKVz3eL5aL1QkP2lyvVjEBSDWvRSCAQ1hpZ7rFvwl6vVefDNHoekUETyQAqRguHAYukjGggY-TLJJyov6jFK7zXO0iOqx2qeRztyG6D4sTlWVGxSS?purpose=fullsize)
+
+![operational amplifier - Level transformation 0/+5 V TTL logic to +/-9V how to maximize gain and frequency range (DC to 4 MHz) - Electrical Engineering Stack Exchange](https://images.openai.com/static-rsc-4/Zu-pdgiqqoFbuIxHskqgri1fypNXy9SCNROJLnAbqn619SyRE6-wXFHIo-mVFrwaoFVvwSIcGLmYLZ9Avjm--FSuDvdYAz0l-7sD_RLMlqfPsXEcuCYKZNbGIKN7haky84Y7i3ULKnXVh1nbcbrF9xHq_f2IcJB8iAGSg1P6UYLqSlpf00pkvP37CQjFRg07?purpose=fullsize)
+
+![Difference Between SRAM and DRAM (with Comparison Chart) - Tech Differences](https://images.openai.com/static-rsc-4/XW2g5-gekczaixVImmPatz4Vzws5zetkQLJRzuw5GHuzQkksnnic8S9Uurk2FQkEGmj0WU5sRzmUxOi1C0uUZxPn3TtEnrjwaYv9y20JbkIZeNpJsq2UI1PP-SbIHlu0oiHNLB8rgPXFntO7H63BlMf1bAQA7iJOyeWWZcQzy5h5Q_SfTOKWkZqh2Ez3Yblx?purpose=fullsize)
+
+Information is represented using electrical properties and signals.
+
+* High voltage
+
+* Low voltage
+
+* Voltage levels
+
+* Current levels
+
+* Electrical charge
+
+* Capacitance
+
+* Resistance
+
+* Conductance
+
+* Transistor ON state
+
+* Transistor OFF state
+
+* Logic HIGH
+
+* Logic LOW
+
+* CMOS logic
+
+* TTL logic
+
+* Differential voltage signaling
+
+* Clock signals
+
+* Pulse signals
+
+* Electrical oscillations
+
+* Switching states
+
+* Capacitive storage
+
+* Resistive storage
+
+Examples of technologies:
+
+* SRAM
+
+* DRAM
+
+* SDRAM
+
+* DDR SDRAM
+
+* Flash memory
+
+* EEPROM
+
+* FRAM
+
+* MRAM
+
+* ReRAM
+
+### B. Magnetic representation
+
+![Hard drive disc.](https://images.openai.com/static-rsc-4/MWu2-ObI83_VNrYjSUKq6xnTX_CUb6NzwpcESEMmNKu5t2chK-R7WVmsDbN8mhrRKKx-ADPtwAXmyYpN-bCaAhnNXaOoeJ2vc2q8GiYsJmnvJbMGkc0N6KgRqgHUmfDsUz8umJScb5cCySmIfFvRzMitFQ3AslMsKq6aWZCkPv1471kMBDBZDP2zOBA5HLz3?purpose=fullsize)
+
+![PPT - Magnetic Memory: Data Storage and Nanomagnets PowerPoint Presentation - ID:2970510](https://images.openai.com/static-rsc-4/Ye0AIcUOYbc9WmZnDlyOp1ASC3rHQBipspjoMHSxjkI6MSpVImcFdXVVMyIE9HDYjGMzfIfo5DnYfCBvIfZDhd0Bt9hf0wsWWRHoOqmwsrmBtOg_bjF6ie8HdtAUCw3X9oKFW5EScnNFnTk1ZYx_WCczVpb5iHZOH7PWS4YsZDmvQu6t9HPTs8BRJ6T0RLlO?purpose=fullsize)
+
+![Tape reel (160 MB) - CHM Revolution](https://images.openai.com/static-rsc-4/gl-bE6Eu0F5tdRgbvMlmHRFHoqm99Uzn4JbpIxdMsoi3uzoYlktDlUZZAr5KtDlCG3mc1IvF2Ll3Wf6o_WxOFxGtFhZhLMVESXCzVntCFewlGHR-498PajjI3yRriEt2ePSI5qRbO6iPl560ncDAE9SwwzcOpvEHXplCaua5G6v2OkSa1T6ARjafZy0zn_3t?purpose=fullsize)
+
+![HDD with MAMR Technology](https://images.openai.com/static-rsc-4/5v8JTTHJaMY6-vp-Oyd5X6K_VIpc04Cvc9UaGwCxVv4hUi_U3l77RnjmqsCIL1pSo3eE4EUsEbj95mfkau06weW3XwLvzUrMVkKFJrupaGBCYtoEvvxhJW-8DrASFMBfmRKZfBIeRqMEvpJeXlR_HS-XAKfuTZnkBdBdqVOncLFpAu7l_TpWC6A0lPJtHJzi?purpose=fullsize)
+
+![Digital forensics](https://images.openai.com/static-rsc-4/NAe3hj0b2vFgGZa4MvXvoHGQQuvQfnfdyFbjWw8cVIFiWHAYIN5HeXeZv1vVPREj1tWSd4dMnQgER8mOlhia2sYw0Hns3IhvEeowwJi7rtX-FQz5FYbW3wK6tOE_x6BruV6TVob1LkCcBlcd11r4ghoppPWCleqKtunrsdpc6ULtTnznZZDHjdi7K0mBCEds?purpose=fullsize)
+
+![Magnetic Reel & Tape - Control Data, 3200 Computer System, Tape Transport, Model 604, 1964-1979](https://images.openai.com/static-rsc-4/D8moZ89HGC2t4JiRgI8HnaFSFOuW2CnyNX4Qq4TNh3TcUFXNjLCThSZjHm7mEvmsrvZBuyU63DK0t1OfSe2FEZqkQ2mlmURPjQv78jCOG2yQzHxNnXa1y9tEudr5rBBY-Tk2njPapCokUPm7OuEW4BKw4eymFhWahmsh4cyWLA5wgGdtIeTRTO9iWhAxYI6W?purpose=fullsize)
+
+Information is stored using magnetic properties and orientations.
+
+* Magnetic polarity
+
+* Magnetic orientation
+
+* Magnetic domains
+
+* Magnetic flux
+
+* Magnetic transitions
+
+* Magnetic remanence
+
+* Magnetic field changes
+
+* Magnetic recording patterns
+
+Examples:
+
+* HDD (hard disk drive)
+
+* Magnetic tape
+
+* Floppy disks
+
+* Magnetic stripe cards
+
+* Magnetic-core memory (historical)
+
+* MRAM (magnetoresistive RAM)
+
+### C. Optical representation
+
+![PPT - How CD and DVD Players Work PowerPoint Presentation, free download - ID:2388761](https://images.openai.com/static-rsc-4/scuo5Ck4nlOahKK5kTADgC0hPZPeJXhxZb6iucrQYg0uTzgxj5pHrFmbesIUXg3_-buHleJXT8b2ykuvNfZ71lOB-glrsEfGTUYaWU2-mP9kAK8AwP6MBodO3yrHrijCE6j2P7tL5M4rA6tgxu5Wd_lnkSxGoZq9vLKaM4fWrIxhSTbinaZvmy9ClkExiiwG?purpose=fullsize)
+
+![Blu Ray Disc Diagram at David Silva blog](https://images.openai.com/static-rsc-4/1zvSI7VVLhq5kGC7AT_Llaw8_TEn1A7pRSt1IUjLvCzcHb0BUS7A0VflpE9mPO8lAJO7nYPf3EAaak8vRrXhqy5m1L4itrEIhj68JcKyJVtsQBendSiAbXQqXQEsT6qQVIt-88qL-7n6Lx5egMPsJLN_I7EDYc2hphtcX6E5b2DiFHGeEHCswSjRIpwAfhYX?purpose=fullsize)
+
+![Why Are Optical Devices Garnering Attention with the Arrival of the Generative AI Boom? | Our Stories | MITSUBISHI ELECTRIC Global Website](https://images.openai.com/static-rsc-4/bbEnPWZNed-EcDSx-BwZUjCyxyl5Ll6UTHbdsIT_8YdJ4KMPMWrYesD0HPAkfKXSj_VXo_i3mOLNVCbiICYSblWVjfqQ2JMZrd4BwMMmEs2kwPi-8w-OFTworvWH1XavORpp2GEMa2LJgXRbx35QLL-nT5aYZFF0xdgD5YE4dgYeBrvu-kPgV-39sd0Teo3d?purpose=fullsize)
+
+![Laser Disc](https://images.openai.com/static-rsc-4/5pv0tBiNbCQhYLoIfCeSYkCEakYKdf6K_5yjT7TUUuyYHCMPg-9Qg5QMmkmdZ7D0-4ZrIQ30rVQNZVVx3bz4XfK0V9MOr1LWCIzDBirqTrUYytRuDruCBlw6VoVmEwT8qTwE8L7dcDBlpgOaMVfRjYcJY6OtW76j94rIVjg_oMumkXMQmOc-fXpegXsOsFn_?purpose=fullsize)
+
+![Blu-ray Disks (BD) - blue laser optical disk technology](https://images.openai.com/static-rsc-4/wu-T72EiL9h--X-K9NPzjsKkKkdwJp25wx6801xMNt0yN23tGH0m-vqgaJmKZDpE2i7sI2_DzDcWCu3kG3nWTQD7oA4mN1qOECtPn5gvMXfRyDnWVYeGxbjCYE_NXsqynajiXT-rk0Hrwg_WFbBJ8LBSaiby1bRXTih_7sJrxJddNV1BBfKlwqCn7vYYVElv?purpose=fullsize)
+
+![Light rays bend when traversing boundaries between media](https://images.openai.com/static-rsc-4/5uRLE7Fby5B2WEWwWdlN0Hx_MC0YU-9xQR3YSHLUMngzer4E6Vo7_OktStjLBQwZx-VeE38GK6OQsE9x4sxceHzSevaISynsjTfQjtIX6bHffUkx73XHuPwsCRUGPUK3VAFcZB6raNH5AqcPbwF6yg2zj3Oqb5uD_-UQRcmimnOrq3kVMFvqySsP8vBRWq1A?purpose=fullsize)
+
+![BD-RE or Blu Ray Erasable Optical Disc](https://images.openai.com/static-rsc-4/L6tPJrukpBpXadVJhj1Nti1HW42j9Dtel52lpqZeEfKmNIyin1lY5OIXP0y5F_utmM0uyeSVNXsVSIRARPrvA7EkWtsdPUonUCbDJ3KZI8vPitoCHQgauPIUb94eFuCze9KWzBBamIIuaNIhpogSfNhp2IA6a9uaz8Hba7JAb2gJh1q27HeH8q1SyaFqlXQL?purpose=fullsize)
+
+Information is stored or transmitted using light.
+
+* Light intensity
+
+* Light pulses
+
+* Optical reflections
+
+* Optical absorption
+
+* Interference
+
+* Phase changes
+
+* Wavelength changes
+
+* Laser modulation
+
+* Optical transmission states
+
+Examples:
+
+* CD
+
+* CD-ROM
+
+* CD-R
+
+* CD-RW
+
+* DVD
+
+* DVD-ROM
+
+* DVD-R
+
+* DVD-RW
+
+* Blu-ray
+
+* Ultra HD Blu-ray
+
+* Optical fiber
+
+* Optical transceivers
+
+* Photonic computing systems
+
+### D. Radio-frequency representation
+
+![PPT - Chapter 3 Communication Concepts PowerPoint Presentation, free download - ID:6782277](https://images.openai.com/static-rsc-4/9aSCLSF90fyI3076XNnOUmsW_iqrZzswU3y4Fev-PEEbrLUpyfpx6oEVYJTHSrsCFP7_WJDLWCl__P08AWl_LByP8h-3zu8xC2xuSLLePHrsdDOlZoOuxCiIme0bpw2KPwDRWAgyIRp4UwxY8GmXT34MymuurcGDvBgPwv6OBAcAnPvSWq5qmxu2K7Jb27Vw?purpose=fullsize)
+
+![PPT - 802.11a and 802.11g OFDM PHY Specification PowerPoint Presentation - ID:4598841](https://images.openai.com/static-rsc-4/FoCnujtSo2t7yycZpWIunBgusnUN_FAfy1MIh3Vvc7sZ_3NhGs7CudTjIdb3hHbx5yOOh1QMBzfbr_-S6B26Q3JYsRMwKSm6OeTSW6yxD4S60CVN4pQcPdPntc8xqfpO9S7bbPO8MrjF_nZC-hvxCo2f8JjBP3CoyHVFoV3CygcAWGCLy9NtV8sMHYqhSBev?purpose=fullsize)
+
+![PPT - Chapter 1 Introduction to RF and Wireless Technology PowerPoint Presentation - ID:3210576](https://images.openai.com/static-rsc-4/ox0rsYD-L-kRipP4L90gOIZ4EL8IxJRAttWClixNR2X-plhRm6XBTA5kxg5c-3HZ6yrnUU_oi0NorVwKkTHL_jtB2oEMUq0Yx0YU7s2RHxSq_M2a_Kvr3pAG4p13Yag3PzPCo9RWXd7DWmFgKVeHFxJhAhhw31Chr4XAhn_4PyX_0qxdn33aZxCHZDEY70ZV?purpose=fullsize)
+
+![Tema 6: Comunicaciones inalámbricas en sistemas embebidos](https://images.openai.com/static-rsc-4/rVfQ0WMbwZnsLNaVeq0mxTuqQn7XM3v_4_wQ4negQ-kAom9FtQP3fez5rlHpgfazYOK7uO6FsiL9Qe_kOf5Vaaxz58Q37y4FLSV_tMH9QVWSJaWEPk89rDzxyuKIBRE9Gws9cyO700SUl6Ay-e77pqfAa5o6qvWsBGQp3HYa3ev5ZwhUMwtHW658Ath89DMN?purpose=fullsize)
+
+![Wireless Communication: Electromagnetic Waves Enable Information Transfer | Dahiru Ohida posted on the topic | LinkedIn](https://images.openai.com/static-rsc-4/xMH72wWiO66OAaWoO_dcglziVPUDu2QUFDKQkgFc8CISJEubwZWLkT00ELZ-KEg0fXJWZWbR2hmomqzwss8Z0VKBlfoTZ37N_IvyCot1U2atWdGVQYfMx4Od-BXxtCAyQZXlfntNA5iJlCQA1YSW94J9mvfHHpsxLUogbkf8yLL8ewyrDw06XjF7fVvuwM5Q?purpose=fullsize)
+
+![Recovery Procedure for an 802.11ac Packet - MATLAB & Simulink](https://images.openai.com/static-rsc-4/OdXz9e2pTEBnHrV1VxDthWWjGbUDnPMjiVSDCiDRrIljlFXVMqj80QZHL_CtC85QzpvC1Biija3WaLtst9xRWOSgA7ryNwZwQhMAfCPvn9HXHYnTXvZFIb59T3oHdDYNwJ8keYr3fdsB_tpxsnqdIIRaJSe5440yKPoVLkm49HgWmsGY8Phrb_VU46KBJ46p?purpose=fullsize)
+
+![RF Circuit Design - \[Ch4-2\] LNA, PA, and Broadband Amplifier | PDF](https://images.openai.com/static-rsc-4/nMUAhQZePrcnKR6Y7bP9EyIuDadeuiBU9CBERFKLi6L0kPH8MnjBuJVrIi9sgMIecGLXalzOP10MXeN4ozvo7dWb0-WzD4MFsM3i-uCl6Tr1pBsAlGwgtDRxiTJBj9hj-7e8XBtPPbcdGVXFTUgLRpNjT6pxl_tn-c251pV_3YQxtbq7EpNrZ3hX3jNQFf5b?purpose=fullsize)
+
+Information is transmitted through electromagnetic waves.
+
+* Amplitude
+
+* Frequency
+
+* Phase
+
+* Wavelength
+
+* Polarization
+
+* Signal strength
+
+* Carrier waves
+
+* Frequency changes
+
+* Phase changes
+
+* Amplitude changes
+
+* Pulse modulation
+
+Important modulation methods:
+
+* ASK
+
+* FSK
+
+* PSK
+
+* BPSK
+
+* QPSK
+
+* 8-PSK
+
+* QAM
+
+* OFDM
+
+* DSSS
+
+* FHSS
+
+* GMSK
+
+* OOK
+
+Examples of technologies:
+
+* Wi-Fi
+
+* Bluetooth
+
+* NFC
+
+* RFID
+
+* Cellular networks
+
+* GPS
+
+* Satellite communications
+
+* Zigbee
+
+* LoRa
+
+* Software-defined radio
+
+### E. Other physical representation methods
+
+| Method        | How information is represented         | Examples                       |
+| ------------- | -------------------------------------- | ------------------------------ |
+| Mechanical    | Physical positions or movements        | Mechanical computers           |
+| Acoustic      | Sound-wave characteristics             | Acoustic modems                |
+| Thermal       | Temperature or thermal states          | Experimental thermal storage   |
+| Quantum       | Quantum states                         | Quantum computing              |
+| Chemical      | Chemical reactions or molecular states | Experimental molecular storage |
+| Biological    | DNA sequences and molecular structures | DNA data storage               |
+| Ferroelectric | Electric polarization states           | FeRAM                          |
+| Phase-change  | Different material phases              | PCM memory                     |
+| Resistive     | Different electrical resistance states | ReRAM                          |
+
+### 6\. How to connect all five levels in security research
+
+Consider the example of an Android application receiving a username from a server.
+
+### One piece of data, five representation levels
+
+1\. Meaning
+
+Username: `ADMIN`
+
+2\. Data structure and format
+
+JSON object containing a username field
+
+3\. Encoding
+
+UTF-8 character encoding
+
+4\. Binary representation
+
+`01000001 01000100 01001101 01001001 01001110`
+
+5\. Physical implementation
+
+Electrical states in memory and electrical or radio signals during transmission
+
+### 7\. What to investigate as an offensive security researcher
+
+These are particularly valuable areas to investigate:
+
+| Area                    | Security questions                                          |
+| ----------------------- | ----------------------------------------------------------- |
+| Data structures         | Can incorrect structure handling cause memory corruption?   |
+| File formats            | Can malformed headers confuse a parser?                     |
+| Encodings               | Can inconsistent decoding cause validation bypass?          |
+| Serialization           | Can untrusted objects trigger unsafe deserialization?       |
+| Binary representation   | Can integer overflow or truncation occur?                   |
+| Memory layout           | Can incorrect bounds handling cause out-of-bounds access?   |
+| Physical implementation | Can hardware or side-channel weaknesses expose information? |
+| Network representation  | Can malformed packets trigger parser failures?              |
+| Executable formats      | Can malformed executable metadata cause unsafe processing?  |
+
+My recommendation: Master sections 2, 3 and 4 before moving deeply into section 5. Those three will give you the foundation for file-format analysis, protocol analysis, reverse engineering, binary exploitation research and fuzzing.
+
+No finite list can contain literally every representation ever developed, but these categories cover the major established families and many important specialized ones.

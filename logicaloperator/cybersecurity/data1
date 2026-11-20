@@ -1,0 +1,675 @@
+In computer science, data is represented in different forms so that computers can store, process, transmit, and understand it. Since you're studying binary manipulation and offensive security, you should understand these representations because applications, operating systems, network protocols, and executable files all depend on them.
+
+Below is a comprehensive map of the major ways data is represented.
+
+### 1\. Number representations
+
+These represent numerical values inside computers.
+
+| Representation | Base | Symbols | Example | |---|---:|---|---| | Binary | 2 | 0, 1 | `1100` | | Octal | 8 | 0–7 | `14` | | Decimal | 10 | 0–9 | `12` | | Hexadecimal | 16 | 0–9, A–F | `0x0C` | | Unary | 1 | Repeated marks | `||||` |
+
+Other important numeric representations:
+
+* Unsigned integers
+
+* Signed integers
+
+* Sign-and-magnitude
+
+* One's complement
+
+* Two's complement
+
+* Fixed-point numbers
+
+* Floating-point numbers
+
+* IEEE 754 single precision (32-bit)
+
+* IEEE 754 double precision (64-bit)
+
+* Binary-coded decimal (BCD)
+
+* Gray code
+
+* Excess-K representation
+
+* Variable-length integers (Varints)
+
+### 2\. Text and character representations
+
+These represent letters, numbers, punctuation and symbols.
+
+| Representation | Purpose                                     |
+| -------------- | ------------------------------------------- |
+| ASCII          | Basic English characters                    |
+| Extended ASCII | Extended 8-bit character sets               |
+| Unicode        | Universal character repertoire              |
+| UTF-8          | Variable-length Unicode encoding            |
+| UTF-16         | Unicode encoding using 16-bit code units    |
+| UTF-32         | Unicode encoding using 32-bit code units    |
+| UTF-7          | Older Unicode encoding                      |
+| EBCDIC         | Character encoding used in some IBM systems |
+| ISO-8859       | Family of 8-bit character encodings         |
+| Windows-1252   | Western European character encoding         |
+| ISCII          | Indian-script encoding family               |
+| Shift JIS      | Japanese character encoding                 |
+| GBK            | Chinese character encoding                  |
+| Big5           | Traditional Chinese character encoding      |
+
+Example:
+
+```python
+text = "A"
+
+print(ord(text))       # 65
+print(bin(ord(text)))  # 0b1000001
+print(text.encode())   # b'A'
+print(text.encode().hex())  # 41
+```
+
+### 3\. Boolean and logical representations
+
+These represent logical conditions and states.
+
+* Boolean: `True`, `False`
+
+* Binary logic: `1`, `0`
+
+* NOT
+
+* AND
+
+* OR
+
+* XOR
+
+* NAND
+
+* NOR
+
+* XNOR
+
+* Truth tables
+
+* Bit flags
+
+* Bit masks
+
+* State representations
+
+Example:
+
+```python
+is_authenticated = True
+is_admin = False
+
+if is_authenticated and is_admin:
+    print("Privileged access")
+else:
+    print("Access not granted")
+```
+
+### 4\. Data structure representations
+
+These determine how multiple values are organized in memory.
+
+* Arrays
+
+* Lists
+
+* Tuples
+
+* Strings
+
+* Sets
+
+* Dictionaries / hash maps
+
+* Linked lists
+
+* Stacks
+
+* Queues
+
+* Trees
+
+* Binary trees
+
+* Binary search trees
+
+* Heaps
+
+* Graphs
+
+* Hash tables
+
+* Tries
+
+* Records
+
+* Structures
+
+* Unions
+
+* Bit fields
+
+Example:
+
+```python
+user = {
+    "username": "tester",
+    "authenticated": True,
+    "level": 3
+}
+```
+
+### 5\. Data serialization and encoding representations
+
+These determine how structured information is converted into a form that can be stored or transmitted.
+
+| Representation     | Typical use                   |
+| ------------------ | ----------------------------- |
+| JSON               | Web APIs and configuration    |
+| XML                | Structured documents and APIs |
+| YAML               | Configuration                 |
+| CSV                | Tabular data                  |
+| TOML               | Configuration                 |
+| Protocol Buffers   | Compact structured messages   |
+| MessagePack        | Binary serialization          |
+| CBOR               | Compact binary data           |
+| BSON               | Binary JSON-style documents   |
+| Apache Avro        | Data serialization            |
+| Apache Thrift      | Cross-language data exchange  |
+| ASN.1              | Structured data definitions   |
+| BER                | ASN.1 encoding                |
+| DER                | Canonical ASN.1 encoding      |
+| XDR                | External data representation  |
+| Pickle             | Python object serialization   |
+| Java Serialization | Java object serialization     |
+| FlatBuffers        | Efficient structured data     |
+| Cap'n Proto        | Structured data serialization |
+
+Other transformations that you should distinguish from serialization:
+
+* Base64
+
+* Base32
+
+* Base16 / hexadecimal encoding
+
+* URL encoding
+
+* Percent encoding
+
+* Quoted-printable
+
+* MIME encoding
+
+* ASCII85
+
+* Base85
+
+Important: Encoding is not encryption. For example, Base64 does not protect information from someone who can decode it.
+
+### 6\. Image and graphics representations
+
+These represent pictures, drawings and visual information.
+
+* Bitmap
+
+* Raster graphics
+
+* Vector graphics
+
+* Pixels
+
+* RGB
+
+* RGBA
+
+* CMYK
+
+* Grayscale
+
+* Indexed color
+
+* Binary images
+
+* PNG
+
+* JPEG
+
+* GIF
+
+* BMP
+
+* TIFF
+
+* WebP
+
+* SVG
+
+* HEIF / HEIC
+
+* AVIF
+
+* RAW image formats
+
+For example, RGB represents a pixel using three color components:
+
+```python
+pixel = (255, 0, 0)
+print("Red:", pixel[0])
+print("Green:", pixel[1])
+print("Blue:", pixel[2])
+```
+
+### 7\. Audio representations
+
+These represent sound.
+
+* Analog audio
+
+* Digital audio
+
+* Pulse-code modulation (PCM)
+
+* Linear PCM
+
+* Floating-point PCM
+
+* Sampled audio
+
+* Quantized audio
+
+* Mono
+
+* Stereo
+
+* Multichannel audio
+
+* WAV
+
+* AIFF
+
+* MP3
+
+* AAC
+
+* FLAC
+
+* OGG
+
+* Opus
+
+* ALAC
+
+Important concepts include:
+
+* Sampling rate
+
+* Bit depth
+
+* Bit rate
+
+* Channels
+
+* Compression
+
+* Quantization
+
+### 8\. Video and animation representations
+
+These represent moving images.
+
+* Video frames
+
+* Frame sequences
+
+* YUV
+
+* RGB video
+
+* Chroma subsampling
+
+* Motion vectors
+
+* Inter-frame compression
+
+* Intra-frame compression
+
+* MPEG-2
+
+* MPEG-4
+
+* H.264 / AVC
+
+* H.265 / HEVC
+
+* H.266 / VVC
+
+* VP8
+
+* VP9
+
+* AV1
+
+* GIF animation
+
+* WebM
+
+* MP4
+
+* MKV
+
+* MOV
+
+### 9\. Network data representations
+
+These represent information transmitted between devices.
+
+Network and transport representations:
+
+* Ethernet frames
+
+* MAC addresses
+
+* IPv4 headers
+
+* IPv6 headers
+
+* TCP segments
+
+* UDP datagrams
+
+* ICMP messages
+
+* ARP packets
+
+* VLAN tags
+
+* SCTP packets
+
+* QUIC packets
+
+Application-level representations:
+
+* HTTP/1.1 messages
+
+* HTTP/2 binary frames
+
+* HTTP/3 messages
+
+* DNS messages
+
+* DHCP messages
+
+* TLS records
+
+* SSH packets
+
+* FTP messages
+
+* SMTP messages
+
+* POP3 messages
+
+* IMAP messages
+
+* SMB messages
+
+* MQTT messages
+
+* CoAP messages
+
+* WebSocket frames
+
+* NTP messages
+
+* SNMP messages
+
+These are particularly important in offensive security because you may need to understand how software parses headers, lengths, flags, fields and payloads.
+
+### 10\. Memory and processor representations
+
+These represent information as it is used by the computer itself.
+
+* CPU registers
+
+* Memory addresses
+
+* Pointers
+
+* Stack memory
+
+* Heap memory
+
+* Static memory
+
+* Global variables
+
+* Machine instructions
+
+* Opcodes
+
+* Operands
+
+* Instruction encoding
+
+* Virtual addresses
+
+* Physical addresses
+
+* Page tables
+
+* Cache lines
+
+* Memory alignment
+
+* Endianness
+
+* 32-bit word representation
+
+* 64-bit word representation
+
+### 11\. Executable and file representations
+
+These describe how files and executable programs are organized.
+
+| Format | Purpose                                         |
+| ------ | ----------------------------------------------- |
+| ELF    | Linux and Unix executables and shared libraries |
+| PE     | Windows executables and DLLs                    |
+| Mach-O | macOS and iOS executables                       |
+| DEX    | Android Dalvik bytecode                         |
+| APK    | Android application package                     |
+| JAR    | Java archive                                    |
+| WASM   | WebAssembly binary module                       |
+| COFF   | Common Object File Format                       |
+| a.out  | Older Unix executable format                    |
+| ZIP    | Compressed archive                              |
+| GZIP   | Compression format                              |
+| PDF    | Portable document format                        |
+
+### 12\. Database representations
+
+These represent information stored and retrieved by database systems.
+
+* Relational tables
+
+* Rows and columns
+
+* SQL data types
+
+* Binary fields (BLOB)
+
+* Character fields (CLOB)
+
+* BSON documents
+
+* JSON documents
+
+* Key-value pairs
+
+* Graph databases
+
+* Columnar storage
+
+* Time-series records
+
+* Database indexes
+
+* Database pages
+
+* Database transaction logs
+
+### 13\. Cryptographic representations
+
+These represent data used in cryptography and security systems.
+
+* Plaintext
+
+* Ciphertext
+
+* Symmetric keys
+
+* Public keys
+
+* Private keys
+
+* Hash digests
+
+* Digital signatures
+
+* Certificates
+
+* Nonces
+
+* Initialization vectors (IVs)
+
+* Authentication tags
+
+* HMAC values
+
+* X.509 certificates
+
+* PEM encoding
+
+* DER encoding
+
+* JWK
+
+* PKCS formats
+
+* OpenPGP formats
+
+Remember that PEM is an encoding/container convention, while RSA and AES are cryptographic algorithms.
+
+### 14\. Hardware and electrical representations
+
+At the lowest physical level, computers represent information using electrical and physical states.
+
+* High voltage and low voltage
+
+* Logic HIGH and LOW
+
+* Transistor ON/OFF states
+
+* Charge stored in memory cells
+
+* Magnetic states
+
+* Flash memory charge levels
+
+* Electrical signals
+
+* Optical signals
+
+* Radio-frequency signals
+
+* Clock signals
+
+* Pulse-width modulation (PWM)
+
+* Manchester encoding
+
+* Differential signaling
+
+### 15\. Other specialized representations
+
+* Date and time formats: Unix timestamps, ISO 8601, UTC
+
+* Geographic data: latitude, longitude, GeoJSON, WKT
+
+* Scientific data: matrices, tensors, complex numbers
+
+* Financial data: fixed-point decimal, BCD
+
+* Chemical data: SMILES, InChI
+
+* 3D graphics: meshes, vertices, polygons, normals, textures
+
+* CAD data: STEP, IGES, STL
+
+* Geospatial raster and vector formats
+
+* Industrial data: Modbus registers, CAN frames, OPC UA structures
+
+* Identity and access data: user IDs, group IDs, permissions, capabilities
+
+### The most important distinction: representation layers
+
+A useful way to understand all these forms is to arrange them into layers.
+
+### How data moves through a computer
+
+1\. Meaning
+
+Numbers, text, images, sound, instructions
+
+2\. Data structures and formats
+
+Arrays, objects, JSON, XML, ELF, APK
+
+3\. Encodings and serialization
+
+UTF-8, Base64, Protobuf, CBOR, hexadecimal
+
+4\. Binary representation
+
+Bits and bytes: 0s and 1s
+
+5\. Physical implementation
+
+Electrical, magnetic, optical and radio states
+
+### What you should master for offensive security
+
+I recommend studying these in this order:
+
+* Binary, decimal, octal and hexadecimal.
+
+* Signed and unsigned integers.
+
+* Two's complement and IEEE 754.
+
+* ASCII, Unicode and UTF-8.
+
+* Bitwise operations and bit masks.
+
+* Endianness and memory layout.
+
+* Hexadecimal and binary file inspection.
+
+* JSON, XML, Base64 and binary serialization.
+
+* Network packet structures and protocol encoding.
+
+* ELF, PE, DEX, APK and shared-library formats.
+
+* Pointers, memory structures and machine instructions.
+
+* Binary parsing, fuzzing and reverse engineering.
+
+The key principle: A computer does not inherently understand a photograph, password, network packet or executable as a human does. Software interprets stored bits according to a particular format, structure and set of rules. Understanding those rules is fundamental to finding parsing errors and security vulnerabilities.

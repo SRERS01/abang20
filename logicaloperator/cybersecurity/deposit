@@ -1,0 +1,7 @@
+Here is how the five security principles from your file apply specifically to a deposit workflow:
+• Architecture: Map how deposit requests move from the user's browser through the API and backend, how external payment gateways or webhooks notify the system of completed funds, and how the database records the incoming balance.
+• Logic: Understand how the system validates payment confirmations, prevents duplicate credits (idempotency), handles pending vs. cleared funds, and updates the user's account balance.
+• Mathematics: Define the invariant rules that must always hold—such as ensuring the user's new balance equals the previous balance plus the exact verified deposit amount, and that total system ledger credits always match actual settled funds.
+• Diagnostics: Trace deposit payloads, webhook callbacks, and database transaction logs across components to spot discrepancies between what the payment processor confirmed and what the internal database credited.
+• Adversarial testing: In an authorized lab environment, test whether deposit assumptions break under replay attacks (sending the same webhook twice), race conditions (simultaneous requests), negative or zero values, currency mismatches, or interrupted network callbacks.
+

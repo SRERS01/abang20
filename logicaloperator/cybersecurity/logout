@@ -1,0 +1,10 @@
+Here is how the five security principles apply specifically to a logout workflow:
+• Architecture: Map how logout requests move from the browser through the API and backend, how session stores (like Redis or database session tables) invalidate active tokens, and how external identity providers (SSO/OAuth) handle federated sign-outs.
+• Logic: Understand how the system clears client-side cookies, revokes server-side session records or refresh tokens, handles "logout from all devices" requests, and protects the endpoint against unauthorized cross-site triggers (CSRF).
+• Mathematics: Define the invariant rules that must always hold—such as ensuring a revoked session or token transitions irreversibly to an invalid state (\(S_{valid} \rightarrow S_{invalid}\)), and any subsequent request presenting that token is strictly rejected regardless of its original expiration timestamp.
+• Diagnostics: Trace logout requests, Set-Cookie deletion headers, session store deletion logs, and post-logout API calls across components to spot discrepancies like cookies being cleared in the browser while the session token remains active on the server.
+• Adversarial testing: In an authorized lab environment, test whether logout assumptions break under token replay (reusing a captured session cookie or JWT after logging out), CSRF logout attacks (forcing a victim to log out via an embedded image or link), cached browser back-button views exposing sensitive pages, or race conditions between a logout call and an in-flight privileged action.
+Would you like me to:
+• Format this into a ready-to-save command for your terminal
+• Expand on specific logout vulnerabilities (like JWT revocation pitfalls)
+• Adapt these five points for session management, OAuth, or API keys

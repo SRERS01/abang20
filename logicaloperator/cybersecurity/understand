@@ -1,0 +1,23 @@
+I'm developing these ideas from financial-system architecture, software engineering, database theory, distributed systems and offensive security research.
+
+My reasoning is based on one central principle:
+
+Understanding how a system is built gives you a better chance of discovering where its security assumptions can fail.
+
+For the negative-balance problem, I approach it in five ways:
+
+* Architecture: Understand how the browser, API, backend, database and payment processor communicate.
+
+* Logic: Understand how the system calculates, approves and processes withdrawals.
+
+* Mathematics: Identify the rules that must always hold, regardless of transaction sequence.
+
+* Diagnostics: Trace how data moves through components and identify inconsistencies.
+
+* Adversarial testing: In an authorized laboratory, test whether those assumptions remain true under unusual inputs, concurrency, failures and recovery.
+
+I'm not claiming that the 120 categories are an exhaustive list of every possible vulnerability. They are a structured research taxonomy that we can keep refining.
+
+My philosophy for your offensive security development is:
+
+Don't just learn how to use a tool to find a vulnerability. Learn how the system works, identify what must always be true, and investigate where reality might violate that rule.

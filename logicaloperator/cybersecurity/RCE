@@ -1,0 +1,370 @@
+### Complete RCE component checklist for offensive security research
+
+An RCE vulnerability is rarely caused by one component in isolation. It usually occurs when untrusted input reaches a component that interprets, loads, compiles, deserializes or executes it.
+
+For Android APKs, websites, APIs, Linux servers and Windows servers, these are the major components worth investigating.
+
+### 1\. Operating-system command execution components
+
+High priority
+
+These components can execute operating-system commands.
+
+| Component                   | Examples                                     |
+| --------------------------- | -------------------------------------------- |
+| Shell interpreters          | Bash, Sh, Zsh, PowerShell, CMD               |
+| Process execution APIs      | system(), exec(), popen(), subprocess        |
+| Process creation            | fork(), execve(), CreateProcess()            |
+| Script engines              | Python, PHP, Ruby, Perl, Lua                 |
+| CGI handlers                | CGI, FastCGI                                 |
+| Server-side include engines | SSI                                          |
+| Task execution services     | Cron, systemd timers, Windows Task Scheduler |
+| Remote management services  | SSH, WinRM, management agents                |
+
+What to investigate: Whether attacker-controlled parameters, filenames, request values or uploaded content reach these execution functions without safe handling.
+
+### 2\. Programming-language runtimes
+
+High priority
+
+| Runtime     | Components                                   |
+| ----------- | -------------------------------------------- |
+| Java        | JVM, class loaders, reflection, JNI          |
+| Android     | ART, Dalvik compatibility, DEX loaders       |
+| Python      | Interpreter, eval, exec, import system       |
+| PHP         | PHP-FPM, PHP interpreter, dynamic inclusion  |
+| JavaScript  | Node.js, V8, browser engines                 |
+| .NET        | CLR, assemblies, reflection                  |
+| Ruby        | MRI, JRuby, dynamic evaluation               |
+| Perl        | Perl interpreter, dynamic evaluation         |
+| Lua         | Lua VM, native modules                       |
+| WebAssembly | WASM runtime, module loader                  |
+| Erlang      | BEAM VM                                      |
+| Go          | Runtime, plugin loading                      |
+| Rust        | Native libraries and unsafe interfaces       |
+| C/C++       | Native executable and shared-library loading |
+
+Investigate unsafe evaluation, untrusted module loading, runtime vulnerabilities and exposed native interfaces.
+
+### 3\. File-processing components
+
+High priority
+
+| Component                    | What it processes                     |
+| ---------------------------- | ------------------------------------- |
+| ImageMagick                  | Images                                |
+| GraphicsMagick               | Images                                |
+| FFmpeg                       | Audio and video                       |
+| Ghostscript                  | PostScript and PDF-related processing |
+| LibreOffice                  | Office documents                      |
+| PDF processing libraries     | PDF documents                         |
+| ExifTool                     | Image and media metadata              |
+| Archive extraction libraries | ZIP, TAR, 7z and related archives     |
+| XML parsers                  | XML, SVG and related formats          |
+| Font engines                 | TTF, OTF, WOFF                        |
+| OCR engines                  | Scanned documents and images          |
+| Antivirus engines            | Uploaded files                        |
+| Preview generators           | Images, documents and videos          |
+
+A parser vulnerability can result in RCE when processing a malicious file. A file upload by itself does not prove that this is possible.
+
+### 4\. Deserialization and serialization components
+
+High priority
+
+| Language/platform | Components and formats                       |
+| ----------------- | -------------------------------------------- |
+| Java              | ObjectInputStream, Java serialization        |
+| PHP               | unserialize()                                |
+| Python            | Pickle, marshal                              |
+| Ruby              | Marshal                                      |
+| .NET              | BinaryFormatter and other serializers        |
+| JavaScript        | Object reconstruction, unsafe object merging |
+| YAML              | Unsafe object constructors                   |
+| XML               | XML object binding and parser integrations   |
+| JSON              | Custom object deserializers                  |
+| Message systems   | Protobuf, Avro, MessagePack integrations     |
+
+The key risk is reconstructing untrusted objects in a way that triggers dangerous behavior. OWASP identifies insecure deserialization as a possible direct RCE pathway. OWASP Web Security Testing Guide +1
+
+### 5\. Web-server components
+
+| Server          | Components to investigate                      |
+| --------------- | ---------------------------------------------- |
+| Apache          | Modules, CGI, SSI, PHP handlers, rewrite rules |
+| Nginx           | FastCGI, proxy integrations, upload handling   |
+| IIS             | ISAPI, ASP.NET handlers, application pools     |
+| Tomcat          | JSP engine, servlets, class loading            |
+| Jetty           | Servlets, application deployment               |
+| Node.js servers | Middleware, route handlers, child processes    |
+| Python servers  | WSGI, ASGI, application workers                |
+| PHP-FPM         | PHP request execution                          |
+| Caddy           | Plugins and reverse-proxy integrations         |
+
+### 6\. Template engines
+
+High priority
+
+These engines process templates to generate dynamic content.
+
+| Language   | Template engine                 |
+| ---------- | ------------------------------- |
+| Python     | Jinja2, Mako                    |
+| PHP        | Twig, Smarty, Blade             |
+| Java       | FreeMarker, Velocity, Thymeleaf |
+| JavaScript | EJS, Pug, Handlebars, Nunjucks  |
+| Ruby       | ERB, Liquid                     |
+| .NET       | Razor                           |
+| Go         | html/template, text/template    |
+
+Investigate whether user-controlled input becomes template source rather than ordinary template data. This is the central issue in server-side template injection (SSTI). OWASP Web Security Testing Guide +1
+
+### 7\. Database and database-extension components
+
+| Component                  | Examples                              |
+| -------------------------- | ------------------------------------- |
+| Database engines           | MySQL, PostgreSQL, SQL Server, Oracle |
+| Stored procedures          | PL/SQL, T-SQL, PostgreSQL functions   |
+| Database extensions        | Native extensions and plugins         |
+| User-defined functions     | UDFs                                  |
+| Database language runtimes | PL/Python, PL/Perl and similar        |
+| Import/export processors   | CSV, SQL dumps, backup restoration    |
+| Database drivers           | JDBC, ODBC, native client libraries   |
+
+Investigate whether database features can invoke external programs, load native extensions, or execute unsafe stored logic. SQL injection alone is not automatically RCE.
+
+### 8\. Application plugins and extension systems
+
+| Component                | Examples                                    |
+| ------------------------ | ------------------------------------------- |
+| CMS plugins              | WordPress, Drupal, Joomla                   |
+| CMS themes               | PHP-based themes and templates              |
+| Browser extensions       | Chrome and Firefox extensions               |
+| IDE extensions           | VS Code and JetBrains plugins               |
+| Java application plugins | JAR-based plugins                           |
+| Python plugins           | Importable modules and entry points         |
+| Node.js packages         | npm dependencies                            |
+| Ruby extensions          | Gems and native extensions                  |
+| Android dynamic features | Downloaded modules and dynamic code loading |
+| Game server plugins      | Java, Lua and native plugins                |
+
+Investigate plugin installation permissions, signature verification, dependency integrity, update mechanisms and whether untrusted users can install or influence extensions.
+
+### 9\. XML, document and markup components
+
+| Component                  | Relevant technologies                     |
+| -------------------------- | ----------------------------------------- |
+| XML parsers                | Xerces, libxml2                           |
+| XML transformations        | XSLT processors                           |
+| XML object binding         | JAXB and similar frameworks               |
+| SVG rendering              | SVG engines                               |
+| HTML rendering             | Browser and server-side rendering engines |
+| Markdown rendering         | Markdown processors                       |
+| Office document processing | DOCX, XLSX, PPTX parsers                  |
+| PDF rendering              | PDF engines                               |
+| PostScript processing      | PostScript interpreters                   |
+
+Look for unsafe external resource resolution, vulnerable parsers, dangerous transformation extensions and unsafe document conversion. XXE often causes file disclosure or server-side requests rather than RCE directly; additional conditions are needed for code execution.
+
+### 10\. Network and message-processing components
+
+| Component                 | Examples                              |
+| ------------------------- | ------------------------------------- |
+| HTTP request parsers      | Apache, Nginx, application frameworks |
+| WebSocket handlers        | WebSocket servers                     |
+| RPC frameworks            | gRPC, XML-RPC, JSON-RPC               |
+| Message brokers           | RabbitMQ, Kafka, ActiveMQ             |
+| Remote procedure services | Java RMI, .NET remoting legacy        |
+| MQTT brokers              | MQTT message handlers                 |
+| File-transfer services    | FTP, SFTP processing                  |
+| Email processing          | SMTP, MIME parsers                    |
+| DNS processing            | DNS servers and resolver libraries    |
+| Network protocol parsers  | Custom binary protocol handlers       |
+
+Investigate untrusted messages reaching unsafe parsers, deserializers, plugin handlers or command execution functions.
+
+### 11\. Memory and native-code components
+
+High priority
+
+These are particularly important when researching native Android libraries, Linux services and Windows applications.
+
+| Component or weakness                 | Potential consequence                                      |
+| ------------------------------------- | ---------------------------------------------------------- |
+| Stack buffer handling                 | Stack buffer overflow                                      |
+| Heap allocation                       | Heap corruption                                            |
+| Use-after-free                        | Invalid memory access and possible control-flow corruption |
+| Out-of-bounds write                   | Memory corruption                                          |
+| Integer overflow                      | Incorrect allocation or bounds checks                      |
+| Format-string handling                | Memory disclosure or corruption                            |
+| Function pointers                     | Potential control-flow corruption                          |
+| Virtual tables                        | C++ object-control corruption                              |
+| JNI interfaces                        | Native memory vulnerabilities                              |
+| Kernel interfaces                     | Kernel memory corruption                                   |
+| Unsafe deserialization in native code | Memory corruption                                          |
+
+These weaknesses do not guarantee remote exploitation. Network reachability, exploitability, architecture and mitigations matter. MITRE CWE documents many of these weaknesses. cwe.mitre.org +1
+
+### 12\. Android-specific components
+
+Important for APK research
+
+| Android component      | What to investigate                         |
+| ---------------------- | ------------------------------------------- |
+| DEX loader             | Dynamic loading of bytecode                 |
+| DexClassLoader         | Loading external DEX/JAR code               |
+| PathClassLoader        | Application class loading                   |
+| InMemoryDexClassLoader | In-memory DEX loading                       |
+| JNI                    | Java-to-native interfaces                   |
+| Native .so libraries   | C/C++ execution and memory safety           |
+| WebView                | JavaScript bridges and content handling     |
+| JavaScript interfaces  | Native functionality exposed to web content |
+| Content providers      | Input handling and data access              |
+| Broadcast receivers    | Intent processing                           |
+| Services               | Background command and task processing      |
+| Download managers      | Downloaded code and file handling           |
+| Package installers     | APK installation and verification           |
+| Accessibility services | Privileged interaction with device UI       |
+| System services        | Binder and IPC interfaces                   |
+| Firmware loaders       | Device firmware processing                  |
+
+A vulnerable exported Android component may expose a dangerous operation to another application. That does not automatically mean remote internet RCE; the attack path and permissions must be established.
+
+### 13\. Build, deployment and automation components
+
+| Component                 | Examples                                       |
+| ------------------------- | ---------------------------------------------- |
+| CI/CD runners             | Jenkins, GitLab Runner, GitHub Actions runners |
+| Build systems             | Maven, Gradle, npm, Make, CMake                |
+| Container engines         | Docker, containerd                             |
+| Container orchestration   | Kubernetes                                     |
+| Configuration management  | Ansible, Chef, Puppet                          |
+| Infrastructure automation | Terraform providers and scripts                |
+| Package managers          | npm, pip, Composer, Maven                      |
+| Deployment agents         | Remote deployment services                     |
+| Artifact processors       | Build and package extraction tools             |
+
+Investigate untrusted build scripts, malicious dependencies, exposed build interfaces and unsafe deployment configurations. A compromised build runner can become a route to code execution in the build environment.
+
+### 14\. Firmware and embedded-device components
+
+| Component                  | Examples                           |
+| -------------------------- | ---------------------------------- |
+| Bootloaders                | U-Boot, GRUB                       |
+| Firmware parsers           | Firmware update processors         |
+| Device drivers             | Linux .ko, Windows .sys            |
+| Management interfaces      | Web administration panels          |
+| Update agents              | OTA update services                |
+| Embedded interpreters      | Lua, Python, shell                 |
+| Network services           | Telnet, SSH, HTTP, custom daemons  |
+| Hardware protocol handlers | CAN, Modbus, proprietary protocols |
+| Native libraries           | ELF shared objects                 |
+
+Investigate firmware signature validation, update authorization, exposed management services and memory-safety defects.
+
+### 15\. Vulnerability classes that connect these components to RCE
+
+These are the vulnerability categories you should learn to recognize:
+
+| Vulnerability                   | Component commonly involved           |
+| ------------------------------- | ------------------------------------- |
+| OS command injection            | Shell and process APIs                |
+| Code injection                  | Language runtimes                     |
+| Server-side template injection  | Template engines                      |
+| Insecure deserialization        | Serialization libraries               |
+| Arbitrary file upload           | Web servers and upload handlers       |
+| Local/remote file inclusion     | Application file loaders              |
+| Memory corruption               | Native libraries and parsers          |
+| Unsafe dynamic loading          | Class loaders and plugin systems      |
+| Archive extraction flaws        | Archive libraries                     |
+| Parser vulnerabilities          | Image, PDF, XML and media processors  |
+| SQL-to-OS execution chains      | Database extensions and procedures    |
+| Unsafe build execution          | CI/CD runners                         |
+| Firmware update vulnerabilities | Bootloaders and update agents         |
+| Unsafe RPC handling             | RPC frameworks and message processors |
+
+OWASP's testing guide covers command injection, code injection, file inclusion, SSTI and insecure deserialization as separate testing areas. GitHub +1
+
+### 16\. How to approach RCE hunting
+
+Use this model when assessing any application:
+
+1\. Input source
+
+HTTP request, upload, API, message, intent, file or network packet
+
+2\. Processing component
+
+Parser, deserializer, template engine, plugin, loader or interpreter
+
+3\. Vulnerable operation
+
+Unsafe evaluation, command execution, memory corruption or dangerous loading
+
+4\. Execution impact
+
+Code runs in the vulnerable process's security context
+
+For each component, answer these five questions:
+
+* Can an external user reach it?
+
+* What input does it accept?
+
+* Does it interpret or execute that input?
+
+* What privileges does it run with?
+
+* Can you demonstrate the impact safely and reproducibly?
+
+### 17\. Your RCE research priorities
+
+I recommend mastering these ten areas in this order:
+
+* Linux and Windows process execution.
+
+* PHP, Python, Java and Node.js execution internals.
+
+* File uploads and server-side file handling.
+
+* Deserialization and object injection.
+
+* Template injection.
+
+* Native library and memory-corruption analysis.
+
+* Android DEX, JNI and dynamic loading.
+
+* Image, PDF, archive and XML parser security.
+
+* Plugin, dependency and CI/CD security.
+
+* Firmware and embedded-device security.
+
+Remember: A component that can execute code is not necessarily vulnerable. Your objective is to discover whether an attacker can control an unsafe execution path.
+
+For a structured hands-on course, the most useful starting point is to select your target environment:
+
+Build my RCE research course
+
+Which environment?
+
+Android APKs
+
+Websites and APIs
+
+Linux and Windows servers
+
+Both Android APKs and websites
+
+All environments including firmware
+
+Your current level?
+
+Beginner to expert
+
+Intermediate to expert
+
+Expert level
+
+Create my RCE course

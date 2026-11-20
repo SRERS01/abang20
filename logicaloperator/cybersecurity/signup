@@ -1,0 +1,10 @@
+Here is how the five security principles apply specifically to a signup (registration) workflow:
+• Architecture: Map how registration data moves from the user's browser through the API and backend, how user records and password hashes are written to the database, and how verification services (email, SMS, or KYC providers) confirm the new identity.
+• Logic: Understand how the system normalizes identifiers (e.g., case-insensitivity and whitespace trimming), enforces uniqueness constraints, hashes passwords with strong salted algorithms, assigns default least-privilege roles, and gates sensitive features behind account verification.
+• Mathematics: Define the invariant rules that must always hold—such as ensuring canonical user identifiers (like normalized email or username) map strictly one-to-one with user IDs (no duplicates), passwords are never stored in reversible form, and newly created accounts start with default non-privileged permissions and zero unauthorized balance.
+• Diagnostics: Trace registration payloads, uniqueness checks, database insert transactions, and outbound verification logs across components to spot discrepancies like partial account creation on failed email delivery, leaked sensitive fields in API responses, or user enumeration via error messages.
+• Adversarial testing: In an authorized lab environment, test whether signup assumptions break under race conditions (sending simultaneous requests with the same email to create duplicate accounts), Unicode normalization tricks, mass assignment (injecting role: "admin" or is_verified: true in the request body), automated bot flooding, or plus-addressing abuse (user+1@domain.com) to bypass limits.
+Would you like me to:
+• Format this into a ready-to-save command for your terminal
+• Expand on specific signup vulnerabilities (like Unicode normalization or mass assignment)
+• Adapt these five points for role-based access control (RBAC) or API endpoints
