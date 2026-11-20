@@ -1,0 +1,579 @@
+### Complete Boolean algebra laws and their applications in offensive security
+
+First, an important mathematical point: there is no finite list of every Boolean law that exists in the universe. Boolean algebra has infinitely many valid identities, and different logical systems have different rules.
+
+However, you can learn the fundamental laws, important derived identities, and security-related applications that an offensive security researcher should understand.
+
+The goal is not simply to memorize formulas. It is to understand how software makes decisions, how those decisions can become insecure, and how to test them in authorized environments.
+
+### 1\. The seven fundamental Boolean operations
+
+Let:
+
+* = a user is authenticated.
+
+* = a user has permission.
+
+* = a session is valid.
+
+| Operation | Symbol | Meaning                   |
+| --------- | ------ | ------------------------- |
+| AND       |        | Both must be true         |
+| OR        |        | At least one must be true |
+| NOT       |        | Reverses the value        |
+| XOR       |        | Exactly one is true       |
+| NAND      |        | NOT AND                   |
+| NOR       |        | NOT OR                    |
+| XNOR      |        | Both have the same value  |
+
+### Python implementation
+
+```python
+A = True
+B = False
+
+print(A and B)       # AND
+print(A or B)        # OR
+print(not A)         # NOT
+print(A ^ B)         # XOR
+print(not (A and B)) # NAND
+print(not (A or B))  # NOR
+print(A == B)        # XNOR
+```
+
+Security applications:
+
+* AND: require authentication and authorization.
+
+* OR: allow multiple valid authentication methods.
+
+* NOT: reject expired or invalid sessions.
+
+* XOR: identify exactly-one conditions in protocols.
+
+* NAND/NOR: simplify hardware and circuit logic.
+
+* XNOR: compare matching states or values.
+
+### 2\. Fundamental Boolean algebra laws
+
+These laws allow you to simplify, transform and verify decision-making logic.
+
+### A. Identity laws
+
+A \\land 1 = AA \\lor 0 = A
+
+Python:
+
+```python
+A = True
+
+print(A and True)
+print(A or False)
+```
+
+Security application: Identify unnecessary conditions in authentication and authorization checks. An expression that adds no restriction does not improve security.
+
+### B. Domination laws
+
+A \\land 0 = 0A \\lor 1 = 1
+
+Python:
+
+```python
+print(A and False)
+print(A or True)
+```
+
+Security application: Detect conditions that make a decision permanently false or true. For example, a faulty authorization expression may accidentally allow everyone.
+
+### C. Idempotent laws
+
+A \\land A = AA \\lor A = A
+
+Python:
+
+```python
+print(A and A)
+print(A or A)
+```
+
+Security application: Find duplicated checks. Two identical permission checks do not provide two independent security controls.
+
+### D. Complement laws
+
+A \\land \\neg A = 0A \\lor \\neg A = 1
+
+Python:
+
+```python
+print(A and not A)
+print(A or not A)
+```
+
+Security application: Identify contradictory conditions and conditions that are always satisfied.
+
+### E. Double-negation law
+
+\\neg(\\neg A) = A
+
+Python:
+
+```python
+A = True
+
+print(not not A)
+```
+
+Security application: Review complicated authorization conditions where multiple negations can make the actual access policy difficult to understand.
+
+### F. Commutative laws
+
+A \\land B = B \\land AA \\lor B = B \\lor AA \\oplus B = B \\oplus A
+
+Python:
+
+```python
+print(A and B == B and A)
+```
+
+For clarity, use parentheses:
+
+```python
+print((A and B) == (B and A))
+```
+
+Security application: Reorder independent logical conditions without changing their Boolean result. However, Python's short-circuit evaluation can make execution order important when expressions have side effects or can raise exceptions.
+
+### G. Associative laws
+
+(A \\land B) \\land C = A \\land (B \\land C)(A \\lor B) \\lor C = A \\lor (B \\lor C)
+
+Python:
+
+```python
+A = True
+B = True
+C = False
+
+print((A and B) and C)
+print(A and (B and C))
+```
+
+Security application: Understand complex conditions involving several security requirements, such as authentication, account status and permission.
+
+### H. Distributive laws
+
+A \\land (B \\lor C)
+=
+(A \\land B) \\lor (A \\land C)A \\lor (B \\land C)
+=
+(A \\lor B) \\land (A \\lor C)
+
+Python:
+
+```python
+print(A and (B or C))
+print((A and B) or (A and C))
+```
+
+Security application: Expand complex access-control expressions into separate cases and check whether every case enforces the intended policy.
+
+### I. Absorption laws
+
+A \\lor (A \\land B) = AA \\land (A \\lor B) = A
+
+Python:
+
+```python
+print(A or (A and B))
+print(A and (A or B))
+```
+
+Security application: Identify conditions that are logically redundant. A permission check may appear to add protection while actually having no effect.
+
+### J. De Morgan's laws
+
+\\neg(A \\land B)
+=
+\\neg A \\lor \\neg B\\neg(A \\lor B)
+=
+\\neg A \\land \\neg B
+
+Python:
+
+```python
+A = True
+B = False
+
+print(not (A and B))
+print((not A) or (not B))
+
+print(not (A or B))
+print((not A) and (not B))
+```
+
+Security application: This is especially important when reviewing deny conditions, input validation and authentication rules.
+
+For example:
+
+```python
+if not (authenticated and authorized):
+    print("Access denied")
+```
+
+Equivalent Boolean expression:
+
+```python
+if not authenticated or not authorized:
+    print("Access denied")
+```
+
+Both express the same denial condition.
+
+### 3\. Additional important Boolean identities
+
+These are useful derived laws and identities that go beyond the basic ten.
+
+| Law                     | Formula                                                   | Security application                    |
+| ----------------------- | --------------------------------------------------------- | --------------------------------------- |
+| Involution              |                                                           | Simplify nested negations               |
+| Excluded middle         |                                                           | Understand binary decisions             |
+| Non-contradiction       |                                                           | Detect conflicting requirements         |
+| Principle of duality    | Swap AND with OR and 0 with 1                             | Verify paired identities                |
+| Consensus               |                                                           | Remove redundant decision paths         |
+| Redundancy              |                                                           | Identify ineffective restrictions       |
+| Complement uniqueness   | If and , then                                             | Verify complementary states             |
+| Shannon expansion       |                                                           | Analyze decisions by input state        |
+| Functional completeness | NAND alone or NOR alone can express all Boolean functions | Understand digital logic implementation |
+
+Here, means OR and multiplication means AND.
+
+### Consensus law in Python
+
+```python
+A = True
+B = False
+C = True
+
+original = (
+    (A and B)
+    or ((not A) and C)
+    or (B and C)
+)
+
+simplified = (
+    (A and B)
+    or ((not A) and C)
+)
+
+print(original == simplified)
+```
+
+Security application: When analyzing a complex access-control policy, consensus can reveal that one decision path is unnecessary. This helps identify confusing or redundant conditions.
+
+### Shannon expansion
+
+Suppose a system grants access according to:
+
+f=A\\land B
+
+If is true:
+
+f_{A=1}=B
+
+If is false:
+
+f_{A=0}=0
+
+Python:
+
+```python
+def access(a, b):
+    return a and b
+
+for a in [False, True]:
+    for b in [False, True]:
+        print(a, b, access(a, b))
+```
+
+Security application: Analyze a program separately under different states, such as authenticated versus unauthenticated, administrator versus ordinary user, or valid versus expired session.
+
+### 4\. XOR-specific laws
+
+XOR deserves special attention because it appears in cryptography, binary operations and protocol analysis.
+
+| Law                   | Formula |
+| --------------------- | ------- |
+| Identity              |         |
+| Complement            |         |
+| Self-cancellation     |         |
+| Commutative           |         |
+| Associative           |         |
+| Cancellation          |         |
+| Distributive identity |         |
+
+Python:
+
+```python
+A = True
+B = False
+
+print(A ^ False)
+print(A ^ True)
+print(A ^ A)
+print(A ^ B)
+```
+
+Offensive security applications:
+
+* Analyze XOR-based obfuscation.
+
+* Understand binary protocol fields.
+
+* Examine cryptographic implementations.
+
+* Identify incorrect assumptions about key reuse.
+
+* Understand bit-level transformations.
+
+Important: XOR is not encryption by itself. Security depends on the complete cryptographic design and key management.
+
+### 5\. Logical implication laws
+
+Implication is particularly important when studying access-control policies.
+
+| Concept         | Formula |
+| --------------- | ------- |
+| Implication     |         |
+| Converse        |         |
+| Inverse         |         |
+| Contrapositive  |         |
+| Biconditional   |         |
+| Non-implication |         |
+
+The most important equivalence is:
+
+A\\rightarrow B
+\\equiv
+\\neg A\\lor B
+
+Python:
+
+```python
+def implies(a, b):
+    return (not a) or b
+
+print(implies(True, False))
+print(implies(False, False))
+```
+
+Security application: If a policy says, "If the user is an administrator, the account must be active," implication helps you formalize and test that requirement.
+
+Do not confuse implication with equivalence. If administrators must have active accounts, it does not automatically mean every active account is an administrator.
+
+### 6\. Important logical inference rules
+
+These are not all Boolean algebra identities; they are rules for deriving conclusions from premises.
+
+| Rule                   | Structure | Application                               |
+| ---------------------- | --------- | ----------------------------------------- |
+| Modus ponens           |           | Derive a required condition               |
+| Modus tollens          |           | Reason backward from a failed requirement |
+| Hypothetical syllogism |           | Analyze chained security requirements     |
+| Disjunctive syllogism  |           | Narrow possible states                    |
+| Resolution             |           | SAT solving                               |
+| Constructive dilemma   |           | Analyze alternative execution paths       |
+
+These are especially useful for reasoning about complex application logic.
+
+### 7\. Python operators every security researcher should recognize
+
+Boolean laws describe logical relationships, but programming languages have additional operators.
+
+| Category | Python operators | Example | |---|---|---| | Logical | `and`, `or`, `not` | `a and b` | | Bitwise | `&`, `|`, `^`, `~` | `a ^ b` | | Shifts | `<<`, `>>` | `a << 2` | | Comparison | `==`, `!=`, `<`, `>` | `a == b` | | Membership | `in`, `not in` | `role in roles` | | Identity | `is`, `is not` | `x is None` | | Assignment | `=`, `&=`, `|=`, `^=` | `flags |= 1` |
+
+Remember:
+
+* `and` is not the same as `&`.
+
+* `or` is not the same as `|`.
+
+* `not` is not the same as `~`.
+
+* `==` checks equality; `is` checks object identity.
+
+* Python does not use `&&`, `||` or `!` for its ordinary logical operators.
+
+### 8\. How to apply these laws in offensive security
+
+The following are the areas where Boolean reasoning is especially valuable.
+
+![Login screen interface on laptop showing username and password fields with secure access icons and verification checkmarks in dark environment. 3D Rendering](https://images.openai.com/static-rsc-4/PM68DmYgMtMazPy8d-7StsiACVVhhZkouNttE1OBHGx7KBNAfba7LVWcvWK7TfmjvmRgOMlyLB86JjsrUCu3rP06zdCz2Rh_vWC70vXMN_npinxKRfW0xZCKbjKDCclhzt6NYXaEoD3s4Nocy7C-RF4KJys6ybPnwcjTxvHq_5enPqbQHnNecxPiap5dmqlw?purpose=fullsize)
+
+1\. Authentication testing
+
+Check whether login decisions correctly combine password validity, account status, MFA and session state.
+
+![IAM Permissions Explorer | cloud-sheriff](https://images.openai.com/static-rsc-4/nzIVAQdejnbZB0352QZyTmpbH-OYjw1goXuagRS_2pTlEJ8LqmySLuk7_WXFbydZVUVaosYlY-Det9C_33iGHMUGu0JP6SibJV0cJqzCI2CF-nwbQ5sKLGYYN2n49ibwjFM_VkXPz_xeOJb1ap-D2wtVULCGZZiL6hBZY1fdVR0vcrmyrgg0af2A1a5j6jDG?purpose=fullsize)
+
+2\. Authorization testing
+
+Test whether the correct user, role, resource owner and permission are all required.
+
+![How JWT Libraries Block Algorithm Confusion: Key Lessons for Code Review](https://images.openai.com/static-rsc-4/le67gkiXmdh5qZoPoS0gxGg6H3ebfgPykPi3DwulQSDQMwvPqmHsobqFO9Ms04q6yX-8TlIvCPTMV1BpwDgdm3s_TDQFUpf6w2-z-tdO4t8iBk8BQZRYNOauraOb2e0TkjnrKj9qeRZ0CZMiAaApjGjZy6R_bgMmIt7qswKYNQtuZnhaQ1A7JBde0Xg1XCil?purpose=fullsize)
+
+3\. Source-code auditing
+
+Trace `if`, `else`, `and`, `or`, `not` and nested conditional expressions to understand security decisions.
+
+![Practical FTW: Testing the Core Rule Set or Any Other WAF | CRS Project](https://images.openai.com/static-rsc-4/nB3F7rpLNjBMGe3GLi5pl_segJ6WwvH-mgrtBeCMo0IfTYc7JpzjEYnZtV0SqyAHl2RXWS1EE7BSah23z6OsJX5C43BCOZEBh8MZM849Lf1XF-nvAsb6-edXchVCaGdLZKKmMi6WXwOzYqltffD8ompbZKIwq-JuJfC5bf46PX6QcPzyVDEXJrQXG6LIcqyV?purpose=fullsize)
+
+4\. Business-logic testing
+
+Identify missing requirements, contradictory conditions and incorrect state transitions.
+
+![Binary Ninja](https://images.openai.com/static-rsc-4/opwJfoyLXwRydqMkbvPb14U_6zO8vEsA3abgfyFgw5-Byw0R5v2-xb2eUqK2WBz4RzuReCAEtQ6CEoaRNk5t2EDbO3cpJtUTxsPpUTXFui1UblDqlqRdWkbQyVtZakGJweLXj9wasQZb8_aZbyf4_cSVML8IWGNEvE1HaIu5dwIyfn6oxAd0Cy8DDXPE0U09?purpose=fullsize)
+
+5\. Reverse engineering
+
+Understand conditional jumps, flags, comparisons and branching in compiled programs.
+
+### 9\. A practical security lab: test an authorization function
+
+Imagine an application should allow access only when:
+
+* The user is authenticated.
+
+* The account is active.
+
+* The user owns the requested resource.
+
+* The user has the required permission.
+
+A correct example:
+
+```python
+def can_access(authenticated, active, owner, permitted):
+    return (
+        authenticated
+        and active
+        and owner
+        and permitted
+    )
+```
+
+Now test every possible combination:
+
+```python
+from itertools import product
+
+def can_access(authenticated, active, owner, permitted):
+    return authenticated and active and owner and permitted
+
+for values in product([False, True], repeat=4):
+    result = can_access(*values)
+    print(values, "ACCESS:", result)
+```
+
+There are possible combinations.
+
+The expected security property is:
+
+Access\\Rightarrow
+Authenticated\\land Active\\land Owner\\land Permitted
+
+This is a useful example of a security invariant: access must never be granted unless all four requirements hold.
+
+### 10\. Tools for advanced Boolean analysis
+
+These tools help move from manually checking conditions to automated reasoning.
+
+![The Python Programming Logo: A Symbol Of Innovation And Community
+ – peerdh.com](https://images.openai.com/static-rsc-4/LOviXaN6Ps17qDQ24gdnxHVZRRpdnffm074aZl9Fgh_GC637zZHsqSWHKLwz6UFJ-dXQ87asJoQurFeC8MlX7cQ7pp-CerMXr_v6BJzPLoulzE5al86lOqiDcEFA1re6hJRCjY7vlwv4upXCiuozbSd1TWsFX2Dntav2SQk0wd3x4sy9hoT39HWNKEMa-t3l?purpose=fullsize)
+
+Python
+
+Write test cases and enumerate Boolean conditions.
+
+Foundation
+
+![File:Z3 Theorem Prover Logo 329x329.jpg - Wikimedia Commons](https://images.openai.com/static-rsc-4/aud1HnnJEg-H5TDj3s89xF-0D1YDlh3BhAhSxr-mb2_i_SixKzj3IHpb7blAYhCA3cIWVnHQNG6UID9w-M7CrJd7IQI0hPbreZYExK_OnZLAyJTMoDdcajFPPSUzXho_Xi5Rmnh10T3RerQj3iLRt9jZuBpRvbHvAuVMuLzXCk1FOzaQp_7tmavGcZ-OEwVr?purpose=fullsize)
+
+Z3 SMT Solver
+
+Check whether security conditions are satisfiable and search for counterexamples.
+
+Advanced symbolic reasoning
+
+![Symbolic Calculus in Python: Simple Samples of Sympy | Casual Inference](https://images.openai.com/static-rsc-4/zuAnXAOGxT8IF7rKIfLfWRM6GsoXv6P8imptJnFWAw0y2g-wjv1y8YMBro9XkmmSgFbSVhMjNdoOVZnzwEjuUoY6TkMY9PEEESuAeFNWJrSrjDn_p8uQ3jCo3e34asG_JRb6XzpXaiXcwNcfvlcaPm4CWrGACwXYUepzL41qY1HCcOIe_TRUETpZ3xqR8Nau?purpose=fullsize)
+
+SymPy
+
+Simplify Boolean expressions and construct truth tables.
+
+Symbolic mathematics
+
+![Ghidra -- the Software Reverse Engineering Tool You’ve Been Waiting for -- is Here! > National Security Agency/Central Security Service > Article](https://images.openai.com/static-rsc-4/caHdXNAP9evqYbLDl-sXdU_PZxI9vHamQ06yxOWJnrFElQimZ7vOzL7BwfJXYkScx434tS1cTJdEv6PJwzWb9yYajP5MS5M3hB7eMhtC0uMb-vrT91fFsqaFL4HdcxubRRCLMkBzlLtQElocoOcSMl9zWkC9oVn-RJsGExl8CE8saA_W8_AzDtOI1WnTgLen?purpose=fullsize)
+
+Ghidra
+
+Examine compiled program conditions and control-flow branches.
+
+Reverse engineering
+
+For example, install Z3 on Ubuntu:
+
+```bash
+python3 -m pip install z3-solver
+```
+
+Try a simple security property:
+
+```python
+from z3 import *
+
+authenticated = Bool("authenticated")
+authorized = Bool("authorized")
+access = Bool("access")
+
+solver = Solver()
+
+solver.add(access == (authenticated and authorized))
+solver.add(access == True)
+solver.add(authenticated == False)
+
+print(solver.check())
+```
+
+For Z3, use its own logical operators instead of Python's `and` and `or` when combining symbolic Boolean variables. The corrected expression is:
+
+```python
+solver = Solver()
+
+solver.add(access == And(authenticated, authorized))
+solver.add(access == True)
+solver.add(authenticated == False)
+
+print(solver.check())
+```
+
+The result is `unsat`: there is no possible assignment satisfying all three conditions. That is precisely what you want if unauthenticated users must never receive access.
+
+### 11\. Your learning progression
+
+| Level                  | What to master                                             |
+| ---------------------- | ---------------------------------------------------------- |
+| 1. Foundation          | True, False, AND, OR, NOT                                  |
+| 2. Algebra             | All fundamental Boolean laws                               |
+| 3. Logic               | Implication, equivalence and inference                     |
+| 4. Programming         | Python logical and bitwise operators                       |
+| 5. Testing             | Truth tables and exhaustive testing                        |
+| 6. Security            | Authentication, authorization and business logic           |
+| 7. Automation          | Z3, SAT and SMT solving                                    |
+| 8. Reverse engineering | Ghidra, assembly conditions and control flow               |
+| 9. Advanced research   | Symbolic execution, formal verification and state machines |
+
+One critical principle: A Boolean expression can be mathematically equivalent to another while the corresponding program behaves differently because of short-circuit evaluation, side effects, exceptions, or evaluation order. Always analyze the actual program, not just its simplified formula.
+
+The next major subject to master is symbolic execution: using Boolean conditions to explore program paths automatically and discover inputs that violate security requirements.

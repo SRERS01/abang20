@@ -1,0 +1,293 @@
+Absolutely. Let's examine the Boolean and related operators one by one, with their actual code usage.
+
+I'll use Python, JavaScript and C so you can understand how the same logical operation is implemented in different programming languages.
+
+### 1\. Fundamental Boolean operators
+
+Assume:
+
+```python
+A = True
+B = False
+```
+
+| Operator | Python        | Result |
+| -------- | ------------- | ------ |
+| AND      | A and B       | False  |
+| OR       | A or B        | True   |
+| NOT      | not A         | False  |
+| XOR      | A ^ B         | True   |
+| NAND     | not (A and B) | True   |
+| NOR      | not (A or B)  | False  |
+| XNOR     | A == B        | False  |
+
+### Actual Python code
+
+```python
+A = True
+B = False
+
+print(A and B)
+print(A or B)
+print(not A)
+print(A ^ B)
+print(not (A and B))
+print(not (A or B))
+print(A == B)
+```
+
+### 2\. Advanced logical operators
+
+These are expressions you can construct using fundamental operators.
+
+1\. Implication (A → B)
+
+Meaning: If A is true, B must also be true.
+
+```python
+A = True
+B = False
+
+result = (not A) or B
+print(result)  # False
+```
+
+2\. Biconditional (A ↔ B)
+
+Meaning: Both values must be equal.
+
+```python
+A = True
+B = True
+
+result = A == B
+print(result)  # True
+```
+
+3\. Converse
+
+Meaning: B implies A.
+
+```python
+result = (not B) or A
+```
+
+4\. Inverse
+
+Meaning: Not A implies not B.
+
+```python
+result = A or (not B)
+```
+
+5\. Contrapositive
+
+Meaning: Not B implies not A.
+
+```python
+result = B or (not A)
+```
+
+6\. Non-implication
+
+Meaning: A does not imply B.
+
+```python
+result = A and (not B)
+```
+
+7\. Tautology
+
+Always true.
+
+```python
+result = A or (not A)
+print(result)  # True
+```
+
+8\. Contradiction
+
+Always false.
+
+```python
+result = A and (not A)
+print(result)  # False
+```
+
+### 3\. Comparison operators
+
+These compare values and return Boolean results.
+
+| Operator      | Python example | Meaning          |
+| ------------- | -------------- | ---------------- |
+| Equal         | 10 == 10       | Equal            |
+| Not equal     | 10 != 5        | Not equal        |
+| Greater than  | 10 > 5         | Greater          |
+| Less than     | 5 < 10         | Smaller          |
+| Greater/equal | 10 >= 10       | Greater or equal |
+| Less/equal    | 5 <= 10        | Less or equal    |
+
+### Code example
+
+```python
+age = 25
+
+print(age == 25)
+print(age != 18)
+print(age > 18)
+print(age < 30)
+print(age >= 25)
+print(age <= 30)
+```
+
+JavaScript also supports strict comparisons:
+
+```javascript
+console.log(5 === "5"); // false
+console.log(5 !== "5"); // true
+```
+
+### 4\. Bitwise operators
+
+These work on binary representations rather than ordinary logical conditions.
+
+Let:
+
+```python
+A = 5  # 0101
+B = 3  # 0011
+```
+
+| Operator    | Python   | Result |
+| ----------- | -------- | ------ |
+| Bitwise AND | A & B    | 1      |
+| Bitwise OR  | A \\\| B | 7      |
+| Bitwise XOR | A ^ B    | 6      |
+| Bitwise NOT | ~A       | -6     |
+| Left shift  | A << 1   | 10     |
+| Right shift | A >> 1   | 2      |
+
+### Actual code
+
+```python
+A = 5
+B = 3
+
+print(A & B)
+print(A | B)
+print(A ^ B)
+print(~A)
+print(A << 1)
+print(A >> 1)
+```
+
+Important: Bitwise XOR (`^`) and logical XOR are not universally interchangeable. In Python, XOR on Boolean operands gives the expected Boolean XOR result.
+
+### 5\. Compound logical operators
+
+These are especially useful in application development.
+
+Logical AND assignment
+
+```javascript
+let authenticated = true;
+authenticated &&= false;
+console.log(authenticated); // false
+```
+
+Logical OR assignment
+
+```javascript
+let username = "";
+username ||= "Guest";
+console.log(username); // Guest
+```
+
+Nullish coalescing
+
+```javascript
+let username = null;
+let result = username ?? "Guest";
+console.log(result); // Guest
+```
+
+Ternary operator
+
+```javascript
+let age = 20;
+
+let result = age >= 18 ? "Adult" : "Minor";
+console.log(result);
+```
+
+Optional chaining
+
+```javascript
+let user = {};
+
+console.log(user.profile?.name);
+```
+
+### 6\. De Morgan's laws in code
+
+These are particularly important when auditing complex conditions.
+
+First law:
+
+\\neg(A \\land B)=\\neg A \\lor \\neg B
+
+Python:
+
+```python
+A = True
+B = False
+
+first = not (A and B)
+second = (not A) or (not B)
+
+print(first == second)  # True
+```
+
+Second law:
+
+\\neg(A \\lor B)=\\neg A \\land \\neg B
+
+```python
+first = not (A or B)
+second = (not A) and (not B)
+
+print(first == second)  # True
+```
+
+### 7\. Real-world security application
+
+Consider a simple authorization system.
+
+```python
+authenticated = True
+is_admin = False
+
+if authenticated and is_admin:
+    print("Access granted")
+else:
+    print("Access denied")
+```
+
+Now examine these security conditions:
+
+| Condition                  | Purpose                       |
+| -------------------------- | ----------------------------- |
+| authenticated and is_admin | Requires both conditions      |
+| authenticated or is_admin  | Requires either condition     |
+| not authenticated          | Checks unauthenticated status |
+| not is_admin               | Checks non-admin status       |
+| authenticated != is_admin  | Checks whether states differ  |
+| authenticated == is_admin  | Checks whether states match   |
+
+A security auditor should verify that the application's actual authorization requirements match the implemented conditions. Never assume changing a client-side Boolean grants server-side privileges.
+
+### 8\. Practical laboratory: Test the operators yourself
+
+Here is a small interactive Python learning exercise.
+
+### Boolean operator playground
