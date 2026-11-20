@@ -1,0 +1,96 @@
+Here is a Python script that converts positive and negative integers and floating-point numbers into binary, including negative values.
+
+### 1\. Complete Python script
+
+```python
+
+import struct
+
+def convert_to_binary(number, precision=16):
+
+    # Check whether the number is an integer
+    if isinstance(number, int):
+        if number >= 0:
+            return bin(number)
+
+        # Negative integer: show sign and magnitude
+        return "-0b" + bin(abs(number))[2:]
+
+    # Check whether the number is a float
+    elif isinstance(number, float):
+
+        # IEEE 754 64-bit representation
+        packed = struct.pack(">d", number)
+
+        binary = format(
+            int.from_bytes(packed, "big"),
+            "064b"
+        )
+
+        # Separate sign, exponent and fraction
+        sign = binary[0]
+        exponent = binary[1:12]
+        fraction = binary[12:]
+
+        return {
+            "sign": sign,
+            "exponent": exponent,
+            "fraction": fraction,
+            "full_binary": binary
+        }
+
+    else:
+        raise TypeError("Only integers and floats are supported.")
+
+# Test examples
+numbers = [-12, -25, -12.625, -0.5, 12.625]
+
+for number in numbers:
+    print(f"\nNumber: {number}")
+    print("Binary:", convert_to_binary(number))
+```
+
+### 2\. Example results
+
+| Number  | Binary representation |
+| ------- | --------------------- |
+| -5      | -0b101                |
+| -12     | -0b1100               |
+| -25     | -0b11001              |
+| -0.5    | IEEE 754 64-bit       |
+| -12.625 | IEEE 754 64-bit       |
+| 12.625  | IEEE 754 64-bit       |
+
+Important distinction:
+
+* Negative integers above use a minus sign followed by the magnitude in binary. This is not two's complement.
+
+* Negative floats use IEEE 754, where the first bit represents the sign.
+
+* Python's `bin()` does not accept floating-point values directly.
+
+### 3\. Test a negative float separately
+
+```python
+import struct
+
+number = -12.625
+
+binary = format(
+    int.from_bytes(struct.pack(">d", number), "big"),
+    "064b"
+)
+
+print(binary)
+```
+
+The 64 bits are divided into:
+
+| Component | Number of bits |
+| --------- | -------------- |
+| Sign      | 1              |
+| Exponent  | 11             |
+| Fraction  | 52             |
+| Total     | 64             |
+
+This is particularly useful when studying floating-point representation, memory analysis and reverse engineering.

@@ -1,0 +1,463 @@
+Almost everything that a computer processes, stores, transmits or displays can be represented in binary (0s and 1s).
+
+For computer science and offensive security, you should understand the following major categories of binary representation.
+
+### 1\. Number systems
+
+Fundamental
+
+| Number type           | Example | Binary representation           |
+| --------------------- | ------- | ------------------------------- |
+| Decimal integer       | 12      | 1100                            |
+| Negative integer      | -5      | Two's complement representation |
+| Binary number         | 1100    | 1100                            |
+| Octal number          | 14      | 1100                            |
+| Hexadecimal number    | C       | 1100                            |
+| Floating-point number | 12.625  | 1100.101                        |
+
+Python:
+
+```python
+print(bin(12))
+print(format(12, "08b"))
+```
+
+### 2\. Characters and text
+
+Letters, numbers, punctuation and symbols can be encoded into binary.
+
+| Character | Encoding | Binary   |
+| --------- | -------- | -------- |
+| A         | ASCII    | 01000001 |
+| a         | ASCII    | 01100001 |
+| B         | ASCII    | 01000010 |
+| 0         | ASCII    | 00110000 |
+| Space     | ASCII    | 00100000 |
+| !         | ASCII    | 00100001 |
+
+Other text encodings include:
+
+* ASCII
+
+* UTF-8
+
+* UTF-16
+
+* UTF-32
+
+* Unicode code points
+
+Python:
+
+```python
+text = "ABC"
+
+for char in text:
+    print(char, format(ord(char), "08b"))
+```
+
+### 3\. Boolean values and logic
+
+Computers use binary representations of logical states.
+
+| Logical value | Binary | |---|---| | False | 0 | | True | 1 | | AND | `&` | | OR | `|` | | NOT | `~` | | XOR | `^` |
+
+Other Boolean operations include NAND, NOR and XNOR.
+
+### 4\. Computer instructions and machine code
+
+![One Line, Millions of Operations: The World Behind print("hello world") | by Gaurav Kumar | Medium](https://images.openai.com/static-rsc-4/-7A6FXKpoWb4w_P4CqMgljFT0dUgxppib5eoELfFxg7JpMJEODAJbU01b6uBCyUZwORoRxZme8Ai8xzJfFwp5zlZkE-oibppWYrYItaeKr_BE1kFEwgFuWq7DkylX4yZDWYp5go2HVdlemL0SFIGBPxbWyzINUWnE3a7cqvFHj6bLLKR_7Wf-krjlv-Nk8SP?purpose=fullsize)
+
+![PPT - Lecture 10 Y86 – a RISC Architecture PowerPoint Presentation, free download - ID:5126267](https://images.openai.com/static-rsc-4/LoSk3Bm0c6FqDw4ZoS-1Gc6FYPI1sboYqntpijbQmDK7lVsMySe1-swStkB8YvR2WocJE0-QNe7ktkeOXALg6oxJAuDt85ZbMcBfWfvkvbyHIIAxwF29mFTQ8QCJR3KvmH56zrTc9O9mjBxcrH1vYNpfY-Kf7O3QF3zG-MALjYjqdRhfAGlCklpfE9q7GEVc?purpose=fullsize)
+
+![Make your own Linux 64-bit shellcodes - Part 1](https://images.openai.com/static-rsc-4/W6wMQ3ZHE_0Vx75XW2XrRmfOtX47Z2nK0NE1Nx61R6r_qf3ks7NvjN0pzUUbtp6wfrZoUV30mbKzKeA4zOMLIWpjNc8tiUJSRDeh1Tk5Q3I1XfIjphGHhybHV6SAf2L8eVDD3hx70iB4Psh48GhE5oodW1765X4MbYi5aPu76T0xCj3oEcPs31YTBCyN4jth?purpose=fullsize)
+
+![PPT - Microcontrollers PowerPoint Presentation, free download - ID:2050315](https://images.openai.com/static-rsc-4/WRAN2CleTfEO4MkpMwOIwjz-IeMtkApzeaVX4bWLbEjUNAW6oHTgaItt-ulz3GqKBrFhwGDtQIupE81Vqs2NOa1jo6J2IpVADNQnvu8OSuTzZ90S7REL3oEl0vcvz5bjKNPHqOz0AUT_B4iKyP_KjhTat608VAfsYWGGfpYUCj7slv7yqPx8vnYk7jHLLg-M?purpose=fullsize)
+
+![OS Fundamentals: Part 1, Understanding the hardware, and its abstractions](https://images.openai.com/static-rsc-4/r92myNvzF9rt3Kdr_suV_mNmMS9JtWWdXlQ6OOADH75014h3Z3IjC-0kPO11hDSbz1AGMnjmp7H1_S9llVrEeeH4WkVsSQRGmAQVHcV-MzQDJg9Jlwp8oMLzDrVPudjWYCnZa1r5FwKBqGWbIcusxiMS2o-EIY4UFkKDrfuUM7227zcc4oOZZ6CdaNurG9MC?purpose=fullsize)
+
+![Google CTF (2018): Beginners Quest - Miscellaneous Solutions - Jack Hacks](https://images.openai.com/static-rsc-4/CvRlmd74jBLzqqfx9gGu39HuPu6ozt7QolA9spwIzZhcYyvoqij3Bff7VCvwTXH2k87Fmaz6H4z2qo4gE6xJ0C-n6fgl11Z8CmxILnV-tPcGxwKwDo_WE1IfUpGz5Y9o1q1P8XSnGJ61fK_yrGmeIpOwWfd8z3i75rDMUPKt3Ovu728xvd-Ewfj2GS1ykZIc?purpose=fullsize)
+
+![ALU CU Registers and Bus Diagram | Quizlet](https://images.openai.com/static-rsc-4/E-5ZorLJnf5oaxsMH5nRKHuDdyM7y9tNah98jO6lsSDQcshp5JyAO6nKHtlenF9jL2XiHWvxBZud_qTkQw8x1V6Ahn5w3P0XGaD9JPM-UcSAVxrzS6Ce0Mpf5LxFtiSscmWsXPChYDyFXv2Hd731r6oN-J09-VIoQTceqmlr27aPhneJMTo2ZrGx9RPWfp5t?purpose=fullsize)
+
+![Solved FIGURE 6.5 FIGURE 6.13 Binary Op Code Operation LOAD | Chegg.com](https://images.openai.com/static-rsc-4/I9__GNVNz_hZheR0jucNfrBhsOVHwzIEhXHHijQMUXN3TxJWr-znTCKlH8IZsM3aFGZjXXiWIr-mlyxCbhOxH5JBr_z4XsYGhRmPlsuyS742_690ahRJ3TMtEDdX7GaAGsx2KlAb8mNCpPfcpxVO5DPiGk133O1uFOf6DgbiMeYs8pTuKGBSCo9a5TfRHSaJ?purpose=fullsize)
+
+![考研408--组成原理--day7--指令&扩展操作码&寻址 - 技术栈](https://images.openai.com/static-rsc-4/d_7NPoY2fVDRscq_Nwcs2GIULVnpm36K12ecrAOLPtWES9v9LtrpVviKLZ5AlFgujAVkBZqX2sPUTIwEZvwIi4szQqdTyuQcAloBQNeiDbwqW0aOL07oXhSK2eM0qe_BrEG5XbfJ303DsMEzztyoJ9-XxuuwSft4mA9kyzhKrOnNrFbVtDBEEmOl5c9BmPSf?purpose=fullsize)
+
+![Herramientas de Linux para el análisis de malware](https://images.openai.com/static-rsc-4/WN0fYm2fDr66iTx3eawKX_qhq6vXi5SZcfcx9imxtmyL8ZLXzSjVjmvQctwzuWpuXxyAOUkDLes8CEpjLzE1C5-zH5oGXux1zlh4H2G4Q1mTnCSGfx8Pbh1hO2u_MtYkGvPmWj0sMy7HgIChXcZBvFrHrdEcBTtQJLlhrcJcXOjPv2n0CjVEizyqwJZ7XOcl?purpose=fullsize)
+
+CPU instructions are encoded as binary machine instructions.
+
+Examples of concepts:
+
+* Machine code
+
+* Opcodes
+
+* Instruction operands
+
+* Registers
+
+* Assembly instructions
+
+* CPU instruction sets (x86, x86-64, ARM)
+
+Security applications: Reverse engineering, executable analysis and vulnerability research.
+
+### 5\. Computer memory
+
+![Array Data Structure: With Sketches and Examples - DEV Community](https://images.openai.com/static-rsc-4/M3rvVMlQos0PIEqPXEHBAFUC1Y-5PxZVNxaMsa-XRkKqvj1DzdOc5FazitiTl2MJwpTDf8S49Z_0Ick39ZwRlTfxcnTYbMQPShw75KTorTxZFQzXJRs4mUCLRS9Cfkn7MRIwg8y5PWnkm_dEyWPxkJ5SGoxXUWMIooSs28u0ELGoNon5zxoxnJW7Bew_l9ir?purpose=fullsize)
+
+Memory stores data in binary.
+
+| Memory concept | Meaning                               |
+| -------------- | ------------------------------------- |
+| Bit            | One binary digit                      |
+| Nibble         | 4 bits                                |
+| Byte           | 8 bits                                |
+| Word           | CPU-defined data size                 |
+| Memory address | Identifies a memory location          |
+| Pointer        | Stores a memory address               |
+| Stack          | Memory region used for function calls |
+| Heap           | Memory used for dynamic allocation    |
+
+Security applications:
+
+* Buffer overflow analysis
+
+* Memory corruption research
+
+* Pointer analysis
+
+* Stack inspection
+
+* Heap analysis
+
+### 6\. Images and graphics
+
+![Notes for A1.2.2 How Binary is Used to Store Data - IB | RevisionDojo](https://images.openai.com/static-rsc-4/NLSAMXcyfysrpq-ku1qFrQA--1WT3yuzWhrgdcVCurSHna0m8WEiCZT6oUyQRMbIsq2ZclEHATtRAdKsXOJDJYcZPcKt9QCJ3potJHxjM9kXzdjcW6YcWx1BSzg6WsD1xM8gmRB4CdwJwusDISvoXwDOGfvIQVKaaZl-2tWh83lX_aPoSGCmtNeaDSOe3S96?purpose=fullsize)
+
+![Basic Introduction To Graphic File Formats | PPTX](https://images.openai.com/static-rsc-4/cOuuSlvhCidx5bLv_NZqJ1jvJpZziWEQvIygmyewARR3HDGYGmOZ19CxAcn-QzRTIyuL5LjYbEri7TD71kj8VCqLstAT2DFp_oEpkW3MIOrZskuiwZic2QN2H96lNLIRXrGwqDFITlojiRUtlRTCr63FdmFiABdIOG3s5trB0JiVnQRHuxfAuO9CBcwK4x8n?purpose=fullsize)
+
+![PPT - Digital Image Fundamentals: from Light Perception to Pixel Encoding PowerPoint Presentation - ID:6522041](https://images.openai.com/static-rsc-4/RveOPestNQ6Ik-_8d7p_alfNnpb4YGYdzaXqm0n0pK0-n7uVAXJH-ZCcJFEKngO1ezu7n5pGBtQkDGs7LXIRKKrCB8ueE0FPcfAgOOQ0UOP-6fy6nHN9r5PkmFDSZ6eoDWa2yh9IdJEOIG8xycYlgTZ1Z1k2qzgY1SkLJ3epRoa8WUpDP7Aodfds32MeYM5_?purpose=fullsize)
+
+![Image Processing in C: Reading, writing and rotating Bitmap (BMP) images | by Subrata Sarkar | Mar, 2026 | Medium](https://images.openai.com/static-rsc-4/3MBFA-K1KkBLBZd2xFgpcviEFLVG5heXcdykYMhL8cRgQ5SwTJMk2llUk4V77miI4FxbXAQA-6IEo7yD_CzRsYl8YZYf3zHFMTQ48M58JK8Piii88kFgFByHHfAIw9hRw570bzoY-2zdg2gpY0R6S3MfcIBYn839JaONOJxIHJ0Fp1dVyIgFyHkswTEIS4qw?purpose=fullsize)
+
+![2. overview of data communication   part 1 | PDF](https://images.openai.com/static-rsc-4/4quNXNzVw_Zt94T2wEkV22WsvUzVKJBiigrMo663yYOKC42wfuTZGV0WH74nSs8YFw0pbO29uSwWHss-pYQXD4IVYPNu-1zT_Ci28vhsz4TDj90YQAv3wWdleF0bh28Vp95wpHEEZMIyTiwud9YkT1k9GD3t71n7WgRWkz_Cqw40pZ9HHDjUYkDml-9oVPFo?purpose=fullsize)
+
+![PPT - Chapter 3 Data Representation ( การแทนข้อมูล ) PowerPoint Presentation - ID:6024632](https://images.openai.com/static-rsc-4/c25MAKSBmSkPiBhqNiXADbjN0XfBVaP9UwBmx_9JH1OKLHlbHufQIMMXgnl6qbdQ92WPMsZtcWuIgGCEDd9vdGs2ILpMRiev9tr4AEdaJx2hJiHKBmg4lAMRwIijhyV1UDfk4ASAA0loz2ivP7Oc2wkaXxnrhre2V0YkBlRoN4R13iArC24BV8VR6-eJUuM7?purpose=fullsize)
+
+![Basic Image Data Analysis Using Python - Part 1](https://images.openai.com/static-rsc-4/klL0kIloW2yWA4foHGyEQAFO3Ro52LR6ryMhLEIsgbOi-2qTss0n8Mchwb48oAX2SdaTMBfqe8RmlYaEkZIrrQJRnT-RwFV1VsoR8exyMRH9F83GelE5PZj5CsqUliq5vx-X4Bn8AdXOjPSXSoMJQYWmQ0nqUDE8p94iC1t7dmXN9hewwrO38O5UEyjGgl0B?purpose=fullsize)
+
+!["해상도·화소 따지는데"…스마트폰 화면색은 어떻게 만들어지나](https://images.openai.com/static-rsc-4/II6N2gcUeEUdPrVEsXSgT8_rZS6RzzTD5CKHzOGLRu4PAxFRoAKxI8ibMw0mw4aFU7WVqiRcWChYBtEZljHLTtN28Bqz1Z5S3hy-0aeDMElWcfG8_02M_sc5228W4zpjyExY1HppEDKPEYKq7AEsqPe8_tLE7mtBPEdyDbxErQGodCw6zk8w5ACRFZc4dk7O?purpose=fullsize)
+
+Images can be represented using binary.
+
+Examples:
+
+* Pixels
+
+* RGB colours
+
+* RGBA colours
+
+* Resolution
+
+* Bitmap images
+
+* Image metadata
+
+* PNG, JPEG and GIF file data
+
+For example, an RGB pixel can have:
+
+```text
+Red:   255 = 11111111
+Green: 0   = 00000000
+Blue:  0   = 00000000
+```
+
+This represents pure red.
+
+### 7\. Audio and sound
+
+![【ITパスポート攻略/テクノロジ系①】　　0と1の世界。基礎理論とアルゴリズム｜Smart Life Lab](https://images.openai.com/static-rsc-4/OkJVzAf9s8I0iIUW1vuVlaqGDJzUMJgpjAPy31qGZ1Vf65qCGpsLRF8_6DSw59SOKlkOYVUY-8ZksaBCMe_g-RD_EBy-OW7s20r9PZll3yJvj7Aj0xwp1BLVLuP6G90fpSJg0TUA9eXYRKZf0qYxV9SfTenRZl5j9cWmVI-3kbVLxnPacsufeVFCL3P9WVsq?purpose=fullsize)
+
+Digital sound is represented using binary data.
+
+Examples:
+
+* Audio samples
+
+* Sampling rate
+
+* Bit depth
+
+* PCM
+
+* WAV
+
+* MP3
+
+* AAC
+
+Security applications include audio file analysis and metadata inspection.
+
+### 8\. Video and animation
+
+![Lecture Digital Video With a Primer on CODECs](https://images.openai.com/static-rsc-4/uKjXKZASVX54jlxQpVx6kmchpN6m_FgYyAkrKsWkIe84CoAEo50H-gNmEPsmvucj5ZzI_1SoxMDej9lEHUgW91ClQsfr5yC-2IfO8NIGlZUyhpl-sDg-_YgH8hy1UjCIjUUb-lYc_xXMWvQmkE4GjRapu7D0tAf0CI1fjhH9PJ3qRG3FvIYo-Z2w3FC0zFQd?purpose=fullsize)
+
+Video is composed of digitally encoded frames and audio data.
+
+Examples:
+
+* Video frames
+
+* Frame rates
+
+* Pixels
+
+* Compression
+
+* Video codecs
+
+* MP4
+
+* AVI
+
+* MKV
+
+### 9\. Networking and communication
+
+![Our Hosting Structure and Security Page](https://images.openai.com/static-rsc-4/5ZNrWQDdK4ZudQtbQ_V5M9wxNJVnyW0iRoqDIF9wdwlc9s10e1KmphN9qmdQOdmtwFi7JJV5ic5vxG1leHGNAodItm6DZTzey6P6j8N2zJv_lI8adbbHDFQa_X0e4P0sYx1LIl-eQaHTslbZoYJUmpIo6x81gPufNfLVgKE4_5dI1vrVZCwV4ShBfAyGF-dP?purpose=fullsize)
+
+Network information is transmitted as binary data.
+
+| Network concept  | Binary relevance          |
+| ---------------- | ------------------------- |
+| IP addresses     | 32-bit IPv4, 128-bit IPv6 |
+| MAC addresses    | 48-bit addresses          |
+| TCP flags        | Individual control bits   |
+| UDP headers      | Binary fields             |
+| Ports            | 16-bit unsigned values    |
+| Subnet masks     | Binary network masks      |
+| Packets          | Encoded binary data       |
+| Protocol headers | Structured binary fields  |
+
+Security applications:
+
+* Packet analysis
+
+* Protocol reverse engineering
+
+* Firewall rule analysis
+
+* Network troubleshooting
+
+* Wireshark investigation
+
+### 10\. Files and executable formats
+
+Files are ultimately stored as bytes.
+
+Examples:
+
+* APK
+
+* ELF
+
+* PE
+
+* DEX
+
+* JAR
+
+* ZIP
+
+* PDF
+
+* PNG
+
+* SO libraries
+
+Security applications:
+
+* Static analysis
+
+* File signature identification
+
+* Reverse engineering
+
+* Malware analysis
+
+* Android application analysis
+
+### 11\. Operating systems and permissions
+
+Binary is used in many operating-system structures.
+
+Examples:
+
+* File permission bits
+
+* Process flags
+
+* Access-control flags
+
+* System calls
+
+* Process identifiers
+
+* Memory protection flags
+
+* Kernel data structures
+
+For example, Linux permissions:
+
+| Permission      | Octal | Binary |
+| --------------- | ----- | ------ |
+| Read            | 4     | 100    |
+| Write           | 2     | 010    |
+| Execute         | 1     | 001    |
+| Read + Write    | 6     | 110    |
+| All permissions | 7     | 111    |
+
+### 12\. Cryptography and security
+
+Binary is fundamental to cryptographic algorithms.
+
+Examples:
+
+* XOR operations
+
+* Bit rotations
+
+* Bit shifting
+
+* Hash functions
+
+* Encryption algorithms
+
+* Digital signatures
+
+* Cryptographic keys
+
+* Random number generation
+
+* Binary encodings
+
+Security applications:
+
+* Cryptographic implementation auditing
+
+* Weak random-number detection
+
+* Hash analysis
+
+* Protocol analysis
+
+* Reverse engineering
+
+### 13\. Database and web technologies
+
+These also rely on binary representations internally.
+
+| Technology    | Binary-related information    |
+| ------------- | ----------------------------- |
+| SQL databases | Numeric and binary data types |
+| HTTP          | Headers and message bytes     |
+| Cookies       | Encoded values                |
+| JSON          | Text encoded as bytes         |
+| XML           | Text encoded as bytes         |
+| TLS           | Binary protocol records       |
+| WebSocket     | Binary frames                 |
+| Base64        | Text encoding of bytes        |
+
+Remember: Base64 is not binary encryption. It is an encoding scheme.
+
+### 14\. Python laboratory: Convert different data types to binary
+
+Here is a small local Python laboratory to explore several categories.
+
+```python
+import struct
+
+# 1. Integer
+number = 12
+print("Integer:", bin(number))
+
+# 2. Character
+letter = "A"
+print("Character:", format(ord(letter), "08b"))
+
+# 3. Text
+message = "ABC"
+print("Text:", message.encode().hex())
+
+# 4. Floating point (IEEE 754)
+number = 12.625
+packed = struct.pack(">f", number)
+print("Float:", format(int.from_bytes(packed, "big"), "032b"))
+
+# 5. RGB colour
+red = (255, 0, 0)
+print("RGB:", [format(value, "08b") for value in red])
+
+# 6. File bytes
+data = b"ABC"
+print("File bytes:", [format(byte, "08b") for byte in data])
+```
+
+### 15\. Your complete learning roadmap
+
+Since your goal is offensive security and bug bounty research, I recommend studying these subjects in this order:
+
+### Binary foundations to security research
+
+* Number systems
+
+    Binary, decimal, octal, hexadecimal.
+
+* Binary mathematics
+
+    Conversion, addition, subtraction, multiplication and division.
+
+* Bits and bytes
+
+    Nibbles, bytes, words, signed and unsigned integers.
+
+* Boolean algebra
+
+    Logic gates, truth tables and Boolean laws.
+
+* Bitwise operations
+
+    AND, OR, XOR, NOT, shifts and masks.
+
+* Data representation
+
+    ASCII, Unicode, floating-point and endianness.
+
+* Computer architecture
+
+    CPU, registers, RAM, stack and heap.
+
+* Assembly and machine code
+
+    x86, x86-64 and ARM.
+
+* Networking
+
+    IP, TCP, UDP, packet structures and protocols.
+
+* File and application analysis
+
+    ELF, PE, APK, DEX and native `.so` files.
+
+* Security research
+
+    Reverse engineering, vulnerability analysis and authorized penetration testing.
+
+One important principle: Binary is not the only foundation of computer science. Algorithms, mathematics, logic, data structures and computational theory are also fundamental. But understanding binary gives you a strong foundation for understanding what happens inside a computer.
+
+My recommendation is to master number systems, bits, bytes and Boolean algebra before moving into machine code and reverse engineering.
