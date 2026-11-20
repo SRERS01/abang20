@@ -1,0 +1,444 @@
+### Complete Binary Manipulation Toolkit for Offensive Security Researchers
+
+If you want to become exceptional at binary vulnerability research, you need more than Python and a hex editor. You need tools that let you inspect, decode, construct, modify, compare, disassemble, debug, fuzz and reverse-engineer binary data.
+
+I'll organize the tools by their actual functions, from beginner to advanced, including Linux, Ubuntu, Termux and Android research tools.
+
+![Install Ghidra on Linux | Flathub](https://images.openai.com/static-rsc-4/IZFLYAaltPjwcqufs89e4uep70yujk5SexXbY8Pq3Jzi7b2iavQFk5pOxihH3q40lOnsy3oOxk8CE4Q75DPacoCAIaEgZj4xW5Oesa6BnLSgnPnYWABKnXkDfFtvebRm3oKcclUT4n9q-fVdsAoXfVWXUSKz6TpfUCUtfu5gyDcSKCus9hjgsAzPEsXgE7b2?purpose=fullsize)
+
+### 1\. Hex editors and binary editors
+
+Essential
+
+These tools let you inspect and modify individual bytes and hexadecimal values.
+
+![ImHex: un editor hexadecimal con enormes posibilidades para Mac, Windows y Linux](https://images.openai.com/static-rsc-4/kchy_RaoFBJFV5p0oWXn2rtCt1ykl_y8C_9i478BAd8XMPsYgSRE3lYo0zfUG6aKFUmNpcVUoScDjCo2XkEOqYScEkAJoErUuvP00ibv5OVNxvBlh7tkSIZA1nU1-GLtvucUaajXKGJHBphWOAlfnX8iW-XE0DRToaijX5AusxBV5RcxZfxgnWd1lCvtqkRj?purpose=fullsize)
+
+1\. ImHex
+
+* Inspect binary files.
+
+* Modify individual bytes.
+
+* Create binary patterns.
+
+* Decode structured data.
+
+* Analyze file formats.
+
+Best for: advanced binary inspection.
+
+[Official website](https://imhex.werwolv.net/?utm_source=chatgpt.com)
+
+![010 Editor - Pro Text/Hex Editor | Edit 300+ Formats | Fast & Powerful | Reverse Engineering](https://images.openai.com/static-rsc-4/N8FyV1dGj5awkcLR7rCygItRwJe4KN_k5RuEEe1gZezX2-BVzVy177zjSLG-QyCT9E0_B0F3iGk_fcn6-Sp-FK3Kt8nEV7nXYgBwK0HjWyj0mBWXpfsUJ50ZLlQ7vob5bjKOdaP_hlFSOd4-NhTQOSWwi2tyOADjq7QozEOQ9eWb2zYFQ7O_0L9KgtTkKwH5?purpose=fullsize)
+
+2\. 010 Editor
+
+* Hexadecimal editing.
+
+* Binary templates.
+
+* Structured file analysis.
+
+* Binary comparison.
+
+[Official website](https://www.sweetscape.com/010editor/?utm_source=chatgpt.com)
+
+![Hex editor workshop free - fuelgawer](https://images.openai.com/static-rsc-4/URSEZgXxjaIoEJtVyFEvNzsg32h-a_vH23K3ccenD35SVHRb6Hc20-rOW4RBGFP4nZVVT_qUZ3rN8y9FVnRyuq7unQUJSWIi7e7gxQWu4Is04ameGrg-zwIiyCI9FzDaeFuc70He-lK7MWdv8DEduUtz3SfMn6o4ZahkESASdZDdCEgK0mRW9t9vSP5ZG2BO?purpose=fullsize)
+
+3\. HxD
+
+* View and edit bytes.
+
+* Search hexadecimal patterns.
+
+* Compare binary files.
+
+[Official website](https://mh-nexus.de/en/hxd/?utm_source=chatgpt.com)
+
+![alex-free.github.io | Alex](https://images.openai.com/static-rsc-4/gsb1CN8Pgwksa483sYPtTlQdgusPUjoHnBEfVvgZyl6cItFloXv1zx8myTwFyJpIbezZCgEtjAtNKQ3uNoubf6c-ct7OejDlaLJ2xNHUJAZh973KWvdLMJqOoRSdOED8uEpqo8tuVIgDQ4kvlVRxnrIec_sjoNj4VMAb-lERkwztau4GnQDTJKgg28kVe449?purpose=fullsize)
+
+4\. Bless Hex Editor
+
+* Linux hexadecimal editing.
+
+* Inspect binary data.
+
+* Modify byte sequences.
+
+![Best programs and websites to view and edit hex code](https://images.openai.com/static-rsc-4/0OxOe_ifByutJQjINUQUx9FjM2buzvDuhTJnBG83yxD7dkyKvzIv2hLVf4AmUDZzhmKC_bKQb2fTBpxIu89tiidwmFg3sY1w7CA__Cwjy9izwFfj1UD1wdjSFZIXaytfS3F4ZWWkCir07TIdmaNoQkvRduvCf7beg8nSSZ6JihpiFfYO1GGWmHP2U9x9p98-?purpose=fullsize)
+
+5\. wxHexEditor
+
+* Large-file editing.
+
+* Disk and memory inspection.
+
+* Binary search and modification.
+
+### 2\. Command-line binary manipulation tools
+
+Essential for Ubuntu and Termux
+
+These are especially useful because you can automate binary analysis through scripts.
+
+| Tool    | Main function                     | Important commands |
+| ------- | --------------------------------- | ------------------ |
+| xxd     | Hex dump and conversion           | xxd, xxd -r        |
+| hexdump | Display bytes                     | hexdump -C         |
+| od      | Display data in different formats | od -An -tx1        |
+| od      | Inspect binary values             | od -t x4           |
+| strings | Extract readable strings          | strings -a         |
+| file    | Identify file types               | file sample.bin    |
+| cmp     | Compare binary files              | cmp file1 file2    |
+| diff    | Compare file contents             | diff               |
+| dd      | Copy and transform raw data       | dd                 |
+| bvi     | Edit binary files in terminal     | bvi                |
+| radiff2 | Compare binary files              | radiff2            |
+| bgrep   | Search binary patterns            | bgrep              |
+
+Example:
+
+```bash
+# Create a binary file
+printf '\x41\x42\x43\x44' > sample.bin
+
+# Inspect its hexadecimal representation
+xxd sample.bin
+
+# Inspect its byte values
+hexdump -C sample.bin
+
+# Display its strings
+strings -a sample.bin
+
+# Identify its file type
+file sample.bin
+```
+
+Expected hexadecimal bytes:
+
+```text
+41 42 43 44
+```
+
+These represent ASCII characters `ABCD`.
+
+### 3\. Python binary manipulation libraries
+
+Essential for automation
+
+Python is one of your most important tools because it allows you to write your own binary-analysis utilities.
+
+| Library       | Purpose                                |
+| ------------- | -------------------------------------- |
+| struct        | Pack and unpack binary structures      |
+| binascii      | Binary-to-hex and related conversions  |
+| bitarray      | Manipulate individual bits             |
+| bitstring     | Read and construct bit-level data      |
+| construct     | Define and parse binary structures     |
+| ctypes        | Work with C-compatible data structures |
+| mmap          | Map files into memory                  |
+| array         | Store typed numeric values             |
+| int and bytes | Built-in binary conversions            |
+| socket        | Network byte transmission              |
+| Scapy         | Construct and dissect packets          |
+| dpkt          | Parse network packet structures        |
+| Atheris       | Python coverage-guided fuzzing         |
+
+Example: Pack and unpack binary values.
+
+```python
+import struct
+
+number = 1024
+
+packed = struct.pack(">I", number)
+
+print("Bytes:", packed)
+print("Hex:", packed.hex())
+print("Binary:", "".join(
+    format(byte, "08b") for byte in packed
+))
+
+unpacked = struct.unpack(">I", packed)[0]
+
+print("Recovered:", unpacked)
+```
+
+This is particularly useful when building protocol parsers and examining binary file structures.
+
+### 4\. Disassemblers and decompilers
+
+Essential for reverse engineering
+
+These tools translate machine instructions into assembly or higher-level representations that humans can understand.
+
+| Tool         | Main function                           | Platform              |
+| ------------ | --------------------------------------- | --------------------- |
+| Ghidra       | Disassembly, decompilation, scripting   | Linux, Windows, macOS |
+| IDA Pro      | Advanced disassembly and decompilation  | Linux, Windows, macOS |
+| IDA Free     | Free-tier binary analysis               | Linux, Windows, macOS |
+| Binary Ninja | Interactive reverse engineering         | Linux, Windows, macOS |
+| radare2      | Command-line binary analysis            | Linux, Windows, macOS |
+| Rizin        | Binary analysis framework               | Linux, Windows, macOS |
+| Cutter       | Graphical reverse-engineering interface | Linux, Windows, macOS |
+| RetDec       | Decompilation                           | Multiple platforms    |
+| Hopper       | Disassembly and decompilation           | macOS, Linux          |
+
+My recommendations: Start with Ghidra and radare2. Learn IDA and Binary Ninja later if your work requires them.
+
+Useful links:
+
+* [Ghidra](https://github.com/NationalSecurityAgency/ghidra?utm_source=chatgpt.com)
+
+* [radare2](https://github.com/radareorg/radare2?utm_source=chatgpt.com)
+
+* [Rizin](https://rizin.re/?utm_source=chatgpt.com)
+
+* [Cutter](https://cutter.re/?utm_source=chatgpt.com)
+
+* [Binary Ninja](https://binary.ninja/?utm_source=chatgpt.com)
+
+### 5\. Binary debugging and memory inspection
+
+These tools let you examine what a program does while it executes.
+
+| Tool                       | Main function                                     |
+| -------------------------- | ------------------------------------------------- |
+| GDB                        | Debug native programs                             |
+| LLDB                       | Debug native applications                         |
+| WinDbg                     | Windows kernel and application debugging          |
+| x64dbg                     | Windows executable debugging                      |
+| pwndbg                     | GDB enhancement for binary research               |
+| GEF                        | GDB enhancement framework                         |
+| PEDA                       | GDB enhancement for exploit-development education |
+| rr                         | Record and replay program execution               |
+| Valgrind                   | Memory error detection                            |
+| AddressSanitizer           | Detect memory-safety errors                       |
+| UndefinedBehaviorSanitizer | Detect undefined behaviour                        |
+| strace                     | Trace Linux system calls                          |
+| ltrace                     | Trace library calls                               |
+| Frida                      | Dynamic instrumentation                           |
+| DynamoRIO                  | Dynamic binary instrumentation                    |
+| Intel Pin                  | Dynamic program instrumentation                   |
+
+These are important for diagnosing buffer overflows, invalid memory access, use-after-free and other memory-safety defects.
+
+### 6\. Binary fuzzing tools
+
+Essential for vulnerability discovery
+
+Fuzzers generate or mutate inputs to discover unexpected program behaviour.
+
+| Tool               | Main purpose                          |
+| ------------------ | ------------------------------------- |
+| AFL++              | Coverage-guided fuzzing               |
+| libFuzzer          | In-process coverage-guided fuzzing    |
+| Honggfuzz          | General-purpose fuzzing               |
+| Atheris            | Python fuzzing                        |
+| boofuzz            | Network-protocol fuzzing              |
+| Syzkaller          | Linux kernel syscall fuzzing          |
+| Peach Fuzzer       | Model-based protocol and file fuzzing |
+| Radamsa            | Input mutation                        |
+| zzuf               | Transparent input fuzzing             |
+| American Fuzzy Lop | Original AFL fuzzing                  |
+| Jazzer             | JVM fuzzing                           |
+| Jazzer.js          | JavaScript fuzzing                    |
+| Hypothesis         | Property-based testing                |
+| QuickCheck         | Property-based testing                |
+
+Official resources:
+
+* [AFL++](https://aflplus.plus/?utm_source=chatgpt.com)
+
+* [libFuzzer](https://llvm.org/docs/LibFuzzer.html?utm_source=chatgpt.com)
+
+* [Atheris](https://github.com/google/atheris?utm_source=chatgpt.com)
+
+* [boofuzz](https://github.com/boofuzz/boofuzz?utm_source=chatgpt.com)
+
+* [Syzkaller](https://github.com/google/syzkaller?utm_source=chatgpt.com)
+
+### 7\. Binary protocol manipulation and packet analysis
+
+These tools help inspect, decode and construct protocol messages.
+
+| Tool          | Main function                                    |
+| ------------- | ------------------------------------------------ |
+| Scapy         | Construct and dissect packets                    |
+| Wireshark     | Graphical packet analysis                        |
+| TShark        | Command-line packet analysis                     |
+| tcpdump       | Capture and inspect packets                      |
+| dpkt          | Python packet parsing                            |
+| PyShark       | Python interface to TShark                       |
+| Kaitai Struct | Describe and parse binary formats                |
+| Construct     | Python declarative binary parser                 |
+| Netcat        | Network byte-stream communication                |
+| socat         | Data-stream relay and conversion                 |
+| mitmproxy     | Inspect and modify supported application traffic |
+
+Useful links:
+
+* [Scapy](https://scapy.net/?utm_source=chatgpt.com)
+
+* [Wireshark](https://www.wireshark.org/?utm_source=chatgpt.com)
+
+* [Kaitai Struct](https://kaitai.io/?utm_source=chatgpt.com)
+
+* [Construct](https://construct.readthedocs.io/?utm_source=chatgpt.com)
+
+* [mitmproxy](https://mitmproxy.org/?utm_source=chatgpt.com)
+
+Important: HTTP/1.1 is primarily text-based, whereas HTTP/2 uses binary frames. Tools must be selected according to the protocol layer and encoding you are investigating.
+
+### 8\. Binary file and executable analysis
+
+These tools help identify file formats, inspect structures, extract components and examine executable metadata.
+
+| Tool                 | Main function                                   |
+| -------------------- | ----------------------------------------------- |
+| readelf              | Inspect ELF structures                          |
+| objdump              | Disassemble and inspect object files            |
+| nm                   | Display symbols                                 |
+| ar                   | Inspect and manage archives                     |
+| patchelf             | Modify ELF metadata and interpreter information |
+| checksec             | Examine executable security protections         |
+| binwalk              | Identify and extract embedded file structures   |
+| foremost             | File carving                                    |
+| bulk_extractor       | Extract forensic artefacts                      |
+| exiftool             | Inspect file metadata                           |
+| Detect It Easy (DIE) | Identify executable formats and packers         |
+| YARA                 | Match binary patterns                           |
+| FLOSS                | Extract obfuscated strings                      |
+| capa                 | Identify executable capabilities                |
+| Kaitai Struct        | Parse custom binary formats                     |
+| GNU poke             | Inspect and edit structured binary data         |
+
+For firmware work, add:
+
+* `unblob`
+
+* `EMBA`
+
+* `Firmware Analysis and Comparison Tool (FACT)`
+
+* `unsquashfs`
+
+* `ubi_reader`
+
+* `jefferson`
+
+### 9\. Emulation and symbolic execution
+
+These tools are especially useful when a binary is compiled for a different processor or operating system.
+
+| Tool           | Main function                                       |
+| -------------- | --------------------------------------------------- |
+| QEMU           | CPU and system emulation                            |
+| Unicorn Engine | CPU emulation framework                             |
+| Unicorn        | Execute CPU instructions in an emulated environment |
+| angr           | Binary analysis and symbolic execution              |
+| Triton         | Dynamic binary analysis and symbolic execution      |
+| Manticore      | Symbolic execution                                  |
+| Qiling         | Binary emulation and instrumentation                |
+| Z3             | Constraint solving                                  |
+| S2E            | Selective symbolic execution                        |
+| DynamoRIO      | Dynamic instrumentation                             |
+
+Links:
+
+* [QEMU](https://www.qemu.org/?utm_source=chatgpt.com)
+
+* [Unicorn](https://www.unicorn-engine.org/?utm_source=chatgpt.com)
+
+* [angr](https://angr.io/?utm_source=chatgpt.com)
+
+* [Qiling](https://qiling.io/?utm_source=chatgpt.com)
+
+* [Z3](https://github.com/Z3Prover/z3?utm_source=chatgpt.com)
+
+### 10\. Android binary manipulation and reverse engineering
+
+Important for Android security research
+
+Since Android applications contain DEX bytecode, resources, manifests and sometimes native ELF libraries, these tools are especially valuable.
+
+| Tool           | Main function                                  |
+| -------------- | ---------------------------------------------- |
+| APKTool        | Decode and rebuild APK resources and Smali     |
+| JADX           | Decompile DEX into Java-like code              |
+| Ghidra         | Analyze native .so libraries                   |
+| Frida          | Dynamic instrumentation                        |
+| Objection      | Mobile runtime exploration                     |
+| Androguard     | Python-based Android binary analysis           |
+| AAPT2          | Inspect Android application resources          |
+| readelf        | Inspect native ELF libraries                   |
+| objdump        | Disassemble native libraries                   |
+| smali/baksmali | Assemble and disassemble DEX bytecode          |
+| MobSF          | Automated mobile application security analysis |
+| Apktool M      | Android APK inspection and editing             |
+
+Official resources:
+
+* [APKTool](https://apktool.org/?utm_source=chatgpt.com)
+
+* [JADX](https://github.com/skylot/jadx?utm_source=chatgpt.com)
+
+* [Frida](https://frida.re/?utm_source=chatgpt.com)
+
+* [Androguard](https://androguard.readthedocs.io/?utm_source=chatgpt.com)
+
+* [MobSF](https://github.com/MobSF/Mobile-Security-Framework-MobSF?utm_source=chatgpt.com)
+
+### 11\. Cryptographic and binary encoding tools
+
+| Tool              | Main function                                     |
+| ----------------- | ------------------------------------------------- |
+| OpenSSL           | Cryptographic operations and certificate analysis |
+| CyberChef         | Encoding, decoding and data transformations       |
+| hashcat           | Password-hash auditing                            |
+| John the Ripper   | Password-hash auditing                            |
+| xxd               | Hexadecimal conversion                            |
+| binascii          | Python binary encoding                            |
+| PyCryptodome      | Cryptographic programming                         |
+| cryptography      | Python cryptographic library                      |
+| ASN.1 tools       | Inspect ASN.1 structures                          |
+| openssl asn1parse | Inspect ASN.1 encoded data                        |
+
+![Walk through 2024-01-06 decoding challenge](https://images.openai.com/static-rsc-4/qmo6L-DPYUjK9epOiP9TvXAjRpCeketAem9mUC_AlLPMwf6UjG41z-RyVd85K122j0ncx9R-eWT0SE77RS1d1CW14d01wUOr0kQUgyb-BFlmh1aRRXMMe3OQ8brXLbwf-qNRhGOG6cNiYiZpUHC0X-2jl3vg-ia5c-kTTT5hhYFj6U0ifYWRzvLUN4f0e11v?purpose=fullsize)
+
+CyberChef
+
+One of my strongest recommendations for learning binary transformations. It can perform Base64, hexadecimal, XOR, compression, hashing and many other data operations.
+
+[Open CyberChef](https://gchq.github.io/CyberChef/?utm_source=chatgpt.com)
+
+### 12\. Hardware, firmware and embedded binary tools
+
+If you eventually research routers, IoT devices, embedded systems and firmware, these tools become important.
+
+| Tool         | Main function                        |
+| ------------ | ------------------------------------ |
+| flashrom     | Read and write supported flash chips |
+| OpenOCD      | Debug and program embedded devices   |
+| J-Link       | Hardware debugging                   |
+| Bus Pirate   | Hardware communication testing       |
+| JTAGulator   | Identify JTAG and UART connections   |
+| Saleae Logic | Digital signal analysis              |
+| sigrok       | Logic-analyser software ecosystem    |
+| GNU Radio    | Software-defined radio processing    |
+| URH          | Universal Radio Hacker               |
+| Proxmark3    | RFID and NFC research                |
+| RTL-SDR      | Software-defined radio reception     |
+| HackRF One   | Software-defined radio research      |
+
+Only connect these tools to hardware you own or are explicitly authorized to test.
+
+### 13\. Memory and digital-forensics tools
+
+| Tool           | Main function                        |
+| -------------- | ------------------------------------ |
+| Volatility 3   | Memory-dump analysis                 |
+| MemProcFS      | Memory analysis                      |
+| The Sleuth Kit | File-system forensics
