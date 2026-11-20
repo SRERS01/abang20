@@ -1,0 +1,1656 @@
+### Complete Binary Mastery Course for Offensive Security Researchers
+
+This course is designed to take you from understanding your first binary number to analyzing network packets, reverse-engineering executable files, understanding memory, and discovering binary-handling vulnerabilities in authorized security assessments.
+
+The goal is not simply to learn how to convert decimal numbers into binary. The goal is to understand how computers represent information, how software processes that information, and how incorrect processing can create security vulnerabilities.
+
+![Step-by-Step Guide to Conducting a Digital Forensics Investigation](https://images.openai.com/static-rsc-4/BCX9Q130Ve4kuHNpPh318ECqjrsH0XnGAh1PIyy-sRCgCjkLHDSTlPdq-h1dyMP7MoxOhChoXclw43fu6sebENaLL2A7O8KGBMIyb9Jayz0Zu1lH8yQfV8i5nektnrSfp0jlIveCVd8GuVDmMOm0agiUCBf-SqvGkcENXyqCxe_S9fyGxOWNCB2vrNhkE_jp?purpose=fullsize)
+
+### Course structure
+
+### 30 modules
+
+### 180+
+
+Core topics and subtopics
+
+### 50+
+
+Practical laboratory exercises
+
+### Python
+
+Programming and binary analysis
+
+### Advanced
+
+Reverse engineering and vulnerability research
+
+Learning progression
+
+Binary foundations → Data representation → Computer architecture → Networking → Operating systems → Reverse engineering → Vulnerability research.
+
+### PART I — BINARY FOUNDATIONS
+
+### Module 1: Introduction to binary computing
+
+Objective: Understand why computers use binary.
+
+Topics:
+
+* What is computer science?
+
+* What is digital computing?
+
+* What is binary?
+
+* Why computers use 0 and 1.
+
+* Electrical states and logic levels.
+
+* Digital signals versus analogue signals.
+
+* Bits and binary digits.
+
+* Binary representation of information.
+
+* How software and hardware interact.
+
+* Binary's role in cybersecurity.
+
+Practical exercise:
+
+```python
+for number in range(21):
+    print(number, "=", bin(number))
+```
+
+Security application: Understanding how information is represented before it is processed by a program.
+
+### Module 2: Number systems
+
+Objective: Master all major number systems.
+
+Topics:
+
+* Decimal (base 10).
+
+* Binary (base 2).
+
+* Octal (base 8).
+
+* Hexadecimal (base 16).
+
+* Base conversion.
+
+* Decimal to binary.
+
+* Binary to decimal.
+
+* Decimal to hexadecimal.
+
+* Hexadecimal to binary.
+
+* Octal to binary.
+
+* Binary to octal.
+
+* Binary to hexadecimal.
+
+* Converting negative numbers.
+
+* Converting large integers.
+
+* Fractional number conversion.
+
+Practical Python:
+
+```python
+number = 255
+
+print("Binary:", bin(number))
+print("Octal:", oct(number))
+print("Hexadecimal:", hex(number))
+```
+
+Security application: Reading memory dumps, network packets, executable files and hexadecimal data.
+
+### Module 3: Bits, bytes and data units
+
+Topics:
+
+* Bit.
+
+* Nibble.
+
+* Byte.
+
+* Word.
+
+* Double word.
+
+* Quad word.
+
+* Kilobit and kilobyte.
+
+* Megabit and megabyte.
+
+* Gigabit and gigabyte.
+
+* Terabit and terabyte.
+
+* Signed and unsigned data.
+
+* Fixed-width integers.
+
+* Integer ranges.
+
+* Bit positions.
+
+* Most significant bit (MSB).
+
+* Least significant bit (LSB).
+
+Example:
+
+| Data unit   | Size                   |
+| ----------- | ---------------------- |
+| Bit         | 1 bit                  |
+| Nibble      | 4 bits                 |
+| Byte        | 8 bits                 |
+| Word        | Architecture-dependent |
+| 32-bit word | 4 bytes                |
+| 64-bit word | 8 bytes                |
+
+Security application: Understanding memory sizes, buffer lengths and integer boundaries.
+
+### Module 4: Binary arithmetic
+
+Topics:
+
+* Binary addition.
+
+* Binary subtraction.
+
+* Binary multiplication.
+
+* Binary division.
+
+* Binary carrying.
+
+* Binary borrowing.
+
+* Overflow.
+
+* Underflow.
+
+* Two's complement.
+
+* One's complement.
+
+* Signed arithmetic.
+
+* Unsigned arithmetic.
+
+* Integer boundaries.
+
+* Arithmetic shifts.
+
+* Fixed-width arithmetic.
+
+Python laboratory:
+
+```python
+a = 0b1100
+b = 0b0011
+
+print("Addition:", bin(a + b))
+print("Subtraction:", bin(a - b))
+print("Multiplication:", bin(a * b))
+```
+
+Security application: Integer overflow, truncation, signedness errors and incorrect size calculations.
+
+### Module 5: Negative binary numbers
+
+Topics:
+
+* Negative integers.
+
+* Sign-and-magnitude representation.
+
+* One's complement.
+
+* Two's complement.
+
+* Signed integer representation.
+
+* Sign extension.
+
+* Arithmetic overflow.
+
+* Integer underflow.
+
+* Fixed-width integer limits.
+
+* Python's arbitrary-precision integers.
+
+Example:
+
+```python
+number = -12
+
+# 8-bit two's complement
+binary = format(number & 0xFF, "08b")
+
+print(binary)
+```
+
+Output:
+
+```text
+11110100
+```
+
+Security application: Understanding signedness bugs in C, C++, native Android libraries and protocol parsers.
+
+### Module 6: Binary fractions and floating-point numbers
+
+Topics:
+
+* Binary fractions.
+
+* Fractional binary conversion.
+
+* Floating-point arithmetic.
+
+* IEEE 754.
+
+* Single precision (32-bit).
+
+* Double precision (64-bit).
+
+* Sign bit.
+
+* Exponent.
+
+* Mantissa/significand.
+
+* Floating-point rounding.
+
+* Precision loss.
+
+* NaN.
+
+* Positive and negative infinity.
+
+* Positive and negative zero.
+
+* Floating-point comparison errors.
+
+Python laboratory:
+
+```python
+import struct
+
+number = -12.625
+
+packed = struct.pack(">d", number)
+binary = format(int.from_bytes(packed, "big"), "064b")
+
+print("64-bit representation:", binary)
+print("Sign:", binary[0])
+print("Exponent:", binary[1:12])
+print("Fraction:", binary[12:])
+```
+
+Security application: Numeric validation, precision errors, unexpected comparison results and resource limits.
+
+### PART II — BOOLEAN ALGEBRA AND BITWISE OPERATIONS
+
+### Module 7: Boolean algebra
+
+Topics:
+
+* Boolean variables.
+
+* True and false.
+
+* AND.
+
+* OR.
+
+* NOT.
+
+* XOR.
+
+* NAND.
+
+* NOR.
+
+* XNOR.
+
+* Truth tables.
+
+* Boolean expressions.
+
+* Boolean simplification.
+
+* Boolean equivalence.
+
+* Boolean functions.
+
+### Module 8: Boolean laws
+
+Study these laws individually:
+
+* Identity law.
+
+* Dominance law.
+
+* Idempotent law.
+
+* Complement law.
+
+* Double-negation law.
+
+* Commutative law.
+
+* Associative law.
+
+* Distributive law.
+
+* Absorption law.
+
+* De Morgan's laws.
+
+* Involution law.
+
+* Excluded middle law.
+
+* Non-contradiction law.
+
+* Principle of duality.
+
+* Consensus theorem.
+
+* Redundancy law.
+
+* Complement uniqueness.
+
+* Shannon expansion.
+
+* Functional completeness.
+
+Security application: Auditing conditional logic, authorization decisions, access-control checks and security filters.
+
+### Module 9: Logic gates and digital circuits
+
+![What Is a Logic Gate? Types, Truth Tables, Symbols and Applications - Aetrix](https://images.openai.com/static-rsc-4/71-IxlTQ1vjkRBpOb7GaM8yMgGtECn3TQe5ffSisvlJVkKehlMmt-WxwNHiVnIt6LTSEPEg-V1TqXwpdIHqWHROg7TMUWYyl3DjhDKUpB8UzvMN_h6PWaNu4aPZOQt5yPu5U1Ue9UE1cLr_-v9wrWkNuGVKzHGKYOSiIELsSp1rZo8TD7ZgUZrST2FzM4IuZ?purpose=fullsize)
+
+Topics:
+
+* AND gate.
+
+* OR gate.
+
+* NOT gate.
+
+* XOR gate.
+
+* NAND gate.
+
+* NOR gate.
+
+* XNOR gate.
+
+* Half adder.
+
+* Full adder.
+
+* Multiplexer.
+
+* Demultiplexer.
+
+* Flip-flops.
+
+* Registers.
+
+* Combinational circuits.
+
+* Sequential circuits.
+
+Security application: Understanding the hardware logic underlying digital systems and processors.
+
+### Module 10: Python bitwise operations
+
+Topics:
+
+* Bitwise AND `&`.
+
+* Bitwise OR `|`.
+
+* Bitwise XOR `^`.
+
+* Bitwise NOT `~`.
+
+* Left shift `<<`.
+
+* Right shift `>>`.
+
+* Bit masks.
+
+* Bit extraction.
+
+* Bit setting.
+
+* Bit clearing.
+
+* Bit toggling.
+
+* Permission masks.
+
+* Binary flags.
+
+* Shift operations.
+
+* Bitwise assignment operators.
+
+Python laboratory:
+
+```python
+READ = 0b0001
+WRITE = 0b0010
+EXECUTE = 0b0100
+ADMIN = 0b1000
+
+permissions = READ | WRITE
+
+print("Permissions:", bin(permissions))
+print("Can read:", bool(permissions & READ))
+print("Can write:", bool(permissions & WRITE))
+print("Can execute:", bool(permissions & EXECUTE))
+```
+
+Security application: Permission analysis, protocol flags, access-control masks and binary data inspection.
+
+### PART III — DATA REPRESENTATION AND ENCODING
+
+### Module 11: Character encoding
+
+Topics:
+
+* Character representation.
+
+* ASCII.
+
+* Extended ASCII.
+
+* Unicode.
+
+* UTF-8.
+
+* UTF-16.
+
+* UTF-32.
+
+* Code points.
+
+* Byte order marks.
+
+* Encoding and decoding.
+
+* Invalid byte sequences.
+
+* Character normalization.
+
+* Unicode confusables.
+
+* Null bytes.
+
+* Encoding-related validation errors.
+
+Python laboratory:
+
+```python
+text = "Hello"
+
+encoded = text.encode("utf-8")
+
+print("Bytes:", encoded)
+print("Binary:", [format(x, "08b") for x in encoded])
+print("Hex:", encoded.hex())
+```
+
+Security application: Encoding mistakes, validation inconsistencies, injection boundaries and Unicode-related bugs.
+
+### Module 12: Data serialization and encoding
+
+Topics:
+
+* Binary serialization.
+
+* Text serialization.
+
+* Base64.
+
+* Hexadecimal encoding.
+
+* URL encoding.
+
+* JSON.
+
+* XML.
+
+* CBOR.
+
+* MessagePack.
+
+* Protocol Buffers.
+
+* ASN.1.
+
+* DER encoding.
+
+* BER encoding.
+
+* Data deserialization.
+
+* Serialization boundaries.
+
+Security application: Investigating unsafe deserialization, parser discrepancies and malformed input handling.
+
+### Module 13: File formats and binary structures
+
+Topics:
+
+* File signatures.
+
+* Magic bytes.
+
+* File headers.
+
+* Metadata.
+
+* Binary offsets.
+
+* File lengths.
+
+* File chunks.
+
+* Endianness.
+
+* Little-endian representation.
+
+* Big-endian representation.
+
+* File parsing.
+
+* File carving.
+
+* Checksums.
+
+* Binary file comparison.
+
+* Structured binary formats.
+
+Python laboratory:
+
+```python
+with open("sample.bin", "rb") as file:
+    data = file.read()
+
+print("Length:", len(data))
+print("Hex:", data.hex())
+print("Binary:", [format(b, "08b") for b in data])
+```
+
+Security application: File-parser vulnerability research, malformed-file testing and forensic analysis.
+
+### PART IV — COMPUTER ARCHITECTURE AND MEMORY
+
+### Module 14: Computer architecture
+
+![Notes for A1.1.5 Fetch, Decode, and Execute Cycle - IB | RevisionDojo](https://images.openai.com/static-rsc-4/NF7nQMoHAkIjBobPBVmDJGYQUi8qoFMQxrlF3aEtqgRQ-tdfWhzHBOkqdGDXFTdK52WeyaGzKoVHi8N7vGeFJJ6vMYfDnacEL0X7vjNa7TC5vascJ5hm7yqfN8OlF_1GEv-65ZQIs6NQ6keFIWtIo4F95VeYkOJOVUpKh5s_qJlS_SrqfL7-GO88LjT-kryk?purpose=fullsize)
+
+Topics:
+
+* CPU.
+
+* Arithmetic Logic Unit (ALU).
+
+* Control unit.
+
+* Registers.
+
+* CPU instruction cycle.
+
+* Fetch.
+
+* Decode.
+
+* Execute.
+
+* Memory buses.
+
+* Data buses.
+
+* Address buses.
+
+* CPU cache.
+
+* RAM.
+
+* ROM.
+
+* Architecture differences.
+
+* 32-bit versus 64-bit systems.
+
+Security application: Understanding how a processor executes instructions and handles data.
+
+### Module 15: Memory and memory management
+
+Topics:
+
+* Physical memory.
+
+* Virtual memory.
+
+* Memory addresses.
+
+* Pointers.
+
+* Stack.
+
+* Heap.
+
+* Memory allocation.
+
+* Memory deallocation.
+
+* Memory alignment.
+
+* Memory pages.
+
+* Page tables.
+
+* Address translation.
+
+* Memory protection.
+
+* ASLR.
+
+* DEP/NX.
+
+* Memory corruption.
+
+Security application: Understanding memory safety vulnerabilities and mitigations.
+
+### Module 16: Endianness and binary memory
+
+Topics:
+
+* Byte ordering.
+
+* Little-endian.
+
+* Big-endian.
+
+* Network byte order.
+
+* Host byte order.
+
+* Integer packing.
+
+* Unpacking.
+
+* Memory inspection.
+
+* Byte offsets.
+
+* Binary structure alignment.
+
+Python laboratory:
+
+```python
+import struct
+
+number = 0x12345678
+
+big = struct.pack(">I", number)
+little = struct.pack("<I", number)
+
+print("Big endian:", big.hex())
+print("Little endian:", little.hex())
+```
+
+Security application: Binary protocol analysis, file parsing and cross-platform compatibility.
+
+### PART V — NETWORK PROTOCOL BINARY ANALYSIS
+
+### Module 17: Networking fundamentals
+
+![How the Internet Really Works?. OSI vs TCP/IP explained: layers… | by İclal Aca | Jan, 2026 | Medium](https://images.openai.com/static-rsc-4/-DIQkiYetH8OKroHKmtKLNPFbLFF9x3Xua5RNohikKKi1fSZByUILGU3KrOeLEZ8kl-z8bUlQb9dZixq-iMaGScOCgcyR4BtzePc1odSo70u0-OOfWeSCsiTcukUkQhCdersuSL0sChx2totuo-_Ybav0VUTOWBzGbYczkV-5YDpKsvVhudGJhX81O0YyPxV?purpose=fullsize)
+
+Topics:
+
+* What is a network?
+
+* LAN, WAN and MAN.
+
+* OSI model.
+
+* TCP/IP model.
+
+* Encapsulation and decapsulation.
+
+* Ethernet.
+
+* MAC addresses.
+
+* IPv4 addressing.
+
+* IPv6 addressing.
+
+* Subnetting.
+
+* Subnet masks.
+
+* Default gateways.
+
+* Routing.
+
+* Switching.
+
+* Broadcast and multicast.
+
+* Ports and sockets.
+
+Security application: Understanding how data travels between systems and where security boundaries exist.
+
+### Module 18: Ethernet and network packet structures
+
+Topics:
+
+* Ethernet frame format.
+
+* Destination MAC.
+
+* Source MAC.
+
+* EtherType.
+
+* VLAN tags.
+
+* Frame payload.
+
+* Frame check sequence.
+
+* IEEE 802.1Q.
+
+* ARP packet structure.
+
+* MTU.
+
+* Frame length.
+
+* Ethernet II versus IEEE 802.3.
+
+Security application: Frame parsing, network segmentation and Layer 2 security analysis.
+
+### Module 19: IPv4 and IPv6 binary structures
+
+Topics:
+
+* IPv4 header.
+
+* Version field.
+
+* Header length.
+
+* Type of service / DS field.
+
+* Total length.
+
+* Identification.
+
+* Fragmentation flags.
+
+* Fragment offset.
+
+* TTL.
+
+* Protocol field.
+
+* Header checksum.
+
+* Source and destination addresses.
+
+* IPv6 base header.
+
+* Traffic class.
+
+* Flow label.
+
+* Hop limit.
+
+* IPv6 extension headers.
+
+* Fragmentation differences.
+
+Security application: Packet parsing, fragmentation handling and malformed packet testing in isolated labs.
+
+### Module 20: TCP and UDP binary analysis
+
+![Internet Architecture ; Erik Wilde, Dilan Mahendran, and Brad Andrews ; UC Berkeley School of Information](https://images.openai.com/static-rsc-4/09lSx0MOyiLyHI1MA321W16xoyIkfltQJWNRw58LZ6WVqVlWLqQinTCXd_p7Z29UUoahbgGyrybgbF8s_2jn5dLfcH4TiqKvanrSYAgxkyQwXaP1-MmAJQPad7w1LDR28_VWN_sVgc1UupPYu6vt6g269l3_29o-7oAeJUPfNV1g6x8E3aSsWoqrs4xS52Ut?purpose=fullsize)
+
+Topics:
+
+* TCP header.
+
+* Source port.
+
+* Destination port.
+
+* Sequence number.
+
+* Acknowledgment number.
+
+* Data offset.
+
+* TCP flags.
+
+* Window size.
+
+* Checksum.
+
+* Urgent pointer.
+
+* TCP options.
+
+* TCP connection states.
+
+* Three-way handshake.
+
+* Connection termination.
+
+* UDP header.
+
+* UDP length.
+
+* UDP checksum.
+
+* TCP versus UDP.
+
+Security application: Connection-state validation, flag handling and packet-parser testing.
+
+### Module 21: Application protocol analysis
+
+Study these protocols individually:
+
+Web and application communication
+
+* HTTP/1.1
+
+* HTTP/2
+
+* HTTP/3
+
+* WebSocket
+
+* DNS
+
+* DHCP
+
+* FTP
+
+* TFTP
+
+Remote access and file sharing
+
+* SSH
+
+* SMB
+
+* RDP
+
+* NFS
+
+Messaging and communication
+
+* MQTT
+
+* AMQP
+
+* CoAP
+
+* XMPP
+
+For every protocol, learn:
+
+* Protocol purpose.
+
+* Message structure.
+
+* Header format.
+
+* Binary fields.
+
+* Field lengths.
+
+* Flags and options.
+
+* Encoding.
+
+* Authentication.
+
+* Session management.
+
+* Error handling.
+
+* Parser behaviour.
+
+* Known security weaknesses and mitigations.
+
+### Module 22: Cryptographic binary structures
+
+Topics:
+
+* Binary representation of keys.
+
+* AES block structure.
+
+* AES key sizes.
+
+* XOR in cryptography.
+
+* Bit rotations.
+
+* Hash functions.
+
+* SHA-256.
+
+* SHA-512.
+
+* HMAC.
+
+* RSA.
+
+* Elliptic-curve cryptography.
+
+* Digital signatures.
+
+* Random number generation.
+
+* TLS records.
+
+* TLS handshakes.
+
+* X.509 certificates.
+
+* Certificate encoding.
+
+* Cryptographic padding.
+
+Security application: Cryptographic implementation auditing, key-handling mistakes and protocol validation.
+
+### PART VI — OPERATING SYSTEMS AND EXECUTABLE ANALYSIS
+
+### Module 23: Operating-system binary structures
+
+Topics:
+
+* Kernel fundamentals.
+
+* System calls.
+
+* Processes.
+
+* Threads.
+
+* Process memory.
+
+* File descriptors.
+
+* File permissions.
+
+* Linux permission masks.
+
+* User IDs and group IDs.
+
+* Capabilities.
+
+* Signals.
+
+* Inter-process communication.
+
+* Shared memory.
+
+* Pipes.
+
+* Sockets.
+
+* Device drivers.
+
+Security application: Operating-system security, privilege boundaries and system-call analysis.
+
+### Module 24: Assembly language and machine code
+
+![Présentation des 10 meilleurs outils d’analyse des malwares et de leurs fonctionnalités | Varonis](https://images.openai.com/static-rsc-4/FSM3x5p_s6Z7hcf2HpBoCL2mv1Fe5G8HIzylLXZXOT0EtgZntHX1Dzjp1rrV6g3U4WW6hM1v6FZH-_AnDPyrVBb9NqL_TbVHbwJNKwSYj9sV0TCFOgjNHG9FRyI3OFqwkQKRiUpOvnLKIm21_gCoswSWRBZxXFF7X5WiUq5ylVF_NlgkyfZ9_TtrTggBXkpd?purpose=fullsize)
+
+Topics:
+
+* What is assembly language?
+
+* Machine instructions.
+
+* Opcodes.
+
+* Operands.
+
+* Registers.
+
+* General-purpose registers.
+
+* Instruction pointer.
+
+* Stack pointer.
+
+* Base pointer.
+
+* Flags register.
+
+* MOV.
+
+* PUSH.
+
+* POP.
+
+* ADD.
+
+* SUB.
+
+* CMP.
+
+* JMP.
+
+* CALL.
+
+* RET.
+
+* Conditional jumps.
+
+* x86 architecture.
+
+* x86-64 architecture.
+
+* ARM.
+
+* ARM64.
+
+Security application: Understanding program execution, disassembly and reverse engineering.
+
+### Module 25: Executable file formats
+
+Study:
+
+| Format | Main purpose                         |
+| ------ | ------------------------------------ |
+| ELF    | Linux and many Unix-like executables |
+| PE     | Windows executables and DLLs         |
+| Mach-O | macOS and iOS executables            |
+| DEX    | Android executable bytecode          |
+| APK    | Android application package          |
+| JAR    | Java archive                         |
+| WASM   | WebAssembly modules                  |
+| SO     | Linux shared libraries               |
+| DLL    | Windows dynamic libraries            |
+
+For each format, understand:
+
+* File headers.
+
+* Magic numbers.
+
+* Sections.
+
+* Segments.
+
+* Symbol tables.
+
+* Relocations.
+
+* Imports and exports.
+
+* Entry points.
+
+* Dynamic linking.
+
+* Metadata.
+
+* Debugging information.
+
+Security application: Executable analysis, malicious-file detection, application security and reverse engineering.
+
+### Module 26: Android binary security analysis
+
+![Android Reverse Engineering: Analyzing APKs with Jadx vs Apktool | by Ayşe YALÇINKAYA | Medium](https://images.openai.com/static-rsc-4/UXTEzLfCOhezdJzLJWAugx96KzrrZeFPkW8lH8GCfu13iIs5ZwMFW2uI3L4S2VpBbsULgrXryHo338YetxV_MvEzDWQhGR1GflMucNNKGiNsy_D6blESaNsXAXcTsZoZevRwczgs765XuTrkDssilbXbjXj_8esHTtEBmx2RQkz17KUNiHPOtNjHYKymoi9W?purpose=fullsize)
+
+This module is particularly important when investigating Android applications.
+
+Topics:
+
+* APK structure.
+
+* ZIP container format.
+
+* AndroidManifest.xml.
+
+* DEX structure.
+
+* Smali representation.
+
+* Java bytecode.
+
+* Native libraries.
+
+* ELF structure.
+
+* `.so` files.
+
+* ARM and ARM64 instructions.
+
+* JNI.
+
+* Android Binder.
+
+* ADB.
+
+* APK signing.
+
+* Certificate verification.
+
+* Android permissions.
+
+* Application sandboxing.
+
+* Inter-process communication.
+
+* Dynamic analysis.
+
+* Static analysis.
+
+Tools to master:
+
+* AAPT / AAPT2
+
+* APKTool
+
+* JADX
+
+* Ghidra
+
+* IDA Free
+
+* Frida
+
+* ADB
+
+* readelf
+
+* objdump
+
+* strings
+
+* hexdump
+
+Security application: Android reverse engineering, insecure native code, exposed components and improper access control.
+
+### PART VII — ADVANCED VULNERABILITY RESEARCH
+
+### Module 27: Binary vulnerability classes
+
+This is where you begin connecting binary knowledge to actual security defects.
+
+| Vulnerability        | What you must understand                            |
+| -------------------- | --------------------------------------------------- |
+| Buffer overflow      | Data exceeds allocated buffer                       |
+| Integer overflow     | Arithmetic exceeds a fixed-width range              |
+| Integer underflow    | Arithmetic goes below an allowed range              |
+| Integer truncation   | Value loses information when converted              |
+| Signedness bug       | Signed and unsigned values are handled incorrectly  |
+| Out-of-bounds read   | Program reads outside valid memory                  |
+| Out-of-bounds write  | Program writes outside valid memory                 |
+| Use-after-free       | Freed memory is accessed again                      |
+| Double free          | Memory is released more than once                   |
+| Heap corruption      | Heap metadata or memory is damaged                  |
+| Stack corruption     | Stack data is overwritten                           |
+| Format string bug    | Unsafe format-string handling                       |
+| Type confusion       | Incompatible data types are interpreted incorrectly |
+| Uninitialized memory | Uninitialized data is used                          |
+| Race condition       | Unexpected timing affects program behaviour         |
+| Deserialization flaw | Encoded data is reconstructed unsafely              |
+| Parser differential  | Two components interpret the same data differently  |
+
+For each vulnerability, study:
+
+* Root cause.
+
+* Binary representation involved.
+
+* Conditions required.
+
+* Program behaviour.
+
+* Reproduction in a local lab.
+
+* Impact.
+
+* Detection.
+
+* Mitigation.
+
+* Responsible disclosure.
+
+### Module 28: Fuzzing and protocol testing
+
+Topics:
+
+* What is fuzzing?
+
+* Mutation-based fuzzing.
+
+* Generation-based fuzzing.
+
+* Coverage-guided fuzzing.
+
+* Seed corpus.
+
+* Test-case generation.
+
+* Boundary-value testing.
+
+* Malformed input generation.
+
+* Protocol-aware fuzzing.
+
+* Crash analysis.
+
+* Reproducibility.
+
+* Minimizing test cases.
+
+* Regression testing.
+
+* Sanitizers.
+
+* Fuzzing harnesses.
+
+Tools:
+
+* AFL++
+
+* libFuzzer
+
+* Honggfuzz
+
+* Atheris
+
+* Boofuzz
+
+* Peach-style protocol fuzzing concepts
+
+* AddressSanitizer
+
+* UndefinedBehaviorSanitizer
+
+Python example: a simple offline binary mutation lab.
+
+```python
+import random
+
+original = bytearray(b"\x45\x00\x00\x28")
+
+def mutate(data):
+    result = bytearray(data)
+
+    position = random.randrange(len(result))
+    result[position] ^= 1 << random.randrange(8)
+
+    return result
+
+for i in range(10):
+    print(mutate(original).hex())
+```
+
+This modifies sample bytes in memory. It does not send traffic or attack a remote system.
+
+### Module 29: Reverse engineering and debugging
+
+Topics:
+
+* Static analysis.
+
+* Dynamic analysis.
+
+* Disassembly.
+
+* Decompilation.
+
+* Debugging.
+
+* Breakpoints.
+
+* Watchpoints.
+
+* Registers inspection.
+
+* Stack inspection.
+
+* Heap inspection.
+
+* Memory dumps.
+
+* Call stacks.
+
+* Control-flow graphs.
+
+* Data-flow analysis.
+
+* Function identification.
+
+* Symbol resolution.
+
+* Library analysis.
+
+* Crash debugging.
+
+* Root-cause analysis.
+
+* Patch analysis.
+
+Tools:
+
+* GDB
+
+* Ghidra
+
+* IDA
+
+* LLDB
+
+* WinDbg
+
+* Radare2
+
+* Cutter
+
+* x64dbg
+
+### Module 30: Professional vulnerability research
+
+Topics:
+
+* Understanding system architecture.
+
+* Understanding trust boundaries.
+
+* Reading technical specifications.
+
+* Threat modelling.
+
+* Attack-surface mapping.
+
+* Input-source identification.
+
+* Data-flow tracing.
+
+* Security-boundary analysis.
+
+* Vulnerability hypothesis development.
+
+* Reproducible proof of concept.
+
+* Impact assessment.
+
+* Root-cause diagnosis.
+
+* Exploitability analysis.
+
+* Mitigation verification.
+
+* Responsible disclosure.
+
+* Writing professional vulnerability reports.
+
+Your final objective: Be able to take an unfamiliar binary protocol or executable, understand its structure, identify how untrusted data enters it, trace how it is processed, and investigate whether incorrect handling produces a demonstrable security vulnerability.
+
+### PART VIII — PRACTICAL LABORATORY PROJECTS
+
+Reading theory is not enough. You need to build things, inspect them, break your own test implementations and understand why they fail.
+
+Here are 15 projects to complete throughout the course.
+
+| Project                  | What you will build or investigate                      |
+| ------------------------ | ------------------------------------------------------- |
+| 1. Binary converter      | Decimal, binary, octal and hexadecimal converter        |
+| 2. Float analyser        | IEEE 754 32-bit and 64-bit analyser                     |
+| 3. Two's complement tool | Signed and unsigned integer converter                   |
+| 4. Bitwise laboratory    | AND, OR, XOR, NOT and shifts                            |
+| 5. Permission analyser   | Linux permission-bit analyser                           |
+| 6. Text encoder          | ASCII, UTF-8 and hexadecimal converter                  |
+| 7. Binary file inspector | File signatures, headers and offsets                    |
+| 8. Endianness analyser   | Big-endian and little-endian converter                  |
+| 9. Packet decoder        | Decode Ethernet, IPv4, TCP and UDP headers              |
+| 10. DNS analyser         | Inspect DNS messages and resource records               |
+| 11. HTTP analyser        | Inspect HTTP messages and protocol framing              |
+| 12. Binary parser        | Build a parser for a custom binary format               |
+| 13. ELF analyser         | Inspect executable headers and sections                 |
+| 14. Android analyser     | Examine APK, DEX and native .so structures              |
+| 15. Fuzzing laboratory   | Test a vulnerable local parser and diagnose its defects |
+
+### PART IX — TOOLS YOU MUST MASTER
+
+These are the tools I recommend learning as you progress.
+
+Programming and binary manipulation
+
+![GitHub - thevkrant/morse_code: Morse code is a method of transmitting text information as a series of on-off tones lights or clicks that can be directly understood by a skilled listener or observer without special equipment. It is named for Samuel F. B. Morse. Every character in the English language is substituted by a series of dots and dashes or something just singular dot or dash. · GitHub](https://images.openai.com/static-rsc-4/82uHC019BBZjoHhrMS2LYKSzWFbx_yuGaUmetBjc9LOGWGK6hfV0MZvxzjPPUms6ieHNiUAwQLi-LmbMMSVPbFomC1p9tFn0VJqTJRGtv897y6RrLxDc2q-lLJ2vL0lnwEz137lVdJCAiid4teY53032ju_3KnuY8Dj2GsxvttnqrfToFEzLooV9297fWvzh?purpose=fullsize)
+
+Python
+
+struct, socket, binascii, bytes, int, bitwise operations
+
+Network analysis
+
+![Wireshark](https://images.openai.com/static-rsc-4/ck7e2nY97v9m7C0wgLjsbo8DKILQtREeisewFiv61QD9Mbr99-Ubtr6fnqKTVBu4ktekWUWiM3RiboWn7SS2dOCH5GCxzywPME-LRw6bsv2N0XW9e9tjw9HaMOh3NZHUwrQrkrvdwAmTtyHMiHyCrDhGvuO8HnD5OOGCt9L9L8ItYsmuoTEfoyEdbNTkWzY8?purpose=fullsize)
+
+Wireshark
+
+Packet inspection and protocol dissection
+
+![Scapy in 0x30 minutes slides](https://images.openai.com/static-rsc-4/KJNSf1h2CheGJr9N76GxTvpnK3Wiwv5W7Zae_cx0kVb2gaEOVBL1mtgwt2PxqZQ0s3far7H6bh9-7iwTbcR_YEeUedon_BjEf9juL4X0NPo2scBEqZmYOdnU9gbSClk6T8l3UQSKBZeaYgrBj19tUKez56Mt-CvfGh3FLHQ32DFjaF2bim_E1R5DwtQ2kWNB?purpose=fullsize)
+
+Scapy
+
+Packet construction and analysis in authorized labs
+
+Reverse engineering
+
+![Ghidra -- the Software Reverse Engineering Tool You’ve Been Waiting for -- is Here! > National Security Agency/Central Security Service > Article](https://images.openai.com/static-rsc-4/caHdXNAP9evqYbLDl-sXdU_PZxI9vHamQ06yxOWJnrFElQimZ7vOzL7BwfJXYkScx434tS1cTJdEv6PJwzWb9yYajP5MS5M3hB7eMhtC0uMb-vrT91fFsqaFL4HdcxubRRCLMkBzlLtQElocoOcSMl9zWkC9oVn-RJsGExl8CE8saA_W8_AzDtOI1WnTgLen?purpose=fullsize)
+
+Ghidra
+
+Disassembly, decompilation and binary analysis
+
+![Hex-Rays IDA/IDA Pro 反彙編及除錯程序 迪凱科技有限公司](https://images.openai.com/static-rsc-4/TUz05f0aIhoOnHPJgje3KkWktD-jDs_6Kw2HR_OLMQelC7_58LxCCcaioIbIuQ1g78DLMTiK2Z3NGsciJuAx2dqcu0WTupsiaAZl8llWbuzGfUyXlxmWbQl8SY7cWKK8J7G11s5oF_LFDcdBX06_HttRuuKZ8OqKkaewIiz06tdimeGNADLGOiqioY5LcYLm?purpose=fullsize)
+
+IDA
+
+Executable analysis and disassembly
+
+![GDB for Reverse Engineering — Cyber Wired](https://images.openai.com/static-rsc-4/qBircmGm-FTEU8J0uCN4ApQRcXcVhYHTixdvJrBuL1IgP-pPcHEil0N6dWuciHCI2ULYbDpLy3vh3w6n-4gGaaDcg1z7HyLXlx-cfLrkye6bN1QOgfSg7R8SfWcCMRFZmwwyhhIAfObtFW52gO5hCDg2MtRvAydHhQfAImDBTKwW-RBHA785PFc4B3UghYez?purpose=fullsize)
+
+GDB
+
+Debugging, registers and memory inspection
+
+Fuzzing and vulnerability research
+
+![AFL++ Fuzzing: From Crash Explosion to Real Vulnerabilities](https://images.openai.com/static-rsc-4/_IXKgAKmtc3OvNqktPL3cM0rEGuXxiPwGwii5XEIvEx9HVxHPVpb6LErkObiNbPTDdfX06C0lpACEVES3kWUdbHNJ41UHGyEwbvxuO1LIQfD_9AKj2Od-vLAEF6Pmr8gh2C5GCUxZsy4p90Vvedcqh6n0uQ0ZMGLxk9kLks6tyhnaPbL-KLHexkhrDT_KPbo?purpose=fullsize)
+
+AFL++
+
+Coverage-guided fuzzing
+
+![Value of Frida Dynamic Instrumentation Toolkit to Cybersecurity - DEV Community](https://images.openai.com/static-rsc-4/CfM0YOrq4B-roxjitLCebZpTLmwaFQh1PD-uEYoay-Gpo75GKtwtOMUGSojMc7FoLgYUrGHBPZ-52MEK9FeY-UPLRaPGx2JHJI_2pM4WEw9rJriVa8C0On41ulLuo3Q1r7Wa98dA5EoWn4f7v7w6Lu15BwkAJVs5HnMdsYDqEVSyiIC8D4Ww7-0kKQfdPQfT?purpose=fullsize)
+
+Frida
+
+Dynamic instrumentation and application analysis
+
+### PART X — HOW TO STUDY THIS COURSE
+
+I recommend a 36-week programme.
+
+| Period      | Modules       | Main goal                                        |
+| ----------- | ------------- | ------------------------------------------------ |
+| Weeks 1–4   | 1–6           | Master binary and number systems                 |
+| Weeks 5–7   | 7–10          | Boolean algebra and bitwise operations           |
+| Weeks 8–10  | 11–13         | Encoding and binary files                        |
+| Weeks 11–14 | 14–16         | Architecture and memory                          |
+| Weeks 15–20 | 17–22         | Networking and protocols                         |
+| Weeks 21–25 | 23–26         | OS, assembly and Android                         |
+| Weeks 26–30 | 27–29         | Vulnerabilities, fuzzing and reverse engineering |
+| Weeks 31–36 | 30 + projects | Professional research and final projects         |
+
+Suggested daily routine:
+
+* 30 minutes: Read and understand the theory.
+
+* 45 minutes: Write Python scripts.
+
+* 45 minutes: Perform practical laboratory exercises.
+
+* 30 minutes: Diagnose errors and document findings.
+
+### PART XI — YOUR PROGRESS TRACKER
+
+Use this checklist to monitor your progress.
+
+Course completion
+
+### 0%
+
+0 of 31 topics completed
+
+Part 1: Binary foundations
+
+Number systems
+
+Binary conversions
+
+Bits and bytes
+
+Binary arithmetic
+
+Negative numbers
+
+Floating-point representation
+
+Part 2: Boolean and bitwise
+
+Boolean algebra
+
+Boolean laws
+
+Logic gates
+
+Python bitwise operations
+
+Part 3: Data representation
+
+ASCII and Unicode
+
+Serialization and encoding
+
+File formats and endianness
+
+Part 4: Computer architecture
+
+CPU and registers
+
+Memory management
+
+Stack and heap
+
+Endianness
+
+Part 5: Network analysis
+
+Networking fundamentals
+
+Ethernet
+
+IPv4 and IPv6
+
+TCP and UDP
+
+Application protocols
+
+Cryptographic structures
+
+Part 6: Operating systems and reverse engineering
+
+Operating-system structures
+
+Assembly and machine code
+
+Executable formats
+
+Android binary analysis
+
+Part 7: Advanced security research
+
+Binary vulnerability classes
+
+Fuzzing
+
+Reverse engineering
+
+Professional vulnerability reporting
+
+Reset progress
+
+### PART XII — YOUR FIRST LESSON
+
+I do not recommend jumping directly into TCP packet manipulation or reverse engineering.
+
+Start with the foundation. If you cannot explain how `12` becomes `1100`, how `-12` is represented in 8-bit two's complement, or why `0xFF` equals 255, advanced binary analysis will become unnecessarily difficult.
+
+Your first examination should cover:
+
+* Convert decimal 25 to binary.
+
+* Convert binary `101101` to decimal.
+
+* Convert hexadecimal `FF` to binary.
+
+* Explain the difference between a bit and a byte.
+
+* Represent -12 in 8-bit two's complement.
+
+* Explain what `0b1100` means.
+
+* Explain the difference between `&` and `|`.
+
+* Explain big-endian versus little-endian.
+
+* Identify the sign, exponent and fraction in IEEE 754.
+
+* Explain how binary data is stored in a file.
+
+Our learning approach: We can take these 30 modules one at a time. Each lesson should include the theory, diagrams where useful, Python scripts, practical exercises, security implications and a test before moving to the next module.
+
+Start with Module 1: Introduction to Binary Computing. I can teach it from the absolute beginning, then progressively take you to advanced binary vulnerability research.
