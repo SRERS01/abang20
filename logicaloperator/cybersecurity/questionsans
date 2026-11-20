@@ -1,0 +1,36 @@
+Here is a practical, step-by-step method for answering each of the five questions when analyzing any system or endpoint:
+
+1. How to Answer Architecture
+
+• Map the components: List every system involved from start to finish (e.g., Browser/App → CDN/WAF → API Gateway → Backend Service → Database → External API/Webhook).
+• Trace the trust boundaries: Identify where data crosses from untrusted zones (user browser, public internet) into trusted zones (internal microservices, database).
+• Document protocols and state: Note how components talk (REST, GraphQL, gRPC, message queues) and where state lives (cookies, JWTs, Redis, SQL tables).
+
+2. How to Answer Logic
+
+• Read the rules and code: Inspect the backend source code, API documentation, and business policies governing the feature.
+• List preconditions: Write down every check that must pass before the action runs (e.g., Is the user logged in? Is the balance sufficient? Is the token unexpired?).
+• Trace state transitions: Document what changes when the action succeeds vs. when it fails or rolls back (e.g., Pending → Completed or Failed).
+
+3. How to Answer Mathematics
+
+• Identify core invariants: Write down equations or boolean rules that can never be violated, no matter what order requests arrive in.
+• Check conservation and bounds:
+	• Conservation: Does money/inventory stay balanced? (e.g., Δ Sender + Δ Receiver = 0)
+	• Bounds: Are limits enforced? (e.g., Balance ≥ 0, Token Uses ≤ 1)
+	• Uniqueness: Is there a strict 1-to-1 mapping? (e.g., one email per user ID)
+
+4. How to Answer Diagnostics
+
+• Follow a single request end-to-end: Send a normal test request with a unique tracking ID (like a request_id or transaction_id) and follow it through browser DevTools, proxy logs, backend application logs, and database records.
+• Compare layers: Check if the data sent by the client matches what the API received, what the database saved, and what external services confirmed.
+• Look for silent drift: Spot discrepancies such as unlogged errors, mismatched timestamps, cached stale data, or partial database writes.
+
+5. How to Answer Adversarial Testing
+
+• Break the invariants deliberately (in an authorized lab): Take every rule you wrote in Step 3 and try to violate it.
+• Test four failure modes:
+	• Unusual inputs: Negative numbers, 0, null, huge integers, wrong data types, or unexpected JSON fields.
+	• Concurrency: Send 20 identical requests at the exact same millisecond (race conditions) to bypass balance or single-use checks.
+	• Failures: Drop network connections mid-transaction, send malformed webhook callbacks, or trigger timeouts.
+	• Recovery: Replay old requests after a failure or reboot to see if the system double-processes or leaves accounts locked.
