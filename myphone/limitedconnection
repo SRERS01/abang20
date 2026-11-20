@@ -1,0 +1,38 @@
+Look at the Pixel 5 screen in your photo: AndroidWifi still says "Limited connection" (and the Wi-Fi icon has the ! mark), AND notice the "Em... isn't responding" dialog peeking out behind it because the emulator is lagging slightly.
+Even though you installed cacert.cer, Android's built-in connectivity check (://gstatic.com) ignores User-installed certificates on modern Android versions—which is why AndroidWifi stays stuck on "Limited connection" and refuses to route internet traffic properly!
+Follow these two steps to fix the "Limited connection" error permanently:
+
+1. Disable Android's Captive Portal Check via adb (Fixes "Limited connection" Immediately)
+
+Open your Ubuntu terminal and run these two commands to stop Android from marking AndroidWifi as "Limited connection" when routed through Burp Suite:
+bash
+~/Android/Sdk/platform-tools/adb shell settings put global captive_portal_mode 0
+~/Android/Sdk/platform-tools/adb shell settings put global captive_portal_detection_enabled 0
+Use code with caution.
+• Toggle Wi-Fi off and on. On the Pixel 5 screen shown in your photo, tap Disconnect (the X icon), wait 3 seconds, and tap Connect (or turn Airplane mode on and off).
+• Check the Wi-Fi icon. The ! exclamation mark will disappear immediately, and AndroidWifi will show Connected with a solid white Wi-Fi icon!
+
+2. Move Burp's Certificate to the System Store (So Apps Trust It)
+
+Because Android apps (and Android's system services) ignore User certificates, install Burp's certificate into the System trust store so your app doesn't reject Burp's HTTPS connection:
+1. Export Burp's certificate to your Ubuntu Desktop:
+	• In Burp Suite (shown on the right side of your screen), go to Proxy > Proxy settings, click Import / export CA certificate, select Certificate in DER format, click Next, and save it as cacert.der on your Desktop.
+2. Convert it to Android's hashed format in your Ubuntu terminal:bash
+openssl x509 -inform DER -in ~/Desktop/cacert.der -out ~/Desktop/cacert.pem
+HASH=$(openssl x509 -inform PEM -subject_hash_old -in ~/Desktop/cacert.pem | head -1)
+cp ~/Desktop/cacert.pem ~/Desktop/${HASH}.0
+Use code with caution.
+3. Push it to Android's System certificates folder:
+	• Close the emulator (killall -9 qemu-system-x86_64) and relaunch it with -writable-system:bash
+myphone -writable-system -no-snapshot-load -http-proxy http://127.0.0.1:8080
+Use code with caution.
+	• Once it boots, open a new terminal tab and run:bash
+~/Android/Sdk/platform-tools/adb root
+~/Android/Sdk/platform-tools/adb remount
+~/Android/Sdk/platform-tools/adb push ~/Desktop/${HASH}.0 /system/etc/security/cacerts/
+~/Android/Sdk/platform-tools/adb shell chmod 644 /system/etc/security/cacerts/${HASH}.0
+~/Android/Sdk/platform-tools/adb reboot
+Use code with caution.
+Once the emulator reboots, AndroidWifi will stay Connected (solid white icon), and your app will trust Burp Suite's SSL certificate cleanly!
+Start by running the two adb shell settings put global captive_portal... commands and toggling Wi-Fi on the Pixel 5. Let me know if "Limited connection" clears right away or if adb gives any error!
+Copying...

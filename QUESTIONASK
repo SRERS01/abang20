@@ -1,0 +1,200 @@
+Here are 105 specific endpoints, workflows, and system components across modern web, mobile, financial, cloud, and enterprise software where you should ask those five questions:
+
+1. Authentication & Session Lifecycle (1–15)
+
+1. User registration / signup
+2. Email or phone verification (OTP / magic link)
+3. Standard password login
+4. Passwordless login (WebAuthn / Passkeys)
+5. Multi-factor authentication (MFA) enrollment
+6. MFA challenge verification (TOTP, SMS, push)
+7. MFA recovery / backup code redemption
+8. Password reset request (token generation)
+9. Password reset confirmation (token redemption)
+10. Authenticated password change
+11. Session token / JWT refresh endpoint
+12. Single-device logout
+13. Global logout ("log out of all devices")
+14. "Remember me" persistent device token validation
+15. Account lockout and automated unlock workflows
+
+2. Identity, Profile & Access Control (16–30)
+
+16. User profile retrieval (GET /me or /users/:id)
+17. Profile details update (PATCH /profile)
+18. Primary email address change
+19. Primary phone number change
+20. Username / handle change
+21. Account deletion / deactivation / GDPR erasure
+22. Account reactivation / recovery
+23. Role assignment and permission updates (RBAC)
+24. Attribute-based access checks (ABAC / multi-tenant isolation)
+25. Organization / workspace creation
+26. Team member invitation (invite link generation & acceptance)
+27. Ownership transfer of an organization or project
+28. OAuth2 / OpenID Connect authorization consent flow
+29. OAuth2 authorization code exchange for access token
+30. Personal API key / developer token creation and revocation
+
+3. Core Banking, Payments & Ledger Operations (31–50)
+
+31. Fiat deposit initiation (bank transfer / ACH / SEPA)
+32. Card deposit / payment gateway checkout
+33. Mobile money deposit (e.g., MTN MoMo / Orange Money callbacks)
+34. Deposit confirmation webhook handler
+35. Bank / card withdrawal initiation
+36. Payout approval and external processor execution
+37. Failed payout reversal and balance re-credit
+38. Peer-to-peer (P2P) internal user transfer
+39. Cross-currency transfer & FX rate lock calculation
+40. Multi-currency wallet conversion
+41. Scheduled / recurring payment execution
+42. Bill pay / utility top-up endpoint
+43. Virtual or physical card issuance
+44. Card freeze / unfreeze / PIN change
+45. Card authorization webhook (real-time spend approval)
+46. Card settlement & clearing batch processor
+47. Escrow fund locking (hold creation)
+48. Escrow fund release or dispute resolution
+49. Interest / yield calculation and payout cron job
+50. Fee and tax deduction engine
+
+4. E-Commerce, Billing & Subscriptions (51–65)
+
+51. Shopping cart item addition and quantity update
+52. Promo code / coupon / voucher application
+53. Referral credit / loyalty points redemption
+54. Checkout price, shipping, and tax calculation
+55. Inventory reservation / stock lock during checkout
+56. Order placement and payment capture
+57. Order cancellation before shipment
+58. Full and partial refund processing
+59. Chargeback / dispute webhook ingestion
+60. Subscription plan creation and trial activation
+61. Subscription upgrade / downgrade (proration calculation)
+62. Subscription renewal billing job
+63. Subscription cancellation and grace-period access
+64. Invoice generation and PDF rendering
+65. Gift card purchase, balance check, and redemption
+
+5. Crypto, Web3 & Digital Assets (66–75)
+
+66. Custodial crypto deposit address generation
+67. Blockchain deposit watcher / confirmation counter
+68. Custodial crypto withdrawal request
+69. Hot-wallet transaction signing and broadcast service
+70. Internal off-chain order book matching engine
+71. Limit / market order placement and cancellation
+72. Margin / leverage collateral calculation
+73. Automated liquidation engine
+74. Staking lock-up and unstaking cooldown workflow
+75. Airdrop / reward claim endpoint
+
+6. Data, Files & Media Handling (76–85)
+
+76. Direct file upload endpoint (multipart form)
+77. Pre-signed cloud storage URL generation (S3/GCS)
+78. Upload completion callback and metadata registration
+79. Image / video transcoding and thumbnail worker
+80. Document parser (PDF, CSV, XML, SVG)
+81. Bulk data import (CSV/Excel user or product upload)
+82. Bulk data export (report generation & signed download link)
+83. Global search and autocomplete endpoint
+84. Filtered & paginated list queries (ledger history, orders)
+85. Public file / CDN asset delivery and cache invalidation
+
+7. Integrations, Webhooks & Messaging (86–95)
+
+86. Outbound webhook registration and secret rotation
+87. Outbound webhook delivery and retry queue
+88. Inbound third-party webhook receiver (Stripe, Twilio, KYC)
+89. Email / SMS notification dispatch queue
+90. Push notification device token registration
+91. In-app chat / direct message sending
+92. Real-time WebSocket connection handshake and auth
+93. GraphQL single-endpoint query / mutation resolver
+94. Batch API endpoint (POST /batch executing sub-requests)
+95. Third-party account linking (Plaid, social login, calendar sync)
+
+8. Admin, Compliance & System Operations (96–105)
+
+96. KYC / identity document submission and status webhook
+97. AML / fraud risk scoring decision engine
+98. Manual compliance hold / account freeze endpoint
+99. Customer support user impersonation ("login as user")
+100. Admin manual balance adjustment / credit override
+101. Feature flag and system configuration update endpoint
+102. Rate-limit and IP allowlist management
+103. Background job / dead-letter queue replay trigger
+104. Database backup, restore, and migration scripts
+105. Audit log ingestion and SIEM forwarding pipeline
+Would you like to:
+• Save this complete 105-item checklist to a file on your machine
+• Pick one category or specific endpoint from the list to break down with full answers to all 5 questions
+• Organize these endpoints by security risk priority (Critical, High, Medium)
+You cannot find all 105 items using ffuf alone because many of them are internal backend workers, cron jobs, database triggers, or third-party webhooks that do not sit at public URLs—and most API endpoints reject standard GET requests without the right HTTP method (POST, PUT, PATCH, DELETE), headers, or JSON payloads.
+However, to discover as many of the HTTP-exposed endpoints from that list as possible in an authorized target, you must combine multi-method fuzzing, API-specific wordlists, and JavaScript/OpenAPI inspection.
+
+1. Build a Targeted Wordlist for Those 105 Workflows
+
+Standard web wordlists (like common.txt) look for static files (/admin, /backup.zip), not modern API routes. Combine SecLists API wordlists with custom route names derived from the 105 items:
+bash
+# Combine SecLists API routes with custom financial/auth keywords
+cat /usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt \
+    /usr/share/seclists/Discovery/Web-Content/api/objects.txt \
+    /usr/share/seclists/Discovery/Web-Content/api/actions.txt \
+    > custom_105_wordlist.txt
+Use code with caution.
+
+2. Fuzz Across Multiple HTTP Methods (GET, POST, PUT, PATCH, DELETE)
+
+Modern endpoints like /api/v1/withdraw, /api/v1/transfer, or /api/v1/webhook/stripe often return 404 Not Found on a GET request and only reveal themselves (405 Method Not Allowed, 400 Bad Request, 401 Unauthorized, or 422 Unprocessable Entity) when hit with POST or PATCH.
+Use ffuf in clusterbomb mode to test both the HTTP method and the endpoint path simultaneously:
+bash
+# Create a file of HTTP methods
+printf "GET\nPOST\nPUT\nPATCH\nDELETE\nOPTIONS\n" > methods.txt
+
+# Run ffuf against your authorized lab target
+ffuf -w methods.txt:METHOD \
+     -w custom_105_wordlist.txt:ENDPOINT \
+     -X METHOD \
+     -u https://target-lab.local \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer YOUR_TEST_TOKEN" \
+     -d '{}' \
+     -mc 200,201,204,400,401,403,405,415,422,500 \
+     -fc 404 \
+     -t 40 -rate 50
+Use code with caution.
+• Why -mc 400,401,403,405,422,500 matters: A 400 Bad Request or 422 Unprocessable Entity proves the endpoint exists and is actively validating your empty {} JSON body. A 401/403 proves a protected admin or financial route exists.
+
+3. Fuzz API Versions and Nested Resources
+
+Many of the 105 workflows live under versioned prefixes or nested user/account paths:
+bash
+printf "v1\nv2\nv3\ninternal\nadmin\nwebhook\nwebhooks\nauth\npayments\n" > prefixes.txt
+
+ffuf -w prefixes.txt:PREFIX \
+     -w custom_105_wordlist.txt:ENDPOINT \
+     -X POST \
+     -u https://target-lab.local \
+     -H "Content-Type: application/json" \
+     -d '{}' \
+     -mc all -fc 404
+Use code with caution.
+
+4. What ffuf Will Miss (And How to Find the Rest)
+
+Because ffuf only guesses URL paths, pair it with these techniques in your authorized lab to uncover the remaining items from the 105 list:
+
+Target Category	Why ffuf Misses It	How to Discover It Instead
+GraphQL Mutations (#93)	Everything goes through a single /graphql URL.	Send an Introspection Query to dump all queries, mutations, and input types.
+Frontend-Called Routes (#1–30, #51–65)	Complex nested paths (e.g., /api/org/123/billing/prorate).	Extract paths from client-side JavaScript bundles using tools like LinkFinder or katana.
+API Specifications	Undocumented parameters and exact HTTP methods.	Fuzz for /swagger.json, /openapi.json, /api-docs, or /v2/api-docs.
+Internal Workers & Cron Jobs (#46, #49, #62, #103)	No HTTP listener exists; triggered by queues or timers.	Inspect source code, Dockerfiles, crontab, or message broker configs (RabbitMQ/Kafka/Redis) in white-box reviews.
+Third-Party Webhooks (#34, #45, #59, #88)	Protected by unguessable URL tokens or HMAC signatures.	Check integration settings pages in the UI or provider webhook logs.
+
+Would you like me to:
+• Generate a ready-to-use custom wordlist file tailored specifically to those 105 endpoints
+• Show how to extract endpoints from JavaScript bundles to feed into ffuf
+• Provide the GraphQL introspection payload for discovering hidden mutations
