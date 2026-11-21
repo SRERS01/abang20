@@ -1,0 +1,126 @@
+Because network protocols are communication rules and standards rather than standalone software programs, you do not install the protocols themselves—instead, you install offensive security tools on Ubuntu designed to interact with, analyze, or test each layer.
+Disclaimer: Only use these tools on networks and systems you own or have explicit written permission to test.
+
+Layer 7: Application Layer (HTTP, DNS, SMB, SSH, FTP)
+
+At this layer, offensive tools focus on web exploitation, service enumeration, and credential testing.
+• Core Tools: nmap (service/script scanning), gobuster (directory brute-forcing), hydra (login brute-forcing), sqlmap (SQL injection), enum4linux (SMB/NetBIOS enumeration).
+• Installation:bash
+sudo apt update && sudo apt install -y nmap gobuster hydra sqlmap smbclient
+Use code with caution.
+• Basic Usage:
+	• Enumerate web directories (HTTP/HTTPS):bash
+gobuster dir -u http://192.168.1.10 -w /usr/share/wordlists/dirb/common.txt
+Use code with caution.
+	• Test SSH login credentials:bash
+hydra -l admin -P /path/to/wordlist.txt ssh://192.168.1.10
+Use code with caution.
+
+Layer 6: Presentation Layer (SSL/TLS, Encoding, Encryption)
+
+Offensive tools at Layer 6 audit cryptographic implementations, check for weak ciphers, and decode obfuscated payloads.
+• Core Tools: sslscan or testssl.sh (TLS/SSL vulnerability scanning), openssl (certificate/cipher inspection), cyberchef or base64 (encoding/decoding).
+• Installation:bash
+sudo apt install -y sslscan testssl.sh openssl
+Use code with caution.
+• Basic Usage:
+	• Audit SSL/TLS ciphers and vulnerabilities (e.g., Heartbleed, POODLE):bash
+sslscan 192.168.1.10:443
+Use code with caution.
+	• Inspect a remote TLS certificate:bash
+openssl s_client -connect 192.168.1.10:443
+Use code with caution.
+
+Layer 5: Session Layer (SMB Sessions, RPC, NetBIOS, SIP)
+
+At Layer 5, testers focus on session hijacking, null-session enumeration, and NTLM relay attacks.
+• Core Tools: impacket-scripts (SMB/RPC interaction and relaying), rpcclient (RPC enumeration), responder (LLMNR/NBT-NS poisoning).
+• Installation:bash
+sudo apt install -y python3-impacket smbclient responder
+Use code with caution.
+• Basic Usage:
+	• Enumerate users/shares via an anonymous RPC null session:bash
+rpcclient -U "" -N 192.168.1.10
+Use code with caution.
+	• Capture NetNTLMv2 hashes via local broadcast poisoning:bash
+sudo responder -I eth0
+Use code with caution.
+
+Layer 4: Transport Layer (TCP, UDP, SCTP)
+
+Offensive tools at this layer perform port discovery, firewall rule mapping, and SYN/UDP flood or crafting tests.
+• Core Tools: nmap (TCP/UDP port scanning), masscan (high-speed asynchronous port scanning), hping3 (custom TCP/UDP packet crafting), netcat (nc for raw socket connections/shells).
+• Installation:bash
+sudo apt install -y nmap masscan hping3 netcat-traditional
+Use code with caution.
+• Basic Usage:
+	• Perform a TCP SYN (stealth) scan:bash
+sudo nmap -sS -p- 192.168.1.10
+Use code with caution.
+	• Craft custom TCP packets with specific flags (e.g., SYN to port 80):bash
+sudo hping3 -S -p 80 192.168.1.10
+Use code with caution.
+
+Layer 3: Network Layer (IPv4, IPv6, ICMP, OSPF, BGP)
+
+Tools here handle host discovery, packet routing manipulation, and custom IP header crafting.
+• Core Tools: scapy (interactive Python packet manipulation), traceroute / mtr (path mapping), yersinia or frr (routing protocol testing), tcpdump (packet capture).
+• Installation:bash
+sudo apt install -y python3-scapy traceroute tcpdump
+Use code with caution.
+• Basic Usage:
+	• Craft and send a custom ICMP echo packet using Scapy:bash
+sudo scapy
+>>> send(IP(dst="192.168.1.10")/ICMP()/"Payload")
+Use code with caution.
+	• Capture live IP traffic on an interface:bash
+sudo tcpdump -i eth0 host 192.168.1.10
+Use code with caution.
+
+Layer 2: Data Link Layer (Ethernet, ARP, Wi-Fi 802.11, VLAN, STP)
+
+Layer 2 offensive testing focuses on local LAN attacks such as ARP spoofing, MAC flooding, VLAN hopping, and wireless auditing.
+• Core Tools: bettercap / dsniff (ARP spoofing and Man-in-the-Middle), macchanger (MAC address spoofing), aircrack-ng (Wi-Fi auditing), yersinia (STP, CDP, DTP, DHCP attacks).
+• Installation:bash
+sudo apt install -y bettercap dsniff macchanger aircrack-ng yersinia
+Use code with caution.
+• Basic Usage:
+	• Spoof your MAC address:bash
+sudo ip link set eth0 down
+sudo macchanger -r eth0
+sudo ip link set eth0 up
+Use code with caution.
+	• Perform an ARP spoofing MITM attack between a target and gateway:bash
+sudo arpspoof -i eth0 -t 192.168.1.10 192.168.1.1
+Use code with caution.
+	• Put a wireless card into monitor mode for 802.11 capture:bash
+sudo airmon-ng start wlan0
+Use code with caution.
+
+Layer 1: Physical Layer (RF, Bluetooth, USB, Serial/UART)
+
+Because Layer 1 deals with physical signals and hardware interfaces, offensive testing requires specialized hardware (such as a Software Defined Radio, Ubertooth, or USB-to-TTL adapter) alongside Ubuntu software.
+• Core Tools: gqrx-sdr / gnuradio (Radio Frequency signal analysis), bluez / btscanner (Bluetooth discovery), minicom / screen (Hardware UART/Serial console interaction).
+• Installation:bash
+sudo apt install -y gqrx-sdr gnuradio bluez minicom screen
+Use code with caution.
+• Basic Usage:
+	• Scan for nearby Bluetooth devices:bash
+hcitool scan
+Use code with caution.
+	• Connect to an embedded device's physical UART/Serial debug port:bash
+sudo screen /dev/ttyUSB0 115200
+Use code with caution.
+
+Quick Reference Summary
+
+
+OSI Layer	Primary Offensive Goal	Key Ubuntu Packages
+7. Application	Service & web exploitation, brute-forcing	nmap, gobuster, hydra, sqlmap
+6. Presentation	TLS/SSL auditing, cipher & encoding checks	sslscan, testssl.sh, openssl
+5. Session	SMB/RPC enumeration, hash relaying	python3-impacket, responder, smbclient
+4. Transport	Port scanning, firewall evasion, raw sockets	nmap, masscan, hping3, netcat
+3. Network	Packet crafting, sniffing, route analysis	python3-scapy, tcpdump, traceroute
+2. Data Link	ARP spoofing, VLAN hopping, Wi-Fi attacks	bettercap, dsniff, aircrack-ng, yersinia
+1. Physical	RF sniffing, Bluetooth scanning, UART access	gnuradio, gqrx-sdr, bluez, screen
+
