@@ -1,0 +1,351 @@
+# CompTIA Security+ (SY0-701) – Practical Lab Guide
+## Domain 3: Security Architecture (18%–19%)
+### Objective 3.1: Security Architecture Models
+
+> **Objective:** Evaluate security implications, trade-offs, technical requirements, and business constraints across cloud, on-premises, OT, air-gapped, and microservices architectures.  
+> **Recommended Lab Tools:** Python 3, Docker Engine / Docker Compose, Linux Terminal / Bash, Windows PowerShell, Mermaid Diagram-as-Code.
+
+---
+
+## Part A: Cloud Architectures (7 Models)
+
+### 1. Serverless Architecture (FaaS — Function as a Service)
+* **Concept:** Running event-driven code functions (AWS Lambda, Azure Functions, Google Cloud Functions) without managing underlying servers or OS patching.
+  * *Security Implications:* Eliminates OS patching burden, **but** introduces short-lived execution states, over-privileged IAM function roles, insecure event-trigger injection, and third-party dependency risks.
+* **Practical Task (Simulate a Least-Privilege Serverless Handler & Input Validator in Python):**
+  ```python
+  import json
+
+  def lambda_handler(event):
+      # Enforce strict input validation & least-privilege action allow-listing
+      allowed_actions = {"GET_STATUS", "LIST_ITEMS"}
+      action = event.get("action")
+      if action not in allowed_actions:
+          return {"statusCode": 403, "body": json.dumps("Forbidden: Action not permitted by IAM role")}
+      return {"statusCode": 200, "body": json.dumps(f"Executed {action} safely")}
+
+  print(lambda_handler({"action": "DROP_TABLE"}))
+  print(lambda_handler({"action": "GET_STATUS"}))
+  ```
+
+### 2. Multicloud Architecture
+* **Concept:** Distributing workloads across **two or more public cloud providers** (e.g., AWS + Azure + GCP).
+  * *Security Implications:* Prevents vendor lock-in and improves geographic resilience, **but** increases attack surface complexity, inconsistent IAM/logging formats, and cross-cloud configuration drift (requiring **CSPM — Cloud Security Posture Management**).
+* **Practical Task (Normalize Multi-Cloud Security Logs into a Unified Schema in Python):**
+  ```python
+  aws_event = {"source": "AWS_CloudTrail", "principal": "alice", "event": "ConsoleLogin", "status": "Success"}
+  azure_event = {"source": "Azure_EntraID", "userPrincipalName": "bob", "operationName": "SignIn", "result": "0"}
+
+  normalized = [
+      {"cloud": aws_event["source"],   "user": aws_event["principal"],          "success": aws_event["status"] == "Success"},
+      {"cloud": azure_event["source"], "user": azure_event["userPrincipalName"], "success": azure_event["result"] == "0"}
+  ]
+  for entry in normalized:
+      print("Normalized SIEM Event:", entry)
+  ```
+
+### 3. Public Cloud, 4. Private Cloud, 5. Hybrid Cloud & 6. Community Cloud
+* **Concept:**
+  * **Public Cloud:** Multi-tenant infrastructure shared across customers over the Internet (AWS, Azure, GCP).
+  * **Private Cloud:** Single-tenant infrastructure dedicated exclusively to one organization (on-premises or hosted).
+  * **Hybrid Cloud:** Combines Private + Public clouds linked via encrypted IPsec VPN or dedicated circuits (AWS Direct Connect), keeping sensitive data on-prem while bursting compute to the cloud.
+  * **Community Cloud:** Shared infrastructure dedicated to a specific group of organizations with common compliance/mission requirements (e.g., government agencies, healthcare consortia, universities).
+* **Practical Task (Model Cloud Deployment Selection Logic in Python):**
+  ```python
+  def select_cloud_model(strict_data_sovereignty, needs_elastic_burst, shared_industry_compliance):
+      if shared_industry_compliance:
+          return "Community Cloud"
+      if strict_data_sovereignty and needs_elastic_burst:
+          return "Hybrid Cloud (Sensitive DB on Private Cloud + Web tier on Public Cloud)"
+      if strict_data_sovereignty:
+          return "Private Cloud"
+      return "Public Cloud"
+
+  print("Recommended Model:", select_cloud_model(True, True, False))
+  ```
+
+### 7. Infrastructure as Code (IaC)
+* **Concept:** Defining networks, firewalls, VMs, and IAM policies in declarative code files (**Terraform**, **CloudFormation**, **Ansible**, **Docker Compose**).
+  * *Security Implications:* Enables repeatable deployments and pre-deployment security scanning (SAST for IaC), **but** a single misconfigured template or leaked secret in Git replicates vulnerabilities across every environment automatically.
+* **Practical Task (Audit an IaC Snippet for Insecure Public Exposure):**
+  ```bash
+  # Check an IaC configuration file for wildcard ingress rules before deployment
+  cat << 'EOF' > main.tf.mock
+  resource "aws_security_group_rule" "rdp_open" {
+    type        = "ingress"
+    from_port   = 3389
+    to_port     = 3389
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  EOF
+
+  grep -E "3389|22" main.tf.mock && grep "0.0.0.0/0" main.tf.mock && echo "[IaC BLOCKED] Admin port exposed globally!"
+  ```
+
+---
+
+## Part B: Other Architectures (6 Models)
+
+### 8. Operational Technology (OT)
+* **Concept:** Industrial Control Systems (**ICS**), **SCADA**, and Programmable Logic Controllers (**PLCs**) managing physical equipment (power grids, water plants, manufacturing).
+  * *Security Priority:* **Availability and Physical Safety** outrank Confidentiality (unlike IT). Legacy protocols (Modbus, DNP3) often lack native authentication/encryption and cannot be rebooted mid-operation.
+
+### 9. On-Premises Infrastructure
+* **Concept:** Physical servers, switches, storage, and facilities owned, housed, and managed directly by the organization—giving maximum physical/data control but requiring full internal responsibility for power, cooling, physical security, and hardware lifecycle.
+
+### 10. Air-Gapped Networks
+* **Concept:** Physically and electrically isolated networks with **zero wired or wireless connections** to the Internet or external corporate LANs (used for top-secret defense systems, nuclear/power control systems, and offline root CAs).
+  * *Security Implications:* Strongest isolation against remote network attacks, **but** still vulnerable to physical **USB sneaker-net malware**, supply-chain implants, and electromagnetic/acoustic side-channel leakage.
+
+### 11. Microservices
+* **Concept:** Breaking a monolithic application into small, independent, loosely coupled services (often running in **Docker/Kubernetes** containers) communicating over APIs (`REST`/`gRPC`).
+  * *Security Implications:* Improves fault isolation and independent scaling, **but** dramatically increases east-west API traffic—requiring **Service Mesh mutual TLS (mTLS)**, API gateways, and per-service authentication.
+
+### 12. Logical Segmentation vs. 13. Physical Segmentation
+* **Concept:**
+  * **Logical Segmentation:** Separating network traffic using software/protocol boundaries on shared hardware—**VLANs (802.1Q)**, **Subnets**, **VPCs**, **VRFs**, and **Software-Defined Networking (SDN)**. Cost-effective and agile, though vulnerable to hypervisor/VLAN-hopping bugs if misconfigured.
+  * **Physical Segmentation:** Separating networks using completely distinct physical switches, routers, NICs, and cabling (up to full air-gapping). Highest assurance, highest hardware/maintenance cost.
+* **Practical Task (Create Two Logically Segmented Networks in Docker):**
+  ```bash
+  docker network create --subnet=10.30.1.0/24 frontend_vlan
+  docker network create --internal --subnet=10.30.2.0/24 backend_db_vlan
+  docker network ls | grep vlan
+  docker network rm frontend_vlan backend_db_vlan
+  ```
+
+---
+
+## Part C: Technical Considerations (8 Factors)
+
+| Technical Factor | Architectural Security Design Meaning | Practical Verification / Lab Check |
+| :--- | :--- | :--- |
+| **1. Availability** | Designing systems to remain operational and accessible (`99.99%` uptime) via **Redundancy**, **Load Balancing**, **Failover Clusters**, and **Anti-DDoS**. | Check active redundant paths/interfaces (`ip link show`) and failover policies. |
+| **2. Resilience** | Ability to withstand, adapt to, and rapidly recover from cyberattacks, hardware failures, or disasters without total collapse (e.g., auto-scaling groups, multi-AZ deployments). | Test container auto-restart resilience (`docker run --restart=always`). |
+| **3. Proprietary vs. Open Source** | **Proprietary:** Vendor-supported, closed source code, SLA-backed patches, vendor lock-in. **Open Source:** Transparent code auditable by community, free, customizable, but relies on internal teams or community maintainers for patching. | Audit open-source dependencies (`pip list` / `dpkg -l`) for unmaintained packages. |
+| **4. Usability** | Security controls must remain practical for users; overly complex controls cause **security fatigue** and drive employees toward insecure workarounds (**Shadow IT**, writing passwords down). | Evaluate SSO + FIDO2 Passkeys (high security *and* high usability). |
+| **5. Responsibility** | Clarifying who owns patching, monitoring, incident response, and compliance across internal teams and third-party CSPs (**Shared Responsibility Model**). | Document RACI matrices (Responsible, Accountable, Consulted, Informed). |
+| **6. Computing Resources** | Ensuring sufficient **CPU, RAM, Disk IOPS, and Network Bandwidth** to run encryption (TLS/AES), EDR agents, and deep packet inspection without bottlenecking production apps. | Benchmark local CPU/RAM overhead (`top -b -n 1 \| head -n 5`). |
+| **7. Power Requirements** | Guaranteeing continuous, clean electrical power via **UPS (Uninterruptible Power Supplies)**, **Dual PDUs**, and **Backup Diesel/Solar Generators** to prevent abrupt crashes and data corruption. | Check battery/power state on laptops/servers (`upower -d 2>/dev/null \| head -n 10`). |
+## Part C: Technical Considerations (8 Factors)
+
+> **Exam Tip:** CompTIA Security+ scenario questions often describe a system constraint (such as limited CPU on legacy devices, unstable power grids, or user workarounds) and ask you to identify which **Technical Consideration** drove the architectural choice.
+
+---
+
+### 1. Availability
+* **Concept:** Ensuring authorized users can access systems, applications, and data reliably whenever required—measured as uptime percentages (e.g., **"Five Nines" = `99.999%`** uptime $\approx$ 5.26 minutes of downtime per year). Achieved via **Redundant Hardware (RAID, dual NICs/PSUs)**, **Load Balancing**, **Failover Clusters**, and **Anti-DDoS scrubbing**.
+* **Practical Task (Calculate Annual Allowed Downtime from SLA Uptime Percentages in Python):**
+  ```python
+  minutes_per_year = 365.25 * 24 * 60
+  for nines, pct in [("Two Nines", 99.0), ("Three Nines", 99.9), ("Four Nines", 99.99), ("Five Nines", 99.999)]:
+      downtime_mins = minutes_per_year * (1 - (pct / 100))
+      print(f"{nines:<13} ({pct:>6.3f}%) -> Max Allowed Downtime: {downtime_mins:>8.2f} mins/year")
+  ```
+
+### 2. Resilience
+* **Concept:** A system's ability to **withstand, adapt to, and rapidly recover** from adverse events (cyberattacks, hardware failures, traffic surges, or power dips) while maintaining core functionality—such as **Multi-Availability Zone (Multi-AZ)** deployments, **self-healing Kubernetes pods**, and **graceful degradation**.
+* **Practical Task (Test Self-Healing Container Resilience with Docker):**
+  ```bash
+  # Run a container with an automatic restart policy and simulate an unexpected crash
+  docker run -d --name resilient_web --restart=always nginx:alpine
+  docker kill resilient_web    # Simulate abrupt process crash
+  sleep 2
+  docker ps --filter "name=resilient_web" --format "Container: {{.Names}} | Status: {{.Status}}"
+  docker rm -f resilient_web
+  ```
+
+### 3. Proprietary vs. Open Source
+* **Concept:** Architectural trade-offs when selecting software platforms:
+  * **Proprietary Software:** Closed source code owned by a vendor; offers formal SLAs, dedicated vendor support, and legal indemnification, **but** carries higher licensing costs, vendor lock-in, and opaque internals ("security through obscurity").
+  * **Open-Source Software (OSS):** Publicly auditable source code, zero licensing fees, rapid community innovation, and high customizability, **but** depends on internal teams or community maintainers for timely security patching and supply-chain verification (e.g., checking dependencies).
+* **Practical Task (Audit Installed Open-Source Packages for Outdated Versions):**
+  ```bash
+  pip list --outdated 2>/dev/null | head -n 10
+  ```
+
+### 4. Usability
+* **Concept:** Security controls must be intuitive and frictionless enough that employees follow them willingly. Overly burdensome controls (e.g., 20-character passwords changed every 15 days without a password manager) cause **security fatigue** and push users toward risky bypasses (**Shadow IT**, sticky-note passwords, disabling host firewalls).
+* **Practical Task:**
+  1. Compare authentication flows: **Legacy Password + SMS OTP** (high user friction, vulnerable to phishing) vs. **SSO + FIDO2 Passkey** (one-tap biometric login—maximizes both **Usability** and **Phishing Resistance**).
+
+### 5. Responsibility
+* **Concept:** Defining clear accountability for security operations, patching, physical protection, monitoring, and compliance across internal departments and external providers (**Shared Responsibility Model** across IaaS/PaaS/SaaS, plus internal **RACI** matrices: *Responsible, Accountable, Consulted, Informed*).
+* **Practical Task (Map RACI Responsibilities in Python):**
+  ```python
+  raci_matrix = {
+      "OS_Kernel_Patching": {"IaaS": "Customer", "PaaS": "Cloud Provider", "SaaS": "Cloud Provider"},
+      "IAM_User_MFA_Policy": {"IaaS": "Customer", "PaaS": "Customer",       "SaaS": "Customer"}
+  }
+  for control, owners in raci_matrix.items():
+      print(f"{control:<22} -> {owners}")
+  ```
+
+### 6. Computing Resources
+* **Concept:** Ensuring hardware/virtual infrastructure has adequate **CPU cycles, RAM, Disk IOPS, and Network Bandwidth** to run security controls (full-disk encryption, TLS inspection, behavioral EDR agents, SIEM log forwarding) without starving business applications.
+* **Practical Task (Inspect Local CPU, Memory & Disk I/O Headroom):**
+  * **Linux:** `free -h && nproc && df -h /`
+  * **Windows (PowerShell):** `Get-CimInstance Win32_OperatingSystem | Select-Object TotalVisibleMemorySize, FreePhysicalMemory`
+
+### 7. Power Requirements
+* **Concept:** Protecting hardware availability and preventing file-system/database corruption from blackouts, brownouts, and voltage surges—especially critical in regions with variable grid stability—using **UPS (Uninterruptible Power Supplies)** for short-term battery bridging, **Dual Power Supplies (A/B feeds)**, and **Backup Generators** for prolonged outages.
+* **Practical Task:**
+  1. Check local power/battery telemetry on your lab machine:
+     * **Linux:** `upower -i $(upower -e | grep BAT) 2>/dev/null | grep -E "state|percentage|time to empty" || echo "AC Power / Desktop"`
+     * **Windows (PowerShell):** `Get-CimInstance Win32_Battery | Select-Object Status, EstimatedChargeRemaining`
+
+### 8. Recovery
+* **Concept:** Designing architectures to restore operations and data within defined disaster recovery targets:
+  * **RTO (Recovery Time Objective):** Maximum tolerable downtime before business operations are restored.
+  * **RPO (Recovery Point Objective):** Maximum tolerable data loss measured in time (e.g., hourly backups = max 1 hour of lost transactions).
+  * **Site Options:** **Cold Site** (empty facility, slowest RTO, lowest cost) $\rightarrow$ **Warm Site** (pre-installed hardware/network, needs recent data restore) $\rightarrow$ **Hot Site** (real-time live replica, near-zero RTO/RPO, highest cost).
+
+---
+
+## Part D: Business Considerations (7 Factors)
+
+### 1. Data Sovereignty
+* **Concept:** Legal and regulatory requirement that digital data is governed by the laws and jurisdiction of the **physical country or region** where it is collected, processed, or stored (e.g., EU GDPR, national financial/telecom data localization mandates).
+* **Practical Task (Enforce Cloud Region Residency Compliance in Python):**
+  ```python
+  approved_data_regions = {"af-south-1", "eu-west-1"}  # Cape Town & Ireland
+  deployments = [
+      {"app": "Mobile-Payments-DB", "region": "af-south-1"},
+      {"app": "Citizen-ID-Archive", "region": "us-east-1"}
+  ]
+
+  for d in deployments:
+      status = "COMPLIANT" if d["region"] in approved_data_regions else "VIOLATION (Data Sovereignty Breach)"
+      print(f"{d['app']:<20} | Region: {d['region']:<12} | {status}")
+  ```
+
+### 2. Data Classification
+* **Concept:** Labeling and grouping organizational information by sensitivity and business impact (**Public**, **Internal**, **Confidential**, **Restricted / Top Secret**) so security controls (encryption, DLP, access approvals) match the value of the data.
+* **Practical Task (Map Data Classification Tiers to Required Technical Controls):**
+  ```python
+  classification_policy = {
+      "Public":       {"encryption_at_rest": False, "mfa_required": False, "dlp_block_external": False},
+      "Internal":     {"encryption_at_rest": True,  "mfa_required": True,  "dlp_block_external": False},
+      "Restricted":   {"encryption_at_rest": True,  "mfa_required": True,  "dlp_block_external": True}
+  }
+  print("Restricted Data Controls:", classification_policy["Restricted"])
+  ```
+
+### 3. Cost
+* **Concept:** Evaluating total financial impact across **CapEx** (upfront hardware/data-center capital expenditures) vs. **OpEx** (recurring cloud subscriptions, bandwidth egress fees, software licenses, and SOC staffing), ensuring the cost of a security control never exceeds the value of the asset it protects (**ALE > Control Cost**).
+
+### 4. Ownership
+* **Concept:** Assigning clear governance roles:
+  * **Data Owner:** Senior business executive accountable for classifying data and approving who gets access.
+  * **Data Custodian:** Technical administrator (sysadmin/DBA) responsible for implementing backups, permissions, and encryption as directed by the Data Owner.
+  * **System Owner:** Manager responsible for the overall security posture and maintenance of an information system.
+
+### 5. Environmental Requirements
+* **Concept:** Physical facility engineering needed to protect hardware from environmental damage:
+  * **HVAC (Heating, Ventilation, and Air Conditioning):** Maintains optimal server room temperature (`18°C–27°C`) and humidity (`40%–60%`) to prevent overheating or static electricity discharge.
+  * **Hot/Cold Aisle Containment:** Separates cold intake air from hot server exhaust air.
+  * **Fire Suppression:** Clean-agent gaseous suppression (e.g., **FM-200 / Inergen**) or dry-pipe sprinklers that extinguish fire without destroying live electronics.
+  * **Water/Flood & Seismic Sensors:** Placed under raised floors to detect leaks early.
+
+### 6. Scalability
+* **Concept:** Ability of an architecture to smoothly handle growing or shrinking workloads without redesign or downtime:
+  * **Vertical Scaling (Scale-Up):** Adding more CPU, RAM, or faster SSDs to a single existing server (limited by hardware ceilings).
+  * **Horizontal Scaling (Scale-Out):** Adding more identical servers/containers behind a load balancer (cloud-native, virtually limitless, eliminates single points of failure).
+* **Practical Task (Simulate Horizontal Scaling with Docker Compose):**
+  ```bash
+## Part D: Business Considerations (7 Factors)
+
+> **Exam Tip:** Even when an architecture is technically sound, business, legal, and financial constraints often dictate the final design. Security+ scenario questions frequently test whether you can spot **Data Sovereignty** laws, **CapEx vs. OpEx** trade-offs, **Data Ownership** roles, or **Environmental** facility requirements.
+
+---
+
+### 1. Data Sovereignty
+* **Concept:** The legal and regulatory requirement that digital data is subject to the laws, privacy regulations (e.g., EU GDPR, national financial/telecom data localization laws), and government jurisdiction of the **physical country or geographic region** where the data is collected, processed, or stored.
+* **Practical Task (Enforce Cloud Region Residency Compliance in Python):**
+  ```python
+  approved_data_regions = {"af-south-1", "eu-west-1"}  # Approved regional zones
+  deployments = [
+      {"app": "Mobile-Payments-DB", "region": "af-south-1"},
+      {"app": "Citizen-ID-Archive", "region": "us-east-1"}
+  ]
+
+  for d in deployments:
+      status = "COMPLIANT" if d["region"] in approved_data_regions else "VIOLATION (Data Sovereignty Breach)"
+      print(f"{d['app']:<20} | Region: {d['region']:<12} | {status}")
+  ```
+
+---
+
+### 2. Data Classification
+* **Concept:** Categorizing and labeling organizational information based on its sensitivity, regulatory requirements, and business impact if disclosed or altered (**Public**, **Internal**, **Confidential**, **Restricted / Top Secret**). Classification dictates which security controls (encryption strength, DLP rules, MFA, access approvals) must be applied.
+* **Practical Task (Map Data Classification Tiers to Required Technical Controls in Python):**
+  ```python
+  classification_policy = {
+      "Public":     {"encryption_at_rest": False, "mfa_required": False, "dlp_block_external": False},
+      "Internal":   {"encryption_at_rest": True,  "mfa_required": True,  "dlp_block_external": False},
+      "Restricted": {"encryption_at_rest": True,  "mfa_required": True,  "dlp_block_external": True}
+  }
+
+  for tier, controls in classification_policy.items():
+      print(f"Tier: {tier:<10} -> Required Controls: {controls}")
+  ```
+
+---
+
+### 3. Cost
+* **Concept:** Evaluating the total financial investment required to build, secure, and maintain an architecture:
+  * **CapEx (Capital Expenditure):** Upfront lump-sum purchases of physical servers, switches, firewalls, and facility build-outs (On-Premises / Private Cloud).
+  * **OpEx (Operational Expenditure):** Ongoing pay-as-you-go monthly/annual operating expenses such as cloud subscriptions, egress bandwidth fees, SaaS licenses, and SOC staffing.
+  * **Cost-Benefit Rule:** The annualized cost of a security control should never exceed the **Annualized Loss Expectancy (ALE)** of the asset it protects.
+
+---
+
+### 4. Ownership
+* **Concept:** Establishing clear executive and operational accountability for systems and data across the organization:
+  * **Data Owner:** Senior business executive (e.g., VP of Finance or HR) accountable for assigning data classification labels and approving who is authorized to access the data.
+  * **Data Custodian:** Technical administrator (sysadmin, DBA, cloud engineer) responsible for implementing backups, permissions, and encryption according to the Data Owner's policy.
+  * **System Owner:** Manager responsible for the overall security posture, patching, and operation of a specific information system.
+
+---
+
+### 5. Environmental Requirements
+* **Concept:** Physical facility engineering controls required to keep IT/OT hardware operating safely and prevent environmental failures:
+  * **HVAC (Heating, Ventilation, and Air Conditioning):** Regulates server room temperature (`18°C–27°C` / `64°F–80°F`) and relative humidity (`40%–60%`) to prevent overheating (too hot/dry) or condensation and static discharge (too humid/dry).
+  * **Hot/Cold Aisle Containment:** Aligns server racks so cold intake air and hot exhaust air never mix, maximizing cooling efficiency.
+  * **Fire Suppression:** Clean-agent gaseous systems (**FM-200**, **Inergen**, **Novec 1230**) or pre-action dry-pipe sprinklers that extinguish fire without destroying live electronics or suffocating personnel.
+  * **Water/Flood & Seismic Sensors:** Installed beneath raised floors and server racks to detect leaks or structural vibration immediately.
+
+---
+
+### 6. Scalability
+* **Concept:** An architecture's ability to smoothly expand or contract capacity to handle workload growth, seasonal spikes, or volumetric DDoS pressure without redesign or downtime:
+  * **Vertical Scaling (Scale-Up):** Upgrading a single server with more CPU cores, RAM, or faster NVMe storage (simpler, but hits hardware limits and creates a single point of failure).
+  * **Horizontal Scaling (Scale-Out):** Adding more identical servers, VMs, or containers behind a load balancer (cloud-native, auto-scaling, high availability).
+* **Practical Task (Simulate Horizontal Scaling with Docker Compose):**
+  ```bash
+  # Scale a stateless microservice horizontally across 3 container replicas
+  cat << 'EOF' > scale_demo.yml
+  services:
+    api-worker:
+      image: alpine:latest
+      command: sleep 30
+  EOF
+
+  docker compose -f scale_demo.yml up -d --scale api-worker=3
+  docker compose -f scale_demo.yml ps
+  docker compose -f scale_demo.yml down
+  ```
+
+---
+
+### 7. Risk
+* **Concept:** Evaluating how each architectural design impacts the organization's **Risk Appetite** (how much risk leadership is willing to accept) and **Residual Risk** (risk remaining after controls are applied). Every architecture trades one risk profile for another—for example:
+  * *On-Premises* reduces third-party vendor custody risk, **but** increases physical facility, power, and hardware failure risk.
+  * *Public Cloud / SaaS* reduces OS patching and facility outage risk, **but** increases misconfiguration, multi-tenancy, and vendor lock-in risk.
+
+---
+
+### Objective 3.1 Completion Checklist
+- [ ] Compared security implications across **Serverless, Multicloud, Public, Private, Hybrid, Community Cloud, and IaC**.
+- [ ] Evaluated **OT/ICS**, **On-Premises**, **Air-Gapped**, **Microservices**, and **Logical vs. Physical Segmentation** architectures.
+- [ ] Tested self-healing container **Resilience**, **Horizontal Scalability** (`docker compose --scale`), and **SLA Availability** math.
+- [ ] Applied all **8 Technical Considerations** and **7 Business Considerations** (**Data Sovereignty**, **Data Classification**, **Cost**, **Ownership**, **Environmental Requirements**, **Scalability**, **Risk**) to architectural decisions.
