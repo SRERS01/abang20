@@ -1,0 +1,49 @@
+The most dangerous and hardest-to-detect web attacks are those that blend into normal user traffic, abuse legitimate browser features, or operate silently in the background without crashing the site or triggering security alarms.
+Because traditional Web Application Firewalls (WAFs) look for obvious malicious code, attackers increasingly use subtle, multi-step techniques to remain invisible for months.
+
+1. Server-Side Request Forgery (SSRF)
+
+• Why it is dangerous: Instead of attacking the website directly from the outside, the attacker tricks the web server into making requests on their behalf from the inside. This allows hackers to bypass firewalls, scan internal corporate networks, and steal sensitive cloud credentials (such as AWS or Azure metadata).
+• Why it is hard to notice: To the internal network, the malicious request looks like it is coming from a trusted, authorized internal server rather than an external hacker.
+
+2. Business Logic Flaws
+
+• Why it is dangerous: Attackers abuse legitimate features of a website in unintended ways—such as manipulating coupon codes, bypassing payment steps in a checkout flow, or transferring negative amounts of money to add funds to their own account.
+• Why it is hard to notice: There is no malicious code, SQL injection, or malware involved. Because the attacker is using the site's actual features with valid inputs, security scanners and firewalls treat it as normal customer behavior.
+
+3. Magecart / Digital Skimming (Client-Side Supply Chain Attacks)
+
+• Why it is dangerous: Attackers inject a tiny, obfuscated snippet of JavaScript into a website's checkout page—often by compromising a third-party plugin (like a chatbot, analytics tool, or ad tracker). As customers type in their credit card details, the script silently sends a copy to the attacker's server.
+• Why it is hard to notice: The checkout process works normally for the customer, and the malicious script runs entirely inside the user's browser rather than on the company's server, making it invisible to standard server-side security monitoring.
+
+4. Second-Order SQL Injection & Stored XSS
+
+• Why it is dangerous: Unlike standard attacks that execute immediately, "second-order" or "stored" payloads sit quietly inside a database until a specific trigger occurs—such as an administrator opening a user profile or generating a monthly report—at which point the code executes with full admin privileges.
+• Why it is hard to notice: When the attacker first submits the data, it appears harmless and passes basic input filters. The actual breach happens days or weeks later, making it very difficult to trace back to the source.
+
+5. HTTP Request Smuggling
+
+• Why it is dangerous: Modern websites use chains of servers (like a CDN or load balancer in front of a backend web server). Attackers craft ambiguous HTTP requests that the front-end server and back-end server interpret differently, allowing them to "smuggle" hidden requests past security filters, hijack other users' sessions, or poison web caches.
+• Why it is hard to notice: Both servers see what looks like valid HTTP traffic, leaving little to no trace in standard error logs while silently compromising other visitors' sessions.
+
+6. Broken Object Level Authorization (BOLA / IDOR)
+
+• Why it is dangerous: Very common in modern APIs, this happens when a website checks that you are logged in, but fails to check if you actually own the data you are requesting (e.g., changing /api/invoices/1001 to /api/invoices/1002 in the URL to view someone else's private invoice).
+• Why it is hard to notice: Every request comes from a legitimately authenticated user account using standard API calls, making it blend seamlessly into normal traffic unless someone notices unusual data volume.
+
+7. Cache Poisoning
+
+• Why it is dangerous: Attackers trick a website's caching system (which saves copies of pages to load them faster for everyone) into saving a malicious version of a webpage. Every innocent visitor who loads that page afterward is automatically served the attacker's payload.
+• Why it is hard to notice: The attacker does not need to breach the main database or alter the source code; once the temporary cache clears or expires, the evidence disappears on its own.
+
+Summary: Why These Evade Detection
+
+
+Attack Type	Primary Target	Why Security Tools Miss It
+SSRF	Internal Cloud / Servers	Traffic originates from a trusted internal server
+Business Logic Flaws	App Workflows & Payments	Uses valid inputs and legitimate site features
+Digital Skimming	User's Web Browser	Executes client-side via trusted 3rd-party scripts
+HTTP Request Smuggling	Proxy & Backend Servers	Exploits parsing disagreements between servers
+BOLA / IDOR	APIs & User Data	Uses valid login tokens and standard API requests
+
+
