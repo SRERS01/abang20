@@ -1,0 +1,322 @@
+You can use mitmproxy, Frida, Wireshark, Postman, MobSF and JADX to test for IDOR, SSRF, RCE, authentication weaknesses, injection vulnerabilities and other mobile application security issues without Burp Suite.
+
+The important thing is to understand that these tools have different jobs:
+
+* JADX/MobSF: Discover application code, API endpoints and possible weaknesses.
+
+* mitmproxy: Capture and inspect requests and responses.
+
+* Postman/curl: Send controlled test requests and compare results.
+
+* Frida: Observe application behavior at runtime.
+
+* Wireshark: Investigate network communications.
+
+Below is a practical testing workflow for an application you own or are explicitly authorized to assess.
+
+### 1\. IDOR — Insecure Direct Object Reference
+
+IDOR occurs when a user can access another user's resource by changing an object identifier without proper authorization.
+
+Example scenario
+
+Suppose your test application has two accounts:
+
+* Account A: user ID `1001`
+
+* Account B: user ID `1002`
+
+Account A requests:
+
+```http
+GET /api/users/1001/profile
+Authorization: Bearer ACCOUNT_A_TOKEN
+```
+
+In your authorized test environment, check whether Account A can access Account B's test profile:
+
+```http
+GET /api/users/1002/profile
+Authorization: Bearer ACCOUNT_A_TOKEN
+```
+
+If the server returns Account B's private profile, that is evidence of a possible IDOR. If it returns `403 Forbidden`, `404 Not Found`, or safely denies access, that is a good sign, although you should test other operations too.
+
+Test all object types, not just profiles:
+
+* User profiles
+
+* Orders
+
+* Payments
+
+* Uploaded documents
+
+* Messages
+
+* Account settings
+
+Also test whether changing an identifier in a `POST`, `PUT`, `PATCH` or `DELETE` request gives unauthorized access or modification. Use two accounts you control.
+
+### 2\. SSRF — Server-Side Request Forgery
+
+SSRF occurs when an application server can be tricked into making network requests to destinations that the application should not access.
+
+Example scenario: Your application has an image-import feature that accepts a URL.
+
+```http
+POST /api/import-image
+Content-Type: application/json
+Authorization: Bearer TEST_TOKEN
+
+{
+  "url": "https://your-controlled-test-domain.example/canary"
+}
+```
+
+Replace the example domain with a domain or callback service you control.
+
+### Testing procedure
+
+* Start your controlled HTTP server or callback listener.
+
+* Submit a normal image URL.
+
+* Check whether your server receives a request.
+
+* Submit another URL pointing to a different controlled endpoint.
+
+* Check whether the application server, rather than your phone, makes the request.
+
+* Check whether the application restricts URL schemes, destinations and redirects.
+
+Secure behavior
+
+* Only approved destinations are accepted.
+
+* Internal and private network destinations are blocked.
+
+* Redirects are validated at every step.
+
+* URL schemes are restricted appropriately.
+
+Do not use production cloud metadata addresses, private company networks or third-party internal services as test targets. Use controlled callback infrastructure or an isolated lab.
+
+### 3\. RCE — Remote Code Execution
+
+RCE means an attacker can cause a server or application environment to execute unintended code.
+
+For a mobile application, distinguish between:
+
+* Backend RCE: The server executes attacker-controlled code.
+
+* Android-side code execution: The application or device executes unintended code.
+
+### Testing procedure
+
+First, use JADX to look for risky functionality:
+
+```bash
+jadx -d decoded_app target.apk
+
+grep -RniE \
+'Runtime.getRuntime|ProcessBuilder|exec\(|loadLibrary|DexClassLoader|WebView' \
+decoded_app/
+```
+
+This identifies code worth reviewing; it does not prove RCE.
+
+Next, inspect API functionality through mitmproxy and Postman. Look for features that process:
+
+* Uploaded files
+
+* Archive files
+
+* Documents
+
+* Images
+
+* Templates
+
+* Scripts
+
+* Server-side conversion jobs
+
+For a deliberately vulnerable lab application, use a harmless execution marker, such as checking whether a controlled test process returns its identity (`whoami`) or a unique marker. Verify execution through server-side logs.
+
+Do not test arbitrary command execution on production systems or use destructive commands. A suspicious API parameter or a `500` response is not proof of RCE.
+
+### 4\. Other vulnerabilities you can test
+
+| Vulnerability             | Practical test                                                                          | Tools                  |
+| ------------------------- | --------------------------------------------------------------------------------------- | ---------------------- |
+| Broken authentication     | Test login, logout, token expiry and password reset                                     | Postman, mitmproxy     |
+| Broken authorization      | Compare access using two test accounts                                                  | Postman                |
+| SQL injection             | Use non-destructive input variations in a test environment; inspect errors and behavior | Postman, mitmproxy     |
+| Command injection         | Review server-side input handling and use harmless lab markers                          | JADX, Postman          |
+| XSS                       | Test whether controlled HTML input is safely encoded in rendered content                | Postman, Frida         |
+| File upload vulnerability | Test allowed file types, sizes and server-side validation                               | Postman, mitmproxy     |
+| Path traversal            | Check whether file-access functions enforce directory boundaries                        | Postman                |
+| Rate-limit weakness       | Make a small, controlled number of requests to a test account                           | Python, Postman        |
+| Sensitive data exposure   | Inspect API responses, logs and local application storage                               | mitmproxy, JADX, MobSF |
+| Insecure data storage     | Inspect shared preferences, databases and files                                         | ADB, MobSF             |
+| TLS weaknesses            | Review certificate validation and transport configuration                               | MobSF, Wireshark       |
+| Business logic flaws      | Test transaction limits, duplicate operations and invalid state transitions             | Postman, Python        |
+| Mass assignment           | Check whether unauthorized fields can be modified through API input                     | Postman                |
+| Race conditions           | Test simultaneous requests against a controlled test operation                          | Python, Postman        |
+| Open redirect             | Test whether redirect destinations are properly restricted                              | Postman                |
+| Insecure deep links       | Inspect exported activities and intent handling                                         | JADX, ADB              |
+
+### 5\. How to perform the tests using your tools
+
+Here is a practical workflow.
+
+Step 1 — Discover the API endpoints
+
+```bash
+jadx -d decoded_app target.apk
+
+grep -RniE \
+'https?://|/api/|graphql|baseUrl' \
+decoded_app/
+```
+
+Step 2 — Capture the application's traffic
+
+```bash
+mitmproxy --listen-host 0.0.0.0 --listen-port 8080
+```
+
+Configure your emulator's proxy to use your Ubuntu host's reachable address and port `8080`.
+
+Step 3 — Identify the requests
+
+Record:
+
+* HTTP method
+
+* Endpoint
+
+* Parameters
+
+* Headers
+
+* Authentication token
+
+* Response status
+
+* Response body
+
+Step 4 — Reproduce requests
+
+Use Postman or curl to replay requests with your test accounts.
+
+Step 5 — Compare results
+
+Compare authorized and unauthorized responses, including their status codes, returned data and server-side effects.
+
+Step 6 — Document findings
+
+Record the affected endpoint, test accounts, evidence, impact and recommended fix.
+
+### 6\. A complete vulnerability-testing checklist
+
+You can use this checklist to track your assessment.
+
+Mobile application security assessment
+
+0/20 completed
+
+IDOR / BOLA
+
+Broken authentication
+
+Broken authorization
+
+SSRF
+
+RCE
+
+SQL injection
+
+Command injection
+
+Cross-site scripting (XSS)
+
+Path traversal
+
+File upload vulnerabilities
+
+Rate limiting
+
+Sensitive information exposure
+
+Insecure local storage
+
+TLS configuration
+
+Mass assignment
+
+Race conditions
+
+Business logic flaws
+
+Open redirects
+
+Insecure deep links
+
+Exported Android components
+
+Reset checklist
+
+### 7\. Important distinction
+
+Not every vulnerability can be discovered by intercepting traffic.
+
+For example:
+
+* IDOR is primarily an API authorization problem.
+
+* SSRF is primarily a server-side network-request problem.
+
+* RCE is a code-execution problem.
+
+* Insecure storage is primarily a device-side problem.
+
+* Certificate pinning is an application networking protection.
+
+That is why combining static analysis, runtime analysis, network inspection and API testing is more effective than relying on one proxy.
+
+### 8\. Let's make this practical
+
+I suggest we build a complete mobile application penetration-testing laboratory using your Ubuntu laptop and Android emulator.
+
+Which application are you testing?
+
+1\. Application
+
+My own Android application
+
+An intentionally vulnerable training application
+
+A third-party application I am authorized to test
+
+2\. Emulator
+
+Rooted emulator
+
+Non-rooted emulator
+
+Not sure
+
+3\. Testing objective
+
+All vulnerability categories
+
+IDOR and API authorization
+
+SSRF and injection vulnerabilities
+
+RCE and Android runtime security
+
+Build my practical testing lab

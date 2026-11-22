@@ -1,0 +1,208 @@
+These five imports are Python modules and functions that provide specific capabilities to your password-testing script.
+
+Let's examine each one, what it does, and where it is used.
+
+### 1\. `import requests`
+
+Purpose: Sends HTTP requests to a server.
+
+It allows Python to communicate with web applications and APIs.
+
+Example from your script:
+
+```python
+response = requests.post(
+    TARGET,
+    json=payload,
+    headers=headers,
+    proxies=proxies,
+    timeout=5
+)
+```
+
+What each part does:
+
+| Part            | Function                                      |
+| --------------- | --------------------------------------------- |
+| requests.post() | Sends an HTTP POST request                    |
+| TARGET          | Specifies the destination URL                 |
+| json=payload    | Sends data in JSON format                     |
+| headers=headers | Adds HTTP headers                             |
+| proxies=proxies | Routes the request through a configured proxy |
+| timeout=5       | Stops waiting after 5 seconds                 |
+
+Other useful methods:
+
+```python
+requests.get()
+requests.put()
+requests.patch()
+requests.delete()
+requests.head()
+```
+
+### 2\. `import time`
+
+Purpose: Handles time-related operations.
+
+Your script uses it in two main ways.
+
+```python
+time.sleep(3)
+```
+
+Pauses the program for three seconds.
+
+Another example:
+
+```python
+time.time()
+```
+
+Returns the current Unix timestamp (seconds since January 1, 1970).
+
+Other useful functions:
+
+```python
+time.sleep(5)       # Pause for 5 seconds
+time.time()         # Current timestamp
+time.ctime()        # Readable date and time
+time.perf_counter() # High-resolution performance timer
+```
+
+### 3\. `import csv`
+
+Purpose: Reads and writes CSV files.
+
+CSV means Comma-Separated Values.
+
+Your script uses it to save test results:
+
+```python
+with open("lab_results.csv", "w", newline="") as file:
+    writer = csv.DictWriter(
+        file,
+        fieldnames=["username", "http_status", "result"]
+    )
+
+    writer.writeheader()
+    writer.writerows(results)
+```
+
+What each part does:
+
+| Code             | Function                               |
+| ---------------- | -------------------------------------- |
+| open()           | Opens or creates a file                |
+| "w"              | Opens in write mode                    |
+| csv.DictWriter() | Writes dictionary data into CSV format |
+| writeheader()    | Writes column names                    |
+| writerows()      | Writes multiple records                |
+
+Example output:
+
+| username | http_status | result  |
+| -------- | ----------- | ------- |
+| alice    | 401         | failed  |
+| bob      | 200         | success |
+| charlie  | 429         | blocked |
+
+### 4\. `from itertools import cycle`
+
+Purpose: Repeats items in a sequence indefinitely.
+
+Your script uses:
+
+```python
+ip_cycle = cycle(SIMULATED_IPS)
+proxy_cycle = cycle(LOCAL_PROXIES)
+```
+
+Then:
+
+```python
+simulated_ip = next(ip_cycle)
+proxy = next(proxy_cycle)
+```
+
+Suppose you have:
+
+```python
+PROXIES = [
+    "proxy1",
+    "proxy2",
+    "proxy3"
+]
+```
+
+The `cycle()` function produces:
+
+Rotation sequence
+
+proxy1proxy2proxy3
+
+proxy1proxy2proxy3
+
+The sequence repeats indefinitely.
+
+`next()` retrieves the next item in that sequence.
+
+### 5\. `from urllib.parse import urlparse`
+
+Purpose: Breaks a URL into individual components.
+
+Your script uses:
+
+```python
+parsed = urlparse(TARGET)
+```
+
+For example:
+
+```python
+from urllib.parse import urlparse
+
+url = "http://127.0.0.1:5000/login"
+
+parsed = urlparse(url)
+
+print(parsed.scheme)
+print(parsed.hostname)
+print(parsed.port)
+print(parsed.path)
+```
+
+Output:
+
+```text
+http
+127.0.0.1
+5000
+/login
+```
+
+The components are:
+
+| Component | Meaning                   |
+| --------- | ------------------------- |
+| scheme    | Protocol (http or https)  |
+| hostname  | Server hostname or IP     |
+| port      | Communication port        |
+| path      | Resource or endpoint path |
+| query     | URL query parameters      |
+
+Your script uses this to verify that the target and configured proxies are local.
+
+### Summary: What each import contributes
+
+| Import                | Main responsibility            |
+| --------------------- | ------------------------------ |
+| requests              | Communicates with web servers  |
+| time                  | Controls delays and timestamps |
+| csv                   | Saves test results             |
+| itertools.cycle       | Repeats items in a sequence    |
+| urllib.parse.urlparse | Analyses URL components        |
+
+Important concept: An `import` makes existing Python functionality available to your program. It doesn't execute your entire testing workflow automatically; your code calls the imported functions when needed.
+
+Next, I can explain every line of the script, including variables, functions, loops, conditions and how the HTTP request is constructed.

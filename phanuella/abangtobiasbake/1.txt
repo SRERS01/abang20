@@ -1,0 +1,195 @@
+You can inspect and configure Android 11 security and networking features using ADB. However, I recommend distinguishing between features that interfere with proxy connectivity and security protections that should remain enabled.
+
+For your Android Studio Emulator and Burp Suite setup, here is the command reference.
+
+### 1\. Network-related Android features
+
+These are the first settings to investigate.
+
+| Feature                  | What it does                                   |
+| ------------------------ | ---------------------------------------------- |
+| Airplane mode            | Disables cellular and can disable Wi-Fi        |
+| Wi-Fi                    | Controls wireless network connectivity         |
+| Mobile data              | Controls cellular data connectivity            |
+| Private DNS              | Controls DNS-over-TLS resolution               |
+| HTTP proxy               | Routes supported HTTP requests through a proxy |
+| VPN                      | Routes traffic through a VPN service           |
+| Captive portal detection | Detects networks requiring login               |
+| Data Saver               | Restricts background data usage                |
+| Background data          | Controls background network access             |
+
+Inspect commands:
+
+```bash
+adb shell settings get global airplane_mode_on
+adb shell settings get global http_proxy
+adb shell settings get global private_dns_mode
+adb shell settings get global private_dns_specifier
+adb shell settings get global captive_portal_mode
+adb shell settings get global data_saver_mode
+```
+
+### 2\. Android networking configuration commands
+
+| Command                                                | Purpose                             |
+| ------------------------------------------------------ | ----------------------------------- |
+| adb shell svc wifi enable                              | Enables Wi-Fi                       |
+| adb shell svc wifi disable                             | Disables Wi-Fi                      |
+| adb shell svc data enable                              | Enables mobile data                 |
+| adb shell svc data disable                             | Disables mobile data                |
+| adb shell settings put global airplane_mode_on 0       | Sets airplane-mode setting to off   |
+| adb shell settings put global http_proxy 10.0.2.2:8080 | Configures HTTP proxy               |
+| adb shell settings get global http_proxy               | Checks proxy configuration          |
+| adb shell dumpsys connectivity                         | Displays connectivity information   |
+| adb shell dumpsys netpolicy                            | Displays network policy information |
+| adb shell dumpsys vpn                                  | Displays VPN information            |
+
+Note: Setting airplane mode through `settings put` alone does not necessarily update all Android radio states.
+
+### 3\. Android security protections
+
+These protections do not normally prevent Chrome from using a correctly configured Burp proxy.
+
+| Security feature               | What it prevents                                        |
+| ------------------------------ | ------------------------------------------------------- |
+| Certificate validation         | Trusting invalid or untrusted certificates              |
+| Network Security Configuration | Controls which certificates applications trust          |
+| Certificate pinning            | Rejects certificates that do not match application pins |
+| SELinux                        | Restricts processes and system access                   |
+| Verified Boot                  | Detects unauthorized system modifications               |
+| Android permissions            | Restricts application access to protected resources     |
+| Play Protect                   | Detects potentially harmful applications                |
+| User CA restrictions           | Some apps do not trust user-installed certificates      |
+| Cleartext traffic restrictions | Prevents certain apps from using unencrypted HTTP       |
+
+I would not recommend disabling SELinux, Verified Boot, certificate validation or Android permission enforcement to solve a proxy problem.
+
+### 4\. Inspect Android security settings
+
+Run:
+
+```bash
+adb shell getenforce
+```
+
+Displays SELinux enforcement status.
+
+```bash
+adb shell getprop ro.boot.verifiedbootstate
+```
+
+Displays Verified Boot state.
+
+```bash
+adb shell dumpsys device_policy
+```
+
+Displays device-policy information.
+
+```bash
+adb shell pm list packages -d
+```
+
+Lists disabled packages.
+
+```bash
+adb shell dumpsys package com.android.chrome
+```
+
+Displays Chrome package information.
+
+### 5\. Recommended Burp configuration
+
+For your particular setup, use:
+
+### Android 11 + Burp Suite
+
+Burp listener
+
+0.0.0.0:8080
+
+Android proxy host
+
+10.0.2.2
+
+Android proxy port
+
+8080
+
+Burp CA certificate
+
+Installed
+
+SELinux
+
+Keep enforcing
+
+Certificate validation
+
+Keep enabled
+
+Configure the proxy:
+
+```bash
+adb shell settings put global http_proxy 10.0.2.2:8080
+```
+
+Check:
+
+```bash
+adb shell settings get global http_proxy
+```
+
+### 6\. My recommended diagnostic sequence
+
+Run this complete inspection sequence:
+
+```bash
+echo "===== ANDROID NETWORK ====="
+
+adb shell settings get global airplane_mode_on
+
+adb shell settings get global http_proxy
+
+adb shell settings get global private_dns_mode
+
+adb shell settings get global private_dns_specifier
+
+echo "===== CONNECTIVITY ====="
+
+adb shell dumpsys connectivity
+
+echo "===== VPN ====="
+
+adb shell dumpsys vpn
+
+echo "===== NETWORK POLICY ====="
+
+adb shell dumpsys netpolicy
+
+echo "===== SECURITY ====="
+
+adb shell getenforce
+
+adb shell getprop ro.boot.verifiedbootstate
+
+echo "===== CHROME ====="
+
+adb shell pm list packages | grep chrome
+```
+
+This sequence is diagnostic; it does not disable protections.
+
+### Important: One distinction for your Burp laboratory
+
+There are three different things that are often confused:
+
+* Android network restrictions: Can affect whether Chrome has connectivity.
+
+* Android certificate restrictions: Can affect whether Chrome or other applications trust Burp's HTTPS certificates.
+
+* Burp proxy configuration: Determines whether supported requests reach Burp.
+
+Disabling all Android security features will not automatically solve any of these problems.
+
+My recommendation: Run section 6 and share the output. We can identify exactly which setting is responsible instead of weakening the entire Android security system.

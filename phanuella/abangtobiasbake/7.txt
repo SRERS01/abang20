@@ -1,0 +1,605 @@
+You can use Python to perform mobile application security testing without Burp Suite. In fact, Python can automate many tests that a penetration tester would otherwise perform manually.
+
+The important thing is to understand that Python can interact with a running Android application in several ways:
+
+* ADB: Python sends commands to the virtual phone.
+
+* Appium: Python controls the application interface.
+
+* HTTP clients: Python sends requests to the application's backend API.
+
+* Frida: Python controls runtime instrumentation.
+
+* Packet analysis: Python examines captured network traffic.
+
+* SQLite: Python examines application databases when accessible.
+
+I'll show you how to build a practical Python mobile testing laboratory using your Ubuntu laptop and Android 11 emulator.
+
+### 1\. Prepare Python
+
+You already have experience using Python virtual environments, so create a separate environment for this project:
+
+```bash
+mkdir -p ~/mobile-security-lab
+cd ~/mobile-security-lab
+
+python3 -m venv myvenv
+source myvenv/bin/activate
+
+pip install --upgrade pip
+pip install requests frida-tools objection
+```
+
+Install supporting Ubuntu tools:
+
+```bash
+sudo apt update
+sudo apt install -y adb tcpdump wireshark sqlite3
+```
+
+Install Appium's Python client:
+
+```bash
+pip install Appium-Python-Client selenium
+```
+
+### 2\. Python script to communicate with the virtual phone
+
+First, Python needs to communicate with Android through ADB.
+
+Create:
+
+`device_test.py`
+
+```python
+
+import subprocess
+
+def adb(command):
+    result = subprocess.run(
+        ["adb"] + command.split(),
+        capture_output=True,
+        text=True
+    )
+    return result.stdout.strip()
+
+print("ANDROID DEVICE")
+print(adb("devices"))
+
+print("\nANDROID VERSION")
+print(adb("shell getprop ro.build.version.release"))
+
+print("\nDEVICE MODEL")
+print(adb("shell getprop ro.product.model"))
+
+print("\nINSTALLED APPLICATIONS")
+print(adb("shell pm list packages"))
+```
+
+Run:
+
+```bash
+python device_test.py
+```
+
+This script allows Python to obtain information from the running virtual phone.
+
+### 3\. Python script to inspect a running application
+
+Create `app_inspector.py`.
+
+```python
+
+import subprocess
+
+PACKAGE = "com.example.app"
+
+def run_adb(args):
+    return subprocess.run(
+        ["adb"] + args,
+        capture_output=True,
+        text=True
+    )
+
+print("APPLICATION INFORMATION")
+
+result = run_adb([
+    "shell", "dumpsys", "package", PACKAGE
+])
+
+print(result.stdout[:10000])
+
+print("\nCURRENT ACTIVITIES")
+
+result = run_adb([
+    "shell", "dumpsys", "activity", "activities"
+])
+
+print(result.stdout[:5000])
+
+print("\nAPPLICATION LOGS")
+
+result = run_adb([
+    "logcat", "-d", "-t", "500"
+])
+
+print(result.stdout[-5000:])
+```
+
+Replace `com.example.app` with the actual package name.
+
+This lets you inspect package configuration, activity state and logs.
+
+### 4\. Python script to automate the application screen
+
+For this, use Appium.
+
+Appium lets Python interact with the actual Android screen, just as a person would.
+
+![Configuring and Starting a Session - Appium Inspector](https://images.openai.com/static-rsc-4/3QfY7kI4EQmDe3Daxoipk0ba3XVy0tWWF9CaJjiVQlMdzgt9GY2RutOaoQ7JdMLAQBugjK9YfiPoKn6vcQ1ZKpEPVx3MmpZxNycwKESqwoUV7CGDYvrwFtS0UhjZm6J7ISZqd5Ad87Uuzn8ikk1nChF7zoIdMMUYqSnyYRP-3LjvdAnqeVdkapUZ2XXwrf6s?purpose=fullsize)
+
+Install Appium on Ubuntu:
+
+```bash
+sudo apt install -y nodejs npm
+
+sudo npm install -g appium
+
+appium driver install uiautomator2
+```
+
+Start the Appium server:
+
+```bash
+appium
+```
+
+In another terminal, create `screen_test.py`:
+
+```python
+
+from appium import webdriver
+from appium.options.android import UiAutomator2Options
+from appium.webdriver.common.appiumby import AppiumBy
+from time import sleep
+
+options = UiAutomator2Options()
+
+options.platform_name = "Android"
+options.automation_name = "UiAutomator2"
+options.device_name = "Android Emulator"
+options.app_package = "com.example.app"
+options.app_activity = ".MainActivity"
+
+driver = webdriver.Remote(
+    "http://127.0.0.1:4723",
+    options=options
+)
+
+try:
+    sleep(5)
+
+    print("Application launched")
+
+    print("Current screen:")
+    print(driver.page_source)
+
+    print("Screen size:")
+    print(driver.get_window_size())
+
+    driver.save_screenshot("app_screen.png")
+
+finally:
+    driver.quit()
+```
+
+Replace the package and activity with those of your test application.
+
+This script:
+
+* Launches the application.
+
+* Reads its visible UI hierarchy.
+
+* Obtains screen dimensions.
+
+* Takes a screenshot.
+
+* Closes the automation session.
+
+You can extend it to tap buttons, fill forms, scroll and repeat test scenarios.
+
+### 5\. Python script to test the application's API
+
+This is particularly important when you do not have Burp Suite.
+
+Your Python script can communicate directly with the application's backend.
+
+For example, suppose your authorised test application has an API endpoint:
+
+```text
+https://test.example.com/api/profile
+```
+
+Create `api_test.py`:
+
+```python
+
+import requests
+
+BASE_URL = "https://test.example.com"
+
+session = requests.Session()
+
+def test_endpoint(path):
+    url = BASE_URL + path
+
+    try:
+        response = session.get(
+            url,
+            timeout=10
+        )
+
+        print("\nEndpoint:", path)
+        print("Status:", response.status_code)
+        print("Content-Type:",
+              response.headers.get("Content-Type"))
+        print("Server:", response.headers.get("Server"))
+        print("Response:", response.text[:500])
+
+    except requests.RequestException as error:
+        print("Request failed:", error)
+
+test_endpoint("/api/profile")
+test_endpoint("/api/products")
+test_endpoint("/api/account")
+```
+
+Replace the example endpoints with endpoints documented for your test application.
+
+You can also authenticate with a dedicated test account:
+
+```python
+response = session.post(
+    BASE_URL + "/api/login",
+    json={
+        "username": "test_user",
+        "password": "TEST_PASSWORD"
+    },
+    timeout=10
+)
+
+print(response.status_code)
+print(response.text)
+```
+
+Do not use real customer credentials.
+
+### 6\. Python script for security-header testing
+
+Security headers help protect web and API communication.
+
+Create `header_test.py`:
+
+```python
+
+import requests
+
+URL = "https://test.example.com"
+
+response = requests.get(
+    URL,
+    timeout=10
+)
+
+security_headers = [
+    "Strict-Transport-Security",
+    "Content-Security-Policy",
+    "X-Content-Type-Options",
+    "X-Frame-Options",
+    "Referrer-Policy",
+    "Permissions-Policy"
+]
+
+print("HTTP STATUS:", response.status_code)
+
+for header in security_headers:
+    value = response.headers.get(header)
+
+    if value:
+        print("[PRESENT]", header, ":", value)
+    else:
+        print("[NOT OBSERVED]", header)
+```
+
+Important: Not every header applies equally to every API. For example, Content Security Policy is primarily relevant to browser-rendered content.
+
+### 7\. Python script to test input validation
+
+You can test an application API with a controlled collection of valid and invalid values.
+
+For example, imagine a test API that accepts a withdrawal amount.
+
+Create `validation_test.py`:
+
+```python
+
+import requests
+
+URL = "https://test.example.com/api/test-withdrawal"
+
+test_values = [
+    1,
+    10,
+    100,
+    0,
+    -1,
+    -100,
+    10.50,
+    "abc",
+    "",
+    None
+]
+
+for amount in test_values:
+    try:
+        response = requests.post(
+            URL,
+            json={"amount": amount},
+            timeout=10
+        )
+
+        print(
+            "Amount:", repr(amount),
+            "| Status:", response.status_code,
+            "| Response:", response.text[:200]
+        )
+
+    except requests.RequestException as error:
+        print("Error:", error)
+```
+
+Only run this against a dedicated test endpoint that cannot move real money or affect real accounts.
+
+The goal is to verify that the server rejects invalid values and preserves its business rules.
+
+For example:
+
+* Zero and negative withdrawals must be rejected.
+
+* Invalid data types must be rejected.
+
+* Excessive amounts must be rejected.
+
+* Repeated requests must not cause duplicate transactions.
+
+A successful HTTP response alone does not prove a transaction succeeded securely. Verify the resulting test-account state.
+
+### 8\. Python script to inspect the running application with Frida
+
+Frida is especially useful because it lets you investigate the application while it is executing.
+
+Install the Python package:
+
+```bash
+pip install frida
+```
+
+Your emulator must have a compatible Frida Server running, or the application must use a suitable Frida Gadget setup.
+
+Create `runtime_test.py`:
+
+```python
+
+import frida
+import sys
+
+PACKAGE = "com.example.app"
+
+device = frida.get_usb_device(timeout=10)
+
+session = device.attach(PACKAGE)
+
+script_code = """
+Java.perform(function () {
+    console.log("[+] Java runtime attached");
+
+    Java.enumerateLoadedClasses({
+        onMatch: function(name) {
+            if (name.startsWith("com.example")) {
+                console.log("[CLASS] " + name);
+            }
+        },
+        onComplete: function() {
+            console.log("[+] Class enumeration complete");
+        }
+    });
+});
+"""
+
+script = session.create_script(script_code)
+
+script.on(
+    "message",
+    lambda message, data: print(message)
+)
+
+script.load()
+
+print("Runtime inspection active. Press Ctrl+C to stop.")
+
+try:
+    sys.stdin.read()
+finally:
+    script.unload()
+    session.detach()
+```
+
+This example observes loaded classes belonging to the application's package. It does not modify the application's security controls.
+
+You can later investigate specific methods and runtime operations in an application you are authorised to test.
+
+### 9\. Python script to capture the application's network traffic
+
+You can use Python to start a TCPdump capture.
+
+First, identify the emulator's network activity and your Ubuntu interfaces:
+
+```bash
+ip -br address
+```
+
+Create `network_capture.py`:
+
+```python
+
+import subprocess
+
+output = "mobile_app_traffic.pcap"
+
+command = [
+    "sudo",
+    "tcpdump",
+    "-i", "any",
+    "-nn",
+    "-w", output
+]
+
+print("Starting network capture...")
+print("Use the Android application to generate traffic.")
+print("Press Ctrl+C to stop.")
+
+try:
+    subprocess.run(command)
+except KeyboardInterrupt:
+    print("\nCapture stopped.")
+
+print("Saved capture:", output)
+```
+
+Run:
+
+```bash
+python network_capture.py
+```
+
+Open the capture:
+
+```bash
+wireshark mobile_app_traffic.pcap
+```
+
+You can observe DNS, TCP, UDP and TLS activity. Remember that HTTPS payloads remain encrypted unless you have a legitimate means of inspecting the application-layer data.
+
+### 10\. Python script to inspect accessible application databases
+
+For a debuggable application that permits `run-as`, Python can retrieve and inspect its database.
+
+Example:
+
+```python
+
+import subprocess
+import sqlite3
+
+PACKAGE = "com.example.app"
+DATABASE = "app.db"
+
+subprocess.run([
+    "adb", "exec-out",
+    "run-as", PACKAGE,
+    "cat", "databases/" + DATABASE
+], stdout=open("app.db", "wb"), check=True)
+
+connection = sqlite3.connect("app.db")
+cursor = connection.cursor()
+
+cursor.execute(
+    "SELECT name FROM sqlite_master WHERE type='table'"
+)
+
+print("Database tables:")
+
+for table in cursor.fetchall():
+    print(table[0])
+
+connection.close()
+```
+
+Only inspect data belonging to your test application and accounts. Some apps use encrypted databases or different database paths.
+
+### 11\. Your complete Python mobile-testing toolkit
+
+| Test                  | Python integration   |
+| --------------------- | -------------------- |
+| Device inspection     | subprocess + ADB     |
+| Application launching | ADB                  |
+| Screen automation     | Appium               |
+| Runtime inspection    | Frida                |
+| API testing           | requests             |
+| Input validation      | requests             |
+| Security headers      | requests             |
+| Packet capture        | TCPdump + subprocess |
+| Packet analysis       | Scapy or Wireshark   |
+| Database inspection   | sqlite3              |
+| Log analysis          | ADB + Python         |
+| Automated reporting   | Python + CSV/JSON    |
+
+### 12\. How the entire laboratory works
+
+Ubuntu laptop
+
+Your Python testing scripts
+
+ADB
+
+Device control
+
+Appium
+
+Screen interaction
+
+Frida
+
+Runtime inspection
+
+TCPdump
+
+Network capture
+
+Android 11 virtual phone
+
+Your running test application
+
+Application backend/API
+
+Authorised test server
+
+### 13\. What I recommend building next
+
+Rather than maintaining ten separate scripts, you can build one Python-based Android security testing framework with modules for:
+
+* Device discovery.
+
+* Application identification.
+
+* APK and manifest inspection.
+
+* Screen automation.
+
+* Runtime monitoring.
+
+* Storage inspection.
+
+* API testing.
+
+* Network capture.
+
+* Input validation.
+
+* Security findings and report generation.
+
+One important limitation: Python's `requests` library sends its own HTTP requests; it does not automatically see requests made by Chrome or another Android app. To examine the actual app's traffic, use network capture, runtime instrumentation or an interception proxy.
+
+My recommendation is to build the framework incrementally, starting with ADB, Appium, Frida and Python Requests. That gives you control of the phone, interaction with the live application, runtime visibility and independent API testing without depending on Burp Suite.

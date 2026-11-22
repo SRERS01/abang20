@@ -1,0 +1,313 @@
+There are many tools that can interact with an Android application running inside your Android 11 virtual phone. They operate at different levels: some control the phone, some interact with the screen, others inspect application code, monitor runtime behaviour, or communicate with the application's APIs.
+
+Here is a comprehensive toolkit for mobile application security research.
+
+### 1\. Tools that directly interact with the virtual phone
+
+Device control, installation, screen interaction and debugging
+
+![](https://images.openai.com/static-rsc-4/s7dMBKaKa1AN_TK4E3XrBzk6fZWHGQegA-3Hk3OZpwQSSDYBmnU0Mf-S3Zs-8H7fhMfzPoi6xl_ZfTZuLTOTr_LpF9ozEW1NDgsVHPZ3aa7J0IxNYXpC6EbEJUIFlVlzfbPnl2PNTVC0zzQO75UYxKSjBWN7WWPtDCugz8wC6b3-9bjLfYurOeecKU_pQbc6?purpose=fullsize)
+
+1\. ADB
+
+Controls the Android emulator from Ubuntu.
+
+* Install and uninstall applications.
+
+* Launch applications.
+
+* Execute Android shell commands.
+
+* Read logs.
+
+* Transfer files.
+
+* Take screenshots.
+
+* Inspect packages.
+
+```bash
+adb devices
+adb shell
+adb install app.apk
+adb logcat
+```
+
+![Can I have the Android Emulator without the Window Frame? - Stack Overflow](https://images.openai.com/static-rsc-4/k1iyRDbk1OV7tcapjgS1SL_4JhXPrFeN0Rb7JLpHKSjiKd-__KYsMiDCoubBErQBcW9RHBbJRWy6HIpb47uaiPs-CzkJlwA82R4axMzCGEwuOzBGqP3suLhhrac5TFpGzf_1swKkpCDQ6xmFk3hYt-3mKmNbn8e-Qbv3wX96mNRg1up97qT8WUwKsc0i3kfJ?purpose=fullsize)
+
+2\. Android Studio
+
+* Launch and manage virtual phones.
+
+* Inspect application layouts.
+
+* Debug applications.
+
+* Monitor CPU and memory.
+
+* Inspect application processes.
+
+[Official website](https://developer.android.com/studio?utm_source=chatgpt.com)
+
+![Appium Inspector | Sauce Labs Documentation](https://images.openai.com/static-rsc-4/34-lf_AYRQFZrxZbwcYv0Ugy0uvsEfVGqfULomakBtQY-zHMfMTYPl0pEbA5skZ_j2rQZFJhnJXpLgxBI5dNRgrF1C80kQTZG4HlS2M82BVBeUhX-kvA91H9GmiD6Cw__Q2GJOqg58J_eEgqM5phnAQzes9xDRaPe7OC1wMcYaSgQl5XUunUYsB0qVxHSqBS?purpose=fullsize)
+
+3\. Appium
+
+Automates interactions with the application interface.
+
+* Tap buttons.
+
+* Enter text.
+
+* Scroll.
+
+* Navigate screens.
+
+* Automate test cases.
+
+[Official website](https://appium.io/?utm_source=chatgpt.com)
+
+![Efficient Testing Android app – Tools](https://images.openai.com/static-rsc-4/hBnnnU7Q5kZ6L6gXjv1Qn7lMDqaE2RlQJCIrvDiWQH8ASLGEfhtvoN8ylKI6v9e_jMHLBmVdkZ8YNNNF6H6gfQ0GUmko59Dvnvb_cfuAlDs6KYFXN2tSTkHOF1AgbJ9aRdrZv7YOKLRFCMWrm28CgFQISBGaLbIHy9g1LmL3OxNBdSOccakqvUGnL47ID9zr?purpose=fullsize)
+
+4\. UI Automator
+
+* Inspect interface elements.
+
+* Find buttons and text fields.
+
+* Automate interface actions.
+
+* Test navigation and accessibility.
+
+[Documentation](https://developer.android.com/training/testing/other-components/ui-automator?utm_source=chatgpt.com)
+
+![Handy vom PC aus steuern (SCRCPY)](https://images.openai.com/static-rsc-4/vznt-gfojxkEEXwLI6TRgvhCkdzHNbKXW7PfaPnI3x63-Bm8WL1AeHl1-idKWbNdIFsQwiwy25P8lREDE9HauUqFu8SIZiqrJD_jo3vp-MgtTuH8y7COaWf9qG7l26Qeksu_h6-hDKXWU0yfKubvrAZutlksiOvYbc19TDuzc-Dhg44d4nssuVi1t0_AH1eb?purpose=fullsize)
+
+5\. scrcpy
+
+* Display the virtual phone on Ubuntu.
+
+* Control it with your mouse and keyboard.
+
+* Type and interact with the screen.
+
+[Official project](https://github.com/Genymobile/scrcpy?utm_source=chatgpt.com)
+
+### 2\. Tools that interact with application code at runtime
+
+These are especially useful for offensive security research in an authorised laboratory.
+
+![Dynamic Instrumentation on Linux/Android using Frida](https://images.openai.com/static-rsc-4/sn1M8bhunnGfyhGd6uAurGuPvxmiSQlvW0y4TbyIZUIuFF5PJlhPO90XwtJWM_WNu19ZT3zBptomm2GqACq00E_qgTPb7R51B039RuhOurzjC6Rfvxr5EVRQP-GdwnXRNPffd3LiAe4tylqq7viPJ2mdg9o2x8BegEOH_AJoPUGhlp6BFgdiX-jfZSf2Essb?purpose=fullsize)
+
+6\. Frida
+
+Observe and instrument application methods while the app is running.
+
+* Observe method calls.
+
+* Inspect runtime values.
+
+* Trace application behaviour.
+
+* Investigate cryptographic functions.
+
+* Understand application execution.
+
+[Official website](https://frida.re/?utm_source=chatgpt.com)
+
+![Objection 2026: Runtime Mobile App Exploration with Frida (Commands & Setup)](https://images.openai.com/static-rsc-4/k-9zpRxOePOxNYn2anvRb1NarKEn4M_U6hrJmEVv8nHG_fAWsVS5tSWoYzoQMim6gOAjFF6tm5rYwoM2zl5ovjPOG9dXeQBB4X75iLVMGQubR8dNncaSu2S6hbEVAiR5eavHeshjtoET06EBJdWn3q1wuKrvUSGYliCLYw1MTi9PjsN483_dhUV8XsLhuUYg?purpose=fullsize)
+
+7\. Objection
+
+A runtime exploration tool built around Frida.
+
+* Explore application environments.
+
+* Inspect files and preferences.
+
+* Examine runtime properties.
+
+* Investigate Android security configurations.
+
+[Official project](https://github.com/sensepost/objection?utm_source=chatgpt.com)
+
+![Debug dell'app  |  Android Studio  |  Android Developers](https://images.openai.com/static-rsc-4/2kbegGCHnh_taFGh5nA-ofK0HGZBysusd5dGWCvjA45g9B83WMI21NECpAQ2Pvek_aBi5hWIagpneLfQt0idoFK6dKuhfX8EbE8mSrpPJ3hq9Vq6ZCRqlsP72y2vcn7fnuuQkMfDmeYNiD0Z-B-MFwwj51Hf3A4caOjfHaCiN6hbgba92e6PCb2Bx_ztPFlc?purpose=fullsize)
+
+8\. LLDB
+
+Debug native Android application code.
+
+* Inspect native processes.
+
+* Examine memory and variables.
+
+* Set breakpoints.
+
+* Investigate native libraries.
+
+![Use the debugger in Android Studio  |  Android Developers](https://images.openai.com/static-rsc-4/e0uKkHU9rQl4HGhAv_zF6zOxqCRj8NpbqMs_ueLX0QAHmoKIzv1EiNjsrWmNoJbI09yYl4vZxs6C7ZqTt2EjPOXQsNDkHeqB300k1e5uxc3PoAJ6yUFOl-3c8urFYovYMVsrKtOrZb0KOLVIA_RbSvhbDnC3aa78fO-HSFGjQVzk4q4fQZZp1O8WArqNdxhN?purpose=fullsize)
+
+9\. JDWP
+
+Supports debugging compatible Android Java applications.
+
+* Inspect execution.
+
+* Set breakpoints.
+
+* Examine variables.
+
+* Follow method execution.
+
+Access depends on application debugging configuration.
+
+### 3\. Tools that inspect and analyse APK files
+
+These tools interact with the application's package and code, rather than necessarily controlling its screen.
+
+| Tool            | Main function                               |
+| --------------- | ------------------------------------------- |
+| JADX            | Decompile APKs into readable Java-like code |
+| APKTool         | Decode resources and Smali                  |
+| MobSF           | Automated mobile security analysis          |
+| Androguard      | Programmatic APK analysis                   |
+| Ghidra          | Reverse-engineer native libraries           |
+| Bytecode Viewer | Inspect compiled application code           |
+| Apk Analyzer    | Inspect APK structure and contents          |
+
+### 4\. Tools that inspect application network communication
+
+These tools help you investigate what the application sends and receives.
+
+![](https://images.openai.com/static-rsc-4/-aL2WRXuR2ijlvtWrqYZN1DDGPB3Rc9KhxWu3DNcL0IwvnsERoVHcYfbpzvYwofKuSmsHw_zZY4lmPu7KlYHwDMhLSzYue4seNVk4vkkXp9T2OtK2P-Ngu2qLFogUAkwGncrZ7OZuvneb3lopSSDuG2IVCuDiwgECJvwzGBxZJsSrGi9UIfk1z3q3nAMWif9?purpose=fullsize)
+
+10\. Wireshark
+
+Captures and analyses network packets.
+
+* DNS
+
+* TCP
+
+* UDP
+
+* TLS
+
+* HTTP traffic when visible
+
+    [Website](https://www.wireshark.org/?utm_source=chatgpt.com)
+
+![Comprehensive Guide to tcpdump (Part 2)](https://images.openai.com/static-rsc-4/Yv9MN85_S7NH2ucbWxdJ9m_PLCDZeWiPcFnjp_hBHYcZo6X9pSlHU8-sgn5JM2MKbIbbSVdzibmzbZ1sDAF8wxv3TSinzm_9epnKsERJYwf9NCpCmN_ycDwvKxU1oPQpF2lEXVxM0rlmWpbpcbDcAkFKzUYCdTCOgJ0WRqHMcavpW2FxoDazV5XPpPhZT5BB?purpose=fullsize)
+
+11\. TCPdump
+
+Captures traffic from the terminal.
+
+```bash
+sudo tcpdump -i any -nn
+```
+
+![mitmproxy抓包工具 - 始識 - 博客园](https://images.openai.com/static-rsc-4/0sHOgvZI7CJ2b-WfBVVMoS0JYPPHc842tec2dVeHOgqlc3i4dy9acAKgR1KzGXXVmT4gCBhoT9eUh66pZsR1pA4yHFw2KQh68ZpPLq7AIPRO1Q8oP12ij00A9yvAxWrC2ZV7gq73Ba6baRFR7DulT1C233D-aSx4rodIyyrO1iG1-5Ev4cvQF1N7YpERMwS9?purpose=fullsize)
+
+12\. mitmproxy
+
+An alternative to Burp Suite for inspecting HTTP/HTTPS traffic.
+
+[Website](https://mitmproxy.org/?utm_source=chatgpt.com)
+
+![Zed Attack Proxy (Formerly OWASP ZAP): 7 Key Features & Tutorial | Radware](https://images.openai.com/static-rsc-4/73PsyHZSkupamrDMAHzgVgNZZfeiIbJXbqFLqZbGym171ZlZ_tLd0fyqsAftdEoIMiACfigZmMOa5CLOhrnIApqwtmykQTxvVmcBeg7AY2ffsIoMmRY3gSVaNL4jMvih3bJgUEIMKklSny765Nac6Ih65SVuRIzCnoN_bOzsnCZ0oK7GRQSTBvo7AanRgavd?purpose=fullsize)
+
+13\. OWASP ZAP
+
+Intercepts and analyses supported HTTP/HTTPS traffic.
+
+[Website](https://www.zaproxy.org/?utm_source=chatgpt.com)
+
+### 5\. Tools that test APIs and backend services
+
+| Tool         | What it does                              |
+| ------------ | ----------------------------------------- |
+| Postman      | Sends API requests and examines responses |
+| Insomnia     | Tests REST and GraphQL APIs               |
+| HTTPie       | Sends HTTP requests                       |
+| curl         | Tests endpoints and HTTP responses        |
+| Newman       | Automates Postman collections             |
+| Schemathesis | Tests APIs against OpenAPI schemas        |
+
+### 6\. Tools for Android system and storage inspection
+
+| Tool                    | What it investigates                           |
+| ----------------------- | ---------------------------------------------- |
+| ADB Shell               | Android operating system and shell             |
+| SQLite3                 | Application databases                          |
+| run-as                  | Private app files for eligible debuggable apps |
+| Android Device Explorer | Application files and directories              |
+| logcat                  | Android and application logs                   |
+| dumpsys                 | Android system services and application state  |
+| dumpsys package         | Installed application configuration            |
+| dumpsys activity        | Activity and task information                  |
+| dumpsys connectivity    | Network state                                  |
+
+### 7\. Which tools can interact with which layers?
+
+This is the important distinction when building your testing laboratory.
+
+| Testing layer                 | Recommended tools      |
+| ----------------------------- | ---------------------- |
+| Phone control                 | ADB, scrcpy            |
+| Screen automation             | Appium, UI Automator   |
+| APK inspection                | JADX, APKTool          |
+| Runtime execution             | Frida, Objection, LLDB |
+| Java debugging                | JDWP                   |
+| Network capture               | Wireshark, TCPdump     |
+| HTTP/HTTPS interception       | mitmproxy, ZAP         |
+| API testing                   | Postman, curl, HTTPie  |
+| Storage inspection            | ADB, SQLite3           |
+| Automated security assessment | MobSF                  |
+| Native code analysis          | Ghidra                 |
+
+### 8\. My recommended toolkit for your Ubuntu + Android 11 lab
+
+Recommended core toolkit
+
+Install and learn these first:
+
+* ADB — control the virtual phone.
+
+* Appium — automate application interaction.
+
+* JADX — examine application code.
+
+* APKTool — examine application resources.
+
+* Frida — inspect runtime behaviour.
+
+* Objection — explore the runtime environment.
+
+* Wireshark — inspect network traffic.
+
+* TCPdump — capture packets.
+
+* MobSF — automate mobile security analysis.
+
+* Postman — test backend APIs.
+
+One important point: No single tool can interact with every part of an application. For example, Appium interacts with the interface, Frida observes runtime execution, JADX examines code, and Wireshark examines network packets.
+
+### 9\. Let me distinguish the kind of interaction you want
+
+Which type of interaction do you want to master?
+
+All types — complete mobile testing toolkit
+
+Control the app like a human: click, type, scroll and navigate
+
+Interact with the running app's internal code and memory
+
+Observe and test everything the app sends and receives
+
+Interact with Android itself: files, permissions, processes and databases
+
+Automate entire application workflows and test cases
+
+Continue with practical guide

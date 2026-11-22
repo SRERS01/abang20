@@ -1,0 +1,210 @@
+In offensive security, bypass and evasion are closely related, but they describe two different security-testing objectives.
+
+The simplest distinction is:
+
+* Bypass: Can I get past the security control?
+
+* Evasion: Can I avoid the security control detecting or recognizing what I am doing?
+
+A bypass can succeed even when the security system detects it. Evasion focuses on avoiding detection or recognition.
+
+Let's examine the practical differences.
+
+### 1\. Fundamental differences
+
+| Comparison                  | Bypass                             | Evasion                                                    |
+| --------------------------- | ---------------------------------- | ---------------------------------------------------------- |
+| Main objective              | Get past a security restriction    | Avoid detection or recognition                             |
+| Main concern                | Access or execution                | Visibility and detection                                   |
+| Security question           | Did the control stop the action?   | Did the control recognize the action?                      |
+| Expected outcome            | Restricted action succeeds         | Suspicious activity remains undetected                     |
+| Detection required?         | No                                 | Avoiding detection is central                              |
+| Can the activity be logged? | Yes                                | Ideally, it is not detected, although logs may still exist |
+| Typical weakness            | Missing or ineffective enforcement | Incomplete detection or monitoring                         |
+| Common assessment           | Authorization testing              | Detection engineering assessment                           |
+
+### 2\. Practical examples
+
+### Example 1: Login rate limiting
+
+Imagine an application allows three failed login attempts before blocking further attempts.
+
+Security rule
+
+Maximum three failed login attempts per account.
+
+Bypass assessment
+
+The researcher checks whether another login route has the same rate limit.
+
+* Expected: Every login route enforces the restriction.
+
+* Finding: One route does not enforce it.
+
+* Result: The rate limit can be bypassed through an inconsistent enforcement path.
+
+Control enforcement weakness
+
+Evasion assessment
+
+The researcher examines whether the monitoring system recognizes suspicious login patterns across multiple accounts and source identities.
+
+* Expected: Related suspicious attempts are correlated.
+
+* Finding: Monitoring treats each account independently.
+
+* Result: The detection system has a visibility gap.
+
+Detection weakness
+
+### Example 2: Web Application Firewall (WAF)
+
+Suppose a WAF blocks malicious-looking input.
+
+| Situation                                                            | Classification                                   | Reason                                     |
+| -------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------ |
+| Input reaches the backend despite the WAF rule                       | Bypass                                           | The security restriction was not enforced  |
+| WAF does not recognize a suspicious request                          | Evasion                                          | Detection failed                           |
+| WAF detects the request but allows it because of an incorrect policy | Bypass                                           | Detection occurred, but enforcement failed |
+| WAF blocks the request and records an alert                          | Neither successful bypass nor successful evasion | The control worked                         |
+
+### Example 3: Android certificate pinning
+
+Suppose an Android application uses certificate pinning to restrict which certificates it trusts.
+
+Bypass testing:
+
+You assess whether the application can be made to accept a certificate that should be rejected.
+
+Evasion testing:
+
+You assess whether the application detects and reports attempts to tamper with its certificate-validation or runtime-integrity mechanisms.
+
+The difference is that one examines whether the restriction can be defeated, while the other examines whether the attempted interference is recognized.
+
+### Example 4: Authentication and authorization
+
+Suppose a user is only permitted to view their own account.
+
+* Bypass: A user obtains access to another user's account information despite the authorization restriction.
+
+* Evasion: The unauthorized access activity is not recognized by the application's security monitoring.
+
+An IDOR vulnerability is primarily an authorization bypass, not automatically an evasion vulnerability.
+
+### Example 5: Antivirus and endpoint protection
+
+| Situation                                                                 | Classification                                   |
+| ------------------------------------------------------------------------- | ------------------------------------------------ |
+| A security product detects a test file but fails to prevent its execution | Prevention bypass                                |
+| A security product does not recognize a malicious test sample             | Detection evasion                                |
+| A product detects and blocks the sample                                   | Neither successful bypass nor successful evasion |
+| A product detects the sample but generates no alert                       | Alerting or observability weakness               |
+
+### 3\. Differences in the testing process
+
+| Testing stage | Bypass testing                         | Evasion testing                         |
+| ------------- | -------------------------------------- | --------------------------------------- |
+| 1. Identify   | Security restriction                   | Detection mechanism                     |
+| 2. Understand | Enforcement conditions                 | Detection logic                         |
+| 3. Examine    | Alternative execution paths            | Visibility and recognition gaps         |
+| 4. Test       | Whether restricted actions succeed     | Whether suspicious activity is detected |
+| 5. Verify     | Whether unauthorized behavior occurred | Whether monitoring recognized it        |
+| 6. Report     | Broken security enforcement            | Broken detection or monitoring          |
+
+### 4\. Can bypass and evasion happen together?
+
+Yes.
+
+Consider this example:
+
+A banking application has a withdrawal limit of 100,000 FCFA.
+
+A security researcher discovers that a transaction-processing endpoint does not enforce the withdrawal limit.
+
+Two separate questions arise:
+
+* Bypass: Can a transaction exceeding the permitted limit be processed?
+
+* Evasion: Does the fraud-monitoring system recognize and flag the abnormal transaction?
+
+Four possible outcomes
+
+| Enforcement | Detection | Interpretation                                 |
+| ----------- | --------- | ---------------------------------------------- |
+| Works       | Works     | Protected and monitored                        |
+| Fails       | Works     | Bypass with detection                          |
+| Works       | Fails     | Detection weakness, but action remains blocked |
+| Fails       | Fails     | Bypass and detection failure                   |
+
+This distinction is extremely important in professional penetration testing.
+
+### 5\. Other real-world comparisons
+
+| Security area | Bypass example                                                | Evasion example                                    |
+| ------------- | ------------------------------------------------------------- | -------------------------------------------------- |
+| Firewall      | Unauthorized traffic is permitted                             | Suspicious traffic is not recognized               |
+| IDS           | Traffic passes a preventive enforcement point                 | IDS fails to identify suspicious traffic           |
+| WAF           | Restricted request reaches the application                    | WAF fails to classify the request                  |
+| MFA           | Protected operation succeeds without required MFA             | Suspicious authentication behavior is not detected |
+| API           | Unauthorized endpoint access succeeds                         | API monitoring misses suspicious access patterns   |
+| Android       | An integrity restriction is defeated                          | Tampering is not detected                          |
+| Antivirus     | A file executes despite prevention policy                     | Malware is not recognized                          |
+| EDR           | A protected operation succeeds despite a security restriction | Endpoint activity is not recognized                |
+| SIEM          | A security policy is not enforced                             | Events are not correlated or alerted               |
+| Cloud IAM     | Unauthorized resource access succeeds                         | Unauthorized activity is not detected              |
+
+### 6\. Important related terminology
+
+These terms are often confused:
+
+| Term               | Meaning                                              |
+| ------------------ | ---------------------------------------------------- |
+| Bypass             | Getting around a security restriction                |
+| Evasion            | Avoiding detection or recognition                    |
+| Exploitation       | Taking advantage of a vulnerability                  |
+| Circumvention      | Going around a control or restriction                |
+| Tampering          | Unauthorized modification of data or system behavior |
+| Obfuscation        | Making information or activity harder to understand  |
+| Spoofing           | Impersonating another identity or source             |
+| Concealment        | Hiding the existence or nature of something          |
+| Persistence        | Maintaining access or execution over time            |
+| Defense impairment | Weakening or disabling security mechanisms           |
+
+### 7\. How to classify a vulnerability correctly
+
+When you discover a weakness, ask these three questions:
+
+* Was the security restriction supposed to prevent the action?
+
+* Did the restricted action succeed?
+
+* Did the security monitoring recognize the activity?
+
+Use this classification:
+
+* Restricted action succeeds → potential bypass.
+
+* Suspicious activity is not recognized → potential evasion.
+
+* Both happen → bypass combined with evasion.
+
+* Neither happens → the tested security control worked.
+
+### Final takeaway
+
+Think of a security system as having two responsibilities:
+
+Prevention and enforcement
+
+Stop unauthorized actions.
+
+Bypass testing examines this responsibility.
+
+Detection and monitoring
+
+Recognize suspicious actions.
+
+Evasion testing examines this responsibility.
+
+Remember: A system can successfully detect an attack but fail to prevent it. It can also prevent an attack without detecting it. That is why bypass and evasion must be assessed separately.

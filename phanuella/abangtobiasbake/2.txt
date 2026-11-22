@@ -1,0 +1,208 @@
+Now I understand your objective. You want your Android 11 virtual phone to behave like a normal internet-connected phone:
+
+* Your Ubuntu laptop can access the internet.
+
+* Chrome inside the Android emulator can access the same websites.
+
+* All supported HTTP and HTTPS requests from the emulator pass through Burp Suite.
+
+* You can inspect those requests and responses in Burp's HTTP history.
+
+* You want to remove network settings or restrictions that interfere with this process.
+
+The important distinction: You do not need to disable every Android security feature. You need to remove network conflicts and configure the emulator and Burp correctly. Disabling SELinux, Verified Boot, or certificate validation will not fix ordinary internet connectivity.
+
+### 1\. Configure Burp Suite on Ubuntu
+
+In Burp Suite Community Edition:
+
+* Open Proxy → Proxy settings.
+
+* Find Proxy listeners.
+
+* Edit the listener.
+
+* Bind address: `All interfaces (0.0.0.0)`.
+
+* Port: `8080`.
+
+* Ensure the listener is running.
+
+Check it from Ubuntu:
+
+```bash
+sudo ss -lntp | grep 8080
+```
+
+You should see Burp listening on port `8080`.
+
+### 2\. Check Ubuntu internet connectivity
+
+Run:
+
+```bash
+ping -c 4 8.8.8.8
+```
+
+Then:
+
+```bash
+curl -I https://www.google.com
+```
+
+If these fail, fix Ubuntu's internet connection first.
+
+Next, test Burp's connection to the internet:
+
+```bash
+curl -v -x http://127.0.0.1:8080 https://www.google.com
+```
+
+This checks whether Burp can forward your laptop's web request.
+
+### 3\. Configure Android emulator to use Burp
+
+First, identify your emulator:
+
+```bash
+emulator -list-avds
+```
+
+Start it with:
+
+```bash
+emulator -avd YOUR_AVD_NAME -http-proxy http://10.0.2.2:8080
+```
+
+`10.0.2.2` is the special address Android Emulator uses to reach the Ubuntu host.
+
+Alternatively, configure the running emulator:
+
+```bash
+adb shell settings put global http_proxy 10.0.2.2:8080
+```
+
+Verify:
+
+```bash
+adb shell settings get global http_proxy
+```
+
+Expected:
+
+```text
+10.0.2.2:8080
+```
+
+### 4\. Check Android settings that can interfere
+
+Run these commands individually:
+
+```bash
+adb shell settings get global airplane_mode_on
+adb shell settings get global private_dns_mode
+adb shell settings get global private_dns_specifier
+adb shell settings get global http_proxy
+adb shell dumpsys vpn
+adb shell dumpsys connectivity
+adb shell dumpsys netpolicy
+```
+
+Here is what they help identify:
+
+| Feature       | Possible interference                  |
+| ------------- | -------------------------------------- |
+| Airplane mode | Can disable network transports         |
+| Wi-Fi         | Affects emulator network connectivity  |
+| Mobile data   | Affects cellular connectivity          |
+| Private DNS   | Can cause DNS resolution problems      |
+| VPN           | May route traffic differently          |
+| Data Saver    | May restrict some app traffic          |
+| HTTP proxy    | Must point to Burp                     |
+| Firewall      | May block emulator-to-host connections |
+
+For a normal test, ensure Airplane mode is off, no conflicting VPN is active, and Private DNS is set to Automatic or Off if you are diagnosing a DNS problem.
+
+You can inspect network state with:
+
+```bash
+adb shell dumpsys connectivity
+```
+
+### 5\. Test the complete traffic route
+
+Expected traffic flow
+
+Android 11 Chrome
+
+You search for a website
+
+Android Emulator Proxy
+
+10.0.2.2:8080
+
+Burp Suite on Ubuntu
+
+Inspect requests and responses
+
+Ubuntu internet connection
+
+Forwards the request to the website
+
+In Burp, turn Intercept off temporarily, open Proxy → HTTP history, and browse to:
+
+```text
+https://example.com
+```
+
+You should see the request in HTTP history.
+
+For HTTPS inspection, Burp's CA certificate must also be trusted by the Android environment. Installing it does not mean every app will trust it; some apps restrict user-installed certificates or use certificate pinning.
+
+### 6\. Security features you should not disable
+
+These are not ordinary causes of Chrome failing to reach the internet:
+
+| Feature                    | Recommendation                                                |
+| -------------------------- | ------------------------------------------------------------- |
+| SELinux                    | Keep enabled                                                  |
+| Verified Boot              | Keep enabled                                                  |
+| Android app permissions    | Keep enabled                                                  |
+| TLS certificate validation | Keep enabled                                                  |
+| Play Protect               | No need to disable                                            |
+| App sandboxing             | Keep enabled                                                  |
+| Certificate pinning        | Test only in an authorized app/lab; do not globally bypass it |
+
+Also, not every type of traffic is guaranteed to appear in Burp. Apps that ignore the system proxy, and some UDP/QUIC traffic, may not be captured by a standard HTTP proxy.
+
+### Let's diagnose your exact setup
+
+Before changing more settings, I want to identify where the connection is failing.
+
+Run this block on Ubuntu and share the output:
+
+```bash
+
+echo "===== UBUNTU INTERNET ====="
+curl -I --max-time 10 https://www.google.com
+
+echo "===== BURP LISTENER ====="
+sudo ss -lntp | grep 8080
+
+echo "===== EMULATOR ====="
+adb devices
+
+echo "===== ANDROID PROXY ====="
+adb shell settings get global http_proxy
+
+echo "===== AIRPLANE MODE ====="
+adb shell settings get global airplane_mode_on
+
+echo "===== PRIVATE DNS ====="
+adb shell settings get global private_dns_mode
+
+echo "===== VPN ====="
+adb shell dumpsys vpn
+```
+
+One question: Can Chrome inside your Android emulator currently open a website when Burp is completely turned off? This will tell us whether we should troubleshoot Android internet connectivity first or the Burp proxy connection.

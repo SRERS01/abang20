@@ -1,0 +1,281 @@
+Below is a complete Python password-spraying detection lab with simulated IP rotation. It is designed for your Ubuntu laptop and a local test server—not for sending login attempts to real services.
+
+It simulates different source IP addresses using an `X-Lab-Source-IP` header. These are test addresses, not actual network IP rotation.
+
+### 1\. Install the requirements
+
+```bash
+mkdir -p ~/password-spray-lab
+cd ~/password-spray-lab
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip install requests flask
+```
+
+### 2\. Create the test server
+
+Save as `server.py`:
+
+```python
+
+from flask import Flask, request, jsonify
+from collections import defaultdict
+import time
+
+app = Flask(__name__)
+
+# Lab-only accounts
+USERS = {
+    "alice": "LabPassword123!",
+    "bob": "LabPassword123!",
+    "charlie": "DifferentPassword!",
+    "david": "AnotherPassword!"
+}
+
+# Tracking for defensive testing
+attempts_by_user = defaultdict(list)
+attempts_by_ip = defaultdict(list)
+
+WINDOW = 60
+MAX_USER_ATTEMPTS = 3
+MAX_IP_ATTEMPTS = 5
+
+def clean_old_attempts(records):
+    now = time.time()
+    return [t for t in records if now - t < WINDOW]
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True) or {}
+
+    username = data.get("username", "")
+    password = data.get("password", "")
+
+    # Only trust this simulated IP header in this local lab.
+    source_ip = request.headers.get(
+        "X-Lab-Source-IP", "127.0.0.1"
+    )
+
+    attempts_by_user[username] = clean_old_attempts(
+        attempts_by_user[username]
+    )
+    attempts_by_ip[source_ip] = clean_old_attempts(
+        attempts_by_ip[source_ip]
+    )
+
+    if len(attempts_by_user[username]) >= MAX_USER_ATTEMPTS:
+        return jsonify({
+            "status": "blocked",
+            "reason": "Account attempt limit reached"
+        }), 429
+
+    if len(attempts_by_ip[source_ip]) >= MAX_IP_ATTEMPTS:
+        return jsonify({
+            "status": "blocked",
+            "reason": "Source attempt limit reached"
+        }), 429
+
+    attempts_by_user[username].append(time.time())
+    attempts_by_ip[source_ip].append(time.time())
+
+    if USERS.get(username) == password:
+        return jsonify({
+            "status": "success",
+            "message": "Lab login successful"
+        }), 200
+
+    return jsonify({
+        "status": "failed",
+        "message": "Invalid credentials"
+    }), 401
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "lab server running"})
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=False)
+```
+
+### 3\. Create the testing script
+
+Save as `client.py`:
+
+```python
+
+import requests
+import time
+import csv
+from itertools import cycle
+
+# LOCAL LAB ONLY
+TARGET = "http://127.0.0.1:5000/login"
+
+# Test accounts created in server.py
+USERNAMES = [
+    "alice",
+    "bob",
+    "charlie",
+    "david"
+]
+
+# One known lab password for controlled testing
+TEST_PASSWORD = "LabPassword123!"
+
+# Reserved documentation addresses.
+# These simulate source identities only.
+SIMULATED_IPS = [
+    "192.0.2.10",
+    "192.0.2.11",
+    "198.51.100.20",
+    "203.0.113.30"
+]
+
+DELAY_SECONDS = 3
+MAX_ATTEMPTS = 4
+OUTPUT_FILE = "lab_results.csv"
+
+def verify_local_target():
+    allowed = (
+        TARGET.startswith("http://127.0.0.1:")
+        or TARGET.startswith("http://localhost:")
+    )
+
+    if not allowed:
+        raise SystemExit(
+            "Safety stop: this script only permits localhost."
+        )
+
+def test_login(session, username, simulated_ip):
+    headers = {
+        "Content-Type": "application/json",
+        "X-Lab-Source-IP": simulated_ip
+    }
+
+    payload = {
+        "username": username,
+        "password": TEST_PASSWORD
+    }
+
+    try:
+        response = session.post(
+            TARGET,
+            json=payload,
+            headers=headers,
+            timeout=5
+        )
+
+        try:
+            body = response.json()
+        except ValueError:
+            body = {"message": response.text[:200]}
+
+        return {
+            "username": username,
+            "simulated_ip": simulated_ip,
+            "http_status": response.status_code,
+            "result": body.get("status", "unknown"),
+            "message": body.get("message", body.get("reason", ""))
+        }
+
+    except requests.RequestException as error:
+        return {
+            "username": username,
+            "simulated_ip": simulated_ip,
+            "http_status": "ERROR",
+            "result": "error",
+            "message": str(error)
+        }
+
+def main():
+    verify_local_target()
+
+    ip_cycle = cycle(SIMULATED_IPS)
+    results = []
+
+    with requests.Session() as session:
+        for index, username in enumerate(USERNAMES[:MAX_ATTEMPTS]):
+            simulated_ip = next(ip_cycle)
+
+            result = test_login(
+                session,
+                username,
+                simulated_ip
+            )
+
+            results.append(result)
+
+            print(
+                f"{username:10} | "
+                f"{simulated_ip:15} | "
+                f"{result['http_status']} | "
+                f"{result['result']}"
+            )
+
+            # Stop if the server reports a block.
+            if result["http_status"] == 429:
+                print("\nServer rate limit detected. Stopping.")
+                break
+
+            # Stop if an unexpected server error occurs.
+            if isinstance(result["http_status"], int) and \
+               result["http_status"] >= 500:
+                print("\nServer error detected. Stopping.")
+                break
+
+            if index < MAX_ATTEMPTS - 1:
+                time.sleep(DELAY_SECONDS)
+
+    with open(OUTPUT_FILE, "w", newline="") as file:
+        writer = csv.DictWriter(
+            file,
+            fieldnames=[
+                "username",
+                "simulated_ip",
+                "http_status",
+                "result",
+                "message"
+            ]
+        )
+        writer.writeheader()
+        writer.writerows(results)
+
+    print(f"\nResults saved to {OUTPUT_FILE}")
+
+if __name__ == "__main__":
+    main()
+```
+
+### 4\. Run the practical
+
+Open Terminal 1:
+
+```bash
+cd ~/password-spray-lab
+source venv/bin/activate
+python server.py
+```
+
+Open Terminal 2:
+
+```bash
+cd ~/password-spray-lab
+source venv/bin/activate
+python client.py
+```
+
+### 5\. What you are testing
+
+| Test                        | What it helps evaluate                                |
+| --------------------------- | ----------------------------------------------------- |
+| Multiple accounts           | Whether failed logins are monitored across accounts   |
+| Simulated source identities | Whether detection relies too heavily on IP addresses  |
+| Account attempt limit       | Whether individual accounts are protected             |
+| Source attempt limit        | Whether repeated attempts from one source are blocked |
+| HTTP 429                    | Whether rate limiting is enforced                     |
+
+Important: The simulated IP header is only for your local lab. It does not change your real IP address, and a production server must never trust a client-supplied header as proof of source identity.
+
+This lab demonstrates why IP-based rate limiting alone is insufficient: effective protection should also consider account-level limits, device/session signals, suspicious patterns across accounts, and alerting.

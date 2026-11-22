@@ -1,0 +1,160 @@
+Password spraying is an authentication attack in which someone tries one commonly used password against multiple accounts, rather than trying many passwords against one account.
+
+For example, in an authorized test environment:
+
+| Account   | Test attempt |
+| --------- | ------------ |
+| testuser1 | Password A   |
+| testuser2 | Password A   |
+| testuser3 | Password A   |
+| testuser4 | Password A   |
+
+The purpose of a security assessment is to determine whether the application detects and prevents this pattern.
+
+### 1\. What you should test
+
+Check these six security controls:
+
+* Rate limiting: Does the server restrict repeated login attempts?
+
+* Account lockout: Does it temporarily restrict accounts after repeated failures?
+
+* IP-based protection: Does it detect repeated authentication attempts from one IP?
+
+* Distributed detection: Can it detect suspicious attempts across multiple IP addresses?
+
+* Account enumeration: Do login responses reveal whether an account exists?
+
+* Monitoring: Are suspicious login patterns recorded and alerted?
+
+### 2\. Tools to use
+
+| Tool      | Job                                           |
+| --------- | --------------------------------------------- |
+| mitmproxy | Capture login requests and responses          |
+| Postman   | Manually test authentication behavior         |
+| Python    | Automate a small, controlled test             |
+| Wireshark | Inspect network communication                 |
+| Frida     | Observe Android authentication behavior       |
+| JADX      | Find login endpoints and authentication logic |
+| MobSF     | Analyze application security configuration    |
+
+### 3\. Find the login endpoint
+
+Start by examining the APK:
+
+```bash
+jadx -d decoded_app target.apk
+```
+
+Search for authentication-related code:
+
+```bash
+grep -RniE \
+'login|signin|authenticate|password|username|token|oauth' \
+decoded_app/
+```
+
+Start mitmproxy:
+
+```bash
+mitmweb --listen-port 8081
+```
+
+Log in using your own test account and inspect the captured request.
+
+You might discover an endpoint such as:
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+```
+
+Do not assume this is the actual endpoint; use the one observed in your application.
+
+### 4\. Perform a safe password-spraying control test
+
+I can help you test the server's rate limits and detection without generating password-spraying attempts across real accounts.
+
+Use a dedicated test account and a small number of deliberately incorrect attempts.
+
+Example Python script:
+
+```python
+import requests
+import time
+
+URL = "https://your-test-server.example/api/auth/login"
+
+TEST_ACCOUNT = "security-test@example.com"
+
+session = requests.Session()
+
+for attempt in range(1, 4):
+
+    response = session.post(
+        URL,
+        json={
+            "username": TEST_ACCOUNT,
+            "password": "DeliberatelyIncorrect-Test-Password"
+        },
+        timeout=10
+    )
+
+    print("Attempt:", attempt)
+    print("HTTP status:", response.status_code)
+    print("Retry-After:", response.headers.get("Retry-After"))
+    print("Response:", response.text[:300])
+
+    time.sleep(10)
+```
+
+This checks basic repeated-login behavior. It does not prove protection against password spraying across multiple accounts.
+
+### 5\. How to identify weaknesses
+
+| Observation                                                          | Possible security issue                    |
+| -------------------------------------------------------------------- | ------------------------------------------ |
+| Unlimited failed attempts                                            | Missing or ineffective rate limiting       |
+| No suspicious-login alerts                                           | Weak authentication monitoring             |
+| Different errors for existing and nonexistent users                  | Account enumeration                        |
+| No temporary restriction                                             | Weak brute-force protection                |
+| Protection only per IP                                               | Distributed attempts may evade detection   |
+| No login audit records                                               | Insufficient security logging              |
+| Successful login after suspicious activity without additional checks | Potentially weak risk-based authentication |
+
+A good implementation uses layered controls: account-based limits, IP and device signals, risk-based challenges, monitoring, and secure recovery mechanisms. Avoid relying only on account lockouts, which can themselves be abused to deny service.
+
+### 6\. What a successful security assessment should produce
+
+Your report should contain:
+
+* Login endpoint and HTTP method.
+
+* Test account used.
+
+* Number and timing of test attempts.
+
+* HTTP response codes.
+
+* Rate-limit behavior.
+
+* Account lockout behavior.
+
+* Relevant server audit events.
+
+* Whether alerts were generated.
+
+* Recommended remediation.
+
+### One question before we go deeper
+
+Are you testing:
+
+A. Your own Android application's login API.
+
+B. An intentionally vulnerable lab application.
+
+C. An authorized company's login system.
+
+The distinction matters because I can give you a more complete, reproducible password-spraying detection and defense assessment using Python, mitmproxy and your Android emulator.

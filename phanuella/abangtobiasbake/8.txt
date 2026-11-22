@@ -1,0 +1,311 @@
+You can discover the API endpoints used by a running Android application and assess their security without Burp Suite, using Python, ADB, Frida and network analysis.
+
+There are two separate tasks:
+
+* API endpoint discovery: Identify the real backend URLs and API paths the application communicates with.
+
+* API security testing: Check authentication, authorization, rate limiting, input validation and session security.
+
+For brute-force testing, use only an application and test accounts you own or have explicit authorization to assess. I can show you controlled rate-limit testing, rather than scripts that automate password guessing against real accounts.
+
+### 1\. Discover real API endpoints
+
+There are several ways to find them.
+
+### Method A: Examine the APK source code
+
+Use JADX:
+
+```bash
+jadx -d app_source target.apk
+```
+
+Search for API-related strings:
+
+```bash
+grep -RniE \
+'https?://|/api/|/v1/|/v2/|graphql|endpoint|baseurl' \
+app_source/
+```
+
+Search for networking libraries:
+
+```bash
+grep -RniE \
+'Retrofit|OkHttp|Volley|HttpURLConnection|WebSocket|GraphQL' \
+app_source/
+```
+
+Look for:
+
+* Base URLs.
+
+* Authentication routes.
+
+* Registration routes.
+
+* Login routes.
+
+* Password reset routes.
+
+* Profile routes.
+
+* Transaction routes.
+
+* File upload routes.
+
+* WebSocket connections.
+
+Remember: some endpoints are generated dynamically or supplied by remote configuration, so source-code searching may not reveal everything.
+
+### Method B: Examine live application traffic
+
+Use TCPdump on Ubuntu:
+
+```bash
+sudo tcpdump -i any -nn -s 0 -w app_traffic.pcap
+```
+
+Now:
+
+* Open your Android emulator.
+
+* Launch the test application.
+
+* Sign in with a test account.
+
+* Visit different screens.
+
+* Perform ordinary actions.
+
+* Stop the capture using `Ctrl+C`.
+
+Open the file:
+
+```bash
+wireshark app_traffic.pcap
+```
+
+Useful filters:
+
+```text
+dns
+```
+
+```text
+tls
+```
+
+```text
+http
+```
+
+```text
+tcp.port == 443
+```
+
+This can reveal destination hosts and connection patterns, but HTTPS normally hides the actual API paths and request bodies.
+
+### Method C: Inspect live application runtime
+
+Frida can help you investigate which networking libraries and application methods are being used.
+
+First, identify the running package:
+
+```bash
+adb shell pm list packages
+```
+
+Check the application process:
+
+```bash
+frida-ps -U
+```
+
+For an application you are authorised to instrument, inspect its loaded classes and networking configuration using Frida.
+
+This can help identify:
+
+* OkHttp clients.
+
+* Retrofit interfaces.
+
+* API base URLs.
+
+* Network request construction.
+
+* Application-specific API methods.
+
+### 2\. Build a Python endpoint inventory
+
+Once you have discovered the legitimate API URLs, create a file called `endpoints.txt`.
+
+Example:
+
+```text
+https://test.example.com/api/login
+https://test.example.com/api/profile
+https://test.example.com/api/products
+https://test.example.com/api/password-reset
+```
+
+Create `endpoint_inventory.py`:
+
+```python
+
+import requests
+
+with open("endpoints.txt") as file:
+    endpoints = [
+        line.strip()
+        for line in file
+        if line.strip()
+    ]
+
+for url in endpoints:
+    try:
+        response = requests.get(
+            url,
+            timeout=10
+        )
+
+        print("\nEndpoint:", url)
+        print("Status:", response.status_code)
+        print("Content type:",
+              response.headers.get("Content-Type"))
+        print("Response length:",
+              len(response.content))
+
+    except requests.RequestException as error:
+        print("Error:", error)
+```
+
+This is a basic inventory check. An endpoint returning `401`, `403` or `405` is not necessarily broken: it may require authentication or a different HTTP method.
+
+### 3\. Understand the endpoints before testing
+
+Build an endpoint table:
+
+| Endpoint            | HTTP method | Purpose            | Authentication |
+| ------------------- | ----------- | ------------------ | -------------- |
+| /api/login          | POST        | User login         | No             |
+| /api/profile        | GET         | Retrieve profile   | Yes            |
+| /api/products       | GET         | Retrieve products  | Depends        |
+| /api/password-reset | POST        | Password reset     | Usually no     |
+| /api/transactions   | POST        | Create transaction | Yes            |
+
+Do not assume the methods or authentication requirements. Confirm them from the application, its API documentation or authorised test observations.
+
+### 4\. Test brute-force protection safely
+
+A security researcher should determine whether the application limits repeated authentication attempts.
+
+The controls to evaluate include:
+
+* Per-account rate limiting.
+
+* Per-IP rate limiting.
+
+* Increasing delays after repeated failures.
+
+* Temporary account lockout.
+
+* CAPTCHA or additional verification where appropriate.
+
+* Monitoring and alerting.
+
+* Consistent responses that do not disclose whether an account exists.
+
+For a controlled test account, record the following:
+
+| Test condition                        | Expected secure behaviour                    |
+| ------------------------------------- | -------------------------------------------- |
+| One incorrect password                | Login rejected                               |
+| Several controlled incorrect attempts | Attempts monitored                           |
+| Rate limit reached                    | Further attempts temporarily restricted      |
+| Correct password after restriction    | Behaviour follows documented recovery policy |
+| Password reset                        | Secure recovery verification required        |
+
+Do not test against real users or attempt credential lists.
+
+### 5\. Python rate-limit observation script
+
+This script checks the rate-limit headers from an authorised test endpoint without sending a password-guessing sequence.
+
+```python
+
+import requests
+
+URL = "https://test.example.com/api/login"
+
+response = requests.options(
+    URL,
+    timeout=10
+)
+
+headers_to_check = [
+    "Retry-After",
+    "RateLimit-Limit",
+    "RateLimit-Remaining",
+    "RateLimit-Reset",
+    "X-RateLimit-Limit",
+    "X-RateLimit-Remaining"
+]
+
+print("HTTP status:", response.status_code)
+
+for name in headers_to_check:
+    print(name, ":", response.headers.get(name))
+```
+
+Note that `OPTIONS` responses do not prove how the login endpoint enforces rate limiting. A proper assessment uses a documented, bounded test procedure against a dedicated test account and verifies the server's actual enforcement and logs.
+
+### 6\. Other API vulnerabilities to investigate
+
+Brute-force protection is only one aspect of API security.
+
+| Vulnerability                            | What to assess                                         |
+| ---------------------------------------- | ------------------------------------------------------ |
+| Broken authentication                    | Login and session controls                             |
+| Broken object-level authorization (BOLA) | Whether users can access other users' objects          |
+| Broken function-level authorization      | Whether users can access restricted functions          |
+| Excessive data exposure                  | Whether APIs return unnecessary sensitive data         |
+| Mass assignment                          | Whether unexpected fields are accepted                 |
+| Injection                                | Whether inputs are safely handled                      |
+| Weak rate limiting                       | Whether sensitive operations are adequately restricted |
+| Replay attacks                           | Whether old requests can be reused                     |
+| Improper session invalidation            | Whether logged-out sessions remain valid               |
+
+Use the [OWASP API Security Top 10](https://owasp.org/API-Security/?utm_source=chatgpt.com) as your testing reference.
+
+### 7\. Let's make this practical with your Android 11 emulator
+
+I need one important detail before giving you the exact endpoint-discovery workflow.
+
+Which application are you testing?
+
+An application I developed
+
+An intentionally vulnerable training app (DIVA, InsecureBankv2, etc.)
+
+A third-party application I have permission to test
+
+Does your Android 11 emulator have root access?
+
+Yes
+
+No
+
+I don't know
+
+Can you currently see the application's HTTPS traffic?
+
+Yes, I can inspect it
+
+No, only encrypted packets
+
+I haven't checked
+
+Continue
+
+These details determine whether we should use APK inspection, Frida runtime observation, or both to discover the actual endpoints.

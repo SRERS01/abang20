@@ -1,0 +1,68 @@
+You probably mean evasion (not evation).
+
+In cybersecurity, evasion is the act of avoiding or bypassing a security mechanism so that an activity is not detected, blocked, or identified.
+
+It is an important concept in offensive security and penetration testing.
+
+### 1\. Examples of evasion
+
+| Type                   | Meaning                                 | Example                                                            |
+| ---------------------- | --------------------------------------- | ------------------------------------------------------------------ |
+| Firewall evasion       | Avoiding firewall restrictions          | Testing how a firewall handles unusual traffic                     |
+| IDS/IPS evasion        | Avoiding intrusion detection/prevention | Testing whether suspicious traffic is detected                     |
+| Antivirus evasion      | Avoiding malware detection              | Testing whether a security scanner detects a harmless test file    |
+| Rate-limit evasion     | Avoiding request limits                 | Testing whether controls identify activity across multiple sources |
+| WAF evasion            | Avoiding web application firewall rules | Testing how input normalization affects filtering                  |
+| Authentication evasion | Bypassing authentication controls       | Testing whether protected endpoints reject unauthenticated users   |
+| Logging evasion        | Avoiding security audit visibility      | Testing whether important events are recorded                      |
+| Bot detection evasion  | Avoiding automated-traffic detection    | Testing whether automated activity is correctly identified         |
+
+### 2\. Evasion versus bypass
+
+These terms are related but slightly different.
+
+* Bypass: Getting around a security control.
+
+* Evasion: Avoiding detection or recognition by that control.
+
+For example:
+
+A website blocks requests after five failed login attempts.
+
+* Bypass testing examines whether the restriction can be circumvented.
+
+* Evasion testing examines whether suspicious login activity can go undetected.
+
+### 3\. Evasion in your mobile application testing
+
+Consider your local login-testing lab.
+
+Normal security monitoring
+
+Login requests
+
+Rate limiter
+
+Security monitoring and alerts
+
+What an authorized evasion assessment investigates
+
+* Does the rate limiter recognize repeated attempts?
+
+* Does it correlate activity across accounts?
+
+* Does it recognize multiple source identities?
+
+* Are blocked attempts logged?
+
+* Are alerts generated?
+
+### 4\. Important distinction
+
+Evasion is not automatically malicious. Security researchers use controlled evasion testing to discover weaknesses in defensive systems.
+
+For example, an authorized penetration tester might assess whether a WAF correctly detects different representations of the same input.
+
+The key objective: Determine whether the security control recognizes the activity it is designed to detect.
+
+I can teach you the major categories of evasion used in web application, Android, network and API penetration testing, with safe laboratory examples.

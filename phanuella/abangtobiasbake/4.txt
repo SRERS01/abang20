@@ -1,0 +1,891 @@
+### Complete Android mobile application security testing without Burp Suite
+
+You can perform a substantial mobile application security assessment without Burp Suite. You do not need an interception proxy to test every security property.
+
+The key is to test the application at different layers:
+
+* Application installation and configuration.
+
+* Static code analysis.
+
+* Permissions and Android security.
+
+* Local storage and sensitive information.
+
+* Authentication and session management.
+
+* Authorization and access control.
+
+* Input validation and application logic.
+
+* Network communication.
+
+* Runtime behavior.
+
+* API security.
+
+* Reporting and remediation.
+
+I'll use your Ubuntu laptop and Android 11 emulator as the laboratory.
+
+Important: Perform active security tests only on applications, devices, APIs and accounts you own or have explicit permission to assess. For banking or payment examples, use a test application and test accounts.
+
+### 1\. Prepare your Ubuntu laboratory
+
+Install the basic tools:
+
+```bash
+sudo apt update
+
+sudo apt install -y \
+  adb \
+  fastboot \
+  openjdk-17-jdk \
+  apktool \
+  jadx \
+  aapt \
+  apksigner \
+  curl \
+  wget \
+  git \
+  python3 \
+  python3-pip \
+  python3-venv \
+  unzip \
+  zip \
+  wireshark \
+  tcpdump
+```
+
+Check the installations:
+
+```bash
+adb version
+java -version
+jadx --version
+apktool --version
+```
+
+Install Python tools in a virtual environment:
+
+```bash
+python3 -m venv ~/mobile-lab
+source ~/mobile-lab/bin/activate
+
+pip install --upgrade pip
+pip install frida-tools objection
+```
+
+These tools provide different capabilities:
+
+| Tool      | What you use it for                       |
+| --------- | ----------------------------------------- |
+| ADB       | Control and inspect the emulator          |
+| JADX      | Read decompiled Android application code  |
+| APKTool   | Examine APK resources and Smali code      |
+| AAPT      | Inspect APK metadata                      |
+| Frida     | Observe application behavior at runtime   |
+| Objection | Assist with authorized runtime inspection |
+| Wireshark | Inspect network packets                   |
+| TCPdump   | Capture network traffic                   |
+
+### 2\. Connect your Android 11 emulator
+
+Start your emulator, then run:
+
+```bash
+adb devices
+```
+
+Expected format:
+
+```text
+List of devices attached
+emulator-5554    device
+```
+
+Check the Android version:
+
+```bash
+adb shell getprop ro.build.version.release
+```
+
+Check the device architecture:
+
+```bash
+adb shell getprop ro.product.cpu.abi
+```
+
+Check whether the device is rooted:
+
+```bash
+adb shell id
+```
+
+A standard Android emulator may provide root access through:
+
+```bash
+adb root
+```
+
+This depends on the emulator image. Production-like images may not permit it.
+
+### 3\. Obtain the application APK
+
+For an application you are authorized to examine, install it in the emulator and identify its package name.
+
+List installed packages:
+
+```bash
+adb shell pm list packages
+```
+
+Search for a package:
+
+```bash
+adb shell pm list packages | grep example
+```
+
+Get the APK location:
+
+```bash
+adb shell pm path com.example.app
+```
+
+Pull the APK:
+
+```bash
+adb pull /data/app/PATH_TO_BASE_APK/base.apk ./target.apk
+```
+
+Replace the path with the actual path returned by `pm path`.
+
+Alternatively, install a test APK:
+
+```bash
+adb install target.apk
+```
+
+### 4\. Static application analysis
+
+Static analysis means inspecting the application without running it.
+
+### A. Inspect APK metadata
+
+```bash
+aapt dump badging target.apk
+```
+
+Look for:
+
+* Package name.
+
+* Application version.
+
+* Minimum Android version.
+
+* Target Android version.
+
+* Application activities.
+
+* Supported device architecture.
+
+### B. Inspect permissions
+
+```bash
+aapt dump permissions target.apk
+```
+
+Ask:
+
+* Does the application request unnecessary permissions?
+
+* Does it request access to location, contacts, camera or microphone?
+
+* Are sensitive permissions justified by its functionality?
+
+### C. Decompile using JADX
+
+```bash
+jadx -d jadx_output target.apk
+```
+
+Open the output:
+
+```bash
+cd jadx_output
+```
+
+Search for potentially sensitive implementation patterns:
+
+```bash
+grep -RniE \
+'password|secret|token|api_key|authorization|access_token' .
+```
+
+Also investigate:
+
+* Hardcoded credentials.
+
+* API endpoints.
+
+* Debug settings.
+
+* Insecure cryptographic algorithms.
+
+* Sensitive information written to logs.
+
+* Exported components.
+
+* Improper input validation.
+
+A match is an investigation lead, not proof of a vulnerability.
+
+### D. Decode using APKTool
+
+```bash
+apktool d target.apk -o apktool_output
+```
+
+Inspect the manifest:
+
+```bash
+cat apktool_output/AndroidManifest.xml
+```
+
+Pay attention to:
+
+* `android:debuggable`
+
+* `android:exported`
+
+* `android:allowBackup`
+
+* `android:usesCleartextTraffic`
+
+* Activity, service and receiver declarations.
+
+* Content provider permissions.
+
+An exported component is not automatically vulnerable; determine whether it exposes sensitive functionality without adequate protection.
+
+### 5\. Android permissions and component security
+
+Inspect the installed application's package information:
+
+```bash
+adb shell dumpsys package com.example.app
+```
+
+List its permissions:
+
+```bash
+adb shell dumpsys package com.example.app | grep permission
+```
+
+Inspect exported activities, services and receivers in the manifest:
+
+```bash
+grep -nE 'activity|service|receiver|provider|exported' \
+  apktool_output/AndroidManifest.xml
+```
+
+For each exported component, ask:
+
+* Is it supposed to be accessible to other applications?
+
+* Does it require an appropriate permission?
+
+* Does it expose sensitive information?
+
+* Does it validate the calling application or user?
+
+* Can an unauthorised application trigger sensitive functionality?
+
+You can also inspect activities with ADB:
+
+```bash
+adb shell dumpsys activity activities
+```
+
+For an application you control, test component access using documented test cases and verify that protected actions reject unauthorised callers.
+
+### 6\. Test local data storage
+
+This is an important mobile security test.
+
+Open the application and perform actions that create local data, such as signing in with a test account.
+
+Inspect the application directory:
+
+```bash
+adb shell run-as com.example.app ls -la
+```
+
+If the application is debuggable and supports `run-as`, inspect its private files:
+
+```bash
+adb shell run-as com.example.app ls -R files
+```
+
+Inspect shared preferences:
+
+```bash
+adb shell run-as com.example.app ls shared_prefs
+```
+
+Inspect databases:
+
+```bash
+adb shell run-as com.example.app ls databases
+```
+
+Check for:
+
+* Passwords stored in plain text.
+
+* Access tokens stored insecurely.
+
+* Personal information.
+
+* Sensitive data in application logs.
+
+* Unprotected database files.
+
+* Insecure backups.
+
+* Sensitive information left behind after logout.
+
+If `run-as` fails, that does not automatically mean the application is secure. It may simply be a non-debuggable application. Use an authorised test build or emulator image that permits the required inspection.
+
+### 7\. Test application logs
+
+Start capturing logs:
+
+```bash
+adb logcat -c
+adb logcat
+```
+
+Alternatively, save them:
+
+```bash
+adb logcat -d > application_logs.txt
+```
+
+Search the saved logs:
+
+```bash
+grep -niE \
+'password|token|secret|authorization|email|phone' \
+application_logs.txt
+```
+
+Look for sensitive data accidentally exposed by the application.
+
+Do not publish logs containing real credentials or personal information.
+
+### 8\. Test authentication and session management
+
+Use a test account.
+
+| Test                          | Expected secure behaviour        |
+| ----------------------------- | -------------------------------- |
+| Correct password              | Login succeeds                   |
+| Incorrect password            | Login is rejected                |
+| Empty password                | Login is rejected                |
+| Invalid username              | Login is rejected safely         |
+| Logout                        | Session becomes invalid          |
+| Expired session               | User must authenticate again     |
+| Password change               | Old credentials no longer work   |
+| Account lockout/rate limiting | Repeated attempts are controlled |
+| Token expiration              | Expired tokens are rejected      |
+
+For session testing, investigate:
+
+* Where tokens are stored.
+
+* Whether tokens expire.
+
+* Whether logout invalidates sessions on the server.
+
+* Whether a password reset invalidates old sessions.
+
+* Whether sensitive actions require fresh authentication.
+
+A particularly important distinction: removing a token from the phone does not necessarily invalidate it on the server.
+
+### 9\. Test authorization and access control
+
+Authentication answers:
+
+Who are you?
+
+Authorization answers:
+
+What are you allowed to do?
+
+Create two test accounts, Account A and Account B.
+
+For example, use a test application with customer profiles.
+
+| Test                                           | Expected behaviour |
+| ---------------------------------------------- | ------------------ |
+| Account A views its own profile                | Allowed            |
+| Account A views Account B's private profile    | Denied             |
+| Account A changes Account B's information      | Denied             |
+| Account A accesses an administrator function   | Denied             |
+| Account B accesses Account A's private records | Denied             |
+
+Test both the mobile application interface and the server-side API.
+
+A hidden button is not an authorization control. The server must enforce access restrictions independently.
+
+### 10\. Test input validation and application logic
+
+Examine every field that accepts user input.
+
+Examples:
+
+* Username.
+
+* Password.
+
+* Email address.
+
+* Phone number.
+
+* Amount.
+
+* Quantity.
+
+* Account number.
+
+* Search field.
+
+* Date.
+
+* File upload.
+
+For each field, test:
+
+| Input category     | Example                                   |
+| ------------------ | ----------------------------------------- |
+| Empty              | Empty string                              |
+| Normal             | Alice123                                  |
+| Long               | A very long string                        |
+| Boundary           | Minimum and maximum permitted values      |
+| Wrong type         | Text entered into a numeric field         |
+| Special characters | @#$%&*                                    |
+| Unicode            | Accented and non-Latin characters         |
+| Negative number    | -100                                      |
+| Decimal            | 10.50                                     |
+| Overflow boundary  | Values beyond the permitted numeric range |
+
+For financial test applications, verify these invariants:
+
+* A withdrawal cannot exceed the available balance.
+
+* A balance cannot become negative.
+
+* A transaction cannot be processed twice.
+
+* An unauthorised user cannot withdraw money.
+
+* Concurrent transactions cannot violate balance rules.
+
+* A failed transaction does not partially update the account.
+
+The server must enforce these rules. Client-side validation alone is insufficient.
+
+### 11\. Test network communication without Burp Suite
+
+You can examine network activity without decrypting HTTPS.
+
+### A. Capture traffic on Ubuntu
+
+Find your network interface:
+
+```bash
+ip -br address
+```
+
+Start a capture:
+
+```bash
+sudo tcpdump -i any -nn -w mobile-test.pcap
+```
+
+Use the application in the emulator while the capture is running.
+
+Stop with `Ctrl+C`.
+
+Open the capture in Wireshark:
+
+```bash
+wireshark mobile-test.pcap
+```
+
+Useful Wireshark display filters:
+
+```text
+dns
+```
+
+```text
+tcp
+```
+
+```text
+tls
+```
+
+```text
+http
+```
+
+```text
+tcp.port == 443
+```
+
+You can investigate:
+
+* Which servers the application contacts.
+
+* DNS lookups.
+
+* Destination IP addresses.
+
+* Connection timing.
+
+* TLS handshakes.
+
+* Unencrypted HTTP traffic.
+
+* Unexpected network connections.
+
+Limitation: HTTPS packet captures normally do not reveal the encrypted request body, passwords or API responses. That is expected. Packet inspection and application-layer inspection are different forms of testing.
+
+### B. Inspect Android network state
+
+```bash
+adb shell dumpsys connectivity
+```
+
+```bash
+adb shell dumpsys netstats
+```
+
+```bash
+adb shell dumpsys wifi
+```
+
+These help you understand the device's network connections and activity.
+
+### C. Test an API directly from Ubuntu
+
+If your authorised test application communicates with an API, you can test the API independently of the Android application.
+
+For example:
+
+```bash
+curl -i https://api.example.com/
+```
+
+Inspect response headers:
+
+```bash
+curl -sSI https://api.example.com/
+```
+
+Test a documented endpoint using a test account:
+
+```bash
+curl -i \
+  -H "Authorization: Bearer YOUR_TEST_TOKEN" \
+  https://api.example.com/profile
+```
+
+Replace the example URL and token with your authorised test environment's values.
+
+This allows you to investigate API behaviour without an interception proxy.
+
+### 12\. Test application behaviour at runtime using Frida
+
+Static analysis tells you what the code appears to do. Runtime analysis helps you observe what it actually does.
+
+Check Frida:
+
+```bash
+frida --version
+```
+
+List connected devices:
+
+```bash
+frida-ls-devices
+```
+
+List running application processes:
+
+```bash
+frida-ps -U
+```
+
+If the emulator supports root access and the corresponding Frida server is installed and running:
+
+```bash
+frida-ps -Uai
+```
+
+You can use Frida to investigate:
+
+* Method calls.
+
+* Runtime variables.
+
+* Application control flow.
+
+* Cryptographic API usage.
+
+* Network library behaviour.
+
+* Data passed between application components.
+
+For example, create a small observation script:
+
+```javascript
+Java.perform(function () {
+    console.log("Android Java runtime is available");
+
+    var Activity = Java.use("android.app.Activity");
+
+    Activity.onResume.implementation = function () {
+        console.log("Activity resumed: " + this.getClass().getName());
+        return this.onResume();
+    };
+});
+```
+
+Save it as `observe.js`.
+
+Attach it to your authorised test application:
+
+```bash
+frida -U -f com.example.app -l observe.js
+```
+
+This is a basic runtime observation example, not a complete assessment. Frida's availability and attachment method depend on the emulator image and application configuration.
+
+### 13\. Test Android application security with MobSF
+
+MobSF = Mobile Security Framework
+
+![](https://images.openai.com/static-rsc-4/VHoKariTva5bw_8TYCBCl28hkogZ0q5DsZLsdQA_umNuYmKtUA-ic2-ZwBkTq81NgVqU9ZPmcS3JjEnicBL0KNRuvRBImVsqN372v3Zgol78qBoBidh2MtyJDBITmfhuEv0sreMEbQHrdoge-hNShuXGRqy-L7e4MXyEw9gNKc3KznoMsYplCPCc2p8hn3nS?purpose=fullsize)
+
+MobSF can automate many static checks and, with a suitable configured environment, dynamic analysis.
+
+If Docker is installed:
+
+```bash
+docker --version
+```
+
+Pull the official image:
+
+```bash
+docker pull opensecurity/mobile-security-framework-mobsf
+```
+
+Run it:
+
+```bash
+docker run -it --rm \
+  -p 8000:8000 \
+  opensecurity/mobile-security-framework-mobsf
+```
+
+Open this address on Ubuntu:
+
+```text
+http://127.0.0.1:8000
+```
+
+Upload your authorised APK.
+
+Review the findings for:
+
+* Manifest security.
+
+* Permissions.
+
+* Hardcoded secrets.
+
+* Insecure storage.
+
+* Cryptographic issues.
+
+* Network configuration.
+
+* Exported components.
+
+* Potential vulnerabilities.
+
+Treat automated findings as leads that need manual verification, not as confirmed vulnerabilities.
+
+### 14\. Test the Android application lifecycle
+
+Test how the application behaves during important events:
+
+| Scenario                       | What to investigate                                |
+| ------------------------------ | -------------------------------------------------- |
+| Application starts             | Does it expose sensitive information?              |
+| Application goes to background | Is sensitive information protected?                |
+| Application resumes            | Does it restore the correct session?               |
+| Device restarts                | Does authentication behave correctly?              |
+| Network disconnects            | Does the application handle failures safely?       |
+| Network reconnects             | Does it recover without duplicating transactions?  |
+| User logs out                  | Are private screens and sessions protected?        |
+| Application data is cleared    | Does the server still accept an old session?       |
+| Screenshot taken               | Is sensitive information exposed?                  |
+| Clipboard used                 | Can sensitive information be copied unnecessarily? |
+
+Also test backup behaviour, notification previews and sensitive information displayed in recent-app previews.
+
+### 15\. Build your complete testing checklist
+
+Use this as your assessment tracker:
+
+Assessment progress
+
+### 0%
+
+1. Environment and installation
+
+Ubuntu tools installed
+
+Android emulator connected
+
+APK obtained and identified
+
+2. Static analysis
+
+APK metadata inspected
+
+Permissions reviewed
+
+Manifest inspected
+
+Source code reviewed
+
+Hardcoded secrets investigated
+
+3. Device and storage
+
+Application storage examined
+
+Shared preferences examined
+
+Database examined
+
+Logs examined
+
+Backup behaviour checked
+
+4. Authentication and authorization
+
+Login tests completed
+
+Logout tests completed
+
+Session expiration tested
+
+Access control tested
+
+Two-account isolation tested
+
+5. Input and business logic
+
+Input boundaries tested
+
+Invalid data tested
+
+Negative numbers tested
+
+Duplicate transactions tested
+
+Concurrent transactions tested
+
+6. Network and runtime
+
+Network traffic captured
+
+DNS and TLS investigated
+
+API endpoints tested
+
+Runtime behaviour observed
+
+Application lifecycle tested
+
+7. Reporting
+
+Findings documented
+
+Evidence collected
+
+Severity assigned
+
+Remediation recommendations written
+
+Retesting completed
+
+Reset checklist
+
+### 16\. Write your security assessment report
+
+For every confirmed finding, document:
+
+* Vulnerability title.
+
+* Affected application version.
+
+* Vulnerability category.
+
+* Description.
+
+* Preconditions.
+
+* Reproduction steps.
+
+* Evidence.
+
+* Security impact.
+
+* Severity.
+
+* Recommended remediation.
+
+* Retest result.
+
+Use OWASP's OWASP MASVS and OWASP MASTG as your main testing references.
+
+* [OWASP MASVS](https://mas.owasp.org/MASVS/?utm_source=chatgpt.com)
+
+* [OWASP MASTG](https://mas.owasp.org/MASTG/?utm_source=chatgpt.com)
+
+### Recommended order for your first practical exercise
+
+Do not start by testing a banking application. Start with an intentionally vulnerable Android application such as DIVA Android or InsecureBankv2.
+
+![Damn Insecure Vulnerable Application (diva.apk) Walkthrough | by Can Özkan | Medium](https://images.openai.com/static-rsc-4/RKkk4E07p7mhcGuPem6jvaZqQKRHwKD0DFhHtryA8cNH7-S7VOXFazYPD4PYqCwkah2a4A80DNggxZkVvd5z1LUagl10s-0x8-LWhKvByENHS5Zf6Kk4d_qA-82r371dmCeKbEKZZdLDaOY332KzjHseOThYv6t48z88p0j_CyjDe5x5rzzhlJ7pOf70oRxK?purpose=fullsize)
+
+DIVA Android
+
+A deliberately vulnerable application for learning Android security testing.
+
+[Source code and APK project](https://github.com/payatu/diva-android?utm_source=chatgpt.com)
+
+My recommendation: Start with DIVA, complete static analysis, storage inspection, permissions, runtime analysis and network capture, then move to API and business-logic testing.
+
+This will teach you how to assess an Android application even when Burp Suite is unavailable.

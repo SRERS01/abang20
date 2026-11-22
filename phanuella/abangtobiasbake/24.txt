@@ -1,0 +1,245 @@
+In cybersecurity, there is no single official list of every evasion technique. New techniques appear as security products and attack methods evolve.
+
+However, the following is a comprehensive classification of evasion techniques used in network security, web application penetration testing, Android security, API testing, malware analysis and infrastructure security.
+
+I'll distinguish the technique, what it attempts to evade, and what a security researcher should examine in an authorized lab.
+
+### 1\. Network evasion
+
+These techniques concern network traffic and network security controls.
+
+| Technique                            | What it attempts to evade     |
+| ------------------------------------ | ----------------------------- |
+| Firewall evasion                     | Firewall filtering rules      |
+| IDS evasion                          | Intrusion detection systems   |
+| IPS evasion                          | Intrusion prevention systems  |
+| Deep Packet Inspection (DPI) evasion | Packet-content inspection     |
+| Protocol evasion                     | Protocol-based security rules |
+| Port-based evasion                   | Port filtering                |
+| IP-based evasion                     | IP reputation and filtering   |
+| DNS evasion                          | DNS filtering and monitoring  |
+| Proxy evasion                        | Proxy restrictions            |
+| VPN-based evasion                    | Network source restrictions   |
+| IPv6 evasion                         | IPv4-only security controls   |
+| Fragmentation evasion                | Packet inspection             |
+| Tunnelling                           | Network security boundaries   |
+| Traffic obfuscation                  | Network traffic analysis      |
+| Timing-based evasion                 | Traffic-pattern detection     |
+
+### 2\. Web application evasion
+
+These techniques concern web applications and HTTP security controls.
+
+| Technique                          | What it attempts to evade               |
+| ---------------------------------- | --------------------------------------- |
+| WAF evasion                        | Web Application Firewalls               |
+| Input-filter evasion               | Input validation                        |
+| Encoding-based evasion             | String and character filters            |
+| URL normalization evasion          | URL inspection                          |
+| HTTP parameter pollution           | Request interpretation rules            |
+| HTTP request smuggling             | Differences in HTTP request parsing     |
+| Case manipulation                  | Case-sensitive filtering                |
+| Unicode normalization evasion      | Character normalization                 |
+| Content-Type manipulation          | Request-type validation                 |
+| Header manipulation                | Header-based security rules             |
+| Parser differential evasion        | Differences between application parsers |
+| Path normalization evasion         | URL path restrictions                   |
+| Cache-based evasion                | Cache security controls                 |
+| CORS misconfiguration exploitation | Cross-origin restrictions               |
+
+### 3\. Authentication and account-security evasion
+
+This is particularly relevant to your password-testing laboratory.
+
+| Technique                             | Security control being examined |
+| ------------------------------------- | ------------------------------- |
+| Rate-limit evasion                    | Request throttling              |
+| Account lockout evasion               | Account lockout policies        |
+| IP reputation evasion                 | IP-based reputation controls    |
+| Device fingerprint evasion            | Device recognition              |
+| Session-based evasion                 | Session restrictions            |
+| CAPTCHA evasion                       | Automated-user detection        |
+| MFA control evasion                   | Multi-factor authentication     |
+| Password reset control evasion        | Recovery security               |
+| Account enumeration evasion           | Username-discovery protections  |
+| Credential-stuffing detection evasion | Automated login detection       |
+| Password-spraying detection evasion   | Cross-account attack detection  |
+| Risk-based authentication evasion     | Adaptive authentication         |
+
+### 4\. API evasion
+
+These concern REST, GraphQL, SOAP and other API technologies.
+
+| Technique                         | Security mechanism examined       |
+| --------------------------------- | --------------------------------- |
+| API gateway evasion               | API gateway policies              |
+| Authentication middleware evasion | Authentication enforcement        |
+| Authorization middleware evasion  | Permission enforcement            |
+| Schema validation evasion         | API input schemas                 |
+| Parameter validation evasion      | Parameter restrictions            |
+| HTTP method handling evasion      | Method restrictions               |
+| GraphQL query control evasion     | Query depth and complexity limits |
+| API versioning evasion            | Version-specific controls         |
+| Serialization evasion             | Data serialization validation     |
+| Token validation evasion          | Token verification                |
+| Request-size limit evasion        | Payload size restrictions         |
+| Business-logic control evasion    | Transaction rules                 |
+
+### 5\. Injection evasion
+
+Injection attacks frequently involve differences between how security filters inspect input and how application interpreters process it.
+
+| Technique                        | Security control examined           |
+| -------------------------------- | ----------------------------------- |
+| SQL injection filter evasion     | SQL input filtering                 |
+| NoSQL injection filter evasion   | NoSQL query validation              |
+| Command injection filter evasion | Shell input filtering               |
+| LDAP injection filter evasion    | LDAP input validation               |
+| XML injection filter evasion     | XML parsing restrictions            |
+| XPath injection filter evasion   | XPath validation                    |
+| SSTI filter evasion              | Template input restrictions         |
+| XSS filter evasion               | HTML/JavaScript sanitization        |
+| JSON injection evasion           | JSON validation                     |
+| Deserialization filter evasion   | Object deserialization restrictions |
+
+### 6\. Android and mobile application evasion
+
+These are particularly relevant to your Android Studio emulator.
+
+| Technique                      | Security mechanism examined        |
+| ------------------------------ | ---------------------------------- |
+| Certificate pinning bypass     | Certificate pinning                |
+| TLS inspection evasion         | Encrypted traffic inspection       |
+| Root detection evasion         | Root detection                     |
+| Emulator detection evasion     | Emulator detection                 |
+| Debugger detection evasion     | Debugging detection                |
+| Frida detection evasion        | Runtime instrumentation detection  |
+| Anti-tampering evasion         | Application integrity checks       |
+| Anti-hooking evasion           | Runtime hooking detection          |
+| Signature verification evasion | APK integrity verification         |
+| Anti-repackaging evasion       | Application modification detection |
+| Screenshot protection evasion  | Screen capture restrictions        |
+| Clipboard protection evasion   | Clipboard restrictions             |
+| Biometric control evasion      | Biometric authentication           |
+| Intent validation evasion      | Android component security         |
+| Deep-link validation evasion   | Deep-link restrictions             |
+| WebView security evasion       | WebView security controls          |
+
+### 7\. Malware and endpoint evasion
+
+These techniques concern endpoint protection and malware-analysis environments.
+
+| Technique                         | Security mechanism examined     |
+| --------------------------------- | ------------------------------- |
+| Antivirus evasion                 | Antivirus detection             |
+| EDR evasion                       | Endpoint Detection and Response |
+| Behavioral detection evasion      | Behavioral monitoring           |
+| Signature-based detection evasion | Malware signatures              |
+| Static analysis evasion           | Static malware analysis         |
+| Dynamic analysis evasion          | Runtime malware analysis        |
+| Sandbox evasion                   | Automated sandbox analysis      |
+| Virtual machine detection         | VM-based analysis               |
+| Process monitoring evasion        | Process monitoring              |
+| File scanning evasion             | File-based detection            |
+| Memory scanning evasion           | Memory inspection               |
+| API monitoring evasion            | Operating-system API monitoring |
+| Logging evasion                   | Security event logging          |
+
+### 8\. Cloud and infrastructure evasion
+
+| Technique                    | Security mechanism examined     |
+| ---------------------------- | ------------------------------- |
+| IAM policy evasion           | Identity and access management  |
+| Cloud firewall evasion       | Cloud network restrictions      |
+| Container security evasion   | Container isolation             |
+| Kubernetes security evasion  | Cluster security                |
+| Cloud WAF evasion            | Cloud application filtering     |
+| Cloud logging evasion        | Audit logging                   |
+| Secret scanning evasion      | Exposed credential detection    |
+| Storage policy evasion       | Cloud storage access controls   |
+| Network segmentation evasion | Network isolation               |
+| Service mesh policy evasion  | Service-to-service restrictions |
+
+### 9\. Monitoring and detection evasion
+
+| Technique                       | Security mechanism examined |
+| ------------------------------- | --------------------------- |
+| SIEM detection evasion          | Security event correlation  |
+| Log-based detection evasion     | Log monitoring              |
+| Alert evasion                   | Alert generation            |
+| Anomaly detection evasion       | Behavioral analytics        |
+| Threat intelligence evasion     | Threat indicator matching   |
+| User behavior analytics evasion | User activity monitoring    |
+| Correlation-rule evasion        | Event correlation           |
+| Time-based evasion              | Time-window monitoring      |
+| Audit-trail evasion             | Audit record completeness   |
+
+### 10\. Social engineering and human-control evasion
+
+| Technique                      | Security mechanism examined     |
+| ------------------------------ | ------------------------------- |
+| Phishing-filter evasion        | Email security filters          |
+| Spam-filter evasion            | Spam detection                  |
+| Domain reputation evasion      | Domain reputation systems       |
+| Email authentication evasion   | SPF, DKIM and DMARC enforcement |
+| User verification evasion      | Identity verification           |
+| Approval-workflow evasion      | Human authorization             |
+| Help-desk verification evasion | Support procedures              |
+
+### 11\. Evasion testing methodology
+
+Knowing the names is only the beginning. A security researcher needs to understand how to evaluate the control.
+
+A typical defensive-control assessment
+
+* Identify the control
+
+    Example: API rate limiter.
+
+* Identify its security assumption
+
+    Example: Requests from one account should be limited.
+
+* Identify different input representations
+
+    Example: Case differences, encoding, JSON types and missing values.
+
+* Test in an authorized environment
+
+    Use controlled accounts, test data and bounded requests.
+
+* Observe the outcome
+
+    Check HTTP responses, application logs, alerts and server-side decisions.
+
+* Document the weakness
+
+    Explain the control, expected behavior, actual behavior and remediation.
+
+### 12\. The most important concepts to master
+
+I recommend learning these underlying concepts because they explain many different evasion vulnerabilities:
+
+* Parsing differences – two components interpret the same input differently.
+
+* Encoding differences – security filters and applications decode data differently.
+
+* Normalization differences – equivalent representations are treated inconsistently.
+
+* State inconsistencies – security checks fail when application state changes.
+
+* Trust-boundary weaknesses – one component trusts data that another component has not validated.
+
+* Distributed detection weaknesses – monitoring fails to correlate activity across accounts, devices or sources.
+
+* Timing and concurrency weaknesses – security decisions behave differently under simultaneous operations.
+
+* Incomplete enforcement – one endpoint or execution path lacks the required security check.
+
+* Context confusion – data is interpreted differently depending on where it is used.
+
+* Observability gaps – suspicious activity occurs without adequate logging or alerting.
+
+My recommendation: Master parsing, encoding, normalization, state management and trust boundaries first. These concepts appear repeatedly in WAF, API, Android, authentication and network-security assessments.
+
+I can turn this classification into a practical, structured evasion-testing course using your Ubuntu laptop and Android Studio emulator, with a laboratory exercise for each category.

@@ -1,0 +1,192 @@
+You're referring to dynamic exploitation tools: tools that interact with an Android application while it is running, examine its behaviour, and test whether vulnerabilities can be exploited.
+
+These are different from JADX and APKTool, which primarily examine application files.
+
+Here are the major tools used in authorised Android penetration testing.
+
+### 1\. Runtime instrumentation and exploitation tools
+
+![Dynamic Instrumentation on Linux/Android using Frida](https://images.openai.com/static-rsc-4/sn1M8bhunnGfyhGd6uAurGuPvxmiSQlvW0y4TbyIZUIuFF5PJlhPO90XwtJWM_WNu19ZT3zBptomm2GqACq00E_qgTPb7R51B039RuhOurzjC6Rfvxr5EVRQP-GdwnXRNPffd3LiAe4tylqq7viPJ2mdg9o2x8BegEOH_AJoPUGhlp6BFgdiX-jfZSf2Essb?purpose=fullsize)
+
+1\. Frida
+
+Essential
+
+* Observe live method execution.
+
+* Inspect runtime values.
+
+* Instrument Java and native functions.
+
+* Test application security controls.
+
+* Investigate authentication and cryptographic behaviour.
+
+[Official website](https://frida.re/?utm_source=chatgpt.com)
+
+![A Definitive Guide to Mobile App Pentesting](https://images.openai.com/static-rsc-4/IRPguxGuYSQzW63fcANuW1jZ2xceSOBDldCwqOTJPy_5RDpwL5tWaqm-lxwUhhWklzCsQi6xV_kYpjfTH4TS1gsbjzWwFI12L50iL7U90UiH4FlGQSodi-6LKOmH6jbKnCIc_toHYkfR5zkn1gS6ER5f51XwrhItXG_7AFwOOZh3-8tdaHIMcrHzjvYjY1rq?purpose=fullsize)
+
+2\. Objection
+
+* Explore running applications.
+
+* Inspect application storage.
+
+* Examine runtime configuration.
+
+* Investigate Android security mechanisms.
+
+[GitHub](https://github.com/sensepost/objection?utm_source=chatgpt.com)
+
+![Mobile Security Testing ทดสอบความปลอดภัย Android ด้วย Drozer](https://images.openai.com/static-rsc-4/YKt3aQAhsBm-P7D1tNR9jideYQNUPr5pJOdYipL0gXzq7sKml3h4XvcPS9tV17nP2jQTcxUz--HfA0A5QJSrxG3bHI9Xmwc3jdxzYZiX3IpOMZt4mG6yUS23H1VOFEi9ywLgBUTN6LdykesvvBaEr87Ze5szN7tYwr9oSGVu30d_J7tTuPpVmJt4H8cgMSiT?purpose=fullsize)
+
+3\. Drozer
+
+* Examine exported Android components.
+
+* Test activities and services.
+
+* Investigate content providers.
+
+* Assess inter-application attack surfaces.
+
+[GitHub](https://github.com/WithSecureLabs/drozer?utm_source=chatgpt.com)
+
+![GitHub - ac-pm/Inspeckage: Android Package Inspector - dynamic analysis with api hooks, start unexported activities and more. (Xposed Module) · GitHub](https://images.openai.com/static-rsc-4/L8x9BdV4lIJSXIUtZ5fJX4A5fuiSxb-K3KlmU1FJzveIiemYUL2WDMhdvxgGQQwBjjpbs7sqei-5S4ipwIsD9MGEQ_NPkBNop6IMLBRgGIuU6AUx-J1LD2jOTfbTr4xbVTP4uHIXWz5P-V9dSBia8QtaXjhAOSRCv-pGlU-p8Ii88oDenfKbzfJRaMa4jAyd?purpose=fullsize)
+
+4\. Inspeckage
+
+* Observe application behaviour.
+
+* Examine Android API calls.
+
+* Investigate files and preferences.
+
+* Monitor selected runtime activity.
+
+[GitHub](https://github.com/ac-pm/Inspeckage?utm_source=chatgpt.com)
+
+![File:Xposed Framework Icon.svg - Wikimedia Commons](https://images.openai.com/static-rsc-4/q2ZW7ED2A7S2a3ZPPAu9HGR8cQXXKFv09mMsFixdDzoTGpT6AHPC0hBkMDmXPiQ286q5MnQ34lC8iDK7SZleTmeoQs3mJqvumsNzEVSvKLVXjk_UDpNA82NmTWtWbNjPyqdYSPJQSzrojfd3hFlJOSHPx-iOTPl8eY_ilv9-aAMorqpeqYhAk8uJgy_We8rC?purpose=fullsize)
+
+5\. LSPosed
+
+* Load authorised runtime modules.
+
+* Observe or modify selected application behaviour.
+
+* Test framework-dependent security assumptions.
+
+[GitHub](https://github.com/LSPosed/LSPosed?utm_source=chatgpt.com)
+
+![10 Aplikasi ROOT yang Wajib Diinstall di Android  (Versi Sendeva) – Sendeva](https://images.openai.com/static-rsc-4/BBuKCqZAInpFM8LSg1Gx6zIZDWJ1n_R60rjQWziRwjiod2EiaIcxlF85M3uojOKBF3mVBX_y20XsuyeK4RWvaszlqzJheh_UfzNjvkAUKiNSUw6G_E4SYC4vGu2FDavtSYHuJ5cOc2sA8eWH0c3OrIPnkLN-sx3l3-JVcdmcIihzPFLsZYCz-nFJipPNxtO0?purpose=fullsize)
+
+6\. Xposed Framework
+
+* Runtime method hooking.
+
+* Application behaviour inspection.
+
+* Framework-level testing.
+
+[GitHub](https://github.com/rovo89/Xposed?utm_source=chatgpt.com)
+
+### 2\. Tools for testing live network and API behaviour
+
+| Tool         | Live testing capability                    |
+| ------------ | ------------------------------------------ |
+| mitmproxy    | Inspect and modify supported HTTP requests |
+| OWASP ZAP    | Intercept and test API traffic             |
+| Wireshark    | Observe network packets                    |
+| HTTP Toolkit | Inspect HTTP communication                 |
+| Insomnia     | Send independent API test requests         |
+| Postman      | Test API endpoints and responses           |
+
+### 3\. Tools for testing live application logic
+
+| Tool                    | What it helps investigate                    |
+| ----------------------- | -------------------------------------------- |
+| Frida                   | Runtime method execution and values          |
+| Objection               | Runtime application inspection               |
+| Appium                  | Automated user interactions                  |
+| UI Automator            | Android interface and component testing      |
+| LLDB                    | Native application debugging                 |
+| Android Studio Debugger | Debuggable Java/Kotlin application execution |
+| GDB                     | Native process debugging where supported     |
+
+### 4\. What can these tools test?
+
+Consider a deliberately vulnerable test banking application.
+
+| Security test               | Suitable tools             |
+| --------------------------- | -------------------------- |
+| Authentication weaknesses   | Frida, Appium              |
+| Session handling            | Frida, ADB, API clients    |
+| Insecure local storage      | Objection, ADB, SQLite     |
+| Exported activities         | Drozer, ADB                |
+| Insecure content providers  | Drozer, ADB                |
+| API authorization           | mitmproxy, ZAP, Postman    |
+| Business logic              | Appium, Frida, API clients |
+| Runtime secrets exposure    | Frida, Objection           |
+| Native code vulnerabilities | GDB, LLDB, Frida           |
+| Network security            | Wireshark, mitmproxy       |
+
+### 5\. Install the core runtime tools on Ubuntu
+
+```bash
+sudo apt update
+sudo apt install -y adb python3 python3-venv git
+```
+
+Create an environment:
+
+```bash
+python3 -m venv ~/android-runtime-lab
+source ~/android-runtime-lab/bin/activate
+```
+
+Install Frida and Objection:
+
+```bash
+pip install --upgrade pip
+pip install frida-tools objection
+```
+
+Verify:
+
+```bash
+frida --version
+objection --help
+frida-ps --help
+```
+
+Connect the emulator:
+
+```bash
+adb devices
+```
+
+Frida requires a compatible Frida server or supported Gadget setup inside the test environment. Its version must match the client version. Root access is commonly needed for system-wide instrumentation on an emulator.
+
+### 6\. Understand the difference between the three levels
+
+Level 1
+
+User-interface interaction
+
+Appium and UI Automator interact with the app as a user would: tapping, typing and scrolling.
+
+Level 2
+
+Runtime interaction
+
+Frida and Objection investigate what happens inside the running application.
+
+Level 3
+
+Security testing and exploitation
+
+Drozer, Frida and API testing tools help establish whether weaknesses in the application or its backend can be demonstrated.
+
+My recommendation: Learn Frida, Objection, Drozer and Appium first. Together, they cover much of the live Android application testing workflow.
+
+One distinction matters: a tool that can hook a running app does not automatically mean it can bypass every security control. Results depend on Android version, root status, application protections and the particular vulnerability being tested.

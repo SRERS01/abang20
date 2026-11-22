@@ -1,0 +1,135 @@
+If Burp Suite is listening on all interfaces, the CA certificate is installed in Android 11, and the emulator proxy is configured, Chrome should normally be able to browse through Burp.
+
+Let's troubleshoot this systematically. Don't disable Android security features yet.
+
+### 1\. Confirm the correct proxy configuration
+
+Because Burp and Android Studio Emulator are on the same Ubuntu laptop:
+
+| Setting                | Value    |
+| ---------------------- | -------- |
+| Burp listener          | 0.0.0.0  |
+| Burp port              | 8080     |
+| Android proxy hostname | 10.0.2.2 |
+| Android proxy port     | 8080     |
+
+Important: `0.0.0.0` is the Burp listening address, not the address you should enter in Android's proxy settings.
+
+### 2\. Check Android proxy settings
+
+Run:
+
+```bash
+adb shell settings get global http_proxy
+```
+
+Expected:
+
+```text
+10.0.2.2:8080
+```
+
+Also check:
+
+```bash
+adb shell settings get global global_http_proxy_host
+adb shell settings get global global_http_proxy_port
+```
+
+### 3\. Test communication between emulator and Burp
+
+On Ubuntu:
+
+```bash
+sudo ss -lntp | grep 8080
+```
+
+You should see Burp listening on port 8080.
+
+Then run:
+
+```bash
+adb shell ping -c 4 10.0.2.2
+```
+
+This tests whether the emulator can reach the host.
+
+### 4\. Test Burp's internet forwarding
+
+On Ubuntu:
+
+```bash
+curl -v -x http://127.0.0.1:8080 https://www.google.com
+```
+
+Look for:
+
+```text
+HTTP/1.1 200 Connection established
+```
+
+If this succeeds but Chrome fails, the problem is likely between Android's proxy configuration and Chrome.
+
+### 5\. Check Burp HTTP history
+
+In Burp:
+
+* Open Proxy → Intercept.
+
+* Turn Intercept OFF temporarily.
+
+* Open Proxy → HTTP history.
+
+* Open Chrome in Android.
+
+* Visit `https://example.com`.
+
+You should see the request in HTTP history.
+
+![How to setup Burp Suite on Android - DEV Community](https://images.openai.com/static-rsc-4/IPessG3ek8wwy1-Ra3CSlVkrcLothtengZS9J2cvIcwRERduPW1i0m7-syiWijyBqi_zAEwidWBz-6NjMvHqEvpKmwPUCmXo5T12mS8ucAcmyYrH8VXs9iheK7Hn-jZvsUEE7LbXyBTH24UlgJRCO-uiiZ7iIcGNxjI15OFsGzV8Tpuw6UlrUD-Mf7b8nf8m?purpose=fullsize)
+
+### 6\. Identify the exact failure
+
+Please run these three commands and send me their outputs:
+
+```bash
+adb shell settings get global http_proxy
+```
+
+```bash
+adb shell ping -c 4 10.0.2.2
+```
+
+```bash
+curl -v -x http://127.0.0.1:8080 https://www.google.com
+```
+
+Also tell me what Chrome displays:
+
+Chrome error
+
+This site can't be reached
+
+ERR_PROXY_CONNECTION_FAILED
+
+ERR_TUNNEL_CONNECTION_FAILED
+
+ERR_CERT_AUTHORITY_INVALID
+
+ERR_NAME_NOT_RESOLVED
+
+Other / no error message
+
+Burp Suite result
+
+No requests appear in HTTP history
+
+Requests appear but return errors
+
+HTTP works, HTTPS fails
+
+Requests appear successfully
+
+Submit results
+
+My objective is to get Chrome browsing successfully through Burp, not to randomly disable Android networking protections.

@@ -1,0 +1,173 @@
+There is no single tool that completely replaces Burp Suite for mobile app security testing. Burp combines several functions: intercepting HTTP/HTTPS traffic, modifying requests, replaying requests, scanning, testing APIs, and inspecting responses.
+
+You can replace it with a combination of tools. Some are direct proxy alternatives; others replace only specific Burp features.
+
+### 1\. Direct Burp Suite alternatives
+
+These are the closest replacements because they can intercept HTTP/HTTPS requests and responses.
+
+![Debugging Mobile Apps with mitmproxy | by Sean Wragg | Sean’s Blog | Medium](https://images.openai.com/static-rsc-4/DakcWVnZKRrCi8R0lePa0Ac0vEU5AipnUO4dyb-2V8x3PhuXfY_Xzy-bIJWT0utRGN2VeD2vChG1NyQPB8TzbZrikI8JAMNGD0I924HYOSpdekQq5Sjcz5AoGjLAiC6NmbO4Yx7IRPf0WxZHgdbNMPulHdchBptDnR_b_tDHOpELfdVYYWcMN_EbvwcTQ5od?purpose=fullsize)
+
+1\. mitmproxy
+
+My top free recommendation
+
+* Intercept and modify HTTP/HTTPS requests.
+
+* Replay requests and inspect responses.
+
+* Automate tests using Python scripts.
+
+* Excellent for Ubuntu and command-line workflows.
+
+Website: [mitmproxy.org](https://mitmproxy.org/?utm_source=chatgpt.com)
+
+![AVD(Android 11)でOWASP ZAPの証明書をインストールする](https://images.openai.com/static-rsc-4/3RAjtlNoVnzIiSDBBlETsX2T7c2u3XRTyi06-i0FxiSuYbL_txf9ytFcwOEtP1RCqni_Qy9QlqNw55q6Duy42yGl5vzLrEQ9q8eGn3cCdyZsIiLzX5YJDk_JIutaMYexlHpXuG3AthDbtWNjmMAZ_OyU7IqsGHq91gjGBK1NvpMwE76F5gMllw54IQEoeo3N?purpose=fullsize)
+
+2\. OWASP ZAP
+
+* Intercept HTTP/HTTPS traffic.
+
+* Modify and replay requests.
+
+* Active and passive web security scanning.
+
+* API testing and automation.
+
+Website: [zaproxy.org](https://www.zaproxy.org/?utm_source=chatgpt.com)
+
+![Intercept, mock & debug Android HTTP traffic](https://images.openai.com/static-rsc-4/8rYNTbuFVapmrW5duru8nfqLLbMIEF9xoq8Qt88efZyMUZdiQYqOF_WACxlA2-cgLyMJH-HcU3Bhe_fDfq-e5d6YuhRZzaEkwvLXmu7Mm8adQn29vrkUYZpLVSRR4NfpFoUAUueP6dmilxQ904HVwwGnUiQTiMxGG6JdDqLNCCgm3FWPcy8FmaH-iN0Y_8za?purpose=fullsize)
+
+3\. HTTP Toolkit
+
+* Captures Android and other application traffic.
+
+* Inspects HTTP/HTTPS requests.
+
+* Helps configure Android interception.
+
+* Has free and paid features.
+
+Website: [httptoolkit.com](https://httptoolkit.com/?utm_source=chatgpt.com)
+
+![Charles Proxy на пальцах: главный помощник QA и разработчиков / Хабр](https://images.openai.com/static-rsc-4/iOP1xuCtjSrshJl4thNcvWPGk6PcyHJHw6Gbl5yvMs5GcFjrAZRxUlvrD2VJLiQa9B6cP7B7dw9zLcsa-W0g1Q-SuNETaa553sd_mc4j945ir8Kmu2v7i7TLhRw-Ti0xJ3tc_SuD1sm01-YqYYCUVjsRNn1PCSEAIEArtDChbFFThcSuilYYBpEik5DqEujT?purpose=fullsize)
+
+4\. Charles Proxy
+
+* HTTP/HTTPS interception.
+
+* Request and response modification.
+
+* Breakpoints and request repetition.
+
+* Commonly used for mobile application debugging.
+
+Website: [charlesproxy.com](https://www.charlesproxy.com/?utm_source=chatgpt.com)
+
+![Getting Started with Proxyman · Proxyman](https://images.openai.com/static-rsc-4/ELjJY7InZOXkI48yOQVPKRL8o0p5jYqz7DxhFmsH6ZYoy8X-_ZKkvP0_w9BWeQG68BKG2ccCl9x8UiPD4didn6iS8yv63lPijzuewcdS2suEy6_5jO1E_aAHWZqZ44h2QLAv_KCcHCW1vq0KXXgpTi_74nKvyLi3sc0-uOXfQ52oT1aCtzKDTq4gJGGmueTh?purpose=fullsize)
+
+5\. Proxyman
+
+* HTTPS traffic inspection.
+
+* Request and response editing.
+
+* Mobile device traffic debugging.
+
+* Polished graphical interface.
+
+Website: [proxyman.com](https://proxyman.com/?utm_source=chatgpt.com)
+
+![Web Debugging Proxy and Troubleshooting Tools | Fiddler](https://images.openai.com/static-rsc-4/MNzkhbkp5rNj1uvitSHy-Gnfy5MbukINq-ivWM0EdNS9x-oUUPUb67Dfn95IloEBp7uPz2OdhDNyjU9WLPNhzBC_0_BoZzZ_YK4PKuU6f4B_iSU8ZBR-vuaxEbLrmHnr9wPH-8ba8MFjskzrot0ccWMMqZgUd1PUly-vxODytH4srdY-fr7bLKEscrc2_x86?purpose=fullsize)
+
+6\. Fiddler Everywhere
+
+* Captures HTTP/HTTPS traffic.
+
+* Inspects and modifies requests.
+
+* Supports debugging across devices and platforms.
+
+Website: [Fiddler Everywhere](https://www.telerik.com/fiddler/fiddler-everywhere?utm_source=chatgpt.com)
+
+These are genuine proxy alternatives, although their features, pricing and mobile compatibility differ. OWASP Mobile Application Security +2
+
+### 2\. Tools that replace other Burp functions
+
+These tools are especially important when testing Android applications that ignore the system proxy or use certificate pinning.
+
+| Tool      | What it replaces or provides                                      |
+| --------- | ----------------------------------------------------------------- |
+| Frida     | Runtime instrumentation and observation of application networking |
+| Objection | Interactive mobile runtime inspection using Frida                 |
+| PCAPdroid | Per-app network monitoring and packet capture                     |
+| Wireshark | Deep packet and network protocol analysis                         |
+| tcpdump   | Command-line packet capture                                       |
+| Postman   | Manual API request construction and testing                       |
+| Insomnia  | API request testing                                               |
+| curl      | Command-line API requests                                         |
+| MobSF     | Automated mobile application security analysis                    |
+| JADX      | APK decompilation and endpoint discovery                          |
+| APKTool   | APK resource and Smali inspection                                 |
+
+An important difference: Wireshark and tcpdump can capture encrypted HTTPS packets, but cannot automatically reveal encrypted request paths and bodies. Frida can help inspect application networking at runtime. OWASP Mobile Application Security +2
+
+### 3\. Which combination can replace Burp Suite?
+
+For your Ubuntu laptop + Android Studio Emulator environment, I would use this combination:
+
+### Recommended mobile security toolkit
+
+mitmproxy
+
+Traffic interception
+
+Capture, modify, replay and automate HTTP/HTTPS traffic.
+
+Frida + Objection
+
+Runtime analysis
+
+Inspect application behavior and networking at runtime.
+
+Wireshark + tcpdump
+
+Network analysis
+
+Capture connections, protocols, DNS and packet-level information.
+
+Postman + curl
+
+API testing
+
+Manually test discovered API endpoints.
+
+MobSF + JADX
+
+APK analysis
+
+Analyze application code, configuration, permissions and potential security weaknesses.
+
+### 4\. Burp feature replacement chart
+
+| Burp Suite feature             | Alternative              |
+| ------------------------------ | ------------------------ |
+| Proxy interception             | mitmproxy, ZAP           |
+| HTTP history                   | mitmproxy, HTTP Toolkit  |
+| Repeater                       | mitmproxy, Postman, curl |
+| Intruder (controlled testing)  | Python scripts, ZAP      |
+| Decoder                        | CyberChef                |
+| Comparer                       | Meld, Beyond Compare     |
+| Scanner                        | ZAP, MobSF               |
+| API testing                    | Postman, Insomnia        |
+| Network traffic analysis       | Wireshark                |
+| Runtime application inspection | Frida, Objection         |
+| APK source inspection          | JADX, APKTool            |
+
+### 5\. My recommendation
+
+If your goal is to stop using Burp Suite entirely, start with mitmproxy + Frida + Wireshark + Postman + MobSF.
+
+One limitation is important: replacing Burp does not automatically solve certificate pinning, applications that bypass system proxy settings, or custom network protocols. Those require different inspection techniques. OWASP Mobile Application Security +2
+
+The next practical step: I can give you a complete Ubuntu installation and configuration guide for this five-tool combination, including connecting your Android emulator and capturing an app's API traffic without Burp Suite.

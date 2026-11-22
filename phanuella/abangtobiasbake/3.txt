@@ -1,0 +1,70 @@
+No. Burp Suite is not a requirement for live mobile application security testing. It is one of several tools offensive security researchers use to inspect and manipulate application traffic.
+
+A researcher can test a mobile application without Burp Suite, but having an interception proxy makes certain tests much easier.
+
+### 1\. Tools used for mobile application testing
+
+| Tool       | Main purpose                                   |
+| ---------- | ---------------------------------------------- |
+| Burp Suite | Intercept and modify HTTP/HTTPS traffic        |
+| OWASP ZAP  | Intercept and analyze web traffic              |
+| mitmproxy  | Intercept and inspect HTTP/HTTPS traffic       |
+| Wireshark  | Analyze network packets                        |
+| Frida      | Instrument application behavior at runtime     |
+| JADX       | Inspect Android application code               |
+| MobSF      | Static and dynamic mobile application analysis |
+| adb        | Communicate with and control Android devices   |
+
+### 2\. What can you test without Burp Suite?
+
+You can still investigate:
+
+* Authentication and session management.
+
+* Authorization and access control.
+
+* Input validation.
+
+* Local data storage.
+
+* Application permissions.
+
+* Cryptographic implementation.
+
+* API communication.
+
+* Application logic.
+
+* Runtime behavior.
+
+* Network communication patterns.
+
+However, inspecting and modifying encrypted HTTPS requests is more difficult without an appropriate interception setup.
+
+### 3\. Why researchers use Burp Suite
+
+Imagine a mobile banking application.
+
+Example: Withdrawal request
+
+Mobile application
+
+User requests a withdrawal of 100.
+
+Burp Suite
+
+Researcher examines the HTTP request, parameters, headers and server response.
+
+Application server
+
+Processes the withdrawal request.
+
+In an authorized test environment, the researcher can examine whether the server correctly enforces transaction limits, authentication and authorization.
+
+### 4\. What you are building
+
+Your Ubuntu + Android Emulator + Burp Suite arrangement is a standard mobile application testing laboratory.
+
+You do not need to disable all Android security features. You need to configure the test environment so that the application traffic you are authorized to inspect reaches your proxy.
+
+One important distinction: Burp is useful for testing the network/API layer, but it cannot independently test every aspect of an Android application. That is why researchers combine it with tools such as Frida, JADX, MobSF and ADB.

@@ -1,0 +1,733 @@
+### Complete mobile application security testing toolkit
+
+You can use your Ubuntu laptop and Android emulator to discover and validate a wide range of mobile application vulnerabilities without Burp Suite.
+
+I will organize this into three parts:
+
+* The vulnerabilities you can discover and safely validate.
+
+* Every tool, how to start it, and what job it performs.
+
+* A practical testing sequence showing which tool to use for each vulnerability.
+
+This is for applications you own, intentionally vulnerable training applications, or applications you have explicit permission to test. For potentially dangerous findings such as RCE and SSRF, use an isolated lab and harmless proof-of-execution or callback tests.
+
+### Part 1 — Vulnerabilities you can discover
+
+### A. API and authorization vulnerabilities
+
+| Vulnerability                   | What you are looking for                               |
+| ------------------------------- | ------------------------------------------------------ |
+| IDOR / BOLA                     | Accessing another user's object                        |
+| BFLA                            | Performing functions outside your permission           |
+| Broken access control           | Unauthorized access to protected resources             |
+| Mass assignment                 | Modifying protected fields through API input           |
+| Broken authentication           | Weaknesses in login and identity verification          |
+| Broken session management       | Incorrect session creation, expiration or invalidation |
+| Token leakage                   | Access tokens exposed in responses, logs or storage    |
+| JWT weaknesses                  | Incorrect token validation or authorization claims     |
+| Password reset flaws            | Weaknesses in recovery and verification                |
+| Account enumeration             | Revealing whether an account exists                    |
+| Missing rate limiting           | Insufficient controls on sensitive requests            |
+| Replay attacks                  | Reusing requests or tokens improperly                  |
+| Privilege escalation            | Obtaining unauthorized permissions                     |
+| Excessive data exposure         | Returning unnecessary private information              |
+| Insecure direct function access | Calling restricted API functions directly              |
+
+### B. Injection vulnerabilities
+
+| Vulnerability                         | What you are looking for                             |
+| ------------------------------------- | ---------------------------------------------------- |
+| SQL injection                         | Unsafe database query construction                   |
+| NoSQL injection                       | Unsafe document-database queries                     |
+| Command injection                     | Untrusted input reaching operating-system commands   |
+| LDAP injection                        | Unsafe LDAP query construction                       |
+| XML injection                         | Unsafe XML processing                                |
+| XPath injection                       | Unsafe XPath query construction                      |
+| Server-side template injection (SSTI) | Untrusted template expressions being evaluated       |
+| Cross-site scripting (XSS)            | Untrusted content executing in a web context         |
+| Header injection                      | Untrusted input modifying HTTP headers               |
+| CRLF injection                        | Improper handling of carriage returns and line feeds |
+| JSON injection                        | Unsafe construction or processing of JSON            |
+| GraphQL injection                     | Unsafe query or resolver behavior                    |
+
+### C. Server-side vulnerabilities
+
+| Vulnerability            | What you are looking for                          |
+| ------------------------ | ------------------------------------------------- |
+| SSRF                     | Server making unauthorized network requests       |
+| RCE                      | Unintended remote code execution                  |
+| Arbitrary file read      | Accessing files outside permitted boundaries      |
+| Arbitrary file write     | Writing files without proper authorization        |
+| Path traversal           | Escaping intended directory boundaries            |
+| Insecure deserialization | Unsafe processing of serialized objects           |
+| XXE                      | XML external entity processing                    |
+| Unsafe file upload       | Dangerous or improperly validated uploads         |
+| Open redirect            | Unrestricted redirection to external destinations |
+| Request smuggling        | Inconsistent HTTP request parsing                 |
+| Cache poisoning          | Manipulating shared cached responses              |
+| Cache deception          | Exposing private content through caching          |
+| Information disclosure   | Exposing internal system information              |
+| Debug endpoint exposure  | Unprotected development or diagnostic interfaces  |
+
+### D. Android-specific vulnerabilities
+
+| Vulnerability                     | What you are looking for                                 |
+| --------------------------------- | -------------------------------------------------------- |
+| Insecure local storage            | Sensitive data stored without adequate protection        |
+| Hardcoded secrets                 | API keys, credentials or tokens in application code      |
+| Insecure SharedPreferences        | Sensitive preferences stored insecurely                  |
+| Insecure SQLite database          | Sensitive information stored without adequate protection |
+| Exported activities               | Activities accessible to unauthorized applications       |
+| Exported services                 | Services exposed without suitable authorization          |
+| Exported broadcast receivers      | Unintended external broadcast interaction                |
+| Insecure content providers        | Unauthorized data access                                 |
+| Deep-link vulnerabilities         | Unsafe handling of incoming links                        |
+| Intent vulnerabilities            | Untrusted intent data being processed                    |
+| WebView vulnerabilities           | Unsafe JavaScript, URL or content handling               |
+| Certificate validation flaws      | Improper server certificate verification                 |
+| Certificate pinning weaknesses    | Incorrect or ineffective pinning implementation          |
+| Cleartext traffic                 | Sensitive communications sent without TLS                |
+| Backup exposure                   | Sensitive information included in backups                |
+| Clipboard leakage                 | Sensitive data exposed through clipboard operations      |
+| Screenshot leakage                | Sensitive screens captured unexpectedly                  |
+| Log leakage                       | Secrets or personal information written to logs          |
+| Insecure biometric implementation | Incorrect biometric authentication design                |
+| Weak cryptography                 | Inadequate algorithms or key management                  |
+| Dynamic code loading risks        | Unsafe loading of executable code                        |
+
+### E. Business logic and financial vulnerabilities
+
+These are particularly important because an application can have strong encryption and still contain serious business logic errors.
+
+* Negative balance or invalid balance transitions.
+
+* Duplicate payments.
+
+* Duplicate withdrawals.
+
+* Unauthorized refunds.
+
+* Incorrect transaction ownership.
+
+* Incorrect transaction amount validation.
+
+* Currency conversion errors.
+
+* Decimal precision errors.
+
+* Integer overflow and underflow.
+
+* Race conditions.
+
+* Time-of-check/time-of-use (TOCTOU) errors.
+
+* Incorrect transaction state transitions.
+
+* Missing transaction limits.
+
+* Unauthorized changes to account details.
+
+* Incorrect discount or promotion calculations.
+
+* Subscription entitlement errors.
+
+* Inconsistent inventory or order quantities.
+
+* Payment verification failures.
+
+### F. Network and infrastructure vulnerabilities
+
+* Weak TLS configuration.
+
+* Unnecessary open ports.
+
+* DNS misconfiguration.
+
+* Insecure HTTP endpoints.
+
+* Missing security headers.
+
+* Insecure CORS configuration.
+
+* Exposed development services.
+
+* Unprotected administrative endpoints.
+
+* Weak API gateway controls.
+
+* Inadequate logging and monitoring.
+
+* Misconfigured cloud storage.
+
+* Excessive API permissions.
+
+### Part 2 — Tools, their jobs, and how to start them
+
+You do not need every tool running simultaneously. Start the tools according to the type of test you are performing.
+
+### 1\. Prepare your Ubuntu environment
+
+Install the common dependencies:
+
+```bash
+sudo apt update
+
+sudo apt install -y \
+  adb \
+  fastboot \
+  tcpdump \
+  wireshark \
+  sqlite3 \
+  curl \
+  git \
+  python3 \
+  python3-venv \
+  python3-pip \
+  openjdk-17-jdk \
+  docker.io \
+  nodejs \
+  npm
+```
+
+Create a working directory and Python environment:
+
+```bash
+mkdir -p ~/mobile-security-lab
+cd ~/mobile-security-lab
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip install --upgrade pip
+pip install requests httpx mitmproxy frida-tools objection
+```
+
+Check that the main tools are available:
+
+```bash
+adb version
+java -version
+python3 --version
+docker --version
+mitmproxy --version
+frida --version
+```
+
+### 2\. Traffic interception and network analysis tools
+
+![Transparent mitmproxy for iPhone using Tailscale in a VM — Aapeli Vuorinen](https://images.openai.com/static-rsc-4/OJ8r-6S_zoBLmm5wNDkkiH4Njz-2L0Z0XaeiBUTimO7dJNGSlbo4F36h5wh6wJGi8nn29jntAOWLCNiMRYZCnLC11H3RQPrWh82GczzFguAqpV2mBTZmqSuBrp01Jh7idw05dwSgmliCndVKzvPxK-C9NPcbeE6PIsTqQ4Elov9tsAxMnwp_LrUVMpaVqZaf?purpose=fullsize)
+
+1\. mitmproxy / mitmweb
+
+Main Burp replacement
+
+Job: Capture, inspect, modify and replay HTTP/HTTPS requests.
+
+Start the graphical interface:
+
+```bash
+mitmweb --listen-host 0.0.0.0 \
+  --listen-port 8081
+```
+
+Open `http://127.0.0.1:8081`
+
+Terminal alternative:
+
+```bash
+mitmproxy --listen-port 8081
+```
+
+![ZAP – Getting Started](https://images.openai.com/static-rsc-4/CYVRDMTnmnf9Q5sdYHxzIDo6esDTQAeR18dTHrvubDyMxe64WpJeDpnTfBE5lYj9yJLw89rKh5lRZY0RZ3XPCp_08lojERGZMRP3rikejQ-YDcstjsmGHqC4QztRlkylDtvjIooSLHJorw-o8k2IYLTKQSz49JJK0RlJKGBG9EciYpB_pcJEdFbCw_AcfUCL?purpose=fullsize)
+
+2\. OWASP ZAP
+
+Job: Proxy interception, passive scanning, active scanning and API security assessment.
+
+Start the desktop interface:
+
+```bash
+zaproxy
+```
+
+Or use Docker:
+
+```bash
+docker run --rm -u zap \
+  -p 8090:8080 \
+  ghcr.io/zaproxy/zaproxy:stable \
+  zap.sh -daemon -host 0.0.0.0 -port 8080
+```
+
+Use active scanning only against authorized test targets.
+
+![Packet Analysis With Wireshark & tcpdump - Project Security](https://images.openai.com/static-rsc-4/_titJuiHPXkK1wtXl2oxeH16Z3NHMqqQzGvxLb-ntVD66eAAeRgrnvPMjKYnxIBm506GpV_IAKtBiJ3v1IfGm0xHTAD84z4-y54p8DG8jLrSqBTy4i8NfvpDn2_jjhI-WHTKSoqeI0aB5vHaHxo0k-ckoizc-jjxyTJB39plV9q7Qa1P47qtKkoSVRiWGB6i?purpose=fullsize)
+
+3\. Wireshark
+
+Job: Analyze network packets, DNS, TCP, TLS and other protocols.
+
+Start:
+
+```bash
+wireshark
+```
+
+Open a previously captured file:
+
+```bash
+wireshark capture.pcap
+```
+
+![tcpdump command | Linux#](https://images.openai.com/static-rsc-4/SL1zqr7jxRNrgbq7GEwcdqIEFNft05TSZziUBUwZdYr06CxGnwSQIBmOegHbY6B1lX6h4HuABIAdmFP7QQnjCquGYCFP7MWCvRlRyjyA6ziLU673DJocHxnnIOuqXPdDXZpwf8DSDLTbvx5pv0a-SlEP10na02h_h7vJmyH5JWFH1T_SjREa35O7CZYpuniL?purpose=fullsize)
+
+4\. tcpdump
+
+Job: Capture network packets from the Ubuntu host.
+
+Start:
+
+```bash
+sudo tcpdump -i any -nn -s 0 \
+  -w mobile-traffic.pcap
+```
+
+Stop with `Ctrl+C`.
+
+### Connect your Android emulator to mitmproxy
+
+For the standard Android Studio emulator, the host computer is reachable at `10.0.2.2`.
+
+First, check your emulator:
+
+```bash
+adb devices
+```
+
+Set its proxy:
+
+```bash
+adb shell settings put global http_proxy 10.0.2.2:8081
+```
+
+Verify:
+
+```bash
+adb shell settings get global http_proxy
+```
+
+To remove the proxy afterward:
+
+```bash
+adb shell settings put global http_proxy :0
+```
+
+For HTTPS inspection, install the mitmproxy CA certificate in your test emulator. Remember that some apps do not trust user-installed certificates or use certificate pinning.
+
+### 3\. Android application analysis tools
+
+![Consiguiendo Acceso Premium en Aplicación Android — Ingeniería Inversa | by Leonardo Testa | Medium](https://images.openai.com/static-rsc-4/-vBy2iUxpve5yP_mXPn6ZqLaIheG9cWrHBL12mJJrFN9Qt0_ZwP9IdYQylb19d1w1tYvCwhZpcEXmU-joRaCdPyYe6rGeZyFm1BOdk3-yQPsGN7LgxYchW08gHxB2LVKFahwjTGUO4c6QRk55sjrIVnNSWrl1ezS1zdtrzaXz0Jx0TEVcNxnVNqTaLm1SNff?purpose=fullsize)
+
+5\. JADX
+
+Job: Decompile APKs and inspect Java/Kotlin-like source.
+
+Start graphical interface:
+
+```bash
+jadx-gui target.apk
+```
+
+Start command-line analysis:
+
+```bash
+jadx -d decoded_app target.apk
+```
+
+Search for API URLs:
+
+```bash
+grep -RniE \
+'https?://|/api/|graphql|baseUrl' \
+decoded_app/
+```
+
+![](https://images.openai.com/static-rsc-4/zHHKsnyLidSv6BGo3ZB5dpr44RroE5qmTvbL7hxELDpMyETKCumKKhgICfe-vTTr2WNxglrv37Ea4ZAKmlK5btEycOd6MWWE1vrKSE-h3uIU4qTusBolY0BwnxtJSoq9ANje6-ZqJn_tw_8OZJXBy3qgNpJg9zE4ftLO8Ur0bIqheKrsGiC4C2ANXNmjae-b?purpose=fullsize)
+
+6\. APKTool
+
+Job: Decode Android resources, manifest and Smali code.
+
+Start:
+
+```bash
+apktool d target.apk -o apk_decoded
+```
+
+Review:
+
+```bash
+cat apk_decoded/AndroidManifest.xml
+```
+
+![GitHub - ProjectZeroDays/Mobile-Security-Framework: Mobile Security Framework (MobSF) is an automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework capable of performing static and dynamic analysis. · GitHub](https://images.openai.com/static-rsc-4/cbea2Auj3cJqSOxh6dRNI1LHCpuMTFXU3VdMHNWtcranxI2K6AV0G61YH0Ng3Cqy6JZAecmpARx81XBfxBSMnSQX-mI8pJpYAL0ScX0367B1b_YfnSQ9J3x7p9H07xHrm57DxDhAzU_2QBnzbZpL8cJg4TsgbCrZtkzfpnJwLH9ce5KgmePVB1YWIw6f1OGT?purpose=fullsize)
+
+7\. MobSF
+
+Job: Automated static and dynamic mobile application security analysis.
+
+Start Docker:
+
+```bash
+sudo systemctl enable --now docker
+
+sudo docker pull \
+opensecurity/mobile-security-framework-mobsf
+
+sudo docker run --rm -it \
+  -p 8000:8000 \
+  opensecurity/mobile-security-framework-mobsf
+```
+
+Open `http://127.0.0.1:8000` and upload your test APK.
+
+![GHidra – NSA Software Reverse Engineering - Jarno Baselier](https://images.openai.com/static-rsc-4/ecmded-wzGbSvC0EQ_WxG1zoUO1WkcHNnk3R6xUjyZ4WHMufA5l-6h1YPAM1q_xvgrxmN-qBrQDG5hLsUm0CNrIoB2EpQk_LDGpjENUx0jr8iwOyGc2YDjOJWMnMBFVPS_OtJnClj7k2oqQn4EerX7ng0bkMELwhjA_H16qvKMjdbO59o3xa1Dcz16gSZJpL?purpose=fullsize)
+
+8\. Ghidra
+
+Job: Reverse-engineer native libraries and inspect compiled code.
+
+After extracting and installing Ghidra:
+
+```bash
+./ghidraRun
+```
+
+Useful when the APK contains native `.so` libraries.
+
+### 4\. Runtime testing tools
+
+![Frida 17.17.0 Released | Frida • A world-class dynamic instrumentation toolkit](https://images.openai.com/static-rsc-4/ugNXbWhmtZFBJessCC3b9wut6EizPeOx5BVRee-0FVgb6f-dvxUnEkQXpteipD3UUHXNEz1lgNrKS7N5OrkNzClz33yTM9e6nWmLKI1NAw1allobLQ7Wr_iZhkanos3kbHFBPLs9SpATgU02T_uO4crbQY8ociflJxu1Ur-KIh2c5t_ScelyMsgDAGpH8FCu?purpose=fullsize)
+
+9\. Frida
+
+Job: Observe and instrument application behavior while it is running.
+
+Check connected devices:
+
+```bash
+frida-ls-devices
+```
+
+List running application processes:
+
+```bash
+frida-ps -U
+```
+
+Attach to an authorized test application:
+
+```bash
+frida -U -n PACKAGE_NAME
+```
+
+The Android Frida server must be compatible with your installed Frida client and emulator architecture.
+
+![A Definitive Guide to Mobile App Pentesting](https://images.openai.com/static-rsc-4/IRPguxGuYSQzW63fcANuW1jZ2xceSOBDldCwqOTJPy_5RDpwL5tWaqm-lxwUhhWklzCsQi6xV_kYpjfTH4TS1gsbjzWwFI12L50iL7U90UiH4FlGQSodi-6LKOmH6jbKnCIc_toHYkfR5zkn1gS6ER5f51XwrhItXG_7AFwOOZh3-8tdaHIMcrHzjvYjY1rq?purpose=fullsize)
+
+10\. Objection
+
+Job: Interactive Android runtime inspection built on Frida.
+
+Start:
+
+```bash
+objection -g PACKAGE_NAME explore
+```
+
+Use it to inspect application files, runtime properties and supported platform security checks.
+
+![Run your first app on the Android Emulator  |  Android Developers](https://images.openai.com/static-rsc-4/RRAhJZIbjT8Duah1QhZS7I2wwG_98TtfX1oJ9RTts__Su8AfngoPhwmOj_OUo9zZnJwguvEm0391Bg4Ms_ivkrCzRtB2j6k8StGLqLssmOlSih-w_EOJAonpTgxgjbMcjiXGU0G-cGDIJE8ZpjytsSSQCk89wd4oUZThI_UksAOSj8FgHsjnw1vWv2brPbci?purpose=fullsize)
+
+11\. ADB
+
+Job: Control the emulator, install APKs, inspect packages, retrieve logs and access permitted application files.
+
+Start:
+
+```bash
+adb devices -l
+adb shell
+```
+
+Useful commands:
+
+```bash
+adb shell pm list packages
+adb logcat
+adb shell getprop
+adb shell dumpsys package PACKAGE_NAME
+```
+
+### 5\. API testing and automation tools
+
+![Postman Tutorial: How to Test APIs Effectively](https://images.openai.com/static-rsc-4/-xmPSFTkxqVSpGbGhx6MkoF8OMpnJ_I57D4o3tYI848c9F0u3weUQ5IyTBkEID-i501azRik9hUnCE2uAPEbrXIcPdyOtG9giaWZ5287kPRpgbbMnbw6VUyEX_xak6NFFiXHad0sZTITHQnDBzlPfsYawxnQUuNCCZr1wdNlbnus2zndAp1mivex9K-8u9SI?purpose=fullsize)
+
+12\. Postman
+
+Job: Build API requests, supply authentication tokens, change parameters and compare responses.
+
+Start if installed:
+
+```bash
+postman
+```
+
+Or install through Ubuntu Snap:
+
+```bash
+sudo snap install postman
+```
+
+Useful for IDOR, BOLA, authentication, mass assignment, input validation and business logic testing.
+
+![cURL for API Testing & Automation: Advanced Commands for Penetration Testers and Developers | by Khaleel Khan | Medium](https://images.openai.com/static-rsc-4/cUTua7tDrvS4dPiq2Fjpc3tsUVO4CSZEACiFIWPFiJnQZboQG8IDaGfEw_h9_K5UCDeHv_GUr8x5YnGJ6_bZOXBswRaUAyty1iDD8M3lmiKruJ10bn8ljTY3X_wt974bgsNC9f-2JYWcbT3zu-dDlfWQx-M6Nrqb44x7CiCNQAr_rC0HbgzIyMpQj1dO9_5j?purpose=fullsize)
+
+13\. curl
+
+Job: Send HTTP requests directly from Ubuntu.
+
+Example:
+
+```bash
+curl -i https://your-test-server.example/api/profile
+```
+
+Send JSON:
+
+```bash
+curl -i -X POST \
+  https://your-test-server.example/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"test":"value"}'
+```
+
+![How to Use UISelector in Tests With Appium | Waldo Blog](https://images.openai.com/static-rsc-4/ETtVHC3eLrwc7BJZkVlZQwmO4B1NxOF_5Fp-qv14nUpTz7mE6HKfbCuakTpSYle-NzPRPsQRV_8Dc1t5td7KJ5k80UzhkzpWpXPdkmzmRWoTJ5cwiVHb61iMi56J9nZGncS7V-AMxrKExvS8twgVnMJbMKsHptJ2aEZy635kQ12BqL2cxE3dVzmtif92wiqt?purpose=fullsize)
+
+14\. Appium
+
+Job: Automate Android application interaction: buttons, forms, navigation, login and repeated UI tests.
+
+Install:
+
+```bash
+sudo npm install -g appium
+appium driver install uiautomator2
+```
+
+Start:
+
+```bash
+appium --address 127.0.0.1 --port 4723
+```
+
+Useful for testing authentication flows, session behavior, UI validation and repeatable test scenarios.
+
+![16 Free and Open-source Internet and Network Traffic Monitor for Linux, Windows and macOS](https://images.openai.com/static-rsc-4/OfLEBB2CAybFPUUoZvsxV7yfxu4yGlJ_5CiJWanqMBqQg8YZLLLQgWI8hKxVz82mJgJxR9j5iYOL8mqKSbPLsLe_253SH210nU5Wz1YrGsHGaBdHrRay4LfYh_QATp0aFqxfMdn3_R-QjR_pUvTZAjhXKxIpBXnPNIqSi3H9LOhH8jSLQZj7fBGhSS2vYQVg?purpose=fullsize)
+
+15\. PCAPdroid
+
+Job: Capture network connections from individual Android applications using Android's VPN-based local capture facility.
+
+Start:
+
+* Install PCAPdroid on your emulator or test phone from a trusted source.
+
+* Open PCAPdroid.
+
+* Select the test application.
+
+* Start capture.
+
+* Export a PCAP file for Wireshark.
+
+Particularly useful when an app does not follow the Android system HTTP proxy.
+
+![Python で SQLite を使ってみよう！ - GIS奮闘記](https://images.openai.com/static-rsc-4/uzRcW9J0CqqdAmEjTBpJEGJVW9DgKgeoNqUhBWKQwQhaLH99iIaWzDK10YTBFdHDN0K5kwSBrOKnWRY17OTKJ3EpLf_Ov1sEeLlIC5SH3WLdjiWaygMz18blAHlDSuPAnrpOnB0PHezXon8wCOA11ZJ-uLyujebT9bHYt9TXWL5kxGoNmFzCQE-SpS0avxz4?purpose=fullsize)
+
+16\. SQLite3
+
+Job: Inspect local Android application databases.
+
+Start:
+
+```bash
+sqlite3 database.db
+```
+
+Inside SQLite:
+
+```sql
+.tables
+.schema
+SELECT name FROM sqlite_master;
+```
+
+Useful for examining insecure local storage and sensitive data exposure in an authorized test app.
+
+![Walk through 2024-01-06 decoding challenge](https://images.openai.com/static-rsc-4/qmo6L-DPYUjK9epOiP9TvXAjRpCeketAem9mUC_AlLPMwf6UjG41z-RyVd85K122j0ncx9R-eWT0SE77RS1d1CW14d01wUOr0kQUgyb-BFlmh1aRRXMMe3OQ8brXLbwf-qNRhGOG6cNiYiZpUHC0X-2jl3vg-ia5c-kTTT5hhYFj6U0ifYWRzvLUN4f0e11v?purpose=fullsize)
+
+17\. CyberChef
+
+Job: Decode and inspect encoded data such as Base64, URL encoding, hexadecimal and other formats.
+
+Start: Open [CyberChef in your browser](https://gchq.github.io/CyberChef/?utm_source=chatgpt.com).
+
+Useful when inspecting tokens, encoded parameters and application data. Decoding is not the same as decrypting.
+
+### 6\. Which tool should you use for each vulnerability?
+
+This is the practical tool-selection chart. The tools listed are useful for finding evidence; none guarantees that a vulnerability exists.
+
+| Vulnerability             | Primary tools      | Additional tools           |
+| ------------------------- | ------------------ | -------------------------- |
+| IDOR / BOLA               | Postman, mitmproxy | Frida                      |
+| BFLA                      | Postman, mitmproxy | JADX                       |
+| Broken authentication     | Postman, mitmproxy | Appium                     |
+| JWT weaknesses            | Postman, CyberChef | JADX                       |
+| SSRF                      | Postman, mitmproxy | Controlled callback server |
+| RCE                       | JADX, MobSF        | Frida, server logs         |
+| SQL injection             | Postman, ZAP       | mitmproxy                  |
+| NoSQL injection           | Postman, ZAP       | mitmproxy                  |
+| Command injection         | JADX, Postman      | Server logs                |
+| XSS                       | ZAP, mitmproxy     | Appium                     |
+| Path traversal            | Postman, ZAP       | mitmproxy                  |
+| XXE                       | ZAP, Postman       | Server logs                |
+| SSTI                      | Postman, ZAP       | Server logs                |
+| Insecure file upload      | Postman, mitmproxy | MobSF                      |
+| Open redirect             | Postman, ZAP       | Appium                     |
+| Mass assignment           | Postman            | mitmproxy                  |
+| Race conditions           | Python, Postman    | Server logs                |
+| Rate-limit weaknesses     | Python, Postman    | mitmproxy                  |
+| Insecure storage          | ADB, SQLite3       | MobSF                      |
+| Hardcoded secrets         | JADX, MobSF        | Ghidra                     |
+| Exported components       | JADX, APKTool      | ADB                        |
+| Deep-link vulnerabilities | JADX, ADB          | Appium                     |
+| WebView vulnerabilities   | JADX, Frida        | MobSF                      |
+| TLS weaknesses            | MobSF, PCAPdroid   | Wireshark                  |
+| Sensitive data leakage    | mitmproxy, ADB     | MobSF                      |
+| Business logic flaws      | Postman, Python    | Appium                     |
+| Native library weaknesses | Ghidra             | JADX, MobSF                |
+
+### Part 3 — Recommended order for a complete assessment
+
+Follow this sequence instead of launching everything at once.
+
+### Mobile application penetration-testing workflow
+
+* Prepare the emulator
+
+    Tools: Android Studio Emulator, ADB.
+
+    ```bash
+    adb devices -l
+    adb install -r target.apk
+    adb logcat -c
+    ```
+
+* Analyze the APK
+
+    Tools: MobSF, JADX, APKTool.
+
+    ```bash
+    jadx -d decoded_app target.apk
+    apktool d target.apk -o apk_decoded
+    ```
+
+    Look for API endpoints, exported components, hardcoded secrets, WebViews and unsafe code patterns.
+
+* Capture network traffic
+
+    Tools: mitmproxy, PCAPdroid, Wireshark.
+
+    ```bash
+    mitmweb --listen-port 8081
+    ```
+
+    Interact with the application and record its requests.
+
+* Test API security
+
+    Tools: Postman, curl, Python.
+
+    Examine authorization, authentication, IDOR, mass assignment, rate limiting and input validation using accounts you control.
+
+* Test application runtime behavior
+
+    Tools: Frida, Objection, ADB, Appium.
+
+    Inspect runtime behavior, local storage, deep links, application components and session handling.
+
+* Investigate server-side vulnerabilities
+
+    Tools: ZAP, Postman, mitmproxy.
+
+    Use isolated test endpoints to assess SSRF, injection, file handling and other server-side weaknesses.
+
+* Document and verify findings
+
+    Tools: Wireshark, SQLite3, MobSF and your test logs.
+
+    Record reproducible evidence, impact, affected endpoint and remediation.
+
+### Part 4 — Where to get the tools
+
+These are their official project pages:
+
+| Tool      | Official website |
+| --------- | ---------------- |
+| mitmproxy | Download         |
+| OWASP ZAP | Download         |
+| Wireshark | Download         |
+| JADX      | Download         |
+| APKTool   | Download         |
+| MobSF     | Download         |
+| Frida     | Documentation    |
+| Objection | Documentation    |
+| Appium    | Documentation    |
+| PCAPdroid | Download         |
+| Ghidra    | Download         |
+| Postman   | Download         |
+
+### Part 5 — What I recommend you learn first
+
+Prioritize these ten areas:
+
+* HTTP and HTTPS request/response analysis.
+
+* API endpoint discovery.
+
+* Authentication and authorization.
+
+* IDOR and BOLA.
+
+* Business logic vulnerabilities.
+
+* SQL injection and input validation.
+
+* SSRF and file upload security.
+
+* Android local storage and exported components.
+
+* Runtime analysis with Frida.
+
+* Race conditions and transaction integrity.
+
+Use intentionally vulnerable applications such as [DIVA Android](https://github.com/payatu/diva-android?utm_source=chatgpt.com) to practise Android-specific security testing.
+
+For structured learning, use the [OWASP Mobile Application Security Testing Guide](https://mas.owasp.org/MASTG/?utm_source=chatgpt.com).
+
+One important point: You cannot discover every possible vulnerability with a fixed list of tools. Some require source-code review, some require backend access, and others require carefully designed runtime experiments.
+
+My recommendation is to master mitmproxy, JADX, MobSF, Frida and Postman first. Together, they give you a strong foundation for Android application security testing without Burp Suite.

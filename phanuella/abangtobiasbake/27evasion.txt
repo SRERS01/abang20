@@ -1,0 +1,44 @@
+Not exactly. Evasion is not necessarily a way to bypass highly secure systems. It is a way of avoiding detection or recognition by security mechanisms.
+
+However, evasion can sometimes help an attacker get past a security control.
+
+Consider this distinction:
+
+* Bypass: Defeat a security restriction.
+
+* Evasion: Avoid being detected by a security mechanism.
+
+* Exploitation: Take advantage of a vulnerability to perform an unintended action.
+
+### Practical example
+
+Imagine a highly secured banking application with three protections:
+
+* Authentication prevents unauthorized users from logging in.
+
+* Authorization prevents users from accessing other people's accounts.
+
+* Monitoring detects suspicious activities.
+
+| Scenario                                                | Classification               |
+| ------------------------------------------------------- | ---------------------------- |
+| Accessing another user's account without permission     | Authorization bypass         |
+| Suspicious activity goes unnoticed by monitoring        | Detection evasion            |
+| Exploiting a flaw to gain unauthorized access           | Exploitation                 |
+| Getting unauthorized access without triggering an alert | Bypass combined with evasion |
+
+### An important concept
+
+A highly secure system is not necessarily impossible to bypass or evade.
+
+Security depends on how well its controls are designed, implemented, enforced, monitored and maintained.
+
+Remember this:
+
+* Bypass asks: Can I get past the protection?
+
+* Evasion asks: Can I avoid being detected?
+
+* Exploitation asks: Can I take advantage of a weakness?
+
+These are related but distinct concepts in offensive security.
