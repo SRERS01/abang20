@@ -1,0 +1,34 @@
+You can install Drozer (Python 3 console + Android agent APK) on Ubuntu 24.04 (noble) using pipx and GitHub releases.
+(Note: All URLs below are built from split variables so your browser extension never rewrites or strips the links.)
+
+1. Install the Drozer Console via pipx
+
+bash
+sudo apt update && sudo apt install -y adb pipx python3-dev build-essential libprotobuf-dev protobuf-compiler curl && \
+pipx ensurepath && \
+pipx install drozer
+Use code with caution.
+
+2. Download the Matching Drozer Android Agent APK (drozer-agent.apk)
+
+bash
+mkdir -p ~/tools/drozer && cd ~/tools/drozer && \
+PROTO="https" && \
+API_HOST="api.github" && \
+TLD="com" && \
+AGENT_API="${PROTO}://${API_HOST}.${TLD}/repos/ReversecLabs/drozer-agent/releases/latest" && \
+AGENT_URL=$(curl -s "$AGENT_API" | grep -oE 'https://[^"]+\.apk' | head -n 1) && \
+echo "Downloading Agent: $AGENT_URL" && \
+curl -sL "$AGENT_URL" -o drozer-agent.apk && \
+ls -lh ~/tools/drozer/drozer-agent.apk
+Use code with caution.
+
+3. Verify drozer & Quick Connection Setup
+
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+which drozer && drozer --help | head -n 6
+Use code with caution.
+(To connect to a running Android device/emulator: install adb install ~/tools/drozer/drozer-agent.apk, turn on the Embedded Server inside the Drozer app on the phone, forward port 31415 with adb forward tcp:31415 tcp:31415, and run drozer console connect.)
+Did drozer and drozer-agent.apk install cleanly, or would you like a 1-page Drozer Android IPC auditing cheat sheet (enumerating exported activities, services, broadcast receivers, and content providers)?

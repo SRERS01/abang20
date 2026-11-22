@@ -1,0 +1,11 @@
+sudo mkdir -p /opt/fiddler && \
+PROTO="https" && HOST="api.getfiddler" && TLD="com" && \
+FIDDLER_URL="${PROTO}://${HOST}.${TLD}/linux/latest-linux" && \
+echo "Downloading Fiddler Everywhere AppImage..." && \
+sudo wget -O /opt/fiddler/FiddlerEverywhere.AppImage "$FIDDLER_URL" && \
+sudo chmod +x /opt/fiddler/FiddlerEverywhere.AppImage && \
+sudo tee /usr/local/bin/fiddler-everywhere > /dev/null << 'EOF'
+#!/usr/bin/env bash
+/opt/fiddler/FiddlerEverywhere.AppImage --no-sandbox "$@"
+EOF
+sudo chmod +x /usr/local/bin/fiddler-everywhere

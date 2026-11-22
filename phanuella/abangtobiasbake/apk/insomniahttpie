@@ -1,0 +1,37 @@
+You can install insomnia, httpie (http and https), newman, and schemathesis on Ubuntu 24.04 (noble) with these commands.
+
+1. Install insomnia (Snap) & newman (npm)
+
+bash
+sudo snap install insomnia && \
+sudo npm install -g newman
+Use code with caution.
+
+2. Install httpie (http / https) & schemathesis (pipx)
+
+bash
+sudo apt update && sudo apt install -y pipx && \
+pipx ensurepath && \
+pipx install httpie && \
+pipx install schemathesis
+Use code with caution.
+
+3. Verify All API Testing Tools Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:/snap/bin:/usr/local/bin:$PATH"
+
+for tool in postman insomnia http https curl newman schemathesis; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+echo "--- Functional Check ---"
+http --version
+newman --version
+schemathesis --version
+Use code with caution.
+Did all 7 API testing commands report ✅ now, or are you ready for the next batch of tools?

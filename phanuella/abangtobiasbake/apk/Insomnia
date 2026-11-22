@@ -1,0 +1,37 @@
+The Snap download for Insomnia dropped mid-stream (unexpected EOF), which also prevented newman from running.
+Retry the Snap install for insomnia (Snap automatically resumes or retries cleanly), or install Insomnia's official .deb directly via wget -c (which handles unstable connections better) alongside newman:
+
+Option 1: Retry Snap + Install newman (Simplest)
+
+bash
+sudo snap install insomnia && sudo npm install -g newman
+Use code with caution.
+
+Option 2: Install Insomnia via Resumable .deb Download (wget -c) + newman (Recommended if Snap Times Out Again)
+
+bash
+rm -rf /tmp/insomnia_dl && mkdir -p /tmp/insomnia_dl && cd /tmp/insomnia_dl && \
+PROTO="https" && API_HOST="api.github" && TLD="com" && \
+INS_API="${PROTO}://${API_HOST}.${TLD}/repos/Kong/insomnia/releases/latest" && \
+INS_URL=$(curl -sL "$INS_API" | grep -oE 'https://[^"]+Insomnia\.Core-[0-9.]+\.deb' | head -n 1) && \
+echo "Downloading Insomnia: $INS_URL" && \
+wget -c -O insomnia.deb "$INS_URL" && \
+sudo apt update && sudo apt install -y ./insomnia.deb && \
+cd ~ && rm -rf /tmp/insomnia_dl && \
+sudo npm install -g newman
+Use code with caution.
+
+Verify Both Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:/snap/bin:/usr/local/bin:$PATH"
+
+for tool in insomnia newman; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Did insomnia and newman both finish installing and show ✅, or are you ready for the next batch of tools?

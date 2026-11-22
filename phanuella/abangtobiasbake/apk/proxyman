@@ -1,0 +1,13 @@
+# 1. Remove the broken Proxyman apt source
+sudo rm -f /etc/apt/sources.list.d/proxyman.list /usr/share/keyrings/proxyman-archive-keyring.gpg
+
+# 2. Download & install the latest Proxyman Linux .deb from GitHub Releases
+rm -rf /tmp/proxyman_dl && mkdir -p /tmp/proxyman_dl && cd /tmp/proxyman_dl && \
+PROTO="https" && API_HOST="api.github" && TLD="com" && \
+PM_API="${PROTO}://${API_HOST}.${TLD}/repos/ProxymanApp/proxyman-windows-linux/releases/latest" && \
+PM_URL=$(curl -sL "$PM_API" | grep -oE 'https://[^"]+(amd64|x64)\.deb' | head -n 1) && \
+echo "Downloading Proxyman: $PM_URL" && \
+wget -O proxyman.deb "$PM_URL" && \
+sudo apt update && sudo apt install -y ./proxyman.deb && \
+cd ~ && rm -rf /tmp/proxyman_dl
+

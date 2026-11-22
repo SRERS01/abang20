@@ -1,0 +1,35 @@
+You can install objection (along with frida-tools and adb) on Ubuntu 24.04 (noble) using pipx so all runtime instrumentation dependencies stay cleanly isolated from system Python packages.
+
+1. Install adb & Prerequisites via APT
+
+bash
+sudo apt update && sudo apt install -y adb pipx
+Use code with caution.
+
+2. Install objection & frida-tools via pipx
+
+bash
+pipx ensurepath && \
+pipx install objection && \
+pipx install frida-tools
+Use code with caution.
+
+3. Verify All Tools Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+for tool in objection frida frida-ps adb; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+objection version
+frida --version
+Use code with caution.
+Would you like:
+• A 1-page objection & Frida mobile runtime exploration cheat sheet (SSL pinning bypass, root/jailbreak detection checks, keystore/keychain dumping, and frida-server setup)
+• The next batch of tools you want to install?

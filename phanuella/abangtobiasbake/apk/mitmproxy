@@ -1,0 +1,29 @@
+You can install and verify mitmproxy (which provides mitmproxy, mitmdump, and mitmweb) on Ubuntu 24.04 (noble) using pipx so you get the latest release cleanly isolated from system Python packages.
+
+1. One-Command Installation
+
+bash
+sudo apt update && sudo apt install -y pipx && \
+pipx ensurepath && \
+pipx install mitmproxy
+Use code with caution.
+
+2. Verify All Three Binaries Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+for tool in mitmproxy mitmdump mitmweb; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+mitmproxy --version | head -n 2
+Use code with caution.
+(Note: After launching mitmproxy or mitmdump once, its root CA certificate is automatically generated in ~/.mitmproxy/mitmproxy-ca-cert.pem for intercepting HTTPS traffic.)
+Would you like:
+• A 1-page mitmproxy & mitmdump cheat sheet (transparent proxying, exporting HAR/flows, and trusting the CA cert on Linux/Android)
+• The next batch of tools you want to install?

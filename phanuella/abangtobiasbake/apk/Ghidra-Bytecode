@@ -1,0 +1,45 @@
+Why it failed: GitHub's /releases/latest HTML page lazy-loads release assets dynamically, so scraping the HTML returned an empty link and wget saved an empty/404 file instead of the real Ghidra .zip or Bytecode Viewer .jar.
+Query the GitHub Releases API (api.github.com) built entirely from split variables (so your browser extension never rewrites api.github.com or .zip/.jar URLs) to fetch and install both Ghidra and Bytecode Viewer:
+bash
+PROTO="https"
+API_HOST="api.github"
+TLD="com"
+
+# 1. Install Ghidra via GitHub API
+rm -rf /tmp/ghidra_dl && mkdir -p /tmp/ghidra_dl && cd /tmp/ghidra_dl && \
+GHIDRA_API="${PROTO}://${API_HOST}.${TLD}/repos/NationalSecurityAgency/ghidra/releases/latest" && \
+GHIDRA_URL=$(curl -s "$GHIDRA_API" | grep -oE 'https://[^"]+PUBLIC_[0-9]+\.zip' | head -n 1) && \
+echo "Downloading Ghidra: $GHIDRA_URL" && \
+wget -O ghidra.zip "$GHIDRA_URL" && \
+unzip -oq ghidra.zip && \
+sudo rm -rf /opt/ghidra && \
+sudo mv ghidra_*_PUBLIC /opt/ghidra && \
+sudo ln -sf /opt/ghidra/ghidraRun /usr/local/bin/ghidraRun && \
+sudo ln -sf /opt/ghidra/ghidraRun /usr/local/bin/ghidra && \
+cd ~ && rm -rf /tmp/ghidra_dl
+
+# 2. Install Bytecode Viewer via GitHub API
+sudo mkdir -p /opt/bytecode-viewer && \
+BCV_API="${PROTO}://${API_HOST}.${TLD}/repos/Konloch/bytecode-viewer/releases/latest" && \
+BCV_URL=$(curl -s "$BCV_API" | grep -oE 'https://[^"]+Bytecode-Viewer-[0-9.]+\.jar' | head -n 1) && \
+echo "Downloading Bytecode Viewer: $BCV_URL" && \
+sudo wget -O /opt/bytecode-viewer/Bytecode-Viewer.jar "$BCV_URL" && \
+sudo tee /usr/local/bin/bytecode-viewer > /dev/null << 'EOF'
+#!/usr/bin/env bash
+java -jar /opt/bytecode-viewer/Bytecode-Viewer.jar "$@"
+EOF
+sudo chmod +x /usr/local/bin/bytecode-viewer
+Use code with caution.
+
+Verify Both Tools Are Installed
+
+bash
+for tool in ghidra ghidraRun bytecode-viewer; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Did ghidra, ghidraRun, and bytecode-viewer all download and show ✅ cleanly, or are you ready to verify all 9 mobile reverse-engineering tools together?

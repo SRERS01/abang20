@@ -1,0 +1,29 @@
+You can download Inspeckage (Inspeckage.apk — the Xposed / LSPosed dynamic Android analysis module) directly onto your Ubuntu host so it is ready to install onto your rooted Android device or emulator via adb.
+(Note: Inspeckage is an Android Xposed/LSPosed module APK rather than a native Linux CLI binary, and it exposes a local web dashboard on port 8008 once active on the device. All URLs below use split variables so your browser extension does not alter them.)
+
+1. Download Inspeckage.apk to ~/tools/inspeckage
+
+bash
+mkdir -p ~/tools/inspeckage && cd ~/tools/inspeckage && \
+PROTO="https" && \
+API_HOST="api.github" && \
+TLD="com" && \
+INS_API="${PROTO}://${API_HOST}.${TLD}/repos/ac-pm/Inspeckage/releases/latest" && \
+INS_URL=$(curl -s "$INS_API" | grep -oE 'https://[^"]+\.apk' | head -n 1) && \
+echo "Downloading Inspeckage: $INS_URL" && \
+curl -sL "$INS_URL" -o Inspeckage.apk && \
+ls -lh ~/tools/inspeckage/Inspeckage.apk
+Use code with caution.
+
+2. Deploy & Launch on Your Android Device / Emulator (via ADB)
+
+Once you have a rooted Android device/emulator with Xposed / LSPosed enabled:
+bash
+# 1. Install the module APK onto the device
+adb install ~/tools/inspeckage/Inspeckage.apk
+
+# 2. Enable Inspeckage inside LSPosed/Xposed Manager on the device and reboot, then forward its web UI port:
+adb forward tcp:8008 tcp:8008
+Use code with caution.
+(After forwarding port 8008, open http://127.0.0.1:8008 in your Ubuntu browser to inspect shared preferences, SQLite queries, crypto keys, hashes, file access, and IPC hooks in real time.)
+Did Inspeckage.apk download cleanly into ~/tools/inspeckage/, or are you ready for the next batch of mobile tools?

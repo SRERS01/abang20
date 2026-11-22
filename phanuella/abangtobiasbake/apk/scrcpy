@@ -1,0 +1,42 @@
+You can install scrcpy (along with adb) on Ubuntu 24.04 (noble) using apt—or grab the latest upstream release with pre-built scrcpy-server from GitHub.
+
+Option 1: Install via APT (Fastest)
+
+bash
+sudo apt update && sudo apt install -y scrcpy adb
+Use code with caution.
+
+Option 2: Install Latest Upstream Release via GitHub (Recommended for Android 14/15/16 Support)
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+sudo apt update && sudo apt install -y adb ffmpeg libsdl2-2.0-0 libusb-1.0-0 curl tar && \
+rm -rf /tmp/scrcpy_install && mkdir -p /tmp/scrcpy_install && cd /tmp/scrcpy_install && \
+API_URL="https://github.com""/repos/Genymobile/scrcpy/releases/latest" && \
+SCRCPY_URL=$(curl -s "$API_URL" | grep -oE 'https://[^"]+scrcpy-linux-x86_64[^"]+\.tar\.gz' | head -n 1) && \
+echo "Downloading: $SCRCPY_URL" && \
+wget -qO scrcpy.tar.gz "$SCRCPY_URL" && \
+tar -xf scrcpy.tar.gz && \
+sudo rm -rf /opt/scrcpy && \
+sudo mv scrcpy-linux-x86_64-* /opt/scrcpy && \
+sudo ln -sf /opt/scrcpy/scrcpy /usr/local/bin/scrcpy && \
+cd ~ && rm -rf /tmp/scrcpy_install
+Use code with caution.
+
+Verify scrcpy & adb Are Installed & Ready
+
+bash
+for tool in scrcpy adb; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+scrcpy --version | head -n 2
+Use code with caution.
+(Note: Enable USB debugging under Developer options on your Android device, plug it in via USB, accept the RSA fingerprint prompt on the phone, and run scrcpy.)
+Would you like:
+• A 1-page scrcpy & adb cheat sheet (wireless TCP/IP mirroring, screen recording, turning off the physical screen while mirroring, and file drag-and-drop)
+• The next batch of tools you want to install?

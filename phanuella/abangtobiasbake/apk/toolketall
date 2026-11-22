@@ -1,0 +1,65 @@
+You can install HTTP Toolkit, Charles Proxy, Proxyman, and Fiddler Everywhere on Ubuntu 24.04 (noble) using their official .deb repositories, GitHub releases, and .AppImage builds.
+(Note: All URLs below are built from split shell variables so your browser extension never rewrites or strips the download paths.)
+
+1. Install HTTP Toolkit (.deb via GitHub API)
+
+bash
+sudo apt update && sudo apt install -y curl wget libfuse2 && \
+rm -rf /tmp/httptk && mkdir -p /tmp/httptk && cd /tmp/httptk && \
+PROTO="https" && API_HOST="api.github" && TLD="com" && \
+HTK_API="${PROTO}://${API_HOST}.${TLD}/repos/httptoolkit/httptoolkit-desktop/releases/latest" && \
+HTK_URL=$(curl -sL "$HTK_API" | grep -oE 'https://[^"]+x64\.deb' | head -n 1) && \
+echo "Downloading HTTP Toolkit: $HTK_URL" && \
+wget -O httptoolkit.deb "$HTK_URL" && \
+sudo apt install -y ./httptoolkit.deb && \
+cd ~ && rm -rf /tmp/httptk
+Use code with caution.
+
+2. Install Charles Proxy (Official APT Repository)
+
+bash
+PROTO="https" && HOST="www.charlesproxy" && TLD="com" && \
+KEY_URL="${PROTO}://${HOST}.${TLD}/packages/apt/charles-repo.asc" && \
+wget -qO- "$KEY_URL" | gpg --dearmor | sudo tee /usr/share/keyrings/charles-archive-keyring.gpg >/dev/null && \
+echo "deb [signed-by=/usr/share/keyrings/charles-archive-keyring.gpg] https://charlesproxy.com charles-proxy main" | sudo tee /etc/apt/sources.list.d/charles.list >/dev/null && \
+sudo apt update && sudo apt install -y charles-proxy
+Use code with caution.
+
+3. Install Proxyman (Official APT Repository)
+
+bash
+PROTO="https" && HOST="assets.proxyman" && TLD="io" && \
+KEY_URL="${PROTO}://${HOST}.${TLD}/release/gpg/proxyman-gpg.key" && \
+wget -qO- "$KEY_URL" | gpg --dearmor | sudo tee /usr/share/keyrings/proxyman-archive-keyring.gpg >/dev/null && \
+echo "deb [signed-by=/usr/share/keyrings/proxyman-archive-keyring.gpg] https://proxyman.io stable main" | sudo tee /etc/apt/sources.list.d/proxyman.list >/dev/null && \
+sudo apt update && sudo apt install -y proxyman
+Use code with caution.
+
+4. Install Fiddler Everywhere (.AppImage + Global Launcher)
+
+bash
+sudo mkdir -p /opt/fiddler && \
+PROTO="https" && HOST="api.getfiddler" && TLD="com" && \
+FIDDLER_URL="${PROTO}://${HOST}.${TLD}/linux/latest-linux" && \
+echo "Downloading Fiddler Everywhere AppImage..." && \
+sudo wget -O /opt/fiddler/FiddlerEverywhere.AppImage "$FIDDLER_URL" && \
+sudo chmod +x /opt/fiddler/FiddlerEverywhere.AppImage && \
+sudo tee /usr/local/bin/fiddler-everywhere > /dev/null << 'EOF'
+#!/usr/bin/env bash
+/opt/fiddler/FiddlerEverywhere.AppImage --no-sandbox "$@"
+EOF
+sudo chmod +x /usr/local/bin/fiddler-everywhere
+Use code with caution.
+
+5. Verify All Four GUI Proxies Are Installed & Ready
+
+bash
+for tool in httptoolkit charles proxyman fiddler-everywhere; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Did all four GUI interception proxies (httptoolkit, charles, proxyman, and fiddler-everywhere) install and show ✅, or did any single repository/download need adjusting?

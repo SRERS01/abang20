@@ -1,0 +1,37 @@
+You can install Appium (Appium 2.x/3.x CLI, plus the uiautomator2 and xcuitest drivers and appium-doctor) on Ubuntu 24.04 (noble) via npm.
+
+1. Install Node.js/npm & Android Platform Tools (adb) via APT
+
+(If you don't already have npm installed, run this first; otherwise skip straight to step 2.)
+bash
+sudo apt update && sudo apt install -y nodejs npm adb default-jdk
+Use code with caution.
+
+2. Install Appium, appium-doctor, & Automation Drivers via npm
+
+bash
+# 1. Install Appium globally
+sudo npm install -g appium appium-doctor
+
+# 2. Install the Android (UiAutomator2) driver into your user's APPIUM_HOME (~/.appium)
+appium driver install uiautomator2
+Use code with caution.
+(Note: Ensure ANDROID_HOME is exported in your ~/.bashrc—for example, export ANDROID_HOME=$HOME/Android/Sdk and export PATH=$PATH:$ANDROID_HOME/platform-tools—so Appium can locate adb and apksigner.)
+
+3. Verify Appium & Installed Drivers Are Ready
+
+bash
+for tool in appium appium-doctor adb java; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+appium --version
+appium driver list --installed
+Use code with caution.
+Would you like:
+• A 1-page Appium mobile automation & security testing setup guide (configuring ANDROID_HOME, connecting an Android emulator/device, and running Appium Inspector)
+• The next batch of tools you want to install?

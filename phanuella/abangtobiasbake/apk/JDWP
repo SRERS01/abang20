@@ -1,0 +1,7 @@
+You can install jdb (the official Java Debug Wire Protocol CLI debugger included in default-jdk) alongside adb (for forwarding Android's jdwp:<pid> sockets) and jdwp-shellifier on Ubuntu 24.04 (noble).
+
+1. Install jdb (default-jdk), adb, & nmap (Includes jdwp-exec / jdwp-info NSE Scripts)
+
+bash
+sudo apt update && sudo apt install -y default-jdk adb nmap python3 git
+Use code with caution.

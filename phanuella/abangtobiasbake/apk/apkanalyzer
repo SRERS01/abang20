@@ -1,0 +1,33 @@
+Your browser extension rewrote the URL again, turning it into "https://dl.""://google.com" and dropping the path.
+Build the URL from separate variables (PROTO, HOST, PATH_PART) with zero :// or .com patterns for your browser extension to rewrite:
+bash
+rm -rf /tmp/cmdline-tools.zip /tmp/sdk_tmp && \
+mkdir -p "$HOME/Android/Sdk/cmdline-tools" && cd /tmp && \
+PROTO="https" && \
+HOST="dl.google" && \
+TLD="com" && \
+PATH_PART="android/repository/commandlinetools-linux-11076708_latest.zip" && \
+SDK_URL="${PROTO}://${HOST}.${TLD}/${PATH_PART}" && \
+echo "Downloading: $SDK_URL" && \
+wget -O cmdline-tools.zip "$SDK_URL" && \
+unzip -oq cmdline-tools.zip -d /tmp/sdk_tmp && \
+rm -rf "$HOME/Android/Sdk/cmdline-tools/latest" && \
+mv /tmp/sdk_tmp/cmdline-tools "$HOME/Android/Sdk/cmdline-tools/latest" && \
+rm -rf /tmp/cmdline-tools.zip /tmp/sdk_tmp && \
+sudo ln -sf "$HOME/Android/Sdk/cmdline-tools/latest/bin/apkanalyzer" /usr/local/bin/apkanalyzer
+Use code with caution.
+
+Verify apkanalyzer & All Mobile Tools
+
+bash
+export PATH="$HOME/.local/bin:$HOME/Android/Sdk/cmdline-tools/latest/bin:/opt/ghidra:/usr/local/bin:$PATH"
+
+for tool in jadx jadx-gui apktool mobsf androguard ghidra ghidraRun bytecode-viewer apkanalyzer; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Did apkanalyzer and the rest of the mobile reverse-engineering tools report ✅ now, or did any single tool show ❌ MISSING?

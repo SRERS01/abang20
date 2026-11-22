@@ -1,0 +1,5 @@
+PROTO="https" && HOST="www.charlesproxy" && TLD="com" && REPO_PATH="packages/apt" && \
+KEY_URL="${PROTO}://${HOST}.${TLD}/${REPO_PATH}/charles-repo.asc" && \
+wget -qO- "$KEY_URL" | gpg --dearmor | sudo tee /usr/share/keyrings/charles-archive-keyring.gpg >/dev/null && \
+echo "deb [signed-by=/usr/share/keyrings/charles-archive-keyring.gpg] ${PROTO}://${HOST}.${TLD}/${REPO_PATH}/ charles-proxy main" | sudo tee /etc/apt/sources.list.d/charles.list >/dev/null && \
+sudo apt update && sudo apt install -y charles-proxy

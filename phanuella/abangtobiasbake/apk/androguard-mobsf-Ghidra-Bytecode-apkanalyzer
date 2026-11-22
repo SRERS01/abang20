@@ -1,0 +1,66 @@
+jadx, jadx-gui, and apktool are already verified (✅). You can install the remaining five tools—androguard, mobsf, ghidra, bytecode-viewer, and apkanalyzer—on Ubuntu 24.04 (noble) with the commands below.
+(Note: Because your browser strips full URLs on copy-paste, every URL below uses concatenated strings "https://..." so nothing gets cut off.)
+
+1. Install androguard & mobsf via pipx
+
+bash
+sudo apt update && sudo apt install -y pipx openjdk-21-jdk wget unzip curl python3-dev build-essential libmagic1 && \
+pipx ensurepath && \
+pipx install androguard && \
+pipx install mobsf
+Use code with caution.
+
+2. Install Ghidra & Bytecode Viewer into /opt
+
+bash
+# 1. Install Ghidra (latest release)
+rm -rf /tmp/ghidra_dl && mkdir -p /tmp/ghidra_dl && cd /tmp/ghidra_dl && \
+GHIDRA_HTML=$(curl -sL "https://github.com""/NationalSecurityAgency/ghidra/releases/latest") && \
+GHIDRA_REL=$(echo "$GHIDRA_HTML" | grep -oE '/NationalSecurityAgency/ghidra/releases/download/[^"]+PUBLIC_[0-9]+\.zip' | head -n 1) && \
+wget -qO ghidra.zip "https://github.com""$GHIDRA_REL" && \
+unzip -oq ghidra.zip && \
+sudo rm -rf /opt/ghidra && \
+sudo mv ghidra_*_PUBLIC /opt/ghidra && \
+sudo ln -sf /opt/ghidra/ghidraRun /usr/local/bin/ghidraRun && \
+sudo ln -sf /opt/ghidra/ghidraRun /usr/local/bin/ghidra && \
+cd ~ && rm -rf /tmp/ghidra_dl
+
+# 2. Install Bytecode Viewer (latest JAR + global launcher)
+sudo mkdir -p /opt/bytecode-viewer && \
+BCV_HTML=$(curl -sL "https://github.com""/Konloch/bytecode-viewer/releases/latest") && \
+BCV_REL=$(echo "$BCV_HTML" | grep -oE '/Konloch/bytecode-viewer/releases/download/[^"]+Bytecode-Viewer-[0-9.]+\.jar' | head -n 1) && \
+sudo wget -qO /opt/bytecode-viewer/Bytecode-Viewer.jar "https://github.com""$BCV_REL" && \
+sudo tee /usr/local/bin/bytecode-viewer > /dev/null << 'EOF'
+#!/usr/bin/env bash
+java -jar /opt/bytecode-viewer/Bytecode-Viewer.jar "$@"
+EOF
+sudo chmod +x /usr/local/bin/bytecode-viewer
+Use code with caution.
+
+3. Install apkanalyzer (Android SDK Command-Line Tools)
+
+bash
+mkdir -p "$HOME/Android/Sdk/cmdline-tools" && cd /tmp && \
+SDK_URL="https://google.com""/android/repository/commandlinetools-linux-11076708_latest.zip" && \
+wget -qO cmdline-tools.zip "$SDK_URL" && \
+unzip -oq cmdline-tools.zip -d /tmp/sdk_tmp && \
+rm -rf "$HOME/Android/Sdk/cmdline-tools/latest" && \
+mv /tmp/sdk_tmp/cmdline-tools "$HOME/Android/Sdk/cmdline-tools/latest" && \
+rm -rf /tmp/cmdline-tools.zip /tmp/sdk_tmp && \
+sudo ln -sf "$HOME/Android/Sdk/cmdline-tools/latest/bin/apkanalyzer" /usr/local/bin/apkanalyzer
+Use code with caution.
+
+4. Verify All Nine Mobile Reverse-Engineering Tools
+
+bash
+export PATH="$HOME/.local/bin:$HOME/Android/Sdk/cmdline-tools/latest/bin:/opt/ghidra:/usr/local/bin:$PATH"
+
+for tool in jadx jadx-gui apktool mobsf androguard ghidra ghidraRun bytecode-viewer apkanalyzer; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Did all 9 mobile reverse-engineering tools show ✅ after running those steps, or did any single download hit a snag?
