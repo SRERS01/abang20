@@ -1,0 +1,647 @@
+go install github.com/ropnop/go-windapsearch/cmd/windapsearch@latest
+pipx install bloodhound
+sudo apt update && sudo apt install -y ldap-utils nmap pipx golang-go libsasl2-dev libldap2-dev libssl-dev
+mkdir -p ~/tools && cd ~/tools && \
+git clone --depth 1 https://github.com/gchq/CyberChef.git cyberchef
+PKG="github.com""/mikefarah/yq/v4@latest"
+go install "$PKG" && \
+sudo ln -sf /home/user/go/bin/yq /usr/local/bin/yq && \
+/usr/local/bin/yq --version
+sudo snap install yq && yq --version
+mkdir -p ~/tools/ysoserial
+
+# 1. Clone phpggc using concatenated URL parts
+PHPGGC_URL="https://github.com""/ambionics/phpggc.git"
+rm -rf ~/tools/phpggc && git clone --depth 1 "$PHPGGC_URL" ~/tools/phpggc
+sudo ln -sf "$HOME/tools/phpggc/phpggc" /usr/local/bin/phpggc
+
+# 2. Download ysoserial JAR using concatenated URL parts
+YSO_URL="https://github.com""/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar"
+wget -O ~/tools/ysoserial/ysoserial-all.jar "$YSO_URL"
+
+# 3. Create global 'ysoserial' launcher command
+sudo tee /usr/local/bin/ysoserial > /dev/null << 'EOF'
+#!/usr/bin/env bash
+java -jar "$HOME/tools/ysoserial/ysoserial-all.jar" "$@"
+EOF
+sudo chmod +x /usr/local/bin/ysoserial
+mkdir -p ~/tools && rm -rf ~/tools/jwt_tool
+
+# Clone jwt_tool
+JWT_URL="https://github.com""/ticarpi/jwt_tool.git"
+git clone --depth 1 "$JWT_URL" ~/tools/jwt_tool
+
+# Create a virtual environment and install its dependencies
+python3 -m venv ~/tools/jwt_tool/venv
+~/tools/jwt_tool/venv/bin/pip install -q -r ~/tools/jwt_tool/requirements.txt
+
+# Create a global 'jwt_tool' launcher command
+sudo tee /usr/local/bin/jwt_tool > /dev/null << 'EOF'
+#!/usr/bin/env bash
+"$HOME/tools/jwt_tool/venv/bin/python3" "$HOME/tools/jwt_tool/jwt_tool.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/jwt_tool
+You can install gzip, brotli, zcat, python3 (which includes zlib in its standard library), and evilarc on Ubuntu 24.04 (noble) using apt and git.
+
+1. Install gzip, brotli, zcat, & python3 via APT
+
+(Note: zcat is included inside the gzip package, and zlib is built directly into Python 3's standard library.)
+bash
+sudo apt update && sudo apt install -y gzip brotli python3 git
+Use code with caution.
+
+2. Install evilarc Globally
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+mkdir -p ~/tools && rm -rf ~/tools/evilarc
+
+# Clone evilarc
+EVIL_URL="https://github.com""/ptoomey3/evilarc.git"
+git clone --depth 1 "$EVIL_URL" ~/tools/evilarc
+
+# Create a global 'evilarc' launcher command
+sudo tee /usr/local/bin/evilarc > /dev/null << 'EOF'
+#!/usr/bin/env bash
+python3 "$HOME/tools/evilarc/evilarc.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/evilarc
+Use code with caution.
+
+3. Verify All Five Tools Are Installed & Ready
+
+bash
+for tool in gzip brotli zcat python3 evilarc; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Verify Python's built-in zlib module and evilarc help output
+python3 -c "import zlib; print('✅ python3 zlib:', zlib.ZLIB_VERSION)" && evilarc -h | head -n 5
+Use code with caution.
+Would you like:
+• A 1-page cheat sheet showing how to decompress raw zlib/gzip/brotli HTTP streams and build Zip Slip path-traversal archives with evilarc
+• The next batch of tools you want to install?
+evilarc was written for Python 2, so Python 3 throws a SyntaxError on its print statements.
+You can automatically convert evilarc.py to valid Python 3 syntax right now using sed (or 2to3), and verify it runs cleanly:
+bash
+sed -i -E 's/^([[:space:]]*)print ([^;]+);?/\1print(\2)/g' ~/tools/evilarc/evilarc.py && evilarc -h
+Use code with caution.
+(That converts all Python 2 print "..." lines in evilarc.py to Python 3 print(...) calls.)
+Did evilarc -h print its options menu cleanly after running that fix, or are you ready for the next batch of tools?
+You can install exiftool, file, binwalk, pdfinfo, and qpdf on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: exiftool is packaged as libimage-exiftool-perl, and pdfinfo is included inside poppler-utils.)
+bash
+sudo apt update && sudo apt install -y libimage-exiftool-perl file binwalk poppler-utils qpdf
+Use code with caution.
+
+2. Verify All Five Tools Are Installed & Ready
+
+bash
+for tool in exiftool file binwalk pdfinfo qpdf; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+Would you like:
+• A 1-page cheat sheet with practical commands for metadata extraction (exiftool, pdfinfo), embedded file carving (binwalk), and PDF stream inspection (qpdf)
+• The next batch of tools you want to install?
+You can install enum4linux-ng, smbclient, smbmap, responder, and nbtscan on Ubuntu 24.04 (noble) using apt, pipx, and git.
+
+1. Install smbclient, nbtscan, & Prerequisites via APT
+
+bash
+sudo apt update && sudo apt install -y smbclient nbtscan python3-venv pipx git
+Use code with caution.
+
+2. Install enum4linux-ng & smbmap (via pipx) + responder (via Git)
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+pipx ensurepath
+
+# 1. Install enum4linux-ng and smbmap cleanly via pipx
+pipx install enum4linux-ng
+pipx install smbmap
+
+# 2. Clone Responder into ~/tools/responder and create a global wrapper
+mkdir -p ~/tools && rm -rf ~/tools/responder
+RESP_URL="https://github.com""/lgandx/Responder.git"
+git clone --depth 1 "$RESP_URL" ~/tools/responder
+
+sudo tee /usr/local/bin/responder > /dev/null << 'EOF'
+#!/usr/bin/env bash
+sudo python3 "$HOME/tools/responder/Responder.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/responder
+Use code with caution.
+
+3. Verify All Five Tools Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+for tool in enum4linux-ng smbclient smbmap responder nbtscan; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+Would you like:
+• A 1-page SMB/NetBIOS enumeration cheat sheet with copy-pasteable commands for enum4linux-ng, smbclient, smbmap, nbtscan, and responder
+• The next batch of tools you want to install?
+enum4linux-ng and responder didn't finish installing—likely because enum4linux-ng isn't published directly on PyPI under that exact name (it installs from GitHub) and responder either hit a git clone/permission hiccup or /usr/local/bin/responder wasn't created.
+Run this single command block to install enum4linux-ng (via pipx from its official GitHub repository) and responder (with its isolated venv and /usr/local/bin/responder wrapper):
+bash
+# 1. Install dependencies for enum4linux-ng and Responder
+sudo apt update && sudo apt install -y python3-dev libldap2-dev libsasl2-dev libssl-dev smbclient
+
+# 2. Install enum4linux-ng directly from GitHub via pipx (using split URL to prevent browser truncation)
+E4L_URL="git+https://github.com""/cddmp/enum4linux-ng.git"
+pipx install "$E4L_URL"
+
+# 3. Clone Responder, set up its virtual environment, and create the global launcher
+mkdir -p ~/tools && rm -rf ~/tools/responder
+RESP_URL="https://github.com""/lgandx/Responder.git"
+git clone --depth 1 "$RESP_URL" ~/tools/responder
+python3 -m venv ~/tools/responder/venv
+~/tools/responder/venv/bin/pip install -q -r ~/tools/responder/requirements.txt
+
+sudo tee /usr/local/bin/responder > /dev/null << 'EOF'
+#!/usr/bin/env bash
+sudo "$HOME/tools/responder/venv/bin/python3" "$HOME/tools/responder/Responder.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/responder
+Use code with caution.
+
+Verify All Five Tools Now
+
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+for tool in enum4linux-ng smbclient smbmap responder nbtscan; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+Did enum4linux-ng and responder both show ✅ now, or did either command print an error message?
+enum4linux-ng is installed and working (✅), and Responder cloned cleanly into /home/user/tools/responder.
+The only reason /usr/local/bin/responder failed was an existing dangling symlink at /usr/local/bin/responder from earlier, which tee cannot write through until it is removed.
+Remove that dangling symlink first, create the launcher script, and verify Responder runs:
+bash
+sudo rm -f /usr/local/bin/responder && \
+sudo tee /usr/local/bin/responder > /dev/null << 'EOF'
+#!/usr/bin/env bash
+sudo "$HOME/tools/responder/venv/bin/python3" "$HOME/tools/responder/Responder.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/responder && \
+responder -h | head -n 5
+Use code with caution.
+Did responder -h print its help menu cleanly, or are you ready for the next batch of tools?
+You can install rpcinfo, rpcclient, impacket-rpcdump (rpcdump.py), and nmap (which includes the rpcinfo and msrpc-enum NSE scripts) on Ubuntu 24.04 (noble) using apt and pipx.
+
+1. One-Command Installation
+
+(Note: rpcinfo is provided by rpcbind, rpcclient is provided by smbclient, and impacket installs rpcdump.py cleanly via pipx.)
+bash
+sudo apt update && sudo apt install -y rpcbind smbclient nmap pipx && \
+pipx ensurepath && \
+pipx install impacket
+Use code with caution.
+
+2. Optional: Add impacket-rpcdump Alias (Kali-Style Naming)
+
+Since upstream Impacket names the binary rpcdump.py inside ~/.local/bin/, create a symlink so both rpcdump.py and impacket-rpcdump work globally:
+bash
+sudo ln -sf "$HOME/.local/bin/rpcdump.py" /usr/local/bin/impacket-rpcdump
+Use code with caution.
+
+3. Verify All Four Tools Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+for tool in rpcinfo rpcclient impacket-rpcdump rpcdump.py nmap; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Verify Nmap's built-in rpcinfo script exists
+ls /usr/share/nmap/scripts/rpcinfo.nse
+Use code with caution.
+Would you like:
+• A 1-page RPC enumeration cheat sheet with copy-pasteable commands for rpcinfo, rpcclient (null sessions), impacket-rpcdump, and nmap --script rpcinfo
+• The next batch of tools you want to install?
+You can install nmap, wireshark, thc-pptp-bruter, and asleap on Ubuntu 24.04 (noble). While nmap and wireshark are in the standard Ubuntu repositories, thc-pptp-bruter and asleap are compiled from source using gcc and make.
+
+1. Install nmap, wireshark, & Build Dependencies via APT
+
+bash
+sudo apt update && sudo apt install -y nmap wireshark build-essential libpcap-dev libssl-dev git
+Use code with caution.
+(Note: During wireshark installation, choose Yes when asked if non-superusers should be able to capture packets, then add your user to the wireshark group with sudo usermod -aG wireshark $USER.)
+
+2. Build & Install thc-pptp-bruter and asleap from Source
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+mkdir -p ~/tools && cd ~/tools
+
+# 1. Clone and compile thc-pptp-bruter
+rm -rf ~/tools/thc-pptp-bruter
+PPTP_URL="https://github.com""/vanhauser-thc/thc-pptp-bruter.git"
+git clone --depth 1 "$PPTP_URL" ~/tools/thc-pptp-bruter
+cd ~/tools/thc-pptp-bruter && ./configure && make && sudo make install
+
+# 2. Clone and compile asleap (MS-CHAPv2 / PPTP / LEAP offline auditing)
+rm -rf ~/tools/asleap
+ASLEAP_URL="https://github.com""/joswr1ght/asleap.git"
+git clone --depth 1 "$ASLEAP_URL" ~/tools/asleap
+cd ~/tools/asleap && make && sudo install -m 755 asleap genkeys /usr/local/bin/
+Use code with caution.
+
+3. Verify All Tools Are Installed & Ready
+
+bash
+for tool in nmap wireshark thc-pptp-bruter asleap genkeys; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+(Once verified, you can scan PPTP/L2TP endpoints with nmap -sV -p 1723,1701 <target>.)
+Would you like:
+• A 1-page VPN & Tunneling auditing cheat sheet covering PPTP (1723), L2TP (1701), and IKE/IPsec (500)
+• The next batch of tools you want to install?
+Why it failed: Modern glibc/libxcrypt on Ubuntu 24.04 removed the obsolete setkey() and encrypt() POSIX functions (undefined reference to setkey/encrypt). Kali Linux maintains a patched fork of asleap that replaces those removed functions with OpenSSL's DES_set_key / DES_ecb_encrypt.
+Clone Kali's patched asleap repository (using split URL strings so your browser doesn't strip the URL) and compile it cleanly:
+bash
+cd ~/tools && rm -rf ~/tools/asleap && \
+KALI_ASLEAP="https://gitlab.com""/kalilinux/packages/asleap.git" && \
+git clone --depth 1 "$KALI_ASLEAP" ~/tools/asleap && \
+cd ~/tools/asleap && make && \
+sudo install -m 755 asleap genkeys /usr/local/bin/
+Use code with caution.
+
+Verify All Five Tools
+
+bash
+for tool in nmap wireshark thc-pptp-bruter asleap genkeys; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+Did Kali's patched asleap and genkeys compile and verify with ✅ now, or are you ready for the next batch of tools?
+You can install proxychains4, curl (which includes --socks5), and nmap (which includes the socks-open-proxy NSE script) on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: proxychains4 is packaged as proxychains4 in Ubuntu 24.04.)
+bash
+sudo apt update && sudo apt install -y proxychains4 curl nmap
+Use code with caution.
+
+2. Verify Everything Is Installed & Ready
+
+Run this check to confirm all three tools and Nmap's socks-open-proxy script are ready:
+bash
+for tool in proxychains4 curl nmap; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Verify Nmap's built-in socks-open-proxy script exists
+ls /usr/share/nmap/scripts/socks-open-proxy.nse
+Use code with caution.
+(Note: --socks5 is a built-in flag in curl—for example, curl --socks5 127.0.0.1:9050 http://target.local—and proxychains4 reads its proxy list from /etc/proxychains4.conf.)
+Would you like:
+• A 1-page SOCKS & Proxy Pivoting cheat sheet with copy-pasteable commands for proxychains4, curl --socks5, and nmap --script socks-open-proxy
+• The next batch of tools you want to install?
+You can install sipvicious (which provides svmap, svwar, and svcrack) and nmap (which includes the sip-methods NSE script) on Ubuntu 24.04 (noble) using apt and pipx.
+
+1. One-Command Installation
+
+bash
+sudo apt update && sudo apt install -y nmap pipx && \
+pipx ensurepath && \
+pipx install sipvicious
+Use code with caution.
+
+2. Verify Everything Is Installed & Ready
+
+Run this check to confirm svmap, svwar, svcrack, and Nmap's sip-methods script are ready:
+bash
+export PATH="$HOME/.local/bin:$PATH"
+
+for tool in svmap svwar svcrack nmap; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Verify Nmap's built-in sip-methods script exists
+ls /usr/share/nmap/scripts/sip-methods.nse
+Use code with caution.
+Would you like:
+• A 1-page VoIP / SIP auditing cheat sheet with copy-pasteable commands for svmap, svwar, svcrack, and nmap --script sip-methods
+• The next batch of tools you want to install?
+sipvicious 0.3.8 installed cleanly, but newer versions prefix the binaries with sipvicious_ (sipvicious_svmap, sipvicious_svwar, sipvicious_svcrack).
+Run this single command block to create global symlinks so both the short names (svmap, svwar, svcrack) and the prefixed names work everywhere:
+bash
+for cmd in svmap svwar svcrack svcrash svreport; do
+  sudo ln -sf "$HOME/.local/bin/sipvicious_$cmd" "/usr/local/bin/$cmd"
+done
+
+# Verify both short and full names
+for tool in svmap svwar svcrack nmap; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+Did svmap, svwar, and svcrack verify with ✅ now, or are you ready for the next batch of tools?
+You can install wscat (via npm) and websocat (pre-compiled Linux binary) on Ubuntu 24.04 (noble) with these commands.
+(Using split URL strings below prevents your browser from truncating the GitHub download link when you copy-paste.)
+
+1. Install wscat (via npm) & websocat (via GitHub Release Binary)
+
+bash
+# 1. Install wscat globally via npm (requires Node.js/npm installed earlier)
+sudo npm install -g wscat
+
+# 2. Download the latest websocat x86_64 binary using concatenated URL parts
+WSCAT_URL="https://github.com""/vi/websocat/releases/latest/download/websocat.x86_64-unknown-linux-musl"
+sudo wget -qO /usr/local/bin/websocat "$WSCAT_URL" && sudo chmod +x /usr/local/bin/websocat
+Use code with caution.
+
+2. Verify Both WebSocket Tools Are Installed & Ready
+
+bash
+for tool in wscat websocat; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+wscat --version && websocat --version
+Use code with caution.
+Would you like:
+• A 1-page WebSocket auditing cheat sheet with copy-pasteable commands for testing CSWSH, origin bypasses, and message fuzzing using wscat and websocat
+• The next batch of tools you want to install?
+Run this single verification command in your terminal to check if nmap, masscan, rustscan, hping3, scapy, and ss are installed and test each one's executable output:
+bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:/usr/local/bin:/snap/bin:$PATH"
+
+for tool in nmap masscan rustscan hping3 scapy ss; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+
+Quick Functional Check (Tests Each Tool Runs)
+
+bash
+nmap --version | head -n 1
+masscan --version 2>&1 | head -n 1
+rustscan --version
+hping3 --version 2>&1 | head -n 1
+scapy -h 2>&1 | head -n 2
+ss -V
+Use code with caution.
+Did all six tools show ✅, or would you like the one-command Ubuntu installation script for whichever ones returned ❌ MISSING?
+You can install rustscan on Ubuntu 24.04 (noble) directly from its official GitHub release .deb package using wget and dpkg.
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+
+1. One-Command Installation
+
+bash
+cd /tmp && \
+RUSTSCAN_URL="https://github.com""/bee-san/RustScan/releases/download/2.4.1/rustscan.deb.zip" && \
+wget -qO rustscan.deb.zip "$RUSTSCAN_URL" && \
+unzip -oq rustscan.deb.zip && \
+sudo dpkg -i rustscan_*.deb && \
+rm -f rustscan.deb.zip rustscan_*.deb
+Use code with caution.
+(Note: If dpkg reports any missing dependencies, run sudo apt-get install -f -y right afterward.)
+
+2. Verify rustscan Is Installed & Ready
+
+bash
+which rustscan && rustscan --version
+Use code with caution.
+Did rustscan --version print cleanly, or would you like the installation commands for masscan, hping3, or scapy next?
+You can install nmap (which supports -sU), nc (netcat-openbsd, which supports -u), hping3, onesixtyone, and udp-proto-scanner on Ubuntu 24.04 (noble) using apt and git.
+
+1. Install nmap, nc, hping3, & onesixtyone via APT
+
+bash
+sudo apt update && sudo apt install -y nmap netcat-openbsd hping3 onesixtyone perl git
+Use code with caution.
+
+2. Install udp-proto-scanner Globally
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+mkdir -p ~/tools && rm -rf ~/tools/udp-proto-scanner
+
+# Clone udp-proto-scanner
+UDP_URL="https://github.com""/portcullislabs/udp-proto-scanner.git"
+git clone --depth 1 "$UDP_URL" ~/tools/udp-proto-scanner
+
+# Create a global launcher so udp-proto-scanner finds its udp-probes.txt config automatically
+sudo tee /usr/local/bin/udp-proto-scanner > /dev/null << 'EOF'
+#!/usr/bin/env bash
+perl "$HOME/tools/udp-proto-scanner/udp-proto-scanner.pl" -f "$HOME/tools/udp-proto-scanner/udp-probes.txt" "$@"
+EOF
+sudo chmod +x /usr/local/bin/udp-proto-scanner
+Use code with caution.
+
+3. Verify All Five Tools Are Installed & Ready
+
+bash
+for tool in nmap nc hping3 onesixtyone udp-proto-scanner; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Quick check of udp-proto-scanner
+udp-proto-scanner -h 2>&1 | head -n 4
+Use code with caution.
+Would you like:
+• A 1-page UDP auditing cheat sheet with copy-pasteable commands for sudo nmap -sU, udp-proto-scanner, nc -u, hping3 --udp, and onesixtyone
+• The next batch of tools you want to install?
+You can install nmap (which includes -sY SCTP INIT scan and -sZ SCTP COOKIE-ECHO scan) and ncat (which includes --sctp for raw SCTP connections and listeners) on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: ncat is packaged separately as ncat in Ubuntu's repositories.)
+bash
+sudo apt update && sudo apt install -y nmap ncat libsctp-dev lksctp-tools
+Use code with caution.
+(Including libsctp-dev and lksctp-tools ensures the Linux kernel SCTP module and sctp_test/checksctp utilities are available if needed.)
+
+2. Verify Both Tools & SCTP Support Are Ready
+
+bash
+for tool in nmap ncat checksctp; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Verify ncat supports --sctp
+ncat --help | grep -i sctp
+Use code with caution.
+Would you like:
+• A 1-page SCTP auditing cheat sheet with copy-pasteable commands for sudo nmap -sY, sudo nmap -sZ, and ncat --sctp
+• The next batch of tools you want to install?
+You can install wireshark, nmap, quic-go, and an HTTP/3-enabled curl (curl --http3) on Ubuntu 24.04 (noble).
+(Note: Ubuntu 24.04's default apt version of curl is compiled without HTTP/3 QUIC support, so you can grab the official static curl binary with HTTP/3 enabled alongside apt and Go for the rest.)
+
+1. Install wireshark, nmap, & golang-go via APT
+
+bash
+sudo apt update && sudo apt install -y wireshark nmap golang-go wget tar xz-utils
+Use code with caution.
+
+2. Install HTTP/3-Enabled curl (curl-http3) & quic-go
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+# 1. Install static curl binary with HTTP/3 (ngtcp2/quictls) support as /usr/local/bin/curl-http3
+cd /tmp
+CURL_H3_URL="https://github.com""/stunnel/static-curl/releases/latest/download/curl-linux-x86_64-glibc.tar.xz"
+wget -qO curl-h3.tar.xz "$CURL_H3_URL" && \
+tar -xf curl-h3.tar.xz && \
+sudo mv curl /usr/local/bin/curl-http3 && \
+sudo chmod +x /usr/local/bin/curl-http3 && \
+rm -f curl-h3.tar.xz
+
+# 2. Install quic-go library & example client/server tools via Go
+QUIC_MOD="github.com""/quic-go/quic-go/example@latest"
+go install "$QUIC_MOD"
+Use code with caution.
+(Note: If you want the default curl command itself to point to the HTTP/3-enabled version, /usr/local/bin already takes priority over /usr/bin/curl if you name it /usr/local/bin/curl instead of curl-http3.)
+
+3. Verify All Four Tools & HTTP/3 Support Are Ready
+
+bash
+export PATH="$HOME/go/bin:/usr/local/bin:$PATH"
+
+for tool in curl-http3 wireshark nmap example; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+
+# Confirm HTTP/3 protocol support is compiled in
+curl-http3 --version | grep -iE "curl|http3"
+Use code with caution.
+Would you like:
+• A 1-page HTTP/3 & QUIC auditing cheat sheet showing how to test Alt-Svc headers, 0-RTT replay, and UDP/443 QUIC handshakes with curl-http3 and wireshark
+• The next batch of tools you want to install?
+Instead of guessing the exact archive name in stunnel/static-curl (which includes the version number in the filename), query the GitHub API directly in Bash to grab the exact linux-x86_64 download URL and extract curl-http3:
+bash
+cd /tmp && \
+API_URL="https://api.github.com""/repos/stunnel/static-curl/releases/latest" && \
+CURL_H3_URL=$(curl -s "$API_URL" | grep -oE 'https://[^"]+linux-x86_64[^"]+\.tar\.xz' | head -n 1) && \
+echo "Downloading: $CURL_H3_URL" && \
+wget -O curl-h3.tar.xz "$CURL_H3_URL" && \
+tar -xf curl-h3.tar.xz && \
+sudo mv curl /usr/local/bin/curl-http3 && \
+sudo chmod +x /usr/local/bin/curl-http3 && \
+rm -f curl-h3.tar.xz && \
+curl-http3 --version | grep -iE "curl|http3"
+Use code with caution.
+Did curl-http3 --version print HTTP3 support cleanly now, or are you ready for the next batch of tools?
+stunnel/static-curl names its release archives with -glibc or -musl before the version number (e.g., curl-linux-x86_64-glibc-8.23.0-1.tar.xz or curl-linux-x86_64-musl-8.23.0-1.tar.xz).
+Run this single command block using curl-linux-x86_64-glibc-8.23.0-1.tar.xz (which matches the -dev-8.23.0-1.tar.xz naming pattern you saw earlier):
+bash
+rm -rf /tmp/h3_install && mkdir -p /tmp/h3_install && cd /tmp/h3_install && \
+DIRECT_URL="https://github.com""/stunnel/static-curl/releases/download/8.23.0-1/curl-linux-x86_64-glibc-8.23.0-1.tar.xz" && \
+wget -O curl-h3.tar.xz "$DIRECT_URL" && \
+tar -xf curl-h3.tar.xz && \
+REAL_CURL=$(find . -type f -executable -name "curl" | head -n 1) && \
+sudo mv "$REAL_CURL" /usr/local/bin/curl-http3 && \
+sudo chmod +x /usr/local/bin/curl-http3 && \
+cd ~ && rm -rf /tmp/h3_install && \
+curl-http3 --version | grep -iE "curl|http3"
+Use code with caution.
+Did curl-http3 --version confirm HTTP3 support cleanly now, or are you ready for the next batch of tools?
+Awesome—all four tools (curl-http3 with ngtcp2/nghttp3/HTTP3, wireshark, nmap, and quic-go example) are installed, verified (✅), and running cleanly!
+You can test HTTP/3 endpoints right away using:
+bash
+curl-http3 --http3 -I https://cloudflare-quic.com
+Use code with caution.
+Would you like:
+• A 1-page HTTP/3 & QUIC auditing cheat sheet with copy-pasteable commands for curl-http3 and wireshark
+• The next batch of tools you want to install?
+You can install testssl.sh on Ubuntu 24.04 (noble) either via apt or by cloning the latest upstream release directly from GitHub.
+
+Option 1: Install via APT (Fastest)
+
+bash
+sudo apt update && sudo apt install -y testssl.sh
+Use code with caution.
+
+Option 2: Install Latest Upstream Release via Git (Recommended for Latest TLS/Cipher Checks)
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+sudo apt update && sudo apt install -y bsdextrautils dnsutils coreutils procps openssl git && \
+mkdir -p ~/tools && rm -rf ~/tools/testssl.sh && \
+TESTSSL_URL="https://github.com""/drwetter/testssl.sh.git" && \
+git clone --depth 1 "$TESTSSL_URL" ~/tools/testssl.sh && \
+sudo ln -sf "$HOME/tools/testssl.sh/testssl.sh" /usr/local/bin/testssl.sh
+Use code with caution.
+
+Verify testssl.sh Is Installed & Working
+
+bash
+which testssl.sh && testssl.sh --version | head -n 3
+Use code with caution.
+Did testssl.sh --version print cleanly, or are you ready for the next batch of tools?
+You can install thc-ipv6 (which provides the atk6-* suite), mitm6, scapy, and ndisc6 on Ubuntu 24.04 (noble) using apt and pipx.
+
+1. One-Command Installation
+
+(Note: thc-ipv6, ndisc6, and python3-scapy are all natively packaged in Ubuntu 24.04's repositories, while mitm6 installs cleanly in an isolated environment via pipx.)
+bash
+sudo apt update && sudo apt install -y thc-ipv6 ndisc6 python3-scapy pipx && \
+pipx ensurepath && \
+pipx install mitm6
+Use code with caution.
+
+2. Verify All Four IPv6 Toolkits Are Installed & Ready
+
+Run this check to confirm atk6-* tools, mitm6, scapy, and ndisc6 are available:
+bash
+export PATH="$HOME/.local/bin:/usr/bin:/usr/sbin:$PATH"
+
+for tool in atk6-alive6 atk6-fake_router6 mitm6 scapy ndisc6 rdisc6; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+# List all installed atk6-* binaries from thc-ipv6
+ls /usr/bin/atk6-* | head -n 10
+Use code with caution.
+Would you like:
+• A 1-page IPv6 auditing & SLAAC/DHCPv6 spoofing cheat sheet with copy-pasteable commands for atk6-*, mitm6, and ndisc6
+• The next batch of tools you want to install?
+You can install thc-ipv6 (atk6-*), mitm6, scapy, and ndisc6 on Ubuntu 24.04 (noble) using apt and pipx (with a GitHub fallback if pipx install mitm6 isn't found on PyPI).
+
+1. One-Command Installation
+
+bash
+sudo apt update && sudo apt install -y thc-ipv6 ndisc6 python3-scapy pipx git && \
+pipx ensurepath && \
+(pipx install mitm6 || pipx install "git+https://github.com""/dirkjanm/mitm6.git")
+Use code with caution.
+
+2. Verify All Four IPv6 Toolkits Are Installed & Ready
+
+bash
+export PATH="$HOME/.local/bin:/usr/bin:/usr/sbin:$PATH"
+
+for tool in atk6-alive6 atk6-fake_router6 mitm6 scapy ndisc6 rdisc6; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+# Show available atk6-* binaries from thc-ipv6
+ls /usr/bin/atk6-* 2>/dev/null | head -n 10
+Use code with caution.
+(Note: Most atk6-*, mitm6, and ndisc6 utilities send raw link-local ICMPv6/DHCPv6 packets and require sudo when running.)
+Did all four IPv6 tools install and show ✅, or are you ready for the next batch of tools?
