@@ -645,3 +645,406 @@ ls /usr/bin/atk6-* 2>/dev/null | head -n 10
 Use code with caution.
 (Note: Most atk6-*, mitm6, and ndisc6 utilities send raw link-local ICMPv6/DHCPv6 packets and require sudo when running.)
 Did all four IPv6 tools install and show ✅, or are you ready for the next batch of tools?
+You can install ptunnel (via apt) and icmpsh (from GitHub with a global /usr/local/bin/icmpsh wrapper) on Ubuntu 24.04 (noble).
+
+1. Install ptunnel & Prerequisites via APT
+
+bash
+sudo apt update && sudo apt install -y ptunnel python3 git
+Use code with caution.
+
+2. Install icmpsh Globally
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+mkdir -p ~/tools && rm -rf ~/tools/icmpsh
+
+# Clone icmpsh
+ICMPSH_URL="https://github.com""/bdamele/icmpsh.git"
+git clone --depth 1 "$ICMPSH_URL" ~/tools/icmpsh
+
+# Create a global 'icmpsh' launcher command (runs icmpsh_m.py)
+sudo tee /usr/local/bin/icmpsh > /dev/null << 'EOF'
+#!/usr/bin/env bash
+sudo python3 "$HOME/tools/icmpsh/icmpsh_m.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/icmpsh
+Use code with caution.
+
+3. Verify Both Tools Are Installed & Ready
+
+bash
+for tool in ptunnel icmpsh; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+(Note: When running icmpsh, remember to temporarily disable kernel ICMP echo replies on your host with sudo sysctl -w net.ipv4.icmp_echo_ignore_all=1 so the OS doesn't respond to incoming pings before icmpsh handles them.)
+Did ptunnel and icmpsh both verify with ✅ now, or are you ready for the next batch of tools?
+GitHub prompted for a username because f0rb1dd3n/ptunnel doesn't exist—the maintained repository is ptunnel-ng (lnslbrty/ptunnel-ng) or Kali's ptunnel package on GitLab.
+Press Ctrl+C to cancel the prompt, then compile and install ptunnel-ng (plus symlink it to /usr/local/bin/ptunnel so both ptunnel and ptunnel-ng work):
+bash
+sudo apt update && sudo apt install -y autoconf automake libtool build-essential libpcap-dev git && \
+mkdir -p ~/tools && rm -rf ~/tools/ptunnel-ng && \
+PTUNNEL_URL="https://github.com""/lnslbrty/ptunnel-ng.git" && \
+git clone --depth 1 "$PTUNNEL_URL" ~/tools/ptunnel-ng && \
+cd ~/tools/ptunnel-ng && ./autogen.sh && make && sudo make install && \
+sudo ln -sf /usr/local/bin/ptunnel-ng /usr/local/bin/ptunnel && \
+which ptunnel && ptunnel -h 2>&1 | head -n 5
+Use code with caution.
+Did ptunnel-ng compile and verify as /usr/local/bin/ptunnel cleanly, or are you ready for the next batch of tools?
+Run this single verification command to check ike-scan, psk-crack, strongswan (ipsec / swanctl), and wireshark on your Ubuntu system:
+bash
+for tool in ike-scan psk-crack ipsec swanctl wireshark; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+
+One-Command Installation (If Any Are Missing)
+
+(Note: psk-crack is included inside the ike-scan package, and strongswan provides the ipsec and swanctl CLI tools.)
+bash
+sudo apt update && sudo apt install -y ike-scan strongswan strongswan-swanctl wireshark
+Use code with caution.
+Did all four IPsec/IKE tools show ✅, or would you like a 1-page IKE/IPsec VPN auditing cheat sheet for ike-scan and psk-crack?
+You can install yersinia, scapy, frr (FRRouting), and loki on Ubuntu 24.04 (noble) using apt and a dedicated Python virtual environment for loki (since loki is an older Python/GTK packet manipulation tool).
+
+1. Install yersinia, scapy, frr, & Build Prerequisites via APT
+
+(Note: yersinia, python3-scapy, and frr are all natively packaged in Ubuntu 24.04's repositories.)
+bash
+sudo apt update && sudo apt install -y yersinia python3-scapy frr frr-pythontools python3-venv python3-dev libpcap-dev libnet1-dev libdumbnet-dev git
+Use code with caution.
+(Note: If you don't want FRRouting daemons running automatically on boot until you configure them, disable the background service with sudo systemctl disable --now frr.)
+
+2. Install loki (Network Protocol & Routing Auditing Tool)
+
+(Using split URL strings below prevents your browser from truncating the GitHub path when you copy-paste.)
+bash
+mkdir -p ~/tools && rm -rf ~/tools/loki
+
+# Clone loki
+LOKI_URL="https://github.com""/b000/loki.git"
+git clone --depth 1 "$LOKI_URL" ~/tools/loki
+
+# Create an isolated virtual environment and install dependencies
+python3 -m venv ~/tools/loki/venv
+~/tools/loki/venv/bin/pip install -q scapy dpkt pycrypto
+
+# Create a global 'loki' launcher command
+sudo tee /usr/local/bin/loki > /dev/null << 'EOF'
+#!/usr/bin/env bash
+sudo "$HOME/tools/loki/venv/bin/python3" "$HOME/tools/loki/loki.py" "$@"
+EOF
+sudo chmod +x /usr/local/bin/loki
+Use code with caution.
+
+3. Verify All Four Toolkits Are Installed & Ready
+
+bash
+for tool in yersinia scapy vtysh loki; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+(Note: vtysh is FRRouting's interactive CLI shell for configuring BGP, OSPF, RIP, and IS-IS peers.)
+Would you like:
+• A 1-page Layer 2 & Routing Protocol auditing cheat sheet (STP/CDP/DTP with yersinia and OSPF/BGP with frr/scapy)
+• The next batch of tools you want to install?
+Hit Ctrl+C to cancel the GitHub username prompt.
+loki is an archived Python 2/GTK2 tool from ~2012 whose original repository (c0decafe/loki) is offline, and its legacy GUI dependencies (pygtk2) do not run on Ubuntu 24.04 anyway—everything loki did (BGP/OSPF/RIP/VRRP/HSRP route injection) is handled natively on Ubuntu 24.04 by frr (vtysh), scapy, and yersinia.
+Run this check to verify those three active tools (yersinia, scapy, and frr/vtysh) are installed and working:
+bash
+for tool in yersinia scapy vtysh; do
+  command -v "$tool" >/dev/null 2>&1 && echo "✅ $tool -> $(command -v "$tool")" || echo "❌ $tool -> MISSING"
+done
+Use code with caution.
+Did yersinia, scapy, and vtysh (frr) all report ✅, or are you ready for the next batch of tools?
+You can install bgpq4, whois, traceroute, and scapy on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: All four packages are available directly in Ubuntu 24.04's official repositories.)
+bash
+sudo apt update && sudo apt install -y bgpq4 whois traceroute python3-scapy
+Use code with caution.
+
+2. Verify All Four Tools Are Installed & Ready
+
+bash
+for tool in bgpq4 whois traceroute scapy; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+# Quick functional check
+bgpq4 -h 2>&1 | head -n 3
+whois --version | head -n 1
+traceroute --version
+Use code with caution.
+Would you like:
+• A 1-page BGP / IRR & AS-Path auditing cheat sheet showing how to generate IRR prefix filters with bgpq4, trace ASN hops with traceroute -A, and query RADB/WHOIS records
+• The next batch of tools you want to install?
+Run this single verification command to check tcpdump, wireshark, macchanger, and ip (which provides ip link):
+bash
+for tool in tcpdump wireshark macchanger ip; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+
+One-Command Installation (If macchanger Is Missing)
+
+(Note: macchanger and iproute2 are packaged directly in Ubuntu 24.04's repositories; during macchanger setup, choose No if asked whether to randomize your MAC automatically every time an interface comes up.)
+bash
+sudo apt update && sudo apt install -y macchanger tcpdump wireshark iproute2
+Use code with caution.
+Did macchanger and the rest of the Layer 2 tools show ✅, or are you ready for the next batch of tools?
+You can install aircrack-ng, iw, iwconfig (via wireless-tools), and kismet on Ubuntu 24.04 (noble) using apt and Kismet's official Ubuntu 24.04 repository.
+
+1. Install aircrack-ng, iw, & wireless-tools (iwconfig) via APT
+
+bash
+sudo apt update && sudo apt install -y aircrack-ng iw wireless-tools wget gpg
+Use code with caution.
+
+2. Install kismet from Kismet's Official Ubuntu 24.04 (noble) Repo
+
+(Note: Using split URL strings below prevents your browser from truncating the URL when you copy-paste. During kismet-capture-common setup, select Yes to install suid-root capture helpers and add your user to the kismet group.)
+bash
+KEY_URL="https://kismetwireless.net""/repos/kismet-release.gpg.key"
+wget -qO - "$KEY_URL" | gpg --dearmor | sudo tee /usr/share/keyrings/kismet-archive-keyring.gpg >/dev/null
+
+echo "deb [signed-by=/usr/share/keyrings/kismet-archive-keyring.gpg] https://kismetwireless.net/repos/apt/release/noble noble main" | sudo tee /etc/apt/sources.list.d/kismet.list >/dev/null
+
+sudo apt update && sudo apt install -y kismet && sudo usermod -aG kismet "$USER"
+Use code with caution.
+
+3. Verify All Four Wireless Tools Are Installed & Ready
+
+bash
+for tool in aircrack-ng airmon-ng airodump-ng iw iwconfig kismet; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+(Note: Log out and back in—or run newgrp kismet—so your kismet group membership takes effect before launching kismet with your monitor-mode adapter.)
+Would you like:
+• A 1-page Wi-Fi monitor-mode & 802.11 auditing cheat sheet (airmon-ng, airodump-ng, aireplay-ng, iw, and kismet)
+• The next batch of tools you want to install?
+You can install yersinia, scapy, vconfig (via vlan), and ip (which provides ip link via iproute2) on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: While ip link is the modern replacement for vconfig, installing the vlan package gives you the legacy vconfig binary alongside the 8021q kernel module.)
+bash
+sudo apt update && sudo apt install -y yersinia python3-scapy vlan iproute2 && \
+sudo modprobe 8021q
+Use code with caution.
+
+2. Verify All Tools & 802.1Q VLAN Support Are Ready
+
+bash
+for tool in yersinia scapy vconfig ip; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+# Verify 802.1Q VLAN kernel module is loaded
+lsmod | grep -q 8021q && echo "✅ 8021q kernel module -> LOADED" || echo "❌ 8021q -> NOT LOADED"
+Use code with caution.
+(Note: All four utilities require sudo/root privileges to create 802.1Q VLAN subinterfaces or inject raw Layer 2/DTP frames.)
+Would you like:
+• A 1-page 802.1Q VLAN hopping & trunking cheat sheet (yersinia, vconfig, ip link add ... type vlan, and scapy double-tagging)
+• The next batch of tools you want to install?
+You can install tcpdump, wireshark, cdpr (Cisco Discovery Protocol Reporter), and lldpctl (provided by lldpd) on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: cdpr is natively packaged in Ubuntu's repositories, and lldpctl is included inside lldpd.)
+bash
+sudo apt update && sudo apt install -y tcpdump wireshark cdpr lldpd
+Use code with caution.
+(Note: If you only want to passively sniff LLDP/CDP frames without advertising your host via lldpd, stop the background daemon afterward with sudo systemctl disable --now lldpd.)
+
+2. Verify All Four Tools Are Installed & Ready
+
+bash
+for tool in tcpdump wireshark cdpr lldpctl; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Would you like:
+• A 1-page CDP & LLDP passive discovery cheat sheet with copy-pasteable commands for cdpr, lldpctl, tcpdump (Layer 2 multicast filters), and wireshark
+• The next batch of tools you want to install?
+You can install pppoe-discovery (provided by pppoe), wireshark, and asleap (which you already compiled and installed earlier to /usr/local/bin/asleap) on Ubuntu 24.04 (noble).
+
+1. Install pppoe-discovery (pppoe) & wireshark via APT
+
+(Note: pppoe-discovery is included inside the pppoe package in Ubuntu 24.04's repositories.)
+bash
+sudo apt update && sudo apt install -y pppoe wireshark
+Use code with caution.
+
+2. Verify All Three Tools Are Installed & Ready
+
+bash
+for tool in pppoe-discovery wireshark asleap; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+# Quick functional check
+pppoe-discovery -h 2>&1 | head -n 3
+Use code with caution.
+Would you like:
+• A 1-page PPPoE & PAP/CHAP/MS-CHAPv2 auditing cheat sheet (pppoe-discovery, wireshark PPPoE display filters, and asleap)
+• The next batch of tools you want to install?
+You can install ethtool on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+bash
+sudo apt update && sudo apt install -y ethtool
+Use code with caution.
+
+2. Verify ethtool Is Installed & Ready
+
+bash
+which ethtool && ethtool --version
+Use code with caution.
+Would you like:
+• A 1-page ethtool cheat sheet for inspecting NIC link speed, duplex, promiscuous/offload settings, and hardware MAC addresses
+• The next batch of tools you want to install?
+ip link is already built into Ubuntu 24.04 via the iproute2 package (at /usr/sbin/ip).
+
+1. Verify ip link Works
+
+bash
+which ip && ip link show
+Use code with caution.
+
+2. Reinstall iproute2 (Only If Missing)
+
+bash
+sudo apt update && sudo apt install -y iproute2
+Use code with caution.
+Would you like:
+• A 1-page ip link cheat sheet for managing network interfaces, MAC addresses, MTU, promiscuous mode, and 802.1Q VLANs
+• The next batch of tools you want to install?
+You can install iw and iwconfig (provided by wireless-tools) on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+bash
+sudo apt update && sudo apt install -y iw wireless-tools
+Use code with caution.
+
+2. Verify Both Tools Are Installed & Ready
+
+bash
+for tool in iw iwconfig; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Would you like:
+• A 1-page iw & iwconfig cheat sheet for checking wireless adapter capabilities, switching to monitor mode, and setting channels
+• The next batch of tools you want to install?
+You can install minicom and screen on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+bash
+sudo apt update && sudo apt install -y minicom screen && sudo usermod -aG dialout "$USER"
+Use code with caution.
+(Adding your user to the dialout group lets you access USB-to-Serial / UART adapters like /dev/ttyUSB0 or /dev/ttyACM0 without needing sudo every time—log out and back in or run newgrp dialout for it to take effect.)
+
+2. Verify Both Tools Are Installed & Ready
+
+bash
+for tool in minicom screen; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Would you like:
+• A 1-page UART / Serial console cheat sheet with common baud rates (9600, 115200) and exit shortcuts for minicom and screen
+• The next batch of tools you want to install?
+You can install rtl_433 and gqrx (gqrx-sdr) along with the rtl-sdr drivers on Ubuntu 24.04 (noble) with a single apt command.
+
+1. One-Command Installation
+
+(Note: Both rtl-433 and gqrx-sdr are natively packaged in Ubuntu 24.04's repositories, and installing rtl-sdr ensures the udev rules for RTL-SDR USB dongles are configured.)
+bash
+sudo apt update && sudo apt install -y rtl-433 gqrx-sdr rtl-sdr && \
+sudo usermod -aG plugdev "$USER"
+Use code with caution.
+(If you plug in an RTL-SDR USB dongle and get a DVB-T kernel driver conflict, blacklist the default TV driver with echo 'blacklist dvb_usb_rtl28xxu' | sudo tee /etc/modprobe.d/blacklist-rtl.conf and reboot.)
+
+2. Verify Both Tools Are Installed & Ready
+
+bash
+for tool in rtl_433 gqrx rtl_test; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+Use code with caution.
+Would you like:
+• A 1-page SDR & ISM-band (433/868/915 MHz) signal analysis cheat sheet for rtl_433 and gqrx
+• The next batch of tools you want to install?
+termux-wifi-scaninfo is an Android-only Termux:API command that interacts with Android's Wi-Fi hardware service, so it cannot be installed natively on desktop Ubuntu 24.04.
+
+1. On Your Ubuntu 24.04 Laptop (Native Equivalent)
+
+To get the exact same JSON/CLI Wi-Fi scan details (SSID, BSSID, frequency, signal level/RSSI, channel, and security) on Ubuntu, use nmcli or iw:
+bash
+# Clean table of nearby Wi-Fi networks (SSID, BSSID, Channel, Signal, Security)
+nmcli -f IN-USE,SSID,BSSID,CHAN,FREQ,SIGNAL,SECURITY dev wifi list --rescan yes
+
+# Or raw detailed scan via iw (replace wlp2s0 with your wireless interface name)
+sudo iw dev $(iw dev | awk '$1=="Interface"{print $2}') scan | grep -E "BSS |SSID:|signal:|freq:"
+Use code with caution.
+
+2. If You Are Installing It on an Android Phone (Termux)
+
+Run these steps on your Android device (with both the Termux app and the Termux:API companion app installed from F-Droid/GitHub, plus Location services enabled):
+bash
+pkg update && pkg install -y termux-api
+termux-wifi-scaninfo
+Use code with caution.
+Are you running this on an Android device via Termux (or ADB from Ubuntu), or are you ready for the next batch of tools on Ubuntu?
