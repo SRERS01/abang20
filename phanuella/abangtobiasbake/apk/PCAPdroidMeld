@@ -1,0 +1,55 @@
+You can set up PCAPdroid (Android APK ready for ADB deployment), Meld, and Beyond Compare on your Ubuntu 24.04 (noble) machine with the steps below.
+(All URLs below use split shell variables so your browser extension never rewrites or strips the links.)
+
+1. Download PCAPdroid.apk to ~/tools/pcapdroid (For Android / ADB)
+
+(PCAPdroid is a non-root Android packet capture & TLS decryption app rather than a native Ubuntu binary, so downloading the official GitHub APK lets you push it directly to any Android device/emulator.)
+bash
+mkdir -p ~/tools/pcapdroid && cd ~/tools/pcapdroid && \
+PROTO="https" && API_HOST="api.github" && TLD="com" && \
+PCAP_API="${PROTO}://${API_HOST}.${TLD}/repos/emanuele-f/PCAPdroid/releases/latest" && \
+PCAP_URL=$(curl -sL "$PCAP_API" | grep -oE 'https://[^"]+PCAPdroid[^"]+\.apk' | head -n 1) && \
+echo "Downloading PCAPdroid: $PCAP_URL" && \
+wget -c -O PCAPdroid.apk "$PCAP_URL" && \
+ls -lh ~/tools/pcapdroid/PCAPdroid.apk
+Use code with caution.
+(To deploy later when an Android device is connected: adb install ~/tools/pcapdroid/PCAPdroid.apk.)
+
+2. Install Meld (Visual Diff & Merge Tool via APT)
+
+bash
+sudo apt update && sudo apt install -y meld
+Use code with caution.
+
+3. Install Beyond Compare (Official .deb Package)
+
+bash
+rm -rf /tmp/bcompare_dl && mkdir -p /tmp/bcompare_dl && cd /tmp/bcompare_dl && \
+PROTO="https" && HOST="www.scootersoftware" && TLD="com" && \
+DL_PAGE=$(curl -sL "${PROTO}://${HOST}.${TLD}/download") && \
+BC_REL=$(echo "$DL_PAGE" | grep -oE '/files/bcompare-[0-9.]+_amd64\.deb' | head -n 1) && \
+BC_URL="${PROTO}://${HOST}.${TLD}${BC_REL}" && \
+echo "Downloading Beyond Compare: $BC_URL" && \
+wget -c -O bcompare.deb "$BC_URL" && \
+sudo apt update && sudo apt install -y ./bcompare.deb && \
+cd ~ && rm -rf /tmp/bcompare_dl
+Use code with caution.
+
+4. Verify All Three Tools Are Ready
+
+bash
+for tool in meld bcompare; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+if [ -s "$HOME/tools/pcapdroid/PCAPdroid.apk" ]; then
+  echo "✅ PCAPdroid.apk -> $HOME/tools/pcapdroid/PCAPdroid.apk ($(du -h "$HOME/tools/pcapdroid/PCAPdroid.apk" | cut -f1))"
+else
+  echo "❌ PCAPdroid.apk -> MISSING"
+fi
+Use code with caution.
+Did PCAPdroid.apk, meld, and bcompare all verify with ✅, or are you ready for the next batch of tools?
