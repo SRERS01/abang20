@@ -1,0 +1,160 @@
+These four tools are used for network traffic capture, inspection, analysis and intrusion detection. However, each has a different primary purpose.
+
+### 1\. Main purpose of each tool
+
+![How to Install Snort NIDS on Ubuntu Linux | Rapid7 Blog](https://images.openai.com/static-rsc-4/MiO6cvNva0YTuweXDUzqeh7_LH5ao3V_hek2SePEIgTDSyziuFrRRLROZkm4pqsrx5qAneTWqaBBKTonihC1mD2TpmBhwPLLsM6T2B3muMBhvoCUV7ejv2VZD6_h5uxG9X8Y0K1qeEtDL_C7CEdDPVZ_TQWaaRQgDWMNjVksRy9k_28g2UYHiiN_eg4w9z88?purpose=fullsize)
+
+1\. Snort
+
+Intrusion detection
+
+Its main purpose is to monitor network traffic and detect suspicious or malicious activity using security rules and signatures.
+
+Examples:
+
+* Detect suspicious network scans.
+
+* Detect known attack patterns.
+
+* Generate security alerts.
+
+* Block traffic when configured for prevention.
+
+![Analyzing network traffic with tcpdump - Linux and Google Cloud Platform GCP](https://images.openai.com/static-rsc-4/UbHKIWzhlF1A4rvUwwIjZTm5pBUvdbzo7pbkSdRZbZAN7hKqLX91QSoksUoeIcSI2mDxwHY4rS12shelgn-2NXnLFKKkB-a9qpLCzIWC0gogMMj7FSQzKZbBokDwFrdNUoOexAuJytxWZaq6yYKf-T6MmxlXNrjAjZ5vDZ4U0sT4w2nwQ3s-E1-r8zpqvue7?purpose=fullsize)
+
+2\. tcpdump
+
+Packet capture
+
+Its main purpose is to capture and display network packets passing through a network interface.
+
+Examples:
+
+* Capture incoming and outgoing packets.
+
+* Save traffic into PCAP files.
+
+* Inspect source and destination IP addresses.
+
+* Troubleshoot network connectivity.
+
+![Extract Packet Fields in Tshark | LabEx](https://images.openai.com/static-rsc-4/SILhYqoRYco4Yw6xs-NetH7PQ_pIMpEAA3pSZMA3TQ10EU6ik-qeoHCxKUzDJ1OjXDws_Zp8wy28oSb3Lqipkh7HkZ3dRCtvGan6E00PoLNVRpHx4Pl1TsD_YS1_PUgrSKDc3Mvi6MvaZLLOI_DTx_vhaxK5W9nSrajuNHPJIMF9-gXAqn7OROrR8cIYMMHQ?purpose=fullsize)
+
+3\. TShark
+
+Command-line packet analysis
+
+Its main purpose is to analyze, filter and extract information from captured network packets through the terminal.
+
+Examples:
+
+* Read PCAP files.
+
+* Extract IP addresses and port numbers.
+
+* Analyze TCP, DNS and TLS traffic.
+
+* Filter and export packet information.
+
+* Automate traffic analysis.
+
+![Wireshark Download Free - 4.6.3 | TechSpot](https://images.openai.com/static-rsc-4/vEmAXTcNBeLJdprz2FCv3BboQuiFtSezLpRi8BJ26aMmcTm6KUH3ndRT2KaovTfLwD7SKV56oLOCi1mtyzvxLUGjSUBGjXTD40gEC3qfyo9EkSd-s875OKa8qBH17EhM2Gbn7orlI19ynoqGPEyeC8lj2TSj6DvbKGRd3QHlvR8VzMVb1aF48RmkRdQZ6R2D?purpose=fullsize)
+
+4\. Wireshark
+
+Visual packet analysis
+
+Its main purpose is to capture and examine network packets through a graphical interface.
+
+Examples:
+
+* Inspect packet details.
+
+* Follow TCP streams.
+
+* Examine DNS queries.
+
+* Investigate TLS handshakes.
+
+* Troubleshoot communication problems.
+
+### 2\. Practical differences
+
+| Tool      | Main job                           | Interface    |
+| --------- | ---------------------------------- | ------------ |
+| Snort     | Detect suspicious traffic          | Command line |
+| tcpdump   | Capture packets                    | Command line |
+| TShark    | Analyze and extract packet data    | Command line |
+| Wireshark | Visually inspect packets           | Graphical    |
+| Nmap      | Discover hosts, ports and services | Command line |
+
+### 3\. Practical commands in Ubuntu
+
+Snort — test its configuration (Snort 3):
+
+```bash
+sudo snort -T -c /etc/snort/snort.lua
+```
+
+tcpdump — capture network traffic:
+
+```bash
+sudo tcpdump -i any -nn -w traffic.pcap
+```
+
+TShark — analyze the captured traffic:
+
+```bash
+tshark -r traffic.pcap
+```
+
+Extract source and destination addresses:
+
+```bash
+tshark -r traffic.pcap \
+-T fields -e ip.src -e ip.dst
+```
+
+Wireshark — open the captured traffic graphically:
+
+```bash
+wireshark traffic.pcap
+```
+
+### 4\. How they work together
+
+Network traffic
+
+Packets travelling across your network
+
+tcpdump
+
+Captures packets and saves PCAP files
+
+TShark
+
+Extracts and analyzes packet information
+
+Wireshark
+
+Visualizes and investigates packets
+
+Snort
+
+Checks traffic against configured detection rules and generates alerts
+
+Note: Snort can also inspect live traffic independently; it does not have to wait for tcpdump.
+
+### 5\. The easiest way to remember them
+
+* Nmap: What hosts and services are exposed?
+
+* tcpdump: What packets are travelling?
+
+* TShark: What information can I extract from those packets?
+
+* Wireshark: What is happening inside those packets?
+
+* Snort: Does the traffic match suspicious activity or attack signatures?
+
+For your deposit API security lab, these tools help investigate network exposure and traffic. For vulnerabilities involving deposit amounts, authentication tokens, IDOR and payment authorization, you will also need application-layer testing tools such as Burp Suite.

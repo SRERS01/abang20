@@ -1,0 +1,88 @@
+The main purpose of Nmap (Network Mapper) is to discover devices on a network, identify their open ports, detect running services and understand the network's exposed attack surface.
+
+In cybersecurity, Nmap helps a security researcher understand what is running, where it is running, and what network services are accessible.
+
+### 1\. Six main purposes of Nmap
+
+| Purpose           | What it does                                                 |
+| ----------------- | ------------------------------------------------------------ |
+| Host discovery    | Identifies devices that are reachable on a network           |
+| Port scanning     | Finds open, closed and filtered ports                        |
+| Service detection | Identifies services such as HTTP, SSH and FTP                |
+| Version detection | Attempts to identify service versions                        |
+| OS detection      | Attempts to identify the operating system                    |
+| Security auditing | Helps identify potentially exposed or misconfigured services |
+
+### 2\. Practical example
+
+Suppose you are assessing your authorized API server:
+
+```text
+https://api.example.com/api/v1/deposit
+```
+
+You run:
+
+```bash
+nmap -sV -p 80,443 api.example.com
+```
+
+Nmap might return:
+
+```text
+PORT    STATE SERVICE  VERSION
+80/tcp  open  http
+443/tcp open  https
+```
+
+This tells you:
+
+* Port 80 accepts connections.
+
+* Port 443 accepts connections.
+
+* HTTP and HTTPS services were identified.
+
+It does not tell you whether the deposit API has an IDOR, SQL injection or authentication vulnerability.
+
+### 3\. What Nmap does not primarily do
+
+Nmap is not designed to:
+
+* Inspect API JSON payloads.
+
+* Extract bearer tokens.
+
+* Test deposit amounts.
+
+* Discover IDOR vulnerabilities directly.
+
+* Authenticate into an application.
+
+* Test payment business logic.
+
+* Read encrypted HTTPS request bodies.
+
+For those tasks, application-security tools such as Burp Suite are more appropriate.
+
+### 4\. Where Nmap fits in an offensive security assessment
+
+Nmap
+
+Discover hosts, ports and services
+
+Service investigation
+
+Understand exposed network services
+
+Burp Suite / API testing
+
+Investigate authentication, authorization and business logic
+
+Wireshark / tcpdump
+
+Analyze network traffic
+
+Remember this exam-standard definition:
+
+Nmap is an open-source network scanning and discovery tool used to identify live hosts, open ports, running services, service versions and operating systems, helping security professionals assess network exposure and identify potential security weaknesses.
