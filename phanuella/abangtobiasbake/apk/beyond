@@ -1,0 +1,31 @@
+The exact Beyond Compare 5.2.8 Linux package filename is bcompare-5.2.8.33052_amd64.deb (the /download page loads it dynamically via JavaScript, which is why curl didn't capture the filename). [1] (https://www.scootersoftware.com/kb/linux_install)
+Run this single command block using split variables (so your browser extension leaves the URL intact) to download and install bcompare-5.2.8.33052_amd64.deb cleanly: [1] (https://www.scootersoftware.com/kb/linux_install)
+bash
+rm -rf /tmp/bc_dl && mkdir -p /tmp/bc_dl && cd /tmp/bc_dl && \
+PROTO="https" && HOST="www.scootersoftware" && TLD="com" && \
+BC_URL="${PROTO}://${HOST}.${TLD}/files/bcompare-5.2.8.33052_amd64.deb" && \
+echo "Downloading: $BC_URL" && \
+wget -c -O bcompare.deb "$BC_URL" && \
+sudo apt update && sudo apt install -y ./bcompare.deb && \
+cd ~ && rm -rf /tmp/bc_dl
+Use code with caution.
+
+Verify All Three Tools (meld, bcompare, and PCAPdroid.apk)
+
+bash
+for tool in meld bcompare; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "✅ $tool -> $(command -v "$tool")"
+  else
+    echo "❌ $tool -> MISSING"
+  fi
+done
+
+if [ -s "$HOME/tools/pcapdroid/PCAPdroid.apk" ]; then
+  echo "✅ PCAPdroid.apk -> $HOME/tools/pcapdroid/PCAPdroid.apk ($(du -h "$HOME/tools/pcapdroid/PCAPdroid.apk" | cut -f1))"
+else
+  echo "❌ PCAPdroid.apk -> MISSING"
+fi
+Use code with caution.
+Did bcompare install cleanly and show ✅ now, or are you ready for the next batch of tools?
+
