@@ -1,0 +1,34 @@
+Yes. Nmap accepts a hostname directly. You don't have to convert it to an IP address first.
+
+For example, if your deposit API is:
+
+```text
+https://api.example.com/api/v1/deposit
+```
+
+You can run:
+
+```bash
+nmap -sV -p 443 api.example.com
+```
+
+Nmap resolves the hostname through DNS and scans the resulting address.
+
+You can also scan the hostname with:
+
+```bash
+sudo nmap -sS -sV -p 80,443 api.example.com
+```
+
+### Important distinction
+
+| Input                          | Accepted by Nmap? |
+| ------------------------------ | ----------------- |
+| api.example.com                |                   |
+| 192.168.1.50                   |                   |
+| https://api.example.com        |                   |
+| api.example.com/api/v1/deposit |                   |
+
+Nmap accepts the hostname, not the complete URL or API path.
+
+If the hostname is behind Cloudflare, Nmap will normally scan the Cloudflare-facing IP. Only scan infrastructure covered by your authorization.

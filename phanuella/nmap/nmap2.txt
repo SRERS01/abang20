@@ -1,0 +1,51 @@
+A hostname is the human-readable name assigned to a device or server on a network. It identifies the device so that people and network tools can refer to it by name instead of using its IP address.
+
+### Examples
+
+| Hostname         | What it identifies         |
+| ---------------- | -------------------------- |
+| google.com       | Google's website           |
+| api.example.com  | An API server              |
+| mail.example.com | A mail server              |
+| 192.168.1.10     | IP address, not a hostname |
+| ubuntu-pc        | A computer's hostname      |
+
+### Hostname in an API endpoint
+
+Consider:
+
+```text
+https://api.example.com/api/v1/deposit
+```
+
+* `https://` — protocol
+
+* `api.example.com` — hostname
+
+* `/api/v1/deposit` — API path
+
+### How to use a hostname with Nmap
+
+```bash
+nmap api.example.com
+```
+
+To scan port 443:
+
+```bash
+nmap -sV -p 443 api.example.com
+```
+
+### How to find your Ubuntu computer's hostname
+
+```bash
+hostname
+```
+
+To see your computer's hostname and network information:
+
+```bash
+hostnamectl
+```
+
+Remember: A hostname identifies a machine or network service by name; DNS can translate that name into an IP address.

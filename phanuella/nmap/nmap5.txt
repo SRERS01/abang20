@@ -1,0 +1,346 @@
+### Complete testing order for a deposit API endpoint using the 5 tools
+
+We'll assume you are testing an application in your own lab or have written authorization to test it.
+
+The five tools, in the order I recommend, are:
+
+* Nmap – discover the target and identify exposed services.
+
+* tcpdump – capture network traffic while you test.
+
+* TShark – extract and analyse packet details from the capture.
+
+* Wireshark – investigate suspicious packets and protocol behaviour visually.
+
+* Snort – detect suspicious traffic using IDS rules.
+
+Important: A deposit endpoint is an application/API function. These five tools mainly analyse the network and detect exposed services or suspicious traffic. They do not, by themselves, prove that the deposit business logic is secure.
+
+Let's use a hypothetical endpoint:
+
+```text
+https://api.lab.example/api/v1/deposit
+```
+
+Replace the example hostname and IP with your authorized lab target.
+
+### Step 1 — Prepare your terminal
+
+First identify your network interface and the route to the target:
+
+```bash
+ip -br addr
+ip route
+```
+
+Set your target details:
+
+```bash
+export HOST="api.lab.example"
+export TARGET_IP="192.168.1.50"
+export PORT="443"
+export ENDPOINT="/api/v1/deposit"
+
+mkdir -p ~/deposit-lab/{scans,captures,reports}
+```
+
+Replace `192.168.1.50` with the actual target IP.
+
+### Step 2 — Nmap: discover the target service
+
+Nmap
+
+Check whether the target is reachable:
+
+```bash
+ping -c 4 "$TARGET_IP"
+```
+
+Check the relevant ports:
+
+```bash
+sudo nmap -sS -p 80,443 "$TARGET_IP"
+```
+
+Identify the services and versions:
+
+```bash
+sudo nmap -sV -p 80,443 "$TARGET_IP"
+```
+
+Check the HTTPS certificate:
+
+```bash
+sudo nmap -p 443 --script ssl-cert "$TARGET_IP"
+```
+
+Save your results:
+
+```bash
+sudo nmap -sV -p 80,443 \
+-oA ~/deposit-lab/scans/deposit-service "$TARGET_IP"
+```
+
+What you are looking for:
+
+* Is the HTTPS port exposed?
+
+* Is the expected web service running?
+
+* Is an unexpected service exposed?
+
+* Is the TLS certificate configured correctly?
+
+An open port is not automatically a vulnerability.
+
+### Step 3 — tcpdump: capture the deposit request
+
+tcpdump
+
+Find the interface used to reach the target:
+
+```bash
+ip route get "$TARGET_IP"
+```
+
+Look for the `dev` value, for example `enp0s3`.
+
+Set it:
+
+```bash
+export INTERFACE="enp0s3"
+```
+
+Start capturing traffic:
+
+```bash
+sudo tcpdump -i "$INTERFACE" -nn -s0 \
+host "$TARGET_IP" and tcp port "$PORT" \
+-w ~/deposit-lab/captures/deposit.pcap
+```
+
+Now, while tcpdump is running, make a normal deposit request using your authorized test application or sandbox account.
+
+Use a test transaction only. Avoid real funds, and don't repeatedly submit deposits just to test the endpoint.
+
+Stop the capture using:
+
+```text
+CTRL + C
+```
+
+What you are looking for:
+
+* Client and server IP addresses.
+
+* TCP connection establishment.
+
+* Connection resets and retransmissions.
+
+* Whether the application communicates over HTTPS.
+
+* Whether unexpected network destinations are contacted.
+
+Remember: ordinary packet captures of HTTPS traffic do not reveal the encrypted deposit request body.
+
+### Step 4 — TShark: extract packet information
+
+TShark
+
+Read the captured file:
+
+```bash
+tshark -r ~/deposit-lab/captures/deposit.pcap
+```
+
+Extract source and destination IP addresses:
+
+```bash
+tshark -r ~/deposit-lab/captures/deposit.pcap \
+-Y ip -T fields \
+-e frame.number \
+-e ip.src \
+-e ip.dst \
+-e ip.ttl \
+-e ip.proto \
+-e ip.len
+```
+
+Inspect TCP connection information:
+
+```bash
+tshark -r ~/deposit-lab/captures/deposit.pcap \
+-Y tcp -T fields \
+-e ip.src \
+-e tcp.srcport \
+-e ip.dst \
+-e tcp.dstport \
+-e tcp.flags
+```
+
+Look for TLS handshakes:
+
+```bash
+tshark -r ~/deposit-lab/captures/deposit.pcap \
+-Y tls.handshake
+```
+
+Check retransmissions:
+
+```bash
+tshark -r ~/deposit-lab/captures/deposit.pcap \
+-Y tcp.analysis.retransmission
+```
+
+Check conversations:
+
+```bash
+tshark -r ~/deposit-lab/captures/deposit.pcap \
+-q -z conv,tcp
+```
+
+What you are looking for:
+
+* Which systems communicated during the deposit operation?
+
+* Did the TCP connection complete?
+
+* Were there repeated retransmissions?
+
+* Did the TLS handshake succeed?
+
+* Did the client connect to unexpected destinations?
+
+### Step 5 — Wireshark: investigate the packets visually
+
+Wireshark
+
+Open the capture:
+
+```bash
+wireshark ~/deposit-lab/captures/deposit.pcap
+```
+
+Use these display filters:
+
+| Filter                      | What it shows              |
+| --------------------------- | -------------------------- |
+| ip                          | IPv4 packets               |
+| tcp                         | TCP traffic                |
+| tls                         | TLS traffic                |
+| tcp.flags.syn == 1          | TCP SYN packets            |
+| tcp.flags.reset == 1        | TCP resets                 |
+| tcp.analysis.retransmission | Retransmissions            |
+| dns                         | DNS requests and responses |
+| arp                         | ARP traffic                |
+| icmp                        | ICMP traffic               |
+
+For HTTPS, inspect the TLS handshake and certificate information.
+
+If you need to inspect the actual HTTP deposit request, use an authorized application proxy such as Burp Suite or mitmproxy alongside these five tools. A normal encrypted PCAP cannot reveal the HTTP body.
+
+Questions to investigate at the application layer:
+
+* Is the deposit request authenticated?
+
+* Does the server enforce authorization?
+
+* Does the server validate the amount?
+
+* Does the server verify transaction status independently?
+
+* Does the server prevent duplicate transactions?
+
+* Does the server verify the payment provider's callback?
+
+These are application-security checks, not conclusions you can draw from packet inspection alone.
+
+### Step 6 — Snort: detect suspicious traffic
+
+Snort
+
+Check your Snort version:
+
+```bash
+snort -V
+```
+
+For Snort 3, validate the configuration:
+
+```bash
+sudo snort -T -c /etc/snort/snort.lua
+```
+
+Run Snort against your saved capture:
+
+```bash
+sudo snort -c /etc/snort/snort.lua \
+-r ~/deposit-lab/captures/deposit.pcap \
+-A alert_fast
+```
+
+Snort can alert on traffic that matches its loaded detection rules.
+
+For example, a simple local rule for detecting an HTTP POST request in unencrypted HTTP traffic is:
+
+```text
+alert tcp any any -> any 80 (msg:"LAB HTTP POST request"; flow:to_server,established; content:"POST"; offset:0; depth:4; sid:1000001; rev:1;)
+```
+
+Save it as:
+
+```text
+/etc/snort/local.rules
+```
+
+Test the rule against a suitable HTTP lab capture:
+
+```bash
+sudo snort -c /etc/snort/snort.lua \
+-R /etc/snort/local.rules \
+-r ~/deposit-lab/captures/deposit.pcap \
+-A alert_fast
+```
+
+This rule will not inspect the encrypted HTTP request inside HTTPS.
+
+### Your complete testing sequence
+
+* Nmap
+
+    Discover the target, ports, services and TLS configuration.
+
+* tcpdump
+
+    Capture traffic while the deposit request is made.
+
+* TShark
+
+    Extract IP, TCP, TLS and connection information.
+
+* Wireshark
+
+    Visually investigate the captured traffic.
+
+* Snort
+
+    Check the capture for traffic matching security detection rules.
+
+### Important: what these five tools cannot establish
+
+For a deposit endpoint, you must separately test application-level vulnerabilities:
+
+| Security test         | What you want to establish                                          |
+| --------------------- | ------------------------------------------------------------------- |
+| IDOR/BOLA             | Can one user access another user's transaction?                     |
+| Amount manipulation   | Does the server independently validate the deposit amount?          |
+| Duplicate transaction | Can one payment be credited more than once?                         |
+| Authentication        | Can an unauthenticated user initiate a deposit?                     |
+| Authorization         | Can a user perform an operation they are not permitted to perform?  |
+| Callback verification | Can an untrusted payment notification mark a deposit as successful? |
+| Race conditions       | Can simultaneous requests cause incorrect balances?                 |
+| Replay protection     | Can a previously accepted payment notification be reused?           |
+
+These require application-level testing and controlled test transactions.
+
+My recommendation: Master this five-tool network workflow first. Then combine it with Burp Suite or mitmproxy to inspect the actual deposit API request and response. That is how you connect network-level analysis with API security testing.

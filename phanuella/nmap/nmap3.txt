@@ -1,0 +1,201 @@
+Nmap accepts several types of targets to scan: IP addresses, hostnames, networks, IP ranges, IPv6 addresses, and target lists from files.
+
+The important thing is that Nmap scans hosts and their network services, not individual API paths.
+
+### 1\. IP addresses
+
+Single IPv4 address
+
+```bash
+nmap 192.168.1.10
+```
+
+Multiple IP addresses
+
+```bash
+nmap 192.168.1.10 192.168.1.20 192.168.1.30
+```
+
+Comma-separated IP addresses
+
+```bash
+nmap 192.168.1.10,192.168.1.20,192.168.1.30
+```
+
+IPv6 address
+
+```bash
+nmap -6 2001:db8::10
+```
+
+### 2\. Hostnames and domains
+
+Hostname
+
+```bash
+nmap example.com
+```
+
+Subdomain
+
+```bash
+nmap api.example.com
+```
+
+Multiple domains
+
+```bash
+nmap example.com api.example.com
+```
+
+Specific service ports on a domain
+
+```bash
+nmap -p 80,443 api.example.com
+```
+
+### 3\. Networks and subnets
+
+Scan an entire /24 network
+
+```bash
+nmap 192.168.1.0/24
+```
+
+Scan a /16 network
+
+```bash
+nmap 192.168.0.0/16
+```
+
+Scan a smaller /28 subnet
+
+```bash
+nmap 192.168.1.0/28
+```
+
+Scan using a netmask
+
+```bash
+nmap 192.168.1.0/255.255.255.0
+```
+
+### 4\. IP address ranges
+
+Last octet range
+
+```bash
+nmap 192.168.1.1-50
+```
+
+Range across a larger network
+
+```bash
+nmap 192.168.1-3.1-254
+```
+
+Multiple ranges
+
+```bash
+nmap 192.168.1.1-20 192.168.2.1-20
+```
+
+### 5\. Target lists from a file
+
+Create a list:
+
+```bash
+nano targets.txt
+```
+
+Put one target on each line:
+
+```text
+192.168.1.1
+192.168.1.10
+192.168.1.20
+example.com
+api.example.com
+```
+
+Scan the list:
+
+```bash
+nmap -iL targets.txt
+```
+
+Exclude a target:
+
+```bash
+nmap 192.168.1.0/24 --exclude 192.168.1.10
+```
+
+### 6\. What Nmap does not accept as a target
+
+These are not valid Nmap host targets:
+
+```bash
+nmap https://example.com
+nmap example.com/api/v1/deposit
+nmap example.com/login
+nmap example.com/register
+nmap example.com/payment
+```
+
+Why? Because `/api/v1/deposit`, `/login`, `/register`, and `/payment` are application paths, not network hosts.
+
+For example:
+
+Example API endpoint
+
+`https://api.example.com/api/v1/deposit`
+
+| Component       | Meaning      | Nmap accepts it? |
+| --------------- | ------------ | ---------------- |
+| https           | Protocol     | No               |
+| api.example.com | Hostname     |                  |
+| 443             | Network port |                  |
+| /api/v1/deposit | API path     |                  |
+
+### 7\. Important Nmap target-selection options
+
+| Option                 | Purpose                              |
+| ---------------------- | ------------------------------------ |
+| -iL file.txt           | Read targets from a file             |
+| -iR 100                | Select 100 random IP targets         |
+| --exclude IP           | Exclude a target                     |
+| --excludefile file.txt | Exclude targets listed in a file     |
+| -6                     | Enable IPv6 scanning                 |
+| -n                     | Disable DNS resolution               |
+| -sL                    | List targets without scanning ports  |
+| -sn                    | Host discovery without port scanning |
+
+### 8\. Practical example for your authorized API lab
+
+Suppose your deposit API is:
+
+```text
+https://api.example.com/api/v1/deposit
+```
+
+You can scan the hostname and its relevant ports:
+
+```bash
+nmap -sV -p 80,443 api.example.com
+```
+
+Check the TLS certificate:
+
+```bash
+nmap -p 443 --script ssl-cert api.example.com
+```
+
+Check supported TLS ciphers:
+
+```bash
+nmap -p 443 --script ssl-enum-ciphers api.example.com
+```
+
+Then use Burp Suite or mitmproxy to examine the actual deposit endpoint, including its headers, token, payload and authorization behaviour.
+
+Remember: Nmap accepts hosts, IPs, networks and ranges as targets. It accepts ports as scan parameters. It does not accept API routes as network targets. Only scan systems you own or have permission to assess.

@@ -1,0 +1,259 @@
+Many things can prevent Nmap from discovering a host, identifying its ports, or detecting its services. Some block Nmap completely; others only hide particular information.
+
+Here is a comprehensive classification for network-security research.
+
+### 1\. Network-level obstacles
+
+| Obstacle             | How it affects Nmap                             |
+| -------------------- | ----------------------------------------------- |
+| Network firewall     | Blocks incoming or outgoing scan traffic        |
+| Host firewall        | Blocks probes arriving at the target            |
+| Router ACL           | Filters packets according to network rules      |
+| ISP filtering        | Blocks or restricts certain traffic             |
+| NAT                  | Hides internal devices behind a public IP       |
+| CGNAT                | Shares a public IP among multiple customers     |
+| VLAN isolation       | Prevents communication between network segments |
+| Network segmentation | Restricts access between different networks     |
+| Routing failure      | Prevents packets reaching their destination     |
+| Incorrect gateway    | Sends traffic through the wrong route           |
+| Asymmetric routing   | Responses take a different network path         |
+| Packet loss          | Causes probes or responses to disappear         |
+| ICMP filtering       | Prevents some host-discovery methods            |
+| TCP filtering        | Blocks TCP probes                               |
+| UDP filtering        | Blocks UDP probes                               |
+| IPv6 filtering       | Prevents IPv6 connectivity or discovery         |
+
+### 2\. Host-level security controls
+
+These controls operate on the target machine itself.
+
+| Control                                 | Effect                                          |
+| --------------------------------------- | ----------------------------------------------- |
+| UFW                                     | Filters incoming and outgoing traffic on Linux  |
+| iptables                                | Applies packet-filtering rules                  |
+| nftables                                | Applies Linux firewall rules                    |
+| Windows Defender Firewall               | Filters network connections                     |
+| firewalld                               | Manages Linux firewall policies                 |
+| SELinux                                 | Enforces access-control policies                |
+| AppArmor                                | Restricts application capabilities              |
+| Endpoint Detection and Response (EDR)   | May detect or block suspicious scanning         |
+| Host Intrusion Prevention System (HIPS) | May block suspicious network activity           |
+| TCP wrappers                            | Restrict access to supported services           |
+| Fail2ban                                | Can block IPs after triggering configured rules |
+
+### 3\. Cloud and infrastructure protection
+
+![WAF (Web Application Firewall) -](https://images.openai.com/static-rsc-4/LD-lAoVqXEBdoM60E12ELyfS5z6AWrHfFvOkvK988tz9AOo1e9CRRwnVeML4ZIc6ZLE3y_UCVnnwoYifFTH_gpqfkeF1nJrJvIvEUpDNclFl9fBA_XSpxcrivZnj_zRHqXneSav_Q75SYJLxHrTyfg8cflj2svt34YQqubyDH5ud7Ck5tPAyHdSZRXNTa-4e?purpose=fullsize)
+
+![개발자를 위한 AWS 클라우드 보안 (3) - 인프라 보안과 사고 대응 - 스캐터랩 블로그](https://images.openai.com/static-rsc-4/4c1UxLT2mm9Mtn27AnDVYmX9MpBq-uZDdMo6Si-fsh5FoHk7yanx07eUGeTtADRplJrqNyNcsCgqQa7Un9m6TOjS2TG7rMVr9KhKUDsRKaVscG1zYphPBFsmFeLxrve5G7sgAMPzpNoA6f6Y2A8vGww2rNs8T3IVWxzkTAetdcQ96L-aLCDDEQ5bTFMjpi94?purpose=fullsize)
+
+![JVTechnicalBlog/content/en/blog/azure-master-class/amc-module-6-networking-in-microsoft-azure.md at main · JustinVerstijnen/JVTechnicalBlog · GitHub](https://images.openai.com/static-rsc-4/G6OE9sNVz3kCPrPG9lwhPat4vnfx5-WNJ4H_hHBdWy_7BD8vlYnAOycYbhQCta3s8nT3bHa1VJAaz-_tbw7sZGuO3KdGzJuww6w7hWQN41olhxlMhxnhX_2JRoAaxoAcaEX9A4XlVXvZP51Qznb70QAh3bqr6kHwPyebPNP_EhMh6hvnX4lvM2U-JfXQCLpG?purpose=fullsize)
+
+![GitHub - rjagait/School-Management-System-on-AWS: Deploying PHP based web app for school management with MySQL database, with an additional python image compressing code that gets triggered when an image is uploaded by student using the PHP web app. The compressed image then picked and updated on the yearbook.](https://images.openai.com/static-rsc-4/-FBeXglCZGiWFoc4E886iks2VMIlU7gV9fXzoUKbEuVFojI98GrvWjx01Qa7PrROMU5DoclB2U_DcWKkzPsOtHQSOBsxX8bijX69v5aUz-hRnlUTnSJCE_Zs8AWBjoPgjjdsScA4-n3svWzBflcoDh8vw79lBrHFtM4xBI606Q0XJJWkvnaPZld8htcsLq2w?purpose=fullsize)
+
+![Create network security groups on Azure Local VMs on multi-rack deployments (preview) - Azure Local | Microsoft Learn](https://images.openai.com/static-rsc-4/lap7_WOkuacBBm21AfvnTpebXkTHkHl-79s2Rul9ahAbHIlcdcQQUfbt-djydbUYIaPhpsyTweJ2R2jVDu2uEUzjI_q7DWAPgbIiqWWLNXUNLnQNoYhlX1UJy4VzNWPbma5P9MmCY_8WuzhfHnYbOGMeyNHb9CbhcRq3XiLNDtFG5gL-hhkkwlKPM1n0n_zQ?purpose=fullsize)
+
+![Enhance Your Network Security with AWS Network Firewall. | by Anasloubadi | Medium](https://images.openai.com/static-rsc-4/CDB35SiN5QnJjWkao989IhYoRnlewgXWUhb-dCNGmaxlefagd3S-zOcUHOOe2SEQxw7DQLV2LEQgvzBfe7oCmNk3I5CueL5QhFEsjbLTeQUaoisdZbShN4zaTaU5CXRlYXw8yE99oZoq-b9o3AVe8cRPI5-3su1eym9sEhhV0xcKG-UYKOCofCmKgxssGTxc?purpose=fullsize)
+
+![Understanding Cloudflare Web Application Firewall (WAF)](https://images.openai.com/static-rsc-4/greAv2UADZcjwhS63HuM1Dd3PKai3kSxFbCWozERC7sULYf9gUN9IHjI4BWw64I3LEp5gJbw6VmkKJvCGZatBYyEJ28jnMd1Yr5hDfLbQ9bZo5dTtJpUmgYgo75IlGNMQjU7BRBSH7_rFVnLZxxglxarAsqIHlPCDBsXW6xx6yxPNC0zNCNJ5-y4exNxZioM?purpose=fullsize)
+
+![AWS_ファイアウォール機能まとめ　#385｜ゆーき|YM202110](https://images.openai.com/static-rsc-4/a8yr5kUuYFgDApTcIf3L3LAAOK35RMBvW2HEiMdgP3rdFk_4xB27Nz5E4hBxDnfmZubS6iyBFNF3hvUIO76CSaVHnKqKs2JqqMdgSlqmxCiMztd4poITqO8aHEqEQJia2lkWNy0aAbY5mqnyHUWEPID8jn6y42PxAi6uTyrQ_kJmGY5fvtGgbO4XLduhJzMy?purpose=fullsize)
+
+![Azure安全系列（1）-Network Security Group（网络安全组） - shuzhen.yu - 博客园](https://images.openai.com/static-rsc-4/2DV7dVMr3uE7gYXEruHNQVLcujYEny_7W5LFSqSAb0Nv3bbv_C0NNn4nplg5hL-dqcjXppvjRpvtLPhiPnVLy7RXidB_n5hSD4vDeE-W-cLtcjtupoNiOQZs6GiKQtPN7HiYGsaF3VqaHzoSMaKCpy6bCXhvaxo01H-oBddn24BBIrbOhRvHXBD0o8kzO4EQ?purpose=fullsize)
+
+![Guidance for Network Security on AWS | AWS Network Security](https://images.openai.com/static-rsc-4/CUvY00jwSSBjVjeQds9qhx-Jqsi3c2hE5qHuNljK-5747KKv93SCEcoGt8m4XR4233hnx7Uj8vgEiJhAA2DEVp1oOOfVGz0bNN4tsydCl2avCsbOXtzeHzvPAtsNXWCZT3Me8I2ggolr01JpsxdIeKM1NDOAGBobYOSfsW_llwRUMbkMsDYsi-FjwOL0ahRp?purpose=fullsize)
+
+| Technology                  | Effect                                                    |
+| --------------------------- | --------------------------------------------------------- |
+| Cloudflare WAF              | Filters HTTP requests                                     |
+| Cloudflare Tunnel           | Keeps origin services from requiring public inbound ports |
+| Cloudflare Access           | Restricts access to authenticated users                   |
+| AWS Security Groups         | Controls inbound and outbound traffic                     |
+| AWS Network ACL             | Filters traffic at subnet level                           |
+| Azure NSG                   | Controls network traffic                                  |
+| Google Cloud Firewall       | Controls permitted network connections                    |
+| Kubernetes Network Policies | Restricts pod-to-pod traffic                              |
+| Load balancers              | Control how connections reach backend services            |
+| Reverse proxies             | Handle and forward incoming requests                      |
+| API gateways                | Apply application-level access policies                   |
+| Zero Trust gateways         | Require identity and policy verification                  |
+
+### 4\. Port and service-related obstacles
+
+These affect what Nmap can identify.
+
+| Condition                           | Nmap observation                                    |
+| ----------------------------------- | --------------------------------------------------- |
+| No service listening                | Closed port                                         |
+| Firewall silently drops packets     | Filtered port                                       |
+| Firewall rejects packets            | Often filtered or closed, depending on response     |
+| Service binds only to localhost     | Not externally reachable                            |
+| Service listens on a different port | Expected port appears closed                        |
+| Service is temporarily unavailable  | Inconsistent results                                |
+| Rate limiting                       | Some probes may be dropped                          |
+| TLS configuration problems          | Service detection or TLS inspection may be affected |
+| Proxy-only access                   | Direct access to the origin may not work            |
+
+### 5\. Host-discovery obstacles
+
+Nmap uses different probes to determine whether a host is online.
+
+Some obstacles include:
+
+* ICMP echo blocking.
+
+* TCP SYN probe filtering.
+
+* TCP ACK probe filtering.
+
+* UDP probe filtering.
+
+* ARP restrictions.
+
+* IPv6 Neighbor Discovery restrictions.
+
+* VPN isolation.
+
+* Wireless client isolation.
+
+* Sleeping or powered-off devices.
+
+* Temporary network disconnection.
+
+An important distinction: a failed host-discovery probe does not necessarily mean the machine is offline.
+
+### 6\. DNS and hostname obstacles
+
+| Problem               | Effect                                                         |
+| --------------------- | -------------------------------------------------------------- |
+| NXDOMAIN              | Hostname does not exist in DNS                                 |
+| Incorrect A record    | Resolves to the wrong IPv4 address                             |
+| Incorrect AAAA record | Resolves to the wrong IPv6 address                             |
+| DNS propagation       | Different resolvers may return different answers               |
+| Split-horizon DNS     | Internal and external networks resolve different addresses     |
+| DNS filtering         | Queries may be blocked                                         |
+| DNS timeout           | Nmap may not resolve the hostname                              |
+| Cloudflare proxy      | DNS may return Cloudflare edge addresses instead of the origin |
+
+### 7\. Detection and monitoring systems
+
+![Insight | Insight | Cyber Security | 資安監控中心（SOC）](https://images.openai.com/static-rsc-4/AIdVQEInmfz5ETS-831EsniuiNPcmQj4x7ZcfhCJXVc8aI815aKSMobWeXOGBk64EPvhsZ6sKJp37XFC_WFbG1Ah2wLFzKeFiR_6xiN_D46YkgFgFpvbuScWDf5pkyDSc-yGlGq09-o9viY9o-Z-S3XCriWIpRgyPJA37Ku74_jNvE8koO_yfAiNOhGVf4fC?purpose=fullsize)
+
+These technologies can monitor, alert on or block scanning activity:
+
+* Snort
+
+* Suricata
+
+* Zeek
+
+* Security Onion
+
+* Wazuh
+
+* CrowdStrike Falcon
+
+* Microsoft Defender for Endpoint
+
+* Palo Alto Threat Prevention
+
+* Fortinet FortiGate
+
+* Cisco Secure Firewall
+
+Their response depends on their configuration. Detection does not automatically mean Nmap will be blocked.
+
+### 8\. Nmap's own limitations
+
+Not every unsuccessful scan is caused by security protection.
+
+| Limitation              | Explanation                                         |
+| ----------------------- | --------------------------------------------------- |
+| Wrong hostname          | Nmap scans the wrong target                         |
+| Wrong IP address        | The intended server is not scanned                  |
+| Wrong interface         | Traffic uses an unexpected network interface        |
+| Missing privileges      | Some scan types require elevated privileges         |
+| Incorrect target syntax | Nmap cannot interpret the target                    |
+| Wrong port selection    | The service's port is not included                  |
+| DNS resolution failure  | Hostname cannot be resolved                         |
+| Unsupported protocol    | The requested scan does not test that protocol      |
+| Scan timing             | A short timeout may miss slow responses             |
+| Outdated Nmap           | Some newer services may not be identified correctly |
+
+### 9\. How to identify what is preventing your scan
+
+For your Ubuntu lab, use this diagnostic sequence.
+
+A. Check your network interface
+
+```bash
+ip addr
+```
+
+B. Check your routing
+
+```bash
+ip route
+```
+
+C. Check DNS
+
+```bash
+dig api.example.com
+```
+
+D. Check basic connectivity
+
+```bash
+ping -c 4 api.example.com
+```
+
+E. Check TCP connectivity
+
+```bash
+nc -vz api.example.com 443
+```
+
+F. Run Nmap host discovery
+
+```bash
+nmap -sn api.example.com
+```
+
+G. Attempt a port scan without host discovery
+
+```bash
+sudo nmap -Pn -sS -p 443 api.example.com
+```
+
+H. Identify the service
+
+```bash
+sudo nmap -Pn -sV -p 443 api.example.com
+```
+
+Only run these against systems you own or have explicit authorization to assess.
+
+### 10\. Understand the three important Nmap results
+
+Open
+
+Service accepting connections
+
+A service is listening and accepting connections on that port.
+
+Closed
+
+No listening service
+
+The host responded, but no service is listening on that port.
+
+Filtered
+
+Uncertain
+
+Nmap cannot determine whether the port is open because packet filtering or another network condition prevents a conclusive response.
+
+My recommendation: As a security researcher, learn to distinguish between network reachability, port availability, service identification and application authorization. They are four different testing layers.
+
+Nmap cannot independently overcome every restriction, and a security researcher should investigate the relevant firewall, routing, DNS or cloud configuration through authorized access rather than trying to defeat protections on systems they do not administer.

@@ -1,0 +1,1402 @@
+Worked for 45s
+
+### Complete network security assessment using Nmap, tcpdump, Wireshark, TShark and Snort
+
+This guide combines all five tools into one practical penetration-testing workflow for your Ubuntu and Android virtual-phone laboratory.
+
+The objective is to teach you how to:
+
+* Discover devices on a network.
+
+* Identify exposed ports and services.
+
+* Identify vulnerable service configurations.
+
+* Capture network traffic.
+
+* Inspect IP, TCP, UDP, DNS and TLS protocols.
+
+* Identify information leakage.
+
+* Detect suspicious network activity.
+
+* Investigate known attack patterns.
+
+* Verify security weaknesses.
+
+* Produce a professional vulnerability assessment report.
+
+Important: These tools primarily assess network-layer and service-level security. They cannot independently discover every application vulnerability, such as IDOR, SQL injection, business-logic flaws or insecure Android storage. Those require additional testing.
+
+Use the commands against your own devices, applications and authorized lab targets.
+
+### 1\. Understand the responsibility of each tool
+
+![The Complete Guide to Nmap: Network Scanning Mastery | by Raj Bhatia | Medium](https://images.openai.com/static-rsc-4/NbsickmLT-0jo71Kww4y_eIDDJPcvrBZDgy2EEtki8h_Aqtn06RDYDp6lYDiQFZOZ3rGVmQO992boSZlZzApzxPpJP9GtP8Do12TANBCC6EJg4RqZZ549TbLcY-2663YUVDx6GfNTc91GjA5b5N9jO8EXPhHMel9GmEtrirxmyzTEW84R-SW4bSsV4oL-wcM?purpose=fullsize)
+
+Nmap — Network discovery
+
+Discovers devices, open ports, services, versions and certain known vulnerabilities.
+
+![21 Basic Linux Networking Commands You Should Know](https://images.openai.com/static-rsc-4/yNb71GxXS_aRcYpy64mBV9OdikYttN-5e5X06qMQWfw734Ii7e6-mc3zhntjf7oIrSN23mG5CLlR36_kzVsbbLto-83WFEg_h16sFxAlGeGRn88btdGKR_KGXipWf1Q0_KFG0cwbaV4J2GSzBcjueZ8Qgbe2NDA-uamVIeJc0ywmcccBJmkx4_6fxmlmMbF2?purpose=fullsize)
+
+tcpdump — Packet collection
+
+Captures network packets and saves them for investigation.
+
+![Wireshark · Go Deep.](https://images.openai.com/static-rsc-4/fVscVS9IzUk-CqnVQD3wRkTE6Yptvw2Qr5ScQhOiwL_FZ6s2-Cw-g2bM7LCRxKsm7oz-PgrFFnTvrRr6VWwZqg5nuAITleuify7EI2_KVNpP2ToUX_jHOb6NEK4rQFEYWLUugzK6NVCS7CU2IfBlLYdirl1HmKIsudCts7S2D5WgCKv--yf6_y1dpxlINd6H?purpose=fullsize)
+
+Wireshark — Packet investigation
+
+Visually examines network protocols, headers, conversations and traffic behaviour.
+
+![Beginners Guide to TShark (Part 1)](https://images.openai.com/static-rsc-4/h_ovNfg6pF6-2PhMhL1BydqdUhcDZjp_-I7R7az9bErTxz1WDriwmn2s9FD2VeAS3ZelC2UcNyJEgzv5WStlbXwD01mb2apt3d57pyVM573X72GHPjCpv3PjLuc81RTaD0h4xemJxH4-0g1LXe7YGHBWcpal-174LtAbQGPod_Mb0ERSjqLFsq32uMske0ND?purpose=fullsize)
+
+TShark — Automated analysis
+
+Extracts fields, filters packets and generates statistics from network captures.
+
+![How to Install Snort NIDS on Ubuntu Linux | Rapid7 Blog](https://images.openai.com/static-rsc-4/MiO6cvNva0YTuweXDUzqeh7_LH5ao3V_hek2SePEIgTDSyziuFrRRLROZkm4pqsrx5qAneTWqaBBKTonihC1mD2TpmBhwPLLsM6T2B3muMBhvoCUV7ejv2VZD6_h5uxG9X8Y0K1qeEtDL_C7CEdDPVZ_TQWaaRQgDWMNjVksRy9k_28g2UYHiiN_eg4w9z88?purpose=fullsize)
+
+Snort — Intrusion detection
+
+Monitors traffic against detection rules and generates security alerts.
+
+### 2\. Vulnerability coverage: what can you investigate?
+
+The following is a practical assessment catalogue, not a promise that these tools can prove every issue.
+
+| Security weakness                | Best tool        | Investigation                              |
+| -------------------------------- | ---------------- | ------------------------------------------ |
+| Unnecessary open ports           | Nmap             | Discover exposed services                  |
+| Outdated services                | Nmap             | Identify software versions                 |
+| Anonymous FTP                    | Nmap             | Check anonymous access                     |
+| Plaintext FTP credentials        | Wireshark        | Inspect FTP traffic                        |
+| Telnet exposure                  | Nmap             | Identify insecure remote access            |
+| Plaintext Telnet credentials     | Wireshark        | Inspect Telnet sessions                    |
+| SMBv1 enabled                    | Nmap             | Check SMB protocol support                 |
+| Insecure SMB configuration       | Nmap             | Examine security settings                  |
+| Exposed databases                | Nmap             | Identify database ports                    |
+| Open DNS recursion               | Nmap             | Check DNS server configuration             |
+| DNS zone transfer exposure       | Nmap             | Check authorized DNS zones                 |
+| DNS information leakage          | Wireshark/TShark | Inspect DNS queries                        |
+| Weak TLS configuration           | Nmap             | Enumerate cipher suites                    |
+| Invalid TLS certificates         | Nmap             | Inspect certificates                       |
+| Cleartext HTTP                   | Wireshark        | Examine HTTP traffic                       |
+| Sensitive data leakage           | Wireshark        | Inspect visible payloads                   |
+| ARP spoofing indicators          | Wireshark/Snort  | Investigate conflicting ARP information    |
+| IP fragmentation anomalies       | Wireshark        | Examine fragmented packets                 |
+| Port scanning activity           | Snort/Wireshark  | Identify scan patterns                     |
+| Suspicious DNS behaviour         | Snort/TShark     | Investigate unusual DNS traffic            |
+| Known exploit signatures         | Snort            | Match traffic against rules                |
+| TCP connection anomalies         | Wireshark/TShark | Examine resets and retransmissions         |
+| Unexpected network destinations  | TShark           | Identify communicating hosts               |
+| Network service misconfiguration | Nmap             | Assess service exposure                    |
+| Known service vulnerabilities    | Nmap/Snort       | Investigate versions and attack signatures |
+
+Some findings require manual verification, application context or additional testing.
+
+### 3\. Prepare your Ubuntu environment
+
+### Step 1: Install all five tools
+
+```bash
+sudo apt update
+
+sudo apt install -y \
+nmap \
+tcpdump \
+wireshark \
+tshark \
+snort
+```
+
+Check their versions:
+
+```bash
+nmap --version
+tcpdump --version
+wireshark --version
+tshark --version
+snort -V
+```
+
+Snort versions 2 and 3 have different configuration formats. The commands below use the common Snort 3 configuration approach where applicable.
+
+### Step 2: Identify your network interface
+
+```bash
+ip -br addr
+```
+
+Example:
+
+```text
+lo       UNKNOWN 127.0.0.1/8
+enp0s3   UP      192.168.1.20/24
+```
+
+Your example network details:
+
+```text
+Interface: enp0s3
+IP:        192.168.1.20
+Subnet:    192.168.1.0/24
+```
+
+Confirm your route:
+
+```bash
+ip route
+```
+
+### Step 3: Define your lab variables
+
+```bash
+export INTERFACE="enp0s3"
+export TARGET="192.168.1.50"
+export SUBNET="192.168.1.0/24"
+```
+
+Replace these example values with your actual authorized lab details.
+
+### Step 4: Create an evidence directory
+
+```bash
+mkdir -p ~/network-security-lab/{scans,captures,reports}
+```
+
+This will hold your scan results, packet captures and reports.
+
+### 4\. Phase one: Discover all devices
+
+Primary tool: Nmap
+
+Your first objective is to establish which devices are active.
+
+### Step 1: Discover active hosts
+
+```bash
+sudo nmap -sn "$SUBNET"
+```
+
+This identifies responsive hosts without performing a port scan.
+
+### Step 2: Identify your target's open TCP ports
+
+```bash
+sudo nmap -sS "$TARGET"
+```
+
+### Step 3: Scan all TCP ports
+
+```bash
+sudo nmap -p- "$TARGET"
+```
+
+### Step 4: Check common UDP services
+
+```bash
+sudo nmap -sU --top-ports 100 "$TARGET"
+```
+
+### Step 5: Identify service versions
+
+```bash
+sudo nmap -sV "$TARGET"
+```
+
+### Step 6: Save the results
+
+```bash
+sudo nmap -sV -oA \
+~/network-security-lab/scans/initial \
+"$TARGET"
+```
+
+### What vulnerabilities can this phase reveal?
+
+* Unnecessary exposed services.
+
+* Exposed administrative interfaces.
+
+* Unexpected database ports.
+
+* Legacy remote administration protocols.
+
+* Outdated service versions.
+
+* Unexpected services accessible from your network.
+
+Example interpretation:
+
+```text
+PORT     STATE SERVICE VERSION
+21/tcp   open  ftp
+22/tcp   open  ssh
+23/tcp   open  telnet
+80/tcp   open  http
+443/tcp  open  https
+3306/tcp open  mysql
+```
+
+This tells you what services are exposed. It does not prove that FTP, SSH or MySQL is vulnerable.
+
+### 5\. Phase two: Investigate individual services
+
+Primary tool: Nmap
+
+Now investigate whether the exposed services have insecure configurations.
+
+### A. FTP
+
+Potential findings:
+
+* Anonymous FTP access.
+
+* Plaintext authentication.
+
+* Unnecessary FTP service.
+
+* Insecure FTP configuration.
+
+Check anonymous access:
+
+```bash
+nmap -p21 --script ftp-anon "$TARGET"
+```
+
+Capture FTP traffic:
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn -s0 -A 'host 192.168.1.50 and tcp port 21'
+```
+
+Wireshark filter:
+
+```wireshark
+ftp || ftp-data
+```
+
+Look for FTP authentication commands and determine whether credentials are transmitted without encryption.
+
+### B. SSH
+
+Potential findings:
+
+* Weak cryptographic algorithms.
+
+* Outdated SSH implementation.
+
+* Unnecessary remote administration exposure.
+
+* Weak host-key configuration.
+
+Commands:
+
+```bash
+nmap -p22 -sV "$TARGET"
+```
+
+```bash
+nmap -p22 --script ssh2-enum-algos "$TARGET"
+```
+
+```bash
+nmap -p22 --script ssh-hostkey "$TARGET"
+```
+
+Wireshark filter:
+
+```wireshark
+ssh
+```
+
+You can inspect the SSH handshake and algorithm negotiation, but you cannot normally read encrypted SSH session contents.
+
+### C. Telnet
+
+Potential findings:
+
+* Insecure remote administration.
+
+* Plaintext credentials.
+
+* Unencrypted administrative commands.
+
+Check:
+
+```bash
+nmap -p23 -sV "$TARGET"
+```
+
+Wireshark:
+
+```wireshark
+telnet
+```
+
+A successful demonstration of plaintext credential exposure is evidence of a real confidentiality weakness.
+
+### D. SMB
+
+Potential findings:
+
+* SMBv1 support.
+
+* Insecure SMB security configuration.
+
+* Unnecessary file-sharing exposure.
+
+* Unexpected SMB services.
+
+Commands:
+
+```bash
+nmap -p445 --script smb-protocols "$TARGET"
+```
+
+```bash
+nmap -p445 --script smb-security-mode "$TARGET"
+```
+
+Wireshark:
+
+```wireshark
+smb || smb2
+```
+
+### E. DNS
+
+Potential findings:
+
+* Unrestricted recursion.
+
+* Unauthorized DNS zone transfer.
+
+* Internal DNS information disclosure.
+
+* Unexpected DNS server communication.
+
+Commands:
+
+```bash
+nmap -sU -p53 \
+--script dns-recursion "$TARGET"
+```
+
+For a domain you administer:
+
+```bash
+nmap -p53 \
+--script dns-zone-transfer \
+--script-args dns-zone-transfer.domain=lab.example \
+"$TARGET"
+```
+
+Wireshark:
+
+```wireshark
+dns
+```
+
+### F. TLS and certificates
+
+Potential findings:
+
+* Deprecated TLS versions.
+
+* Weak cipher suites.
+
+* Expired certificates.
+
+* Incorrect certificate hostnames.
+
+* Insecure cryptographic configuration.
+
+Commands:
+
+```bash
+nmap -p443 --script ssl-cert "$TARGET"
+```
+
+```bash
+nmap -p443 --script ssl-enum-ciphers "$TARGET"
+```
+
+Wireshark:
+
+```wireshark
+tls.handshake
+```
+
+Inspect the protocol version, certificate details, cipher negotiation and handshake failures.
+
+### G. HTTP
+
+Potential findings:
+
+* Unencrypted HTTP communication.
+
+* Unnecessary HTTP methods.
+
+* Server information disclosure.
+
+* Missing or insecure response headers.
+
+Commands:
+
+```bash
+nmap -p80 --script http-headers "$TARGET"
+```
+
+```bash
+nmap -p80 --script http-methods "$TARGET"
+```
+
+```bash
+nmap -p80 --script http-title "$TARGET"
+```
+
+Wireshark:
+
+```wireshark
+http
+```
+
+Check whether sensitive information is exposed in HTTP requests or responses.
+
+### H. Database services
+
+Investigate exposed database ports:
+
+```bash
+nmap -p1433,1521,3306,5432,6379 "$TARGET"
+```
+
+Potential issues:
+
+* Database exposed to an untrusted network.
+
+* Administrative interfaces unnecessarily accessible.
+
+* Legacy database versions.
+
+* Insecure database communication.
+
+Nmap identifies exposure; authentication and authorization testing are needed to establish further weaknesses.
+
+### 6\. Phase three: Capture network traffic
+
+Primary tool: tcpdump
+
+You now need packet evidence from the services you have discovered.
+
+Open another Ubuntu terminal.
+
+### A. Capture all traffic to and from the target
+
+```bash
+sudo tcpdump \
+-i "$INTERFACE" \
+-nn -s0 \
+host "$TARGET" \
+-w ~/network-security-lab/captures/target.pcap
+```
+
+Leave it running while you perform your authorized tests.
+
+Press `CTRL+C` when finished.
+
+### B. Capture TCP traffic
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn 'host 192.168.1.50 and tcp'
+```
+
+### C. Capture UDP traffic
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn 'host 192.168.1.50 and udp'
+```
+
+### D. Capture DNS
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn 'port 53'
+```
+
+### E. Capture ICMP
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn icmp
+```
+
+### F. Capture ARP
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn arp
+```
+
+### G. Capture TCP SYN packets
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn 'tcp[tcpflags] & tcp-syn != 0'
+```
+
+### H. Capture traffic on multiple interfaces
+
+For a system where the `any` interface is supported:
+
+```bash
+sudo tcpdump -i any -nn -w all-interfaces.pcap
+```
+
+What are you looking for?
+
+* Unencrypted authentication.
+
+* Unexpected communication.
+
+* Unusual connections.
+
+* Unexpected DNS destinations.
+
+* Conflicting ARP information.
+
+* TCP connection anomalies.
+
+* Network traffic to unnecessary services.
+
+One limitation: promiscuous mode does not automatically allow you to see all traffic on a switched network. Capture at an appropriate endpoint, bridge, virtual interface or authorized monitoring port.
+
+### 7\. Phase four: Deep packet inspection
+
+Primary tool: Wireshark
+
+Open your capture:
+
+```bash
+wireshark ~/network-security-lab/captures/target.pcap
+```
+
+Investigate the following areas.
+
+### A. IP-header investigation
+
+Display filter:
+
+```wireshark
+ip
+```
+
+Inspect:
+
+| IP field        | What to investigate        |
+| --------------- | -------------------------- |
+| Source IP       | Unexpected sending devices |
+| Destination IP  | Unexpected destinations    |
+| TTL             | Routing behaviour          |
+| Protocol        | TCP, UDP or ICMP           |
+| Identification  | Packet identification      |
+| Flags           | Fragmentation behaviour    |
+| Fragment offset | Packet fragmentation       |
+| Total length    | Packet size                |
+| Header checksum | Header integrity           |
+
+IPv6 filter:
+
+```wireshark
+ipv6
+```
+
+Potential findings include unexpected IP communication, unusual fragmentation and suspicious source-address behaviour.
+
+### B. TCP-header investigation
+
+```wireshark
+tcp
+```
+
+Useful filters:
+
+```wireshark
+tcp.flags.syn == 1
+```
+
+```wireshark
+tcp.flags.reset == 1
+```
+
+```wireshark
+tcp.flags.fin == 1
+```
+
+```wireshark
+tcp.analysis.retransmission
+```
+
+```wireshark
+tcp.analysis.duplicate_ack
+```
+
+Investigate:
+
+* Unexpected connection attempts.
+
+* Repeated resets.
+
+* Abnormal connection termination.
+
+* Retransmissions.
+
+* Suspicious scanning patterns.
+
+These are indicators for investigation, not automatic proof of vulnerabilities.
+
+### C. DNS investigation
+
+```wireshark
+dns
+```
+
+Look for:
+
+* Unexpected domains.
+
+* Internal hostnames exposed to external resolvers.
+
+* Unexpected DNS servers.
+
+* Unusual query frequency.
+
+* Suspicious DNS response patterns.
+
+### D. ARP investigation
+
+```wireshark
+arp
+```
+
+Investigate:
+
+* Duplicate IP addresses.
+
+* Multiple MAC addresses associated with one IP.
+
+* Unexpected changes in gateway MAC addresses.
+
+* Repeated unsolicited ARP replies.
+
+Potential finding: ARP spoofing or address conflict.
+
+You must verify the legitimate network configuration before classifying it as an attack.
+
+### E. TLS investigation
+
+```wireshark
+tls
+```
+
+Look at:
+
+* ClientHello.
+
+* ServerHello.
+
+* Supported TLS versions.
+
+* Negotiated cipher suites.
+
+* Certificate information.
+
+* Handshake failures.
+
+Encrypted application contents remain unreadable unless you have an authorized decryption method and the necessary session secrets.
+
+### F. HTTP investigation
+
+```wireshark
+http
+```
+
+Look for:
+
+* Sensitive information transmitted without encryption.
+
+* Authentication information in visible requests.
+
+* Unexpected HTTP destinations.
+
+* Information disclosure in response headers.
+
+* Unnecessary HTTP communication.
+
+### G. Follow a complete TCP conversation
+
+Right-click a TCP packet and select:
+
+`Follow → TCP Stream`
+
+This helps reconstruct a supported conversation in both directions.
+
+### 8\. Phase five: Automated investigation
+
+Primary tool: TShark
+
+TShark uses the same display-filter engine as Wireshark, making it particularly useful for repeatable investigations. Wireshark +1
+
+### A. List communicating IP endpoints
+
+```bash
+tshark -r target.pcap \
+-q -z endpoints,ip
+```
+
+### B. Identify TCP conversations
+
+```bash
+tshark -r target.pcap \
+-q -z conv,tcp
+```
+
+### C. Extract IP headers
+
+```bash
+tshark -r target.pcap \
+-Y ip -T fields \
+-e frame.number \
+-e ip.src \
+-e ip.dst \
+-e ip.ttl \
+-e ip.proto \
+-e ip.len \
+-e ip.id \
+-e ip.flags \
+-e ip.frag_offset
+```
+
+### D. Extract TCP information
+
+```bash
+tshark -r target.pcap \
+-Y tcp -T fields \
+-e ip.src \
+-e tcp.srcport \
+-e ip.dst \
+-e tcp.dstport \
+-e tcp.flags \
+-e tcp.window_size_value
+```
+
+### E. Identify DNS queries
+
+```bash
+tshark -r target.pcap \
+-Y dns -T fields \
+-e frame.time \
+-e ip.src \
+-e dns.qry.name
+```
+
+### F. Identify HTTP requests
+
+```bash
+tshark -r target.pcap \
+-Y http.request -T fields \
+-e ip.src \
+-e ip.dst \
+-e http.request.method \
+-e http.host \
+-e http.request.uri
+```
+
+### G. Identify TLS handshakes
+
+```bash
+tshark -r target.pcap \
+-Y tls.handshake -T fields \
+-e ip.src \
+-e ip.dst \
+-e tls.handshake.type \
+-e tls.handshake.version
+```
+
+### H. Identify TCP retransmissions
+
+```bash
+tshark -r target.pcap \
+-Y tcp.analysis.retransmission
+```
+
+### I. Identify TCP resets
+
+```bash
+tshark -r target.pcap \
+-Y 'tcp.flags.reset == 1'
+```
+
+### J. Generate protocol hierarchy
+
+```bash
+tshark -r target.pcap \
+-q -z io,phs
+```
+
+### K. Export results to a CSV file
+
+```bash
+tshark -r target.pcap \
+-Y ip -T fields \
+-E header=y -E separator=, \
+-e frame.number \
+-e ip.src \
+-e ip.dst \
+-e ip.ttl \
+-e ip.proto \
+-e ip.len \
+> ~/network-security-lab/reports/ip-analysis.csv
+```
+
+This allows you to compare traffic from multiple assessments.
+
+### 9\. Phase six: Intrusion detection with Snort
+
+Primary tool: Snort
+
+This is where you introduce network attack detection.
+
+Unlike Nmap, which actively probes services, Snort observes traffic and compares it with configured detection rules.
+
+Snort 3 supports live interface monitoring and PCAP analysis. Snort 3 Rule Writing Guide +1
+
+### A. Check your Snort version
+
+```bash
+snort -V
+```
+
+Find the configuration file:
+
+```bash
+sudo find /etc/snort -maxdepth 2 -type f
+```
+
+For Snort 3, a common configuration filename is:
+
+```text
+/etc/snort/snort.lua
+```
+
+For Snort 2, it is commonly:
+
+```text
+/etc/snort/snort.conf
+```
+
+Do not use a Snort 2 configuration with Snort 3.
+
+### B. Validate the Snort 3 configuration
+
+If you have Snort 3 and the Lua configuration:
+
+```bash
+sudo snort -T \
+-c /etc/snort/snort.lua
+```
+
+### C. Monitor live traffic
+
+```bash
+sudo snort \
+-c /etc/snort/snort.lua \
+-i "$INTERFACE" \
+-A alert_fast
+```
+
+This runs passive monitoring and displays alerts generated by the loaded rules.
+
+### D. Analyse your saved PCAP
+
+```bash
+sudo snort \
+-c /etc/snort/snort.lua \
+-r ~/network-security-lab/captures/target.pcap \
+-A alert_fast
+```
+
+This lets you investigate the same captured traffic with Snort.
+
+### E. Enable a separate local rules file
+
+Create:
+
+```bash
+sudo nano /etc/snort/local.rules
+```
+
+For a harmless example, add a rule that detects ICMP echo requests in your lab:
+
+```text
+alert icmp any any -> any any (msg:"LAB ICMP Echo Request"; itype:8; sid:1000001; rev:1;)
+```
+
+This is a demonstration detection rule, not a vulnerability detector.
+
+Validate the configuration and rule file:
+
+```bash
+sudo snort -T \
+-c /etc/snort/snort.lua \
+-R /etc/snort/local.rules
+```
+
+Test it against your PCAP:
+
+```bash
+sudo snort \
+-c /etc/snort/snort.lua \
+-R /etc/snort/local.rules \
+-r ~/network-security-lab/captures/target.pcap \
+-A alert_fast
+```
+
+If the package does not provide Snort 3 or the expected configuration, check its installed version and package documentation before using these commands. Snort 2 requires different configuration and rule-loading syntax.
+
+### F. What can you investigate with Snort?
+
+| Investigation            | What you look for                    |
+| ------------------------ | ------------------------------------ |
+| Port scanning            | Repeated connection attempts         |
+| Suspicious DNS           | Matches against configured DNS rules |
+| Known exploit attempts   | Signatures of known exploits         |
+| Suspicious HTTP requests | Recognized attack patterns           |
+| Malware communication    | Known malicious traffic signatures   |
+| Network reconnaissance   | Suspicious probing behaviour         |
+| Policy violations        | Traffic matching prohibited patterns |
+| ICMP anomalies           | Unusual ICMP patterns                |
+
+Snort alerts are leads, not proof. Investigate the matching packet in Wireshark and confirm whether the activity is genuinely malicious.
+
+Important: Running Snort in passive IDS mode does not block attacks. Inline IPS operation requires supported packet-acquisition modules, correct network placement and carefully tested configuration. Snort 3 Rule Writing Guide +1
+
+### 10\. Phase seven: Nmap vulnerability detection
+
+Nmap has a scripting engine called NSE (Nmap Scripting Engine).
+
+It allows you to perform additional checks against discovered services. Some scripts identify specific known vulnerabilities; others inspect configurations or retrieve information. Nmap Network Scanning +1
+
+### A. Find available vulnerability scripts
+
+```bash
+ls /usr/share/nmap/scripts/*vuln*.nse
+```
+
+Search for a particular script:
+
+```bash
+ls /usr/share/nmap/scripts/ | grep -E 'ssl|smb|ftp|http|dns|ssh'
+```
+
+Read the description of a script:
+
+```bash
+nmap --script-help ssl-enum-ciphers
+```
+
+### B. Check known vulnerabilities
+
+For an authorized test host, use carefully selected NSE scripts relevant to its detected services.
+
+For example:
+
+```bash
+sudo nmap -sV \
+-p21,22,80,443,445 \
+--script ftp-anon,ssh2-enum-algos,ssl-cert,ssl-enum-ciphers,smb-protocols \
+-oA ~/network-security-lab/scans/service-checks \
+"$TARGET"
+```
+
+Nmap also has a `vulners` script that can correlate identified software versions with known vulnerability information when the script and external service are available. It does not prove that a CVE is exploitable on your target. Nmap Scripting Engine documentation +1
+
+Avoid blindly running all NSE scripts. Some scripts can be intrusive or disruptive, particularly those categorized as `dos`, `exploit`, `brute` or `intrusive`. Nmap Network Scanning
+
+### 11\. Complete vulnerability catalogue by tool
+
+This is the practical reference list to keep while performing assessments.
+
+### A. Nmap findings
+
+| Finding                         | How to investigate                 |
+| ------------------------------- | ---------------------------------- |
+| Open ports                      | TCP and UDP scans                  |
+| Unnecessary services            | Service discovery                  |
+| Outdated services               | Version detection                  |
+| Anonymous FTP                   | ftp-anon                           |
+| Weak SSH algorithms             | ssh2-enum-algos                    |
+| Weak SSH host-key configuration | ssh-hostkey                        |
+| SMBv1 support                   | smb-protocols                      |
+| Insecure SMB settings           | smb-security-mode                  |
+| DNS recursion exposure          | dns-recursion                      |
+| DNS zone transfer               | dns-zone-transfer                  |
+| Weak TLS cipher suites          | ssl-enum-ciphers                   |
+| Invalid certificates            | ssl-cert                           |
+| HTTP method exposure            | http-methods                       |
+| HTTP header disclosure          | http-headers                       |
+| Known service vulnerabilities   | Selected NSE vulnerability scripts |
+| Exposed database services       | Port and version detection         |
+| Unexpected service on a port    | Version detection                  |
+
+### B. tcpdump findings
+
+| Finding                          | How to investigate           |
+| -------------------------------- | ---------------------------- |
+| Plaintext protocols              | Capture and inspect payloads |
+| Unexpected network communication | Host and network filters     |
+| Suspicious connection attempts   | TCP SYN capture              |
+| DNS information leakage          | DNS packet capture           |
+| ARP anomalies                    | ARP capture                  |
+| ICMP anomalies                   | ICMP capture                 |
+| Unusual packet fragmentation     | IP packet capture            |
+| Unexpected external destinations | Source/destination filtering |
+| Suspicious traffic volume        | Capture statistics           |
+| Unexpected UDP traffic           | UDP capture                  |
+
+### C. Wireshark findings
+
+| Finding                        | How to investigate          |
+| ------------------------------ | --------------------------- |
+| Plaintext credential exposure  | Follow application streams  |
+| Cleartext HTTP                 | HTTP inspection             |
+| DNS information disclosure     | DNS inspection              |
+| ARP spoofing indicators        | ARP mapping analysis        |
+| TCP scanning patterns          | SYN and connection analysis |
+| TCP resets                     | RST inspection              |
+| IP fragmentation anomalies     | IPv4/IPv6 inspection        |
+| Weak TLS negotiation           | TLS handshake inspection    |
+| Certificate problems           | Certificate inspection      |
+| Suspicious communication       | Conversation analysis       |
+| Network misconfiguration       | Protocol inspection         |
+| Unexpected application traffic | Protocol dissection         |
+
+### D. TShark findings
+
+| Finding                        | How to investigate               |
+| ------------------------------ | -------------------------------- |
+| Unexpected communicating hosts | Endpoint statistics              |
+| Unusual TCP conversations      | Conversation statistics          |
+| DNS leakage                    | DNS field extraction             |
+| HTTP information exposure      | HTTP field extraction            |
+| TLS configuration indicators   | TLS field extraction             |
+| TCP retransmissions            | Analysis filters                 |
+| TCP resets                     | Flag extraction                  |
+| Unusual protocol usage         | Protocol hierarchy               |
+| Network traffic patterns       | I/O statistics                   |
+| Suspicious flows               | Stream and conversation analysis |
+
+### E. Snort findings
+
+| Finding                          | How to investigate        |
+| -------------------------------- | ------------------------- |
+| Known exploit signatures         | Detection rules           |
+| Port scanning patterns           | Scan detection rules      |
+| Suspicious HTTP requests         | HTTP inspection rules     |
+| Suspicious DNS traffic           | DNS rules                 |
+| Malware communication indicators | Threat signatures         |
+| Suspicious payloads              | Content matching          |
+| Network policy violations        | Custom rules              |
+| ICMP anomalies                   | ICMP rules                |
+| Known attack traffic             | Signature-based detection |
+
+Remember: Snort only detects activity covered by its active rules and visible to its sensor.
+
+### 12\. How to combine all five tools in one assessment
+
+This is the workflow I recommend using in your Ubuntu laboratory.
+
+### Integrated network security assessment
+
+* Nmap — Discovery
+
+    Discover devices, ports, services and versions.
+
+    Output: Nmap scan results
+
+* tcpdump — Capture
+
+    Capture the traffic generated during the assessment.
+
+    Output: PCAP file
+
+* Wireshark — Investigation
+
+    Inspect packet headers, application protocols, TLS and network behaviour.
+
+    Output: Packet-level evidence
+
+* TShark — Automation
+
+    Extract endpoints, DNS queries, TCP conversations and protocol statistics.
+
+    Output: Structured analysis
+
+* Snort — Detection
+
+    Analyze the captured traffic against security rules.
+
+    Output: Intrusion detection alerts
+
+* Verification and reporting
+
+    Confirm findings, determine impact, document evidence and recommend remediation.
+
+### Example: Investigating a suspicious open service
+
+Suppose Nmap identifies port 23 open.
+
+* Nmap establishes that Telnet is exposed.
+
+* tcpdump captures the Telnet communication.
+
+* Wireshark examines whether authentication data is transmitted in plaintext.
+
+* TShark extracts the source, destination and relevant traffic fields.
+
+* Snort can alert on Telnet traffic if the appropriate detection rules are configured.
+
+* You document the exposure and demonstrate the confidentiality risk using your own test credentials.
+
+This is how you turn a simple discovery into a properly evidenced security finding.
+
+### 13\. Special considerations for your Android virtual-phone laboratory
+
+Since you are using Ubuntu with an Android virtual phone, there are some important differences.
+
+![Android Network Traffic Interception & Cleartext Risks | Falcon0x1](https://images.openai.com/static-rsc-4/9CTxuPN7VHK8SjQCjM6Dmbp46qxt8gZ04xgy8utAHy2Wj7ZeS3azAq-rYp9lLEUrfdecgAIc9m4fRTFoq4J8Ze0IweoIY6Ml8q7t2o1y6c6An97Jes8xi7WkoJH2QpHd4KoEJqZ5jT2MXaR7lIV1CJyc4PLTe6QOglpXt7lALiBYxqapuyuGsjZ3QRPOI7r7?purpose=fullsize)
+
+![Introduction to Linux interfaces for virtual networking | Red Hat Developer](https://images.openai.com/static-rsc-4/A-k32Su_Fd5Jcu445jTBYCJRNvf9rw7w7KsZsgXNBkiYOyH3wSCfLCN8HvhZPpwsJETfDvPODz69p2vemHEoBE6ssHQJIDPCH2tCyFHxExufsy4oqQRFkzMODXM5sFQEEdiZjKJqxNC-ke4Qgwtqm2-EjAxzLSa3M0uq-2Z0aQZmugvoWTpLKPB_SU8RDBcb?purpose=fullsize)
+
+![Virtual Devices - Desktop User Guide](https://images.openai.com/static-rsc-4/F1Oyi6bGZ9jvcXx1ShKZtM6ZKz4FOjOI4t-6zBzMawSu661aWcLRhrd1nXLHMcgz00C6-_NXG80D5gtVGdX557LLTQfy1iRSg9xlvFD_oCXBdnrUWWWc1GVxfS4zGCQm8T1zomhQZKWKH2ecDBpbhAvxEjHGFaKlgVAdm0VhoQQmXKEvnf21jDT-wTVK1VOT?purpose=fullsize)
+
+![Capture all android network traffic · Ex Android Dev](https://images.openai.com/static-rsc-4/xVkV9WtZ46dCpH_M4iRuSQMaLYD-QdSrxle2TiJmVEEhCY5Xcg5ymhR0sEhPycb2a-Am3J-K2psrD3w0ZXb59nvtf8FICS922Th-XK8JFmi2TJ4EEKkO7bdyHmt34yOcVTPHcAXqcTI5eYixRQQ-wsMy-rxdNmy7RoedFjaGwefsbdiMw1ztMWol-J1M8Uuu?purpose=fullsize)
+
+![OpenStack之Neutron - OrcHome](https://images.openai.com/static-rsc-4/QQh9Gt9_E4OywHfJVp7qNDRXMAMnDQeHKWE9R0QZSRamh3BTRnIQpOH1B0guEGA8iQcaMT3L11v0vDv7XS7kLGfQpbkyueX69VgB0z0Lrx9O8K0fuVyFpsfMm-Y4Hb-UF5lIL6IZUQ_cC1khTfJwkeZOQCKI1y7sWdtikvgYlqvP_efpVT03LjpD9-ye7Gl5?purpose=fullsize)
+
+![鳥哥私房菜 - 第零章、笑談 Linux 應用與伺服器學習](https://images.openai.com/static-rsc-4/DX2pFiptdkMoN_CrEY_MzLZigVaHxVukxlBW112Nf_eyKKLu9f9YhcNIgOQyavx4t6zdGdfJm92QfpdJIysNTzvVd4Bur91lGZmunsCqWrRk9hG8ABllZil2h1DIsb6BFIMjOeGleP3qKseraUdbPRTzz68DjbrnQJGZFCkZ81xK2O-nw1yg4PpVMnICsX8u?purpose=fullsize)
+
+![PPT - Android Network Stack and Enhancement (3G/ WiFi , IPV4/IPV6, SIP/VoIP) PowerPoint Presentation - ID:2384170](https://images.openai.com/static-rsc-4/aAGaNH1iZHT_ZMIOaZ8YGG4hcxyqEEH1Vpk_JhzNnhJsTaCXEwlS-Tl3E5dVU6amHBimwTcvOuPUnJRIfLLgihT5I5U5cr0wUthWFQw84riFFZ5km2LduiEoMJv2vWXgqVYLogzXbIra82-rkQ6vb7r_1ZQSA-cbX4C5q0z8h9giReX_hGKxRrHg22xdjylu?purpose=fullsize)
+
+![M 201: ADB on Genymotion (15 pts)](https://images.openai.com/static-rsc-4/9LrglbTwQbu1VkNM6sPrG2O6wFhc1DFTjPA-OojbsGGEtGGcaMCv_AiTki2Sqs3jg6gtrdmelNMY0bKCDIKJsrTUwkhA9wfnXnhcR2Vs-LhVk920TTVQ5B5qCHjZfbZjH1WOiBSjCwO42ZUUydgGDV1j2H5jORw0HOdT8cir5ZHTGNk9FvhbeNjHCkiiTcis?purpose=fullsize)
+
+![How to Spy on Traffic from a Smartphone with Wireshark :: Null Byte](https://images.openai.com/static-rsc-4/dOOkfN14GJCmKv524Pi6g_0OlR0Xp4SMClC_jds21gcfBKuHynULT3jxuIWSrtvPTnd4KFot08zt7dh21m8pPdFAQfJOIDVJIh708E7G-0eoil3kB3LBKUJfZSgE4d0yqS7isah22UYyiVl3o3YIjkKL_5psKmqxBI1oV612OAgTxsvOunH1o-GRdCAGNsKU?purpose=fullsize)
+
+![KVM の AndroidStudio で Android x86 を adb](https://images.openai.com/static-rsc-4/U1yAynwvGXfN8QNZxnRc_GKipUICVoKwvl6p0LE7b5VemvRA6WRwGYp17RrFjL5fBmLQT3gCgzTfiL57US-fdlMINQQGctHuGlj0UMX2kXL4t6aBEAj6Uhaf6GsIqyxrd4g-KrqWhUf0Uq43t8ifxnDANpEcYBvKYFjILjTTX8EQu0txeBt6MHvDVveo3nxi?purpose=fullsize)
+
+![android无root抓包（PCAPdroid）-CSDN博客](https://images.openai.com/static-rsc-4/sNv7dF2j_F258eAp0S505UBG7FPA3XS_Od978Wlg0uGf_5oB4TdtEY2vJG7MLA8G28pKBRZRQglREUYA-0aOOofx9lSJTAh1FZX_rimClX8ydN2KWJPC75WJOL_-oRGGA4cpLUuepBtwnOqXAE-bpIJ47S-TTVM4yNI0BD6_Q_0eg69Ea4x7ywsEB-XhqXuK?purpose=fullsize)
+
+You need to identify where the virtual phone's traffic actually travels.
+
+Run:
+
+```bash
+ip -br addr
+```
+
+```bash
+ip route
+```
+
+```bash
+sudo tcpdump -D
+```
+
+Then identify:
+
+* The virtual network interface.
+
+* The bridge interface, if one exists.
+
+* The host-only interface, if one exists.
+
+* The interface carrying outbound traffic.
+
+For Android traffic:
+
+| Investigation                          | Tool                                  |
+| -------------------------------------- | ------------------------------------- |
+| Discover reachable lab services        | Nmap                                  |
+| Capture emulator traffic               | tcpdump                               |
+| Inspect DNS and TLS                    | Wireshark                             |
+| Extract API destination IPs            | TShark                                |
+| Detect suspicious network behaviour    | Snort                                 |
+| Inspect encrypted application payloads | Not possible from ordinary PCAP alone |
+
+If the emulator sends HTTPS through a proxy, remember that the proxy creates separate network connections. The IP headers may therefore represent the phone-to-proxy and proxy-to-server connections rather than one original end-to-end connection.
+
+### 14\. How to classify your findings
+
+Not every observation deserves a vulnerability report.
+
+| Severity      | Example                                                                     |
+| ------------- | --------------------------------------------------------------------------- |
+| Critical      | Confirmed severe unauthorized compromise                                    |
+| High          | Unauthorized access to sensitive systems or information                     |
+| Medium        | Significant security weakness with limited or conditional impact            |
+| Low           | Minor information disclosure or limited security weakness                   |
+| Informational | Open port or configuration observation without demonstrated security impact |
+
+Use the actual impact and exploitability to determine severity, not the tool's output alone.
+
+### 15\. Your final assessment checklist
+
+Master assessment checklist
+
+### 0/52
+
+1. Preparation
+
+Install all five tools
+
+Identify network interfaces
+
+Identify authorized subnet and target
+
+Create scan and evidence directories
+
+2. Nmap
+
+Discover active devices
+
+Scan TCP ports
+
+Check selected UDP ports
+
+Identify service versions
+
+Investigate FTP
+
+Investigate SSH
+
+Investigate Telnet
+
+Investigate SMB
+
+Investigate DNS
+
+Investigate TLS
+
+Investigate HTTP
+
+Investigate database exposure
+
+Run selected NSE checks
+
+3. tcpdump
+
+Capture target traffic
+
+Capture TCP and UDP
+
+Capture DNS
+
+Capture ICMP
+
+Capture ARP
+
+Save PCAP evidence
+
+4. Wireshark
+
+Inspect IP headers
+
+Inspect TCP flags
+
+Investigate DNS
+
+Investigate ARP
+
+Inspect TLS handshakes
+
+Investigate HTTP
+
+Follow TCP streams
+
+Investigate suspicious conversations
+
+5. TShark
+
+Extract IP endpoints
+
+Extract TCP conversations
+
+Extract DNS queries
+
+Extract HTTP requests
+
+Extract TLS information
+
+Find retransmissions
+
+Generate protocol statistics
+
+Export CSV results
+
+6. Snort
+
+Check Snort version
+
+Validate configuration
+
+Configure appropriate rules
+
+Run passive IDS monitoring
+
+Analyze captured PCAP
+
+Review alerts
+
+Verify alerts against packet evidence
+
+7. Reporting
+
+Confirm each finding
+
+Collect supporting evidence
+
+Determine impact
+
+Assign severity
+
+Recommend remediation
+
+Perform reassessment
+
+0% completed
+
+Reset
+
+### 16\. Official learning resources
+
+* [Nmap Network Scanning Guide](https://nmap.org/book/?utm_source=chatgpt.com)
+
+* [tcpdump Manual](https://www.tcpdump.org/manpages/tcpdump.1.html?utm_source=chatgpt.com)
+
+* [Wireshark Documentation](https://www.wireshark.org/docs/?utm_source=chatgpt.com)
+
+* [TShark Manual](https://www.wireshark.org/docs/man-pages/tshark.html?utm_source=chatgpt.com)
+
+* [Snort 3 Documentation](https://docs.snort.org/?utm_source=chatgpt.com)
+
+* [Snort Rule Writing Guide](https://docs.snort.org/start/rules?highlight=s&utm_source=chatgpt.com)
+
+My advice: Don't try to master all five simultaneously. Complete one assessment against one authorized target, preserve the PCAP, investigate every interesting finding and write a report. Repeat the assessment after fixing the weaknesses.
+
+That process will teach you considerably more than simply memorizing hundreds of commands.

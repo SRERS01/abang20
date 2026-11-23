@@ -1,0 +1,1049 @@
+Worked for 22s
+
+### Complete network vulnerability assessment using Wireshark, tcpdump, TShark and Nmap
+
+You can build a substantial network security assessment laboratory using just these four tools, without Burp Suite, mitmproxy, or vulnerability-scanning frameworks.
+
+However, understand their boundaries:
+
+* Nmap: Discovers hosts, open ports, services, versions and certain security weaknesses.
+
+* tcpdump: Captures raw network packets.
+
+* Wireshark: Investigates packet contents, protocols and network behaviour.
+
+* TShark: Performs automated packet analysis and extracts evidence from captures.
+
+Together, they help you investigate network exposure, insecure configurations, information leakage, weak protocols, exposed services and suspicious network behaviour.
+
+This guide focuses on systems you own or have explicit permission to assess.
+
+### 1\. Vulnerabilities and weaknesses you can investigate
+
+First, here is your assessment coverage.
+
+| Vulnerability or weakness         | Primary tool        | What you investigate                          |
+| --------------------------------- | ------------------- | --------------------------------------------- |
+| Open ports                        | Nmap                | Unnecessary exposed services                  |
+| Unnecessary services              | Nmap                | Unexpected network services                   |
+| Outdated service versions         | Nmap                | Potentially vulnerable software               |
+| Anonymous FTP                     | Nmap                | Unauthenticated FTP access                    |
+| Open DNS recursion                | Nmap                | Unrestricted DNS recursion                    |
+| DNS zone transfer exposure        | Nmap                | Unrestricted AXFR                             |
+| SMB exposure                      | Nmap                | File-sharing exposure                         |
+| SMBv1 enabled                     | Nmap                | Legacy protocol support                       |
+| Telnet exposure                   | Nmap                | Unencrypted remote administration             |
+| FTP credentials exposure          | Wireshark           | Plaintext authentication                      |
+| HTTP information exposure         | Wireshark           | Unencrypted web traffic                       |
+| Weak TLS configuration            | Nmap / Wireshark    | Protocol and handshake weaknesses             |
+| Expired TLS certificates          | Nmap                | Certificate validity                          |
+| Self-signed certificates          | Nmap                | Certificate trust configuration               |
+| DNS information leakage           | Wireshark / TShark  | Query and response visibility                 |
+| ARP spoofing indicators           | Wireshark / tcpdump | Suspicious ARP changes                        |
+| IP fragmentation anomalies        | Wireshark           | Fragmentation behaviour                       |
+| TCP retransmissions               | Wireshark / TShark  | Network reliability issues                    |
+| Suspicious port scanning          | Wireshark / TShark  | Unusual connection patterns                   |
+| Network information leakage       | All four            | Exposed addresses and services                |
+| Cleartext protocols               | Wireshark / TShark  | Sensitive data transmitted without encryption |
+| Weak SSH configuration            | Nmap                | Supported algorithms and configurations       |
+| Exposed database ports            | Nmap                | Database network exposure                     |
+| Exposed administration interfaces | Nmap                | Unnecessary management access                 |
+
+Important: An open port, retransmission, self-signed certificate or exposed service is not automatically a vulnerability. You must establish the security impact and whether the configuration violates the system's security requirements.
+
+### 2\. Prepare your Ubuntu laboratory
+
+### Step 1: Install all four tools
+
+```bash
+sudo apt update
+
+sudo apt install -y \
+nmap \
+tcpdump \
+tshark \
+wireshark
+```
+
+Check installation:
+
+```bash
+nmap --version
+tcpdump --version
+tshark --version
+wireshark --version
+```
+
+### Step 2: Discover your network interface and subnet
+
+Run:
+
+```bash
+ip -br addr
+```
+
+Example:
+
+```text
+lo       UNKNOWN 127.0.0.1/8
+enp0s3   UP      192.168.1.20/24
+```
+
+Here:
+
+* Interface: `enp0s3`
+
+* Ubuntu IP: `192.168.1.20`
+
+* Subnet: `192.168.1.0/24`
+
+* Network mask: `255.255.255.0`
+
+You can also obtain the routing information:
+
+```bash
+ip route
+```
+
+### Step 3: Identify your authorized target
+
+For this practical, assume you have a deliberately vulnerable test machine at:
+
+```text
+192.168.1.50
+```
+
+Set variables:
+
+```bash
+TARGET=192.168.1.50
+INTERFACE=enp0s3
+```
+
+Replace these values with your actual lab configuration.
+
+### 3\. Phase one: Network discovery
+
+Tool: Nmap
+
+Your first task is to discover devices and determine which ones are available.
+
+### A. Discover devices on your lab subnet
+
+```bash
+sudo nmap -sn 192.168.1.0/24
+```
+
+This performs host discovery without a port scan.
+
+You can identify:
+
+* Active hosts.
+
+* IP addresses.
+
+* MAC addresses where visible.
+
+* Device manufacturers where identifiable.
+
+* Host availability.
+
+### B. Identify open TCP ports
+
+```bash
+sudo nmap -sS "$TARGET"
+```
+
+Alternative without raw-packet privileges:
+
+```bash
+nmap -sT "$TARGET"
+```
+
+### C. Scan all TCP ports on the target
+
+```bash
+sudo nmap -p- "$TARGET"
+```
+
+This checks TCP ports 1–65535.
+
+### D. Identify UDP services
+
+```bash
+sudo nmap -sU --top-ports 100 "$TARGET"
+```
+
+UDP scanning can take longer, and open versus open|filtered results need careful interpretation.
+
+### E. Identify service names and versions
+
+```bash
+sudo nmap -sV "$TARGET"
+```
+
+Example output:
+
+```text
+PORT     STATE SERVICE VERSION
+21/tcp   open  ftp     vsftpd
+22/tcp   open  ssh     OpenSSH
+23/tcp   open  telnet  Linux telnetd
+80/tcp   open  http    Apache
+443/tcp  open  ssl     Apache
+3306/tcp open  mysql   MySQL
+```
+
+Investigate:
+
+* Is FTP necessary?
+
+* Is Telnet enabled?
+
+* Is SSH exposed to the wrong network?
+
+* Is the database accessible from unauthorized devices?
+
+* Is the web server outdated?
+
+Nmap's version detection and NSE capabilities are documented in its official reference guide. nmap.org +2
+
+### 4\. Phase two: Service-specific security checks
+
+This is where you start investigating specific weaknesses.
+
+Only run these checks against services in your authorized laboratory.
+
+### A. FTP security
+
+Potential weaknesses:
+
+* Anonymous FTP access.
+
+* Unencrypted FTP authentication.
+
+* Unnecessary FTP exposure.
+
+* Insecure file permissions (requires further verification).
+
+Check anonymous FTP:
+
+```bash
+nmap -p21 --script ftp-anon "$TARGET"
+```
+
+Check the traffic with Wireshark:
+
+```wireshark
+ftp || ftp-data
+```
+
+Look for:
+
+* FTP `USER` commands.
+
+* FTP `PASS` commands.
+
+* File transfers.
+
+* Sensitive information transmitted without encryption.
+
+If actual credentials are transmitted in plaintext, you have evidence of an information-exposure vulnerability.
+
+### B. SSH security
+
+Potential weaknesses:
+
+* Weak cryptographic algorithms.
+
+* Outdated SSH implementations.
+
+* Unexpected SSH exposure.
+
+* Weak server configuration.
+
+Check supported SSH algorithms:
+
+```bash
+nmap -p22 --script ssh2-enum-algos "$TARGET"
+```
+
+Check SSH host keys:
+
+```bash
+nmap -p22 --script ssh-hostkey "$TARGET"
+```
+
+Investigate whether weak or deprecated algorithms are enabled and whether they violate your security policy.
+
+### C. Telnet security
+
+Check:
+
+```bash
+nmap -p23 -sV "$TARGET"
+```
+
+Wireshark filter:
+
+```wireshark
+telnet
+```
+
+Investigate:
+
+* Plaintext usernames.
+
+* Plaintext passwords.
+
+* Unencrypted commands.
+
+* Whether Telnet is unnecessarily enabled.
+
+Telnet exposing credentials in plaintext is a significant security concern.
+
+### D. SMB security
+
+Potential weaknesses:
+
+* SMBv1 enabled.
+
+* Insecure SMB configurations.
+
+* Unexpected file-sharing exposure.
+
+* Unnecessary SMB access.
+
+Check:
+
+```bash
+nmap -p445 --script smb-protocols "$TARGET"
+```
+
+Check SMB security modes:
+
+```bash
+nmap -p445 --script smb-security-mode "$TARGET"
+```
+
+Wireshark filters:
+
+```wireshark
+smb || smb2
+```
+
+Look for legacy protocol negotiation and insecure security settings.
+
+### E. DNS security
+
+Potential weaknesses:
+
+* Unrestricted DNS recursion.
+
+* Unrestricted zone transfers.
+
+* DNS information disclosure.
+
+* Unexpected DNS server exposure.
+
+Check DNS recursion:
+
+```bash
+nmap -sU -p53 --script dns-recursion "$TARGET"
+```
+
+For an authorized DNS zone that you administer, test zone transfer:
+
+```bash
+nmap -p53 --script dns-zone-transfer \
+--script-args dns-zone-transfer.domain=lab.example \
+"$TARGET"
+```
+
+A successful unauthorized zone transfer may expose internal DNS records.
+
+### F. TLS/SSL security
+
+Important security assessment
+
+Potential weaknesses:
+
+* Deprecated TLS versions.
+
+* Weak cipher suites.
+
+* Expired certificates.
+
+* Untrusted certificates.
+
+* Incorrect certificate hostnames.
+
+* Insecure cryptographic configuration.
+
+Run:
+
+```bash
+nmap -p443 --script ssl-enum-ciphers "$TARGET"
+```
+
+Check certificate details:
+
+```bash
+nmap -p443 --script ssl-cert "$TARGET"
+```
+
+In Wireshark:
+
+```wireshark
+tls.handshake
+```
+
+```wireshark
+tls.handshake.type == 1
+```
+
+Inspect the ClientHello and ServerHello messages, negotiated protocol versions, cipher suites and certificate information.
+
+Remember: a self-signed certificate is not automatically a vulnerability. Its security depends on the intended trust model.
+
+### G. HTTP security
+
+Potential weaknesses:
+
+* Unnecessary HTTP methods.
+
+* Information disclosure in response headers.
+
+* Insecure HTTP instead of HTTPS.
+
+* Server software version disclosure.
+
+* Unexpected directory listings (requires application-level confirmation).
+
+Check supported HTTP methods:
+
+```bash
+nmap -p80 --script http-methods "$TARGET"
+```
+
+Check HTTP headers:
+
+```bash
+nmap -p80 --script http-headers "$TARGET"
+```
+
+Check HTTP title:
+
+```bash
+nmap -p80 --script http-title "$TARGET"
+```
+
+Wireshark:
+
+```wireshark
+http
+```
+
+Investigate whether sensitive information is being transmitted without encryption.
+
+### H. Database exposure
+
+Check common database ports:
+
+```bash
+nmap -p1433,1521,3306,5432,6379 "$TARGET"
+```
+
+These correspond to common Microsoft SQL Server, Oracle, MySQL, PostgreSQL and Redis ports.
+
+Investigate:
+
+* Why is the database accessible?
+
+* Should it be reachable from this network?
+
+* Is access restricted to trusted application servers?
+
+* Is an administrative service exposed unnecessarily?
+
+An open database port does not establish that authentication is weak or that data can be accessed.
+
+### 5\. Phase three: Capture the actual network traffic
+
+Tool: tcpdump
+
+Now you will capture the traffic generated during your Nmap assessment.
+
+Open a second Ubuntu terminal.
+
+### A. Capture all traffic to and from your target
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn -s0 \
+host "$TARGET" \
+-w network-assessment.pcap
+```
+
+Leave it running.
+
+In your first terminal, perform your authorized Nmap scans.
+
+Stop tcpdump using:
+
+```text
+CTRL + C
+```
+
+You now have a PCAP file containing the captured packets.
+
+### B. Capture only TCP traffic
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn 'host 192.168.1.50 and tcp'
+```
+
+### C. Capture DNS traffic
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn 'port 53'
+```
+
+### D. Capture ICMP
+
+```bash
+sudo tcpdump -i "$INTERFACE" icmp
+```
+
+### E. Capture TCP SYN packets
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+'nn' 'tcp[tcpflags] & tcp-syn != 0'
+```
+
+For this last command, use the correct syntax:
+
+```bash
+sudo tcpdump -i "$INTERFACE" -nn \
+'tcp[tcpflags] & tcp-syn != 0'
+```
+
+### What should you investigate?
+
+* Unexpected connections.
+
+* Unexpected destination IP addresses.
+
+* Repeated connection attempts.
+
+* Unusual TCP resets.
+
+* Unexpected DNS queries.
+
+* Cleartext application traffic.
+
+* Unexpected network services.
+
+Remember that a PCAP shows the packets visible at the capture point. Switches, virtual networks, VPNs and proxying can affect what you see.
+
+### 6\. Phase four: Deep packet inspection
+
+Tool: Wireshark
+
+Open your captured file:
+
+```bash
+wireshark network-assessment.pcap
+```
+
+Now investigate the following.
+
+### A. IP-header analysis
+
+Display filter:
+
+```wireshark
+ip
+```
+
+Expand:
+
+`Internet Protocol Version 4`
+
+Inspect:
+
+| Field           | Security relevance                   |
+| --------------- | ------------------------------------ |
+| Source IP       | Identify communicating host          |
+| Destination IP  | Identify destination                 |
+| TTL             | Investigate packet routing behaviour |
+| Protocol        | Identify TCP, UDP or ICMP            |
+| Fragment offset | Examine fragmentation                |
+| Flags           | Examine fragmentation flags          |
+| Total length    | Inspect packet size                  |
+| Header checksum | Examine header integrity             |
+
+### B. TCP analysis
+
+Filter:
+
+```wireshark
+tcp
+```
+
+Inspect:
+
+* Source and destination ports.
+
+* SYN and ACK flags.
+
+* RST flags.
+
+* Retransmissions.
+
+* Duplicate ACKs.
+
+* Connection establishment.
+
+* Connection termination.
+
+Useful filters:
+
+```wireshark
+tcp.flags.syn == 1
+```
+
+```wireshark
+tcp.flags.reset == 1
+```
+
+```wireshark
+tcp.analysis.retransmission
+```
+
+```wireshark
+tcp.analysis.duplicate_ack
+```
+
+These help identify unusual connection behaviour, but network problems should not be misreported as security vulnerabilities.
+
+### C. DNS analysis
+
+Filter:
+
+```wireshark
+dns
+```
+
+Investigate:
+
+* Queries for unexpected domains.
+
+* Internal hostnames exposed externally.
+
+* Unusual DNS response patterns.
+
+* Unexpected DNS servers.
+
+* Repeated queries.
+
+* DNS tunnelling indicators.
+
+A suspicious-looking DNS query is an investigation lead, not proof of DNS tunnelling.
+
+### D. TLS analysis
+
+Filter:
+
+```wireshark
+tls
+```
+
+Investigate:
+
+* Negotiated TLS versions.
+
+* Cipher suites.
+
+* Certificates.
+
+* Handshake failures.
+
+* Unexpected plaintext communication.
+
+Do not assume encrypted application data can be inspected merely because you have captured it.
+
+### E. ARP analysis
+
+Filter:
+
+```wireshark
+arp
+```
+
+Investigate:
+
+* Duplicate IP address announcements.
+
+* Unexpected MAC address changes.
+
+* Repeated ARP replies.
+
+* Conflicting IP-to-MAC mappings.
+
+Potential finding: ARP spoofing or a network misconfiguration.
+
+You need to compare the observed behaviour against the legitimate network topology before declaring an attack.
+
+### 7\. Phase five: Automated analysis using TShark
+
+TShark is particularly useful when you want to analyze hundreds or thousands of packets without manually opening every packet.
+
+### A. Extract all communicating IP addresses
+
+```bash
+tshark -r network-assessment.pcap \
+-q -z endpoints,ip
+```
+
+This helps identify communicating hosts.
+
+### B. Extract TCP conversations
+
+```bash
+tshark -r network-assessment.pcap \
+-q -z conv,tcp
+```
+
+Investigate unexpected connections, communication volume and frequently contacted services.
+
+### C. Extract IP-header information
+
+```bash
+tshark -r network-assessment.pcap \
+-Y ip \
+-T fields \
+-e ip.src \
+-e ip.dst \
+-e ip.ttl \
+-e ip.proto \
+-e ip.len \
+-e ip.id \
+-e ip.flags \
+-e ip.frag_offset
+```
+
+### D. Extract DNS queries
+
+```bash
+tshark -r network-assessment.pcap \
+-Y dns \
+-T fields \
+-e frame.time \
+-e ip.src \
+-e dns.qry.name
+```
+
+### E. Find TCP retransmissions
+
+```bash
+tshark -r network-assessment.pcap \
+-Y tcp.analysis.retransmission
+```
+
+### F. Find TCP resets
+
+```bash
+tshark -r network-assessment.pcap \
+-Y 'tcp.flags.reset == 1'
+```
+
+### G. Identify HTTP requests
+
+```bash
+tshark -r network-assessment.pcap \
+-Y http.request \
+-T fields \
+-e ip.src \
+-e ip.dst \
+-e http.request.method \
+-e http.host \
+-e http.request.uri
+```
+
+This can help identify HTTP endpoints and destinations, provided the HTTP traffic is visible.
+
+### H. Identify TLS versions and negotiated ciphers
+
+```bash
+tshark -r network-assessment.pcap \
+-Y tls.handshake.type==2 \
+-T fields \
+-e ip.src \
+-e ip.dst \
+-e tls.handshake.version \
+-e tls.handshake.ciphersuite
+```
+
+### I. Generate protocol statistics
+
+```bash
+tshark -r network-assessment.pcap \
+-q -z io,phs
+```
+
+This shows the protocol hierarchy and helps identify unexpected protocols.
+
+### 8\. Phase six: Use Nmap's vulnerability detection scripts
+
+Nmap has an additional feature called the Nmap Scripting Engine (NSE).
+
+It contains scripts for discovering particular known vulnerabilities and insecure configurations. Nmap Network Scanning +2
+
+First, inspect available vulnerability scripts:
+
+```bash
+ls /usr/share/nmap/scripts/*vuln*.nse
+```
+
+Check the help for an individual script:
+
+```bash
+nmap --script-help ssl-enum-ciphers
+```
+
+For an authorized lab, you can run selected checks against the relevant services.
+
+Examples:
+
+| Check                | Script            |
+| -------------------- | ----------------- |
+| FTP anonymous access | ftp-anon          |
+| SMB protocol support | smb-protocols     |
+| SMB security mode    | smb-security-mode |
+| SSH algorithms       | ssh2-enum-algos   |
+| SSL/TLS ciphers      | ssl-enum-ciphers  |
+| SSL certificate      | ssl-cert          |
+| DNS recursion        | dns-recursion     |
+| HTTP methods         | http-methods      |
+
+For example:
+
+```bash
+sudo nmap -p21,22,23,80,443,445 \
+-sV \
+--script ftp-anon,ssh2-enum-algos,ssl-cert,ssl-enum-ciphers,smb-protocols \
+"$TARGET"
+```
+
+This is a targeted service-configuration assessment, not a guarantee that every vulnerability has been discovered.
+
+Be careful with NSE scripts: some categories, especially `intrusive`, `dos`, `exploit` and `brute`, can have disruptive effects. Do not indiscriminately execute every script in those categories. Nmap Network Scanning +1
+
+### 9\. Phase seven: What you cannot reliably discover with these four tools
+
+This is an important distinction for your offensive security training.
+
+| Vulnerability               | Why these four tools are insufficient                   |
+| --------------------------- | ------------------------------------------------------- |
+| IDOR / BOLA                 | Requires application authorization testing              |
+| SQL injection               | Requires application input testing                      |
+| Stored XSS                  | Requires application-layer testing                      |
+| Reflected XSS               | Requires application-layer testing                      |
+| CSRF                        | Requires request and application-context testing        |
+| Business logic flaws        | Requires understanding application workflows            |
+| Password reset flaws        | Requires application workflow testing                   |
+| Race conditions             | Requires controlled application-level concurrency tests |
+| JWT authorization flaws     | Requires token and application validation testing       |
+| Mobile insecure storage     | Requires inspecting the device and application storage  |
+| Android exported components | Requires APK and Android component analysis             |
+| API parameter tampering     | Requires modifying application requests                 |
+| SSRF                        | Requires confirming server-side request behaviour       |
+| RCE                         | Requires application or service-specific validation     |
+
+For these, you would eventually add tools such as Burp Suite, JADX, Frida and MobSF.
+
+Do not confuse network exposure with application security. These four tools provide strong network-level visibility, but they cannot establish the security of every application feature.
+
+### 10\. Phase eight: Produce a vulnerability assessment report
+
+Do not stop after discovering open ports. Convert your findings into documented security issues.
+
+For each potential vulnerability, record:
+
+| Field          | What to record                        |
+| -------------- | ------------------------------------- |
+| Finding ID     | VULN-001                              |
+| Vulnerability  | Example: FTP plaintext authentication |
+| Affected host  | 192.168.1.50                          |
+| Port           | 21                                    |
+| Evidence       | Nmap output and PCAP                  |
+| Severity       | Critical / High / Medium / Low        |
+| Impact         | What an attacker could achieve        |
+| Reproduction   | Exact commands and steps              |
+| Recommendation | How to fix it                         |
+| Verification   | Whether the issue was resolved        |
+
+### Save your Nmap results
+
+```bash
+sudo nmap -sV -oA assessment "$TARGET"
+```
+
+This creates:
+
+* `assessment.nmap`
+
+* `assessment.xml`
+
+* `assessment.gnmap`
+
+### Preserve packet evidence
+
+```bash
+sudo tcpdump -i "$INTERFACE" \
+-nn -s0 -w evidence.pcap
+```
+
+Use a separate terminal to conduct your authorized tests, then stop the capture.
+
+### Compare results after remediation
+
+Run the same assessment again:
+
+```bash
+sudo nmap -sV -oA reassessment "$TARGET"
+```
+
+Compare the results to determine whether exposed services or insecure configurations have been corrected.
+
+### 11\. Your complete practical assessment checklist
+
+Assessment progress
+
+### 0/38
+
+1. Preparation
+
+Install Nmap, tcpdump, TShark and Wireshark
+
+Identify Ubuntu network interface
+
+Determine the authorized subnet
+
+Identify the authorized target
+
+Create an evidence directory
+
+2. Network discovery
+
+Discover active hosts
+
+Identify open TCP ports
+
+Check selected UDP ports
+
+Identify service versions
+
+Identify operating system where possible
+
+3. Service assessment
+
+Check FTP anonymous access
+
+Inspect SSH algorithms
+
+Check Telnet exposure
+
+Inspect SMB protocols and security
+
+Check DNS recursion and zone transfers
+
+Inspect TLS versions and certificates
+
+Check HTTP methods and headers
+
+Identify exposed database services
+
+4. Packet investigation
+
+Capture target traffic using tcpdump
+
+Inspect IP headers
+
+Inspect TCP flags and connections
+
+Investigate DNS traffic
+
+Investigate TLS handshakes
+
+Inspect ARP traffic
+
+Investigate plaintext protocols
+
+Examine unusual network destinations
+
+5. Automated analysis
+
+Extract IP endpoints using TShark
+
+Analyze TCP conversations
+
+Extract DNS queries
+
+Identify HTTP requests
+
+Inspect TLS handshake details
+
+Generate protocol hierarchy statistics
+
+6. Reporting
+
+Verify each finding
+
+Collect packet and scan evidence
+
+Determine security impact
+
+Assign severity
+
+Recommend remediation
+
+Repeat tests after remediation
+
+0% completed
+
+Reset checklist
+
+### 12\. Official documentation
+
+These are useful references for mastering the four tools:
+
+* [Nmap official documentation](https://nmap.org/docs.html?utm_source=chatgpt.com).
+
+* [Nmap Scripting Engine guide](https://nmap.org/book/nse.html?utm_source=chatgpt.com).
+
+* [Wireshark documentation](https://www.wireshark.org/docs/?utm_source=chatgpt.com).
+
+* [TShark manual](https://www.wireshark.org/docs/man-pages/tshark.html?utm_source=chatgpt.com).
+
+* [tcpdump manual](https://www.tcpdump.org/manpages/tcpdump.1.html?utm_source=chatgpt.com).
+
+### My final recommendation
+
+Master the tools in this order:
+
+* Nmap: Learn to discover hosts, ports, services and exposed configurations.
+
+* tcpdump: Learn to capture exactly the traffic generated by your tests.
+
+* Wireshark: Learn to interpret the packets and understand network behaviour.
+
+* TShark: Learn to automate investigations and extract evidence at scale.
+
+The most important skill is learning to connect the results: an Nmap finding tells you what is exposed, tcpdump records the communication, Wireshark explains the packet behaviour, and TShark helps automate the analysis.
+
+That is a solid foundation for network penetration testing and vulnerability assessment.
