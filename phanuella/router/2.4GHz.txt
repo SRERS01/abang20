@@ -1,0 +1,74 @@
+### Notes on 2.4 GHz Wi-Fi: Enabled vs Disabled
+
+2.4 GHz is a Wi-Fi frequency band that routers use to transmit wireless signals between the router and connected devices.
+
+### 1\. 2.4 GHz ENABLED
+
+Enabled = ON
+
+This means your router broadcasts a Wi-Fi signal on the 2.4 GHz frequency.
+
+Characteristics:
+
+* Covers a relatively longer distance.
+
+* Passes through walls and obstacles better than 5 GHz.
+
+* Supports many older phones, laptops and smart devices.
+
+* Usually offers lower speeds than 5 GHz.
+
+* Can experience interference from Bluetooth devices and other electronics.
+
+### 2\. 2.4 GHz DISABLED
+
+Disabled = OFF
+
+This means your router stops broadcasting Wi-Fi on the 2.4 GHz frequency.
+
+Consequences:
+
+* Devices that support only 2.4 GHz cannot connect through Wi-Fi.
+
+* Devices that support 5 GHz can still connect if that band is enabled.
+
+* Your Wi-Fi coverage may become shorter.
+
+* You may experience less interference from some neighbouring networks.
+
+* It does not switch off your entire Wi-Fi network.
+
+### 3\. Practical comparison
+
+| Feature          | 2.4 GHz ON             | 2.4 GHz OFF             |
+| ---------------- | ---------------------- | ----------------------- |
+| Wi-Fi coverage   | Longer                 | Usually shorter overall |
+| Wall penetration | Better                 | 5 GHz is weaker         |
+| Speed            | Generally lower        | Generally higher        |
+| Older devices    | Supported              | May not connect         |
+| 5 GHz devices    | Supported if available | Still supported         |
+| Interference     | Often more             | Often less              |
+
+### 4\. Which should you choose?
+
+For your objective of limiting Wi-Fi access to your room, you can try:
+
+2.4 GHz
+
+OFF
+
+5 GHz
+
+ON
+
+WPS
+
+OFF
+
+WPA2-AES / WPA3
+
+ON
+
+Important: Disabling 2.4 GHz does not guarantee that people outside your room cannot connect. Use a device whitelist and reduce transmission power if supported.
+
+Also, check that your phone supports 5 GHz before disabling 2.4 GHz.
