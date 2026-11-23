@@ -1,0 +1,178 @@
+mitmproxy is a command-line and interactive terminal-based HTTPS/HTTP interception proxy. It is an excellent addition to your Ubuntu mobile application security lab.
+
+It has three main interfaces:
+
+![Mitmproxy 3](https://images.openai.com/static-rsc-4/ujYefi8P0BANWpsHG_8wU3KRPCcjxobbJHeXe9qDlSOzxBgzHiN7r7TuYI98orUJsYC9x1eCBzS5yMVzm2nPFy-Ytci7SDesmLAYiuHTEbp0w06PFto39a06jnrWTkapZJUv5I0QkfXLTSaKTZ5NOnxCE0hrSlQOiWFBUVALqY29Zrf8pi-_mCbtGPbf5-H-?purpose=fullsize)
+
+1\. mitmproxy
+
+Interactive terminal interface. Inspect, intercept, modify and replay HTTP requests and responses.
+
+![Pliny the Liberator 🐉󠅫󠄼󠄿󠅆󠄵󠄐󠅀󠄼󠄹󠄾󠅉󠅭 (@elder_plinius) on X](https://images.openai.com/static-rsc-4/sAbzPyPvY7_GNRENn6bZL1wkQWxFpyi7-nZPNm-SSpDmEVss2l3grBFT4oRqnuXTI1diE_STGkPVgH-jqPAB2FB3oowgd1NYTbaVp4Inc_2LX5Wht4aYTRy3xfBU2epimGCk9uXAOjAFsKmyenHaIQPNHEKhUQwr8_-6v_Vuk_nJJZhJOIV2rxOldrK2xP1M?purpose=fullsize)
+
+2\. mitmdump
+
+Command-line interface for capturing, filtering, scripting and automating traffic.
+
+![fiddleitm: Open-source mitmproxy add-on identifies malicious web traffic - Help Net Security](https://images.openai.com/static-rsc-4/kQrmGlEzjbH3y2uoqMuoxDJYrN9VoFrk7iwgMq49v0zL8OUmh-FkNx8CjBFrBwVD1Bk6ZRlDXNa4G_pALHQdZvxupF2LrIfC99ty8cyjScxf6D-GSSEbk6pgrM2Sr7YIZAIaN8ikXCTs73gohwdTZe03ZqF8bR4SdWqdlGFqgN8xLIki7p0szuoN0Zr9s4c2?purpose=fullsize)
+
+3\. mitmweb
+
+Browser-based graphical interface for inspecting intercepted traffic.
+
+### 1\. Install on Ubuntu
+
+```bash
+sudo apt update
+sudo apt install mitmproxy -y
+```
+
+Check installation:
+
+```bash
+mitmproxy --version
+```
+
+### 2\. Start the terminal interface
+
+```bash
+mitmproxy --listen-host 0.0.0.0 --listen-port 8080
+```
+
+Your proxy listens on port `8080`.
+
+### 3\. Start mitmdump
+
+```bash
+mitmdump --listen-host 0.0.0.0 --listen-port 8080
+```
+
+Save captured traffic:
+
+```bash
+mitmdump -w mobile-lab.flows
+```
+
+Read saved traffic:
+
+```bash
+mitmdump -r mobile-lab.flows
+```
+
+### 4\. Install its CA certificate
+
+On your Android virtual device, configure its Wi-Fi proxy to use your Ubuntu IP address and port `8080`.
+
+Open:
+
+```text
+http://mitm.it
+```
+
+Follow the Android certificate installation instructions.
+
+Only use this on your own test device and applications that permit your testing. Android apps using certificate pinning may still reject interception.
+
+### 5\. Add it to your security toolkit
+
+| Tool       | Main responsibility              |
+| ---------- | -------------------------------- |
+| tcpdump    | Packet capture                   |
+| Wireshark  | Visual packet analysis           |
+| TShark     | Automated packet analysis        |
+| Snort      | Network intrusion detection      |
+| mitmproxy  | Terminal HTTP/HTTPS interception |
+| Burp Suite | Web and API security testing     |
+
+My recommendation: Learn `mitmproxy` and `mitmdump` together. The first is excellent for interactive testing; the second is excellent for Python automation.
+
+Official documentation: [mitmproxy documentation](https://docs.mitmproxy.org/?utm_source=chatgpt.com).
+mitmproxy is a command-line and interactive terminal-based HTTPS/HTTP interception proxy. It is an excellent addition to your Ubuntu mobile application security lab.
+
+It has three main interfaces:
+
+![Mitmproxy 3](https://images.openai.com/static-rsc-4/ujYefi8P0BANWpsHG_8wU3KRPCcjxobbJHeXe9qDlSOzxBgzHiN7r7TuYI98orUJsYC9x1eCBzS5yMVzm2nPFy-Ytci7SDesmLAYiuHTEbp0w06PFto39a06jnrWTkapZJUv5I0QkfXLTSaKTZ5NOnxCE0hrSlQOiWFBUVALqY29Zrf8pi-_mCbtGPbf5-H-?purpose=fullsize)
+
+1\. mitmproxy
+
+Interactive terminal interface. Inspect, intercept, modify and replay HTTP requests and responses.
+
+![Pliny the Liberator 🐉󠅫󠄼󠄿󠅆󠄵󠄐󠅀󠄼󠄹󠄾󠅉󠅭 (@elder_plinius) on X](https://images.openai.com/static-rsc-4/sAbzPyPvY7_GNRENn6bZL1wkQWxFpyi7-nZPNm-SSpDmEVss2l3grBFT4oRqnuXTI1diE_STGkPVgH-jqPAB2FB3oowgd1NYTbaVp4Inc_2LX5Wht4aYTRy3xfBU2epimGCk9uXAOjAFsKmyenHaIQPNHEKhUQwr8_-6v_Vuk_nJJZhJOIV2rxOldrK2xP1M?purpose=fullsize)
+
+2\. mitmdump
+
+Command-line interface for capturing, filtering, scripting and automating traffic.
+
+![fiddleitm: Open-source mitmproxy add-on identifies malicious web traffic - Help Net Security](https://images.openai.com/static-rsc-4/kQrmGlEzjbH3y2uoqMuoxDJYrN9VoFrk7iwgMq49v0zL8OUmh-FkNx8CjBFrBwVD1Bk6ZRlDXNa4G_pALHQdZvxupF2LrIfC99ty8cyjScxf6D-GSSEbk6pgrM2Sr7YIZAIaN8ikXCTs73gohwdTZe03ZqF8bR4SdWqdlGFqgN8xLIki7p0szuoN0Zr9s4c2?purpose=fullsize)
+
+3\. mitmweb
+
+Browser-based graphical interface for inspecting intercepted traffic.
+
+### 1\. Install on Ubuntu
+
+```bash
+sudo apt update
+sudo apt install mitmproxy -y
+```
+
+Check installation:
+
+```bash
+mitmproxy --version
+```
+
+### 2\. Start the terminal interface
+
+```bash
+mitmproxy --listen-host 0.0.0.0 --listen-port 8080
+```
+
+Your proxy listens on port `8080`.
+
+### 3\. Start mitmdump
+
+```bash
+mitmdump --listen-host 0.0.0.0 --listen-port 8080
+```
+
+Save captured traffic:
+
+```bash
+mitmdump -w mobile-lab.flows
+```
+
+Read saved traffic:
+
+```bash
+mitmdump -r mobile-lab.flows
+```
+
+### 4\. Install its CA certificate
+
+On your Android virtual device, configure its Wi-Fi proxy to use your Ubuntu IP address and port `8080`.
+
+Open:
+
+```text
+http://mitm.it
+```
+
+Follow the Android certificate installation instructions.
+
+Only use this on your own test device and applications that permit your testing. Android apps using certificate pinning may still reject interception.
+
+### 5\. Add it to your security toolkit
+
+| Tool       | Main responsibility              |
+| ---------- | -------------------------------- |
+| tcpdump    | Packet capture                   |
+| Wireshark  | Visual packet analysis           |
+| TShark     | Automated packet analysis        |
+| Snort      | Network intrusion detection      |
+| mitmproxy  | Terminal HTTP/HTTPS interception |
+| Burp Suite | Web and API security testing     |
+
+My recommendation: Learn `mitmproxy` and `mitmdump` together. The first is excellent for interactive testing; the second is excellent for Python automation.
+
+Official documentation: [mitmproxy documentation](https://docs.mitmproxy.org/?utm_source=chatgpt.com).

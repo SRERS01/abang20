@@ -1,0 +1,336 @@
+As an offensive security researcher, you should understand that tcpdump, Wireshark and TShark are three different interfaces to network packet analysis, but they have different strengths.
+
+They overlap significantly. None of the three has a completely exclusive packet-analysis capability that the others cannot reproduce in some form. However, each has tasks for which it is particularly useful.
+
+### 1\. tcpdump — Live packet capture
+
+![tcpdump command | Linux#](https://images.openai.com/static-rsc-4/SL1zqr7jxRNrgbq7GEwcdqIEFNft05TSZziUBUwZdYr06CxGnwSQIBmOegHbY6B1lX6h4HuABIAdmFP7QQnjCquGYCFP7MWCvRlRyjyA6ziLU673DJocHxnnIOuqXPdDXZpwf8DSDLTbvx5pv0a-SlEP10na02h_h7vJmyH5JWFH1T_SjREa35O7CZYpuniL?purpose=fullsize)
+
+Primary function: Capture network packets directly from network interfaces.
+
+Best for lightweight live capture
+
+### What tcpdump gives you
+
+* Live network packet capture.
+
+* Capture traffic from a specific network interface.
+
+* Capture traffic from all available interfaces (where supported).
+
+* Filter traffic by source IP.
+
+* Filter traffic by destination IP.
+
+* Filter TCP and UDP traffic.
+
+* Filter traffic by port.
+
+* Filter ICMP traffic.
+
+* Filter DNS traffic.
+
+* Capture ARP packets.
+
+* Capture DHCP traffic.
+
+* Capture IPv6 traffic.
+
+* Capture VLAN-tagged traffic.
+
+* Capture broadcast and multicast traffic.
+
+* Capture traffic between two hosts.
+
+* Save packets into PCAP files.
+
+* Apply capture filters before packets are saved.
+
+* Capture packets remotely through supported capture mechanisms.
+
+* Limit packet capture size.
+
+* Capture traffic without opening a graphical interface.
+
+### Practical commands
+
+```bash
+# List interfaces
+ip -br addr
+
+# Capture all traffic
+sudo tcpdump -i any
+
+# Capture DNS
+sudo tcpdump -i any port 53
+
+# Capture ICMP
+sudo tcpdump -i any icmp
+
+# Capture traffic from an IP
+sudo tcpdump -i any host 192.168.1.10
+
+# Capture TCP SYN packets
+sudo tcpdump -i any 'tcp[tcpflags] & tcp-syn != 0'
+
+# Save capture
+sudo tcpdump -i any -w capture.pcap
+
+# Limit capture to 1000 packets
+sudo tcpdump -i any -c 1000
+```
+
+What makes tcpdump particularly useful: Capturing traffic directly on a Linux machine with minimal resource consumption, especially on servers and headless systems.
+
+### 2\. Wireshark — Deep packet analysis
+
+![Chapter 1. Introduction](https://images.openai.com/static-rsc-4/YdUyzxJgqLBPt3KdFvg70cLLL9QIILYeM4DUaAx1-9-rWNG0Sg2jE6X007el39nI368vdBegSXkTk8bZZhquxWi_OL03cx1dJixlJljz3ITGYcVVtYdBHul-mnF93WRV7g_R0BHtw_4Q3QWCusw9lloOtFDfFRwfJH-APFOJvRznjfUDrM_gkaujlWVxQlR7?purpose=fullsize)
+
+Primary function: Examine and understand captured network packets.
+
+Best for visual protocol analysis
+
+### What Wireshark gives you
+
+* Decode network protocols.
+
+* Inspect individual packets.
+
+* Examine Ethernet frames.
+
+* Inspect IP headers.
+
+* Inspect TCP headers.
+
+* Inspect UDP headers.
+
+* Analyze TCP three-way handshakes.
+
+* Analyze TCP retransmissions.
+
+* Identify TCP resets.
+
+* Examine DNS queries and responses.
+
+* Analyze DHCP exchanges.
+
+* Inspect ARP communication.
+
+* Examine TLS handshakes.
+
+* Analyze certificate information visible in TLS handshakes.
+
+* Follow TCP streams.
+
+* Follow UDP streams.
+
+* Reconstruct supported application-layer conversations.
+
+* Analyze HTTP requests and responses when unencrypted or decrypted.
+
+* Inspect WebSocket traffic when available.
+
+* Analyze packet timing.
+
+* Identify network latency.
+
+* Examine packet loss indicators.
+
+* Detect malformed packets.
+
+* Analyze network conversations.
+
+* Identify communicating hosts.
+
+* Generate protocol hierarchy statistics.
+
+* Generate endpoint statistics.
+
+* Generate I/O graphs.
+
+* Compare packets visually.
+
+* Apply advanced display filters.
+
+### Practical filters
+
+```wireshark
+ip.addr == 192.168.1.10
+```
+
+```wireshark
+tcp.port == 443
+```
+
+```wireshark
+dns
+```
+
+```wireshark
+http
+```
+
+```wireshark
+tls.handshake
+```
+
+```wireshark
+tcp.analysis.retransmission
+```
+
+```wireshark
+tcp.flags.syn == 1
+```
+
+What makes Wireshark particularly useful: Its graphical packet dissection, stream following, protocol analysis and interactive visual investigation.
+
+### 3\. TShark — Command-line protocol analysis
+
+![TShark: The Basics|Tryhackme|Walkthrough](https://images.openai.com/static-rsc-4/qfz9RRGJFYY5uC9J9uCPjEugbBK5HJKMooAb6fOPen4Id00vJFqMI5QEdYxDYvoXZbpao3ZqxgCcHFRD_VWaIDJ7eowBNNZKttyUd9rOwhuaXqEU8IAnlHF05yRgnuAdQ88OvAgb5Z5EOFwGyimcQkJGvflVUBl3Y-59r-Tot5HecruTdEd_CeqM7MKkuwwW?purpose=fullsize)
+
+Primary function: Capture, dissect, filter and extract packet information from the command line.
+
+Best for automation and scripting
+
+### What TShark gives you
+
+* Live packet capture.
+
+* Read existing PCAP files.
+
+* Decode hundreds of network protocols supported by Wireshark.
+
+* Extract specific protocol fields.
+
+* Apply display filters.
+
+* Apply capture filters.
+
+* Export packet information to structured formats.
+
+* Generate protocol hierarchy statistics.
+
+* Generate endpoint statistics.
+
+* Generate conversation statistics.
+
+* Extract HTTP information when available.
+
+* Extract DNS information.
+
+* Extract TLS handshake information.
+
+* Extract TCP stream information.
+
+* Automate packet analysis using shell scripts.
+
+* Integrate packet analysis into Python workflows.
+
+* Perform scheduled network monitoring.
+
+* Analyze multiple capture files.
+
+* Produce machine-readable output.
+
+* Generate statistical reports.
+
+### Practical commands
+
+```bash
+# Read PCAP
+tshark -r capture.pcap
+```
+
+```bash
+# Capture live traffic
+sudo tshark -i any
+```
+
+```bash
+# Extract source and destination IP
+tshark -r capture.pcap \
+-T fields \
+-e ip.src \
+-e ip.dst
+```
+
+```bash
+# Extract DNS queries
+tshark -r capture.pcap \
+-Y dns \
+-T fields \
+-e dns.qry.name
+```
+
+```bash
+# Protocol hierarchy
+tshark -r capture.pcap -q -z io,phs
+```
+
+```bash
+# Conversation statistics
+tshark -r capture.pcap -q -z conv,tcp
+```
+
+What makes TShark particularly useful: Automating protocol dissection and extracting structured information without manually opening Wireshark.
+
+### 4\. The real differences
+
+| Task                     | tcpdump        | Wireshark     | TShark    |
+| ------------------------ | -------------- | ------------- | --------- |
+| Live capture             | Excellent      | Yes           | Yes       |
+| Low-resource capture     | Excellent      | Less suitable | Good      |
+| Graphical inspection     | No             | Yes           | No        |
+| Deep protocol dissection | Limited output | Excellent     | Excellent |
+| Advanced display filters | No             | Yes           | Yes       |
+| Capture filters          | Yes            | Yes           | Yes       |
+| Stream following         | Limited        | Yes           | Yes       |
+| Packet statistics        | Basic          | Excellent     | Excellent |
+| Automated extraction     | Shell tools    | Limited       | Excellent |
+| Python integration       | Possible       | Possible      | Excellent |
+| PCAP analysis            | Yes            | Yes           | Yes       |
+
+### 5\. Which one is indispensable for your mobile application security lab?
+
+![Analyzing network traffic with tcpdump - Linux and Google Cloud Platform GCP](https://images.openai.com/static-rsc-4/UbHKIWzhlF1A4rvUwwIjZTm5pBUvdbzo7pbkSdRZbZAN7hKqLX91QSoksUoeIcSI2mDxwHY4rS12shelgn-2NXnLFKKkB-a9qpLCzIWC0gogMMj7FSQzKZbBokDwFrdNUoOexAuJytxWZaq6yYKf-T6MmxlXNrjAjZ5vDZ4U0sT4w2nwQ3s-E1-r8zpqvue7?purpose=fullsize)
+
+tcpdump
+
+Capturing packets from your Ubuntu network interfaces.
+
+Keep
+
+![Wireshark Download Free - 4.6.3 | TechSpot](https://images.openai.com/static-rsc-4/vEmAXTcNBeLJdprz2FCv3BboQuiFtSezLpRi8BJ26aMmcTm6KUH3ndRT2KaovTfLwD7SKV56oLOCi1mtyzvxLUGjSUBGjXTD40gEC3qfyo9EkSd-s875OKa8qBH17EhM2Gbn7orlI19ynoqGPEyeC8lj2TSj6DvbKGRd3QHlvR8VzMVb1aF48RmkRdQZ6R2D?purpose=fullsize)
+
+Wireshark
+
+Investigating protocols, TLS, TCP behaviour and packet-level issues.
+
+Keep
+
+![Beginners Guide to TShark (Part 1)](https://images.openai.com/static-rsc-4/h_ovNfg6pF6-2PhMhL1BydqdUhcDZjp_-I7R7az9bErTxz1WDriwmn2s9FD2VeAS3ZelC2UcNyJEgzv5WStlbXwD01mb2apt3d57pyVM573X72GHPjCpv3PjLuc81RTaD0h4xemJxH4-0g1LXe7YGHBWcpal-174LtAbQGPod_Mb0ERSjqLFsq32uMske0ND?purpose=fullsize)
+
+TShark
+
+Automating packet analysis and extracting network intelligence.
+
+Keep
+
+### 6\. What these three cannot replace
+
+For your Android virtual-phone testing environment:
+
+| Security task                      | Additional tool        |
+| ---------------------------------- | ---------------------- |
+| Intercept and modify HTTP requests | Burp Suite / mitmproxy |
+| API fuzzing                        | ffuf / custom Python   |
+| API endpoint discovery             | APK analysis / MobSF   |
+| Static Android analysis            | JADX                   |
+| Dynamic Android analysis           | Frida                  |
+| Android debugging                  | ADB                    |
+| Network service discovery          | Nmap                   |
+| Vulnerability scanning             | Nuclei                 |
+
+My recommendation: Install all three. They complement each other, but you do not need three separate packet-capture tools running simultaneously.
+
+The next important skill is learning how to combine tcpdump + Wireshark + TShark to investigate an Android application's network traffic, including DNS, TCP, TLS, API communication and connection failures.

@@ -1,0 +1,153 @@
+Snort is an important addition, but it performs a different job from tcpdump, Wireshark and TShark.
+
+Snort is a Network Intrusion Detection and Prevention System (NIDS/NIPS). Its primary purpose is to monitor network traffic, inspect packets against security rules, and identify suspicious or malicious activity.
+
+Think of the four tools this way:
+
+* tcpdump: Collects network packets.
+
+* Wireshark: Helps you investigate packets visually.
+
+* TShark: Automates packet dissection and extraction.
+
+* Snort: Detects suspicious network activity using security rules.
+
+### 1\. What Snort adds to your toolkit
+
+![SNORT. INTRODUCTION | by SarahAgnave | Medium](https://images.openai.com/static-rsc-4/xKX2TILO1Zjks8tScB0eUO32FI_XN2pDRR7zvBHg2nphDQxnBLBw9P82_QN1e857-CvF8Lu5HHxv0C11aSnufCGVVlgvU2SGXR-xrwQo0e7rBmZAXDc6d0d_pAhqiO9wrahv-a-rl_r_WC-rV_iF4NRmYlkjJufTMI2Y2AlHvl8aEEDkJIDP_hOmSOLnzL-T?purpose=fullsize)
+
+Snort IDS/IPS
+
+Network threat detection
+
+Rule-based network security monitoring
+
+### What Snort can do
+
+* Detect suspicious network connections.
+
+* Detect port scanning activity.
+
+* Detect known attack patterns.
+
+* Detect suspicious payloads.
+
+* Detect policy violations.
+
+* Detect certain exploit attempts.
+
+* Detect suspicious DNS traffic.
+
+* Detect suspicious HTTP traffic.
+
+* Detect certain brute-force patterns.
+
+* Detect known malware communication patterns.
+
+* Generate security alerts.
+
+* Log suspicious packets.
+
+* Monitor network protocols.
+
+* Apply custom detection rules.
+
+* Integrate threat intelligence rulesets.
+
+* Operate in IDS mode.
+
+* Operate in inline IPS mode when properly configured.
+
+* Help investigate suspicious network activity.
+
+Note: Snort detects patterns covered by its rules. It cannot automatically identify every new vulnerability or attack.
+
+### 2\. Your updated network security toolkit
+
+Here is how I would organize all four tools in your offensive security research environment.
+
+| Tool      | Primary responsibility                | Category        |
+| --------- | ------------------------------------- | --------------- |
+| tcpdump   | Capture network packets               | Packet capture  |
+| Wireshark | Deep packet investigation             | Packet analysis |
+| TShark    | Automated packet analysis             | Packet analysis |
+| Snort     | Detect suspicious traffic and attacks | IDS/IPS         |
+
+### 3\. What makes Snort different?
+
+Imagine someone is attempting a port scan against your Ubuntu machine.
+
+Incoming network traffic
+
+Packets from your network
+
+Snort
+
+Inspects traffic against configured rules
+
+Alert
+
+Suspicious activity detected
+
+Log
+
+Record traffic for investigation
+
+In inline IPS mode, Snort can also block traffic when configured with appropriate rules and network integration.
+
+### 4\. Practical Snort commands on Ubuntu
+
+Install:
+
+```bash
+sudo apt update
+sudo apt install snort -y
+```
+
+Check version:
+
+```bash
+snort -V
+```
+
+List network interfaces:
+
+```bash
+ip -br addr
+```
+
+Run Snort against an interface (syntax depends on Snort version):
+
+```bash
+sudo snort -i eth0 -c /etc/snort/snort.lua
+```
+
+Test a PCAP file:
+
+```bash
+sudo snort -r capture.pcap -c /etc/snort/snort.lua
+```
+
+Check the installed configuration before running these commands; Snort 2 and Snort 3 have different configuration formats and options.
+
+### 5\. The complete list I recommend
+
+For your mobile application and network security laboratory:
+
+| Tool       | What you use it for                  |
+| ---------- | ------------------------------------ |
+| tcpdump    | Network packet collection            |
+| Wireshark  | Visual packet investigation          |
+| TShark     | Scripted packet extraction           |
+| Snort      | Network attack detection             |
+| Nmap       | Network and port discovery           |
+| Burp Suite | HTTP/API interception                |
+| mitmproxy  | Programmable proxy interception      |
+| Frida      | Dynamic application instrumentation  |
+| JADX       | Android APK reverse engineering      |
+| MobSF      | Mobile application security analysis |
+| ADB        | Android device control and debugging |
+
+One important distinction: Snort is primarily a defensive detection tool. It helps you understand what suspicious activity looks like from the network defender's perspective, which is valuable when performing authorized penetration tests.
+
+You now have four complementary network-monitoring tools, rather than four competing packet analyzers.
