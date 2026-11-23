@@ -1,0 +1,61 @@
+To capture protocols across different layers of the OSI model, you pair tcpdump flags (to display lower-layer headers or full payloads) with Berkeley Packet Filter (BPF) expressions (to target specific protocols or ports).
+Because tcpdump operates on a live network interface, it naturally receives frames starting at Layer 2 and works its way up. Here is how to target and inspect each layer from bottom to top.
+
+Layer 1: Physical Layer
+
+• Reality check: tcpdump cannot capture Layer 1 (electrical signals, light pulses, or raw radio waves) because the Network Interface Card (NIC) strips away physical preambles and frame check sequences before passing data to the OS kernel.
+• Closest workaround: On Wi-Fi interfaces put into monitor mode (-I), you can capture Radiotap headers (tcpdump -i wlan0 -I), which show physical-layer metadata like signal strength (dBm), channel frequency, and data rate.
+
+Layer 2: Data Link Layer
+
+By default, tcpdump hides Layer 2 MAC addresses. Add the -e flag to print link-level headers.
+
+Protocol	Command	Notes
+ARP	tcpdump -ni eth0 -e arp	Captures IP-to-MAC resolution requests/replies.
+VLAN (802.1Q)	tcpdump -ni eth0 -e vlan	Shows VLAN ID tags on trunk ports.
+STP (Spanning Tree)	tcpdump -ni eth0 -e stp	Captures bridge protocol data units (BPDUs).
+LLDP	tcpdump -ni eth0 -e 'ether proto 0x88cc'	Uses EtherType hex to catch neighbor discovery.
+
+
+Layer 3: Network Layer
+
+Layer 3 protocols use built-in keywords or ip proto filters. Add -v (or -vv) to inspect IP headers like TTL, fragmentation, and IP options.
+
+Protocol	Command	Notes
+IPv4 / IPv6	tcpdump -ni eth0 -v ip or ip6	Filters exclusively by IP version.
+ICMP (Ping)	tcpdump -ni eth0 icmp	Captures Echo Requests/Replies and unreachable errors.
+OSPF	tcpdump -ni eth0 'ip proto ospf'	Captures dynamic routing advertisements (IP protocol 89).
+GRE Tunnel	tcpdump -ni eth0 'ip proto gre'	Captures encapsulated tunnel packets (IP protocol 47).
+
+
+Layer 4: Transport Layer
+
+Layer 4 protocols are filtered by their direct keywords. You can also filter by specific TCP flags (like SYN or RST) to troubleshoot connections.
+
+Protocol	Command	Notes
+TCP	tcpdump -ni eth0 tcp	Captures all TCP segments (shows [S], [.], [F], [R] flags).
+TCP SYN only	tcpdump -ni eth0 'tcp[tcpflags] & tcp-syn != 0'	Isolates new connection attempts.
+UDP	tcpdump -ni eth0 udp	Captures connectionless datagrams.
+SCTP	tcpdump -ni eth0 sctp	Captures Stream Control Transmission Protocol traffic.
+
+
+Layers 5, 6, & 7: Session, Presentation, & Application Layers
+
+tcpdump does not have direct protocol keywords for Layers 5–7. Instead, you filter by their Layer 4 port numbers and add -A (ASCII output) or -X (Hex + ASCII output) to read the payload.
+(Note: Ensure -s 0 is active—it is the default in modern versions—so payloads aren't truncated.)
+
+Layer & Protocol	Command	What You See
+L5: NetBIOS / SMB	tcpdump -ni eth0 -X 'port 139 or port 445'	Session establishment and Windows file-sharing headers.
+L6: TLS / SSL	tcpdump -ni eth0 -vv 'tcp port 443'	TLS ClientHello/ServerHello handshakes and cipher negotiation (encrypted payload cannot be read).
+L7: DNS	tcpdump -ni eth0 -vv 'udp port 53'	Domain queries (A, AAAA, MX) and resolved IP answers.
+L7: HTTP	tcpdump -ni eth0 -A 'tcp port 80'	Plaintext GET/POST headers and HTML body content.
+L7: DHCP	tcpdump -ni eth0 -vv 'port 67 or port 68'	IP lease discovery, offers, and requests.
+
+
+Summary Cheat Sheet of Layer-Revealing Flags
+
+• -e: Reveals Layer 2 (MAC addresses & EtherTypes).
+• -n: Disables DNS/port name resolution so you see raw Layer 3 IPs and Layer 4 port numbers.
+• -vv: Reveals detailed Layer 3 & 4 header fields (TTL, checksums, TCP window sizes) and decodes Layer 7 metadata (like DNS records).
+• -A / -X: Prints Layers 5–7 payload bytes in ASCII or Hex/ASCII.
+Would you like to practice filtering a specific OSI layer (such as isolating TCP handshake flags or decoding HTTP/DNS payloads), or do you have a specific network issue you are trying to troubleshoot?

@@ -1,0 +1,76 @@
+Yes! `inet` is very important in Linux networking and offensive security. It tells you the IPv4 address assigned to a network interface.
+
+Let's understand it practically.
+
+### 1\. What does `inet` mean?
+
+When you run:
+
+```bash
+ip -4 addr
+```
+
+You may see:
+
+```text
+inet 192.168.1.163/24
+```
+
+Here:
+
+| Component     | Meaning                    |
+| ------------- | -------------------------- |
+| inet          | IPv4 address information   |
+| 192.168.1.163 | Your device's IPv4 address |
+| /24           | Network prefix length      |
+
+### 2\. Other important terms you will encounter
+
+| Term         | Meaning                                |
+| ------------ | -------------------------------------- |
+| inet         | IPv4 address                           |
+| inet6        | IPv6 address                           |
+| lo           | Loopback interface                     |
+| wlp3s0       | Wi-Fi interface                        |
+| UP           | Interface is administratively enabled  |
+| DOWN         | Interface is administratively disabled |
+| BROADCAST    | Supports broadcast communication       |
+| MULTICAST    | Supports multicast communication       |
+| mtu          | Maximum Transmission Unit              |
+| qdisc        | Queueing discipline                    |
+| scope global | Address has global interface scope     |
+| scope host   | Address is limited to the local host   |
+
+### 3\. Why is `inet` important in offensive security?
+
+You need IPv4 information for:
+
+* Network reconnaissance.
+
+* Subnet identification.
+
+* Host discovery.
+
+* Network scanning.
+
+* Firewall configuration.
+
+* Routing analysis.
+
+* Network troubleshooting.
+
+* Understanding attack surfaces.
+
+For example, if your IP is `192.168.1.163/24`, you can identify the network as `192.168.1.0/24`.
+
+### 4\. Practise these commands
+
+```bash
+ip addr
+ip -4 addr
+ip -6 addr
+ip route
+ip link
+```
+
+My recommendation: Master `ip addr`, `ip route`, and `ip link` before moving into network reconnaissance. They are foundational Linux networking commands.

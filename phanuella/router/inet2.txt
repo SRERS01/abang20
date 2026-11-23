@@ -1,0 +1,203 @@
+In offensive security, `inet` helps you understand which IP address your machine uses, which network it belongs to, and which systems you can reach during an authorized security assessment.
+
+Let's use your actual Ubuntu network configuration as a practical example.
+
+Your screenshot shows:
+
+```bash
+inet 192.168.1.163/24
+```
+
+This tells us:
+
+* Your Ubuntu laptop's IPv4 address is `192.168.1.163`.
+
+* Your network prefix is `/24`.
+
+* Your subnet is `192.168.1.0/24`.
+
+### 1\. Network reconnaissance
+
+Before testing a network, identify your interfaces and IP addresses.
+
+```bash
+ip addr
+```
+
+Identify your active routes:
+
+```bash
+ip route
+```
+
+Example:
+
+```text
+default via 192.168.1.1 dev wlp3s0
+192.168.1.0/24 dev wlp3s0
+```
+
+Interpretation:
+
+* `192.168.1.1` — likely your router's gateway.
+
+* `wlp3s0` — your Wi-Fi interface.
+
+* `192.168.1.0/24` — your local network.
+
+### 2\. Host discovery
+
+In an authorized lab, you can discover which devices respond on your subnet.
+
+Install Nmap:
+
+```bash
+sudo apt update
+sudo apt install nmap
+```
+
+Run:
+
+```bash
+nmap -sn 192.168.1.0/24
+```
+
+This performs host discovery without conducting a full port scan.
+
+It can help identify:
+
+* Active devices.
+
+* IP addresses.
+
+* MAC addresses where available.
+
+* Device manufacturers where identifiable.
+
+### 3\. Port scanning
+
+Once you have identified an authorized lab device, you can check which TCP ports are open.
+
+For example, if your lab device has IP `192.168.1.100`:
+
+```bash
+nmap -sV 192.168.1.100
+```
+
+This helps identify:
+
+* Open ports.
+
+* Services listening on those ports.
+
+* Possible service versions.
+
+### 4\. Identify your source IP
+
+When testing a target, your `inet` address helps you understand which source IP your machine uses.
+
+Run:
+
+```bash
+ip route get 192.168.1.100
+```
+
+Example output:
+
+```text
+192.168.1.100 dev wlp3s0 src 192.168.1.163
+```
+
+Here:
+
+* `dev` identifies the outgoing interface.
+
+* `src` identifies your source IP.
+
+* The destination is `192.168.1.100`.
+
+### 5\. Monitor network traffic
+
+You can observe traffic on your Wi-Fi interface.
+
+Install Wireshark's command-line capture utility:
+
+```bash
+sudo apt install tcpdump
+```
+
+Capture traffic involving your own lab machine:
+
+```bash
+sudo tcpdump -i wlp3s0
+```
+
+Filter traffic involving a particular lab IP:
+
+```bash
+sudo tcpdump -i wlp3s0 host 192.168.1.100
+```
+
+This helps you understand network communication and troubleshoot security tests.
+
+### 6\. Understand how everything connects
+
+### Offensive security network workflow
+
+1\. IP identification
+
+`ip addr`
+
+Identify your inet address
+
+2\. Network identification
+
+`ip route`
+
+Identify your subnet and gateway
+
+3\. Host discovery
+
+`nmap -sn`
+
+Identify responding devices
+
+4\. Service enumeration
+
+`nmap -sV`
+
+Identify exposed services
+
+5\. Security assessment
+
+Investigate and validate vulnerabilities within your authorized scope
+
+### 7\. Commands you should master
+
+| Command         | Security application               |
+| --------------- | ---------------------------------- |
+| ip addr         | IP identification                  |
+| ip route        | Routing analysis                   |
+| ip link         | Interface analysis                 |
+| ip neigh        | Neighbor discovery                 |
+| ip route get IP | Route and source IP identification |
+| ss -tulnp       | Local listening services           |
+| nmap -sn        | Host discovery                     |
+| nmap -sV        | Service enumeration                |
+| tcpdump         | Traffic analysis                   |
+
+Important: Only scan networks and devices you own or have explicit permission to assess.
+
+### Your practical assignment
+
+Run these three commands on your Ubuntu laptop:
+
+```bash
+ip addr
+ip route
+ip neigh
+```
+
+Send me their output.
+
+I'll use your actual network configuration to teach you how to perform your first structured network reconnaissance exercise in Ubuntu.
