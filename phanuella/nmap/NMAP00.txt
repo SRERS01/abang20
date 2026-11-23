@@ -1,0 +1,31 @@
+Great catch—cleaning that file paid off immediately! You just found a non-Cloudflare, Google Cloud-hosted subdomain: support.betpawa.cm (34.12.1.247).
+
+Summary of Your 5 Subdomains
+
+
+Subdomain	DNS Resolution	Hosting / Status	Action to Take
+support.betpawa.cm	34.12.1.247	Google Cloud (34.12.x.x) — NOT Cloudflare	Scan with Nmap (your primary Nmap target)
+www.betpawa.cm	172.64.153.207, 104.18.34.49	Cloudflare Proxy	Skip Nmap; test via browser / Burp Suite
+api.betpawa.cm	(No public A record)	Internal / Inactive DNS	Skip Nmap
+payment.betpawa.cm	(No public A record)	Internal / Inactive DNS	Skip Nmap
+test.betpawa.cm	(No public A record)	Internal / Inactive DNS	Skip Nmap
+
+
+Step 1: Scan support.betpawa.cm Safely with Nmap
+
+Because support.betpawa.cm sits directly on a Google Cloud IP (34.12.1.247) rather than Cloudflare, run a polite, targeted scan with safe read-only NSE scripts:
+bash
+nmap -Pn --top-ports 100 -sV -sC --open -T3 support.betpawa.cm -oA support_betpawa
+Use code with caution.
+• --top-ports 100 --open: Checks the 100 most common ports and displays only genuinely open ones.
+• -sV -sC: Identifies exact service versions and runs safe default scripts (page titles, HTTP headers, TLS certs).
+• -T3: Keeps scan timing polite so you stay compliant with bug bounty rate limits.
+• -oA support_betpawa: Saves .nmap, .xml, and .gnmap logs for your notes.
+
+Step 2: Check for Any Additional Subdomains via crt.sh
+
+subfinder without API keys only checks a handful of sources. Run a quick passive query against Certificate Transparency logs (crt.sh) to see if any other *.betpawa.cm hosts exist:
+bash
+curl -s "https://crt.sh" | grep -oE '"name_value":"[^"]+"' | cut -d'"' -f4 | tr '\n' '\n' | sed 's/\\n/\n/g' | sort -u
+Use code with caution.
+Run that Nmap scan on support.betpawa.cm and paste the output here so we can inspect what services and headers are exposed on 34.12.1.247!
