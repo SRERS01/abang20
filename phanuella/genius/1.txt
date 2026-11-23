@@ -1,0 +1,41 @@
+When the scope includes *.betpawa.cm (wildcard subdomains), Nmap becomes useful again—only after you discover subdomains and filter out the ones sitting behind Cloudflare.
+Follow this exact 4-step workflow to use Nmap safely and effectively on a wildcard scope:
+
+Step 1: Discover Subdomains Passively (No Direct Traffic Yet)
+
+Gather subdomains from public certificate logs and passive DNS without hammering the target:
+bash
+subfinder -d betpawa.cm -silent -o subdomains.txt
+Use code with caution.
+(If you don't have subfinder, you can query Certificate Transparency logs directly with curl -s "https://crt.sh" | jq -r '.[].name_value' | sort -u > subdomains.txt.)
+
+Step 2: Resolve IPs & Filter Out Cloudflare
+
+Check which subdomains actually resolve and separate Cloudflare proxy IPs (104.16.0.0/12, 172.64.0.0/13, 162.158.0.0/15, etc.) from direct/cloud origin IPs (AWS, DigitalOcean, Azure, etc.):
+bash
+while read sub; do
+  ip=$(dig +short "$sub" | grep -E '^[0-9]+\.' | head -n 1)
+  [ -n "$ip" ] && echo "$sub -> $ip"
+done < subdomains.txt | tee resolved.txt
+Use code with caution.
+• Skip Cloudflare IPs for Nmap (test those via HTTP/browser instead).
+• Save only the non-Cloudflare IPs/subdomains into a clean file called nmap_targets.txt (double-checking that every domain is still *.betpawa.cm and in scope).
+
+Step 3: Run a Safe, Polite Nmap Scan on Direct Hosts
+
+Once you have non-Cloudflare subdomains in nmap_targets.txt, scan them with low-noise, rule-compliant flags:
+bash
+nmap -iL nmap_targets.txt --top-ports 100 -sV --open -T3 -oA betpawa_subdomains
+Use code with caution.
+• --open: Shows only genuinely open ports (ignoring filtered firewall noise).
+• -sV: Identifies exact services and versions (e.g., SSH, Nginx, databases, admin panels).
+• -T3: Keeps scan speed polite so you don't trigger IDS/rate limits.
+• -oA betpawa_subdomains: Saves full output in .nmap, .xml, and .gnmap formats.
+
+Step 4: Inspect Discovered Web Ports with Safe NSE Scripts
+
+For any non-Cloudflare hosts with open HTTP/HTTPS ports (80, 443, 8080, 8443), pull page titles, headers, and SSL certificates:
+bash
+nmap -iL nmap_targets.txt -p 80,443,8080,8443 --script http-title,http-server-header,ssl-cert -T3 -oN web_services.txt
+Use code with caution.
+Do you have subfinder or jq installed on your machine to run Steps 1 and 2, or would you like a pure-Bash one-liner to pull subdomains from crt.sh?

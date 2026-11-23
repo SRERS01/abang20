@@ -1,0 +1,33 @@
+Nice—subfinder uncovered 4 high-value subdomains alongside www.betpawa.cm:
+• payment.betpawa.cm
+• support.betpawa.cm
+• test.betpawa.cm
+• api.betpawa.cm
+
+Step 1: Resolve Each Subdomain to See Which Ones Bypass Cloudflare
+
+Run this loop to check the DNS A-records and CNAMEs for all 5 hosts:
+bash
+while read sub; do
+  echo "=== $sub ==="
+  dig +short "$sub"
+done < subdomains.txt
+Use code with caution.
+
+Step 2: Separate Your Targets Based on the Output
+
+• If a subdomain resolves to a non-Cloudflare IP (for example, an AWS ELB/EC2 IP, DigitalOcean, OVH, or a dedicated server IP, especially on test.betpawa.cm or support.betpawa.cm):
+	1. Put those specific hostnames into a new file (direct_targets.txt).
+	2. Run your polite, targeted Nmap scan on them:bash
+nmap -iL direct_targets.txt --top-ports 100 -sV --open -T3 -oA betpawa_direct
+Use code with caution.
+• If a subdomain resolves to Cloudflare (104.16.x.x, 172.64.x.x, *.cdn.cloudflare.net):
+	• Do not run Nmap on it—you will get the same tcpwrapped proxy response.
+	• Instead, check its HTTP status and page title safely with curl or httpx:bash
+curl -sIL https://betpawa.cm | grep -E "HTTP/|Server:|Location:"
+Use code with caution.
+
+Step 3: Double-Check Scope Exclusions
+
+Before probing payment.betpawa.cm or test.betpawa.cm actively, quickly confirm in the program policy that staging/test subdomains (test.*) and payment gateways (payment.*) are not listed under scope exclusions (some programs exclude third-party payment processors or live payment flows from automated testing).
+Run the dig resolution loop above and share the output so we can see which of the 4 subdomains sit behind Cloudflare and which ones are ready for Nmap!
