@@ -1,0 +1,234 @@
+Your Ubuntu laptop has several network interfaces. As an offensive security researcher, understanding these interfaces helps you identify network boundaries, discover devices, test virtual environments, and understand where traffic travels.
+
+Your screenshot shows 5 interfaces (1, 3, 4, 5 and 6). Interface number 2 is not displayed.
+
+Let's examine each one.
+
+### 1\. `lo` — Loopback interface
+
+Function: Allows your computer to communicate with itself.
+
+* IP address: `127.0.0.1`
+
+* Also called localhost.
+
+* Used for local application communication.
+
+* Does not communicate directly with other physical devices.
+
+Offensive security applications:
+
+* Test locally hosted web applications.
+
+* Test APIs running on your laptop.
+
+* Test local services and ports.
+
+* Run security tools against your own local lab.
+
+Example:
+
+```bash
+curl http://127.0.0.1:8080
+```
+
+### 2\. Wireless interface — `wlp3s0`
+
+![How to Restart Network in Ubuntu \[Command Line & GUI\]](https://images.openai.com/static-rsc-4/qUmk5LxElEY6UBQT2II4qmZdnuJRCQGuyjXd99efRIp4SRTAj8tR_zQ7rX7aLuQHcdKSTW4QeTTky5kCvLckOHGb_4KVKo53c0mbEVYaYumrp-WlfDIP5D9IbrMo8l9TFhYcOOnSjiFU4-bUgV1XWiWY8IA-zTSr6LvpxzntHWGoq5g-wPATay-bw3EFk00R?purpose=fullsize)
+
+Function: Connects your laptop to your Wi-Fi network.
+
+Your screenshot shows:
+
+| Property     | Value          |
+| ------------ | -------------- |
+| Interface    | wlp3s0         |
+| IPv4 address | 192.168.1.163  |
+| Subnet mask  | 255.255.255.0  |
+| Network      | 192.168.1.0/24 |
+| Broadcast    | 192.168.1.255  |
+
+Offensive security applications:
+
+* Discover devices on your authorized LAN.
+
+* Perform network reconnaissance.
+
+* Identify accessible network services.
+
+* Test firewall configurations.
+
+* Capture and analyze authorized network traffic.
+
+Example:
+
+```bash
+ip neigh
+```
+
+Discover known neighboring devices.
+
+For authorized network discovery:
+
+```bash
+sudo nmap -sn 192.168.1.0/24
+```
+
+### 3\. `lxcbr0` — LXC bridge
+
+![9Isolation Mechanism of Linux Containers (1): Linux Namespace | by boyoon | Medium](https://images.openai.com/static-rsc-4/tSuJWRIeyMpt6opkRHXhcLp889HnU3NtAqb13ol4butGRU4l2rkG9OoGIJ1iSeVah2VMNSktCzSGGGaVhsU4ghHTCv2rvbNItKLdEZpx40Q-vvwKLvReiEgzOIJbn1vKH0eZ_0rN-N4VlZNOLSSIb7SpXuVNgmRBhgZvGaQu0lJZHCNlrhsUXh4weZ0G4O-d?purpose=fullsize)
+
+Function: Provides networking for LXC containers (Linux Containers).
+
+Think of it as a virtual network connecting containers to your Ubuntu host.
+
+Offensive security applications:
+
+* Build isolated penetration-testing environments.
+
+* Run vulnerable Linux containers.
+
+* Test network segmentation.
+
+* Practice attacks between authorized lab containers.
+
+* Study communication between host and containers.
+
+Example:
+
+```bash
+ip link show lxcbr0
+```
+
+### 4\. `br-bf3b84610761` — Docker custom bridge
+
+![Why won’t my containers talk to each other?! | Tom Donohue](https://images.openai.com/static-rsc-4/jWWyblKS6bT1nU1xzmRmVVFfLWc9A8nwN_T0lMDGEahiB7yWgCFxC2LC42sQPpdE3C_fEm_GAe5yJJ6pmdDsEmMmUkDDou2j4qjCkW1GGXJwg6vg2LijWiUoUoYeS8uV6pjiCDBXNacOfHBC68gvbreV0BtBtk6cQnaZZPuosB4JlAUc6nkDGzLjAy9X8HbZ?purpose=fullsize)
+
+Function: Connects containers belonging to a Docker custom bridge network.
+
+It allows containers to communicate with one another and, depending on configuration, with external networks.
+
+Offensive security applications:
+
+* Build isolated vulnerable application environments.
+
+* Test container-to-container communication.
+
+* Examine network exposure.
+
+* Test container security configurations.
+
+* Practice network segmentation assessments.
+
+Example:
+
+```bash
+docker network ls
+```
+
+View Docker networks.
+
+```bash
+docker network inspect bridge
+```
+
+Inspect the default Docker bridge (not necessarily this custom bridge).
+
+### 5\. `docker0` — Default Docker bridge
+
+![Simplified Docker Networking for Developers – Niraj Bhatt – Architect's Blog](https://images.openai.com/static-rsc-4/YL-Fkc09tt5sS1iUt0tIyml-0xoU4pB_zmIDxAf-SBLhSCYyFed6TR0J-rI7BEnwTRzt2Nwi_My_DfzoeowlYDW0H4X4SK9AKbntA84GE48y1fL3ucssF_takD5t4PYhSLGeSoRBWd4BLh3sun0pNTE99d6b4rTLTZIp92soeLq0XfniCqMtudvolPUJEKbP?purpose=fullsize)
+
+Function: Provides the default bridge network for Docker containers when they use Docker's default bridge networking.
+
+Offensive security applications:
+
+* Examine Docker container network isolation.
+
+* Test host-to-container communication.
+
+* Investigate exposed container services.
+
+* Assess Docker network configurations.
+
+* Practice container security testing.
+
+Example:
+
+```bash
+docker ps
+```
+
+List running containers.
+
+```bash
+docker network inspect bridge
+```
+
+Inspect the default bridge network.
+
+### 6\. Understanding all six numbers together
+
+Here is the overall picture:
+
+Ubuntu laptop
+
+Your host operating system
+
+1\. lo
+
+Local communication
+
+3\. wlp3s0
+
+Physical Wi-Fi LAN
+
+4\. lxcbr0
+
+LXC containers
+
+5\. Docker custom
+
+Docker containers
+
+6\. docker0
+
+Default Docker network
+
+### 7\. Commands you should know as an offensive security researcher
+
+| Command                      | Function                                 |
+| ---------------------------- | ---------------------------------------- |
+| ip addr                      | Display network interfaces and IPs       |
+| ip route                     | Display routing table                    |
+| ip neigh                     | Display neighboring devices              |
+| ip link                      | Display interface states                 |
+| ss -tulnp                    | Display listening ports and processes    |
+| ip route get 8.8.8.8         | Determine the route to a destination     |
+| sudo tcpdump -i wlp3s0       | Capture traffic on Wi-Fi                 |
+| sudo nmap -sn 192.168.1.0/24 | Discover hosts on your authorized subnet |
+
+Important distinction: `DOWN` does not necessarily mean the interface is permanently disabled. It means it is not currently operational. Your `lxcbr0` and Docker interfaces may become active when their respective container services or networks start.
+
+### What I recommend you learn next
+
+For offensive security, the next important concept is understanding how traffic moves between these interfaces.
+
+In particular, learn:
+
+* Network interfaces.
+
+* IP addresses and subnetting.
+
+* Routing tables.
+
+* Network bridges.
+
+* NAT (Network Address Translation).
+
+* Packet forwarding.
+
+* Firewall rules.
+
+The important question: Can you explain how a packet travels from your virtual Docker container through Ubuntu's network interface to your MTN Wi-Fi router?
+
+That is a fundamental networking skill for penetration testing.
