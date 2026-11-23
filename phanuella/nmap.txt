@@ -1,0 +1,45 @@
+Here are the 6 commands you can run right now against Nmap's official, authorized practice server (scanme.nmap.org) to see each of Nmap's 6 core capabilities in action:
+
+1. Find Available Hosts (Host Discovery)
+
+Checks if the host is online without scanning ports:
+bash
+nmap -sn scanme.nmap.org
+Use code with caution.
+
+2. Find Open Ports (Port Scanning)
+
+Scans the top 1,000 most common TCP ports to see which ones are open, closed, or filtered:
+bash
+nmap scanme.nmap.org
+Use code with caution.
+
+3. Find Services & Versions (Service Detection)
+
+Probes open ports to identify the exact software and version numbers (e.g., Apache, OpenSSH):
+bash
+nmap -sV scanme.nmap.org
+Use code with caution.
+
+4. Find the Operating System (OS Detection)
+
+Analyzes TCP/IP packet responses to fingerprint the target's OS and kernel version (requires sudo):
+bash
+sudo nmap -O scanme.nmap.org
+Use code with caution.
+
+5. Detect Packet Filters & Firewalls (ACK Scan)
+
+Sends TCP ACK packets to map out whether ports are filtered by a stateful firewall (requires sudo):
+bash
+sudo nmap -sA scanme.nmap.org
+Use code with caution.
+
+6. Discover Advanced Characteristics (Nmap Scripting Engine)
+
+Runs Nmap's default safe scripts (-sC) to gather extra details like HTTP page titles, SSH host keys, and SSL info:
+bash
+nmap -sC scanme.nmap.org
+Use code with caution.
+(Tip: scanme.nmap.org is explicitly provided by the Nmap Project for testing—just avoid running more than a few dozen scans per day against it.)
+Run whichever command you'd like first and paste the terminal output here if you want help reading the results!
