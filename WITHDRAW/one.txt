@@ -1,0 +1,275 @@
+Here is the expanded version, with more platforms and apps under each of the five headings.
+
+### Complete cryptocurrency payment system: HackenProof to MTN MoMo
+
+### 1\. Bounty platform apps
+
+Platforms where you earn bug bounties and request payments.
+
+* HackenProof
+
+* HackerOne
+
+* Bugcrowd
+
+* Intigriti
+
+* YesWeHack
+
+* Immunefi
+
+* Federacy
+
+* Synack
+
+### 2\. Blockchain networks
+
+Networks used to transfer cryptocurrency. These are blockchains, not wallet apps.
+
+Ethereum ecosystem
+
+* Ethereum
+
+* Base
+
+* Arbitrum One
+
+* Optimism
+
+* Polygon
+
+* zkSync Era
+
+* Linea
+
+* Scroll
+
+* Mantle
+
+* Blast
+
+Other blockchain networks
+
+* BNB Smart Chain
+
+* Solana
+
+* TRON
+
+* Avalanche C-Chain
+
+* TON
+
+* Aptos
+
+* Sui
+
+* NEAR
+
+* Stellar
+
+* Algorand
+
+* Cardano
+
+* Hedera
+
+* XRP Ledger
+
+* Polkadot
+
+* Cosmos
+
+* Bitcoin
+
+Not every network supports native USDC and USDT. Token availability and exchange support must be checked individually.
+
+### 3\. Wallet apps
+
+Applications for receiving, holding, sending and managing cryptocurrency.
+
+Multi-network wallets
+
+* MetaMask
+
+* Trust Wallet
+
+* OKX Wallet
+
+* Coinbase Wallet
+
+* Exodus
+
+* SafePal
+
+* Atomic Wallet
+
+* imToken
+
+* TokenPocket
+
+* MathWallet
+
+* Zerion
+
+* Rabby Wallet
+
+Network-focused wallets
+
+* Phantom — Solana and other supported chains.
+
+* TronLink — TRON.
+
+* Core Wallet — Avalanche and other supported chains.
+
+* Solflare — Solana.
+
+* Backpack — Solana and supported networks.
+
+* Keplr — Cosmos ecosystem.
+
+* Leap Wallet — Cosmos ecosystem.
+
+* Petra Wallet — Aptos.
+
+* Martian Wallet — Aptos and Sui.
+
+* Xaman — XRP Ledger.
+
+* Lobstr — Stellar.
+
+* Ledger Live — hardware-wallet management.
+
+### 4\. Cryptocurrency exchange apps
+
+Platforms for crypto deposits, withdrawals, trading, conversion and sometimes P2P.
+
+Major international exchanges
+
+* Binance
+
+* Bybit
+
+* OKX
+
+* Bitget
+
+* Gate
+
+* KuCoin
+
+* MEXC
+
+* HTX
+
+* BingX
+
+* Coinbase
+
+* Kraken
+
+* Crypto.com
+
+* Bitfinex
+
+* Bitstamp
+
+* WhiteBIT
+
+* Phemex
+
+* XT.com
+
+* LBank
+
+* CoinEx
+
+* BitMart
+
+Additional crypto and mobile-money platforms
+
+* LomoPay
+
+* Yellow Card
+
+* PaySela
+
+* Gryllex
+
+Not all these exchanges offer P2P, Cameroon account access, XAF trading or MTN MoMo. Their availability must be checked before choosing one.
+
+### 5\. P2P payment and receiving apps
+
+Services that connect cryptocurrency sellers with buyers and payment apps that receive local currency.
+
+P2P marketplaces
+
+* Binance P2P
+
+* Bybit P2P
+
+* OKX P2P
+
+* Bitget P2P
+
+* Gate P2P
+
+* KuCoin P2P
+
+* MEXC P2P
+
+* HTX P2P
+
+* BingX P2P
+
+* LomoPay P2P
+
+Mobile-money and payment apps
+
+* MTN MoMo
+
+* Orange Money
+
+* Moov Money
+
+* Airtel Money
+
+* Wave
+
+* PayPal
+
+* Skrill
+
+* Neteller
+
+* Bank mobile applications that support local transfers.
+
+For your specific plan, MTN MoMo is the receiving payment service.
+
+### Your complete payment route
+
+1\. Bounty platform
+
+HackenProof
+
+2\. Blockchain network
+
+Base / Ethereum / BNB Chain / Solana, as required
+
+3\. Wallet
+
+MetaMask / Trust Wallet / Phantom
+
+4\. Exchange
+
+Binance / Bitget / Gate / Bybit
+
+5\. P2P marketplace
+
+Find an XAF buyer paying through MTN MoMo
+
+6\. Final receiving account
+
+MTN Mobile Money — Cameroon
+
+Note: P2P is included within the exchange category in many apps, so you do not necessarily need a separate P2P application. The personal wallet is also optional if HackenProof permits direct withdrawal to your exchange's matching deposit address.
