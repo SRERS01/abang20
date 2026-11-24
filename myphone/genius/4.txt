@@ -1,0 +1,243 @@
+### FFUF in API security testing: All its roles in your event API investigation
+
+![Attacking Web Applications with Ffuf: Part 1 | by Sumayasomow | Medium](https://images.openai.com/static-rsc-4/VZE95xIA7HtamTbVn1Lnlz9Qfnp7d5QGTUOSUTlT-1R9uRXoqHtHn96JzWaPIaatpZe8AE3Tf-BQ2KBs7KztOuDtmDEmAp-EVgmWsW7gZIwy6UQ60EcFjphP7JAwcbwCgTj_xrJIKQBpa2LcVxBlPrVb1I_UFMyCrfzETIQpcwlBhAnqaDw-9Svvc9ewu-By?purpose=fullsize)
+
+FFUF (Fuzz Faster U Fool) is a fast web fuzzer written in Go. Its main purpose is to send automated HTTP requests using different candidate values and identify interesting differences in server responses.
+
+In your investigation of an event API, FFUF is primarily a discovery and response-behavior testing tool. It does not replace Burp Suite, Wireshark or Nmap.
+
+### 1\. What FFUF can do in your investigation
+
+| Function                           | What it investigates                           |
+| ---------------------------------- | ---------------------------------------------- |
+| Endpoint discovery                 | Finds undocumented API paths                   |
+| Directory discovery                | Finds accessible directories                   |
+| File discovery                     | Finds exposed files                            |
+| Parameter discovery                | Identifies accepted parameter names            |
+| Value fuzzing                      | Tests how an endpoint handles different values |
+| HTTP method testing                | Checks which methods are accepted              |
+| Virtual host discovery             | Identifies configured virtual hosts            |
+| Authentication response comparison | Identifies differences in access responses     |
+| Response-size analysis             | Identifies unusual responses                   |
+| Status-code analysis               | Identifies interesting HTTP responses          |
+| Content-length analysis            | Identifies response differences                |
+| API version discovery              | Finds potentially exposed version paths        |
+
+These are discovery capabilities, not proof that a vulnerability exists.
+
+### 2\. The different FFUF modes and their purposes
+
+### A. Directory discovery
+
+Finds accessible directories.
+
+Example against your authorized lab:
+
+```bash
+ffuf -u http://127.0.0.1/FUZZ \
+-w directories.txt
+```
+
+What it can discover:
+
+* `/api/`
+
+* `/admin/`
+
+* `/events/`
+
+* `/static/`
+
+* `/uploads/`
+
+### B. Endpoint discovery
+
+Looks for API endpoints.
+
+```bash
+ffuf -u http://127.0.0.1/api/FUZZ \
+-w endpoints.txt
+```
+
+Potential discoveries:
+
+```text
+/api/events
+/api/results
+/api/settlements
+/api/markets
+/api/status
+```
+
+These are illustrative endpoint names, not guaranteed paths.
+
+### C. File discovery
+
+Looks for accessible files.
+
+```bash
+ffuf -u http://127.0.0.1/FUZZ \
+-w files.txt
+```
+
+Potential discoveries include:
+
+* JSON files
+
+* XML files
+
+* Configuration files
+
+* Documentation files
+
+* Backup files
+
+### D. Parameter-name discovery
+
+Tests candidate query parameter names against an authorized endpoint.
+
+```bash
+ffuf -u "http://127.0.0.1/api/events?FUZZ=test" \
+-w parameters.txt
+```
+
+It can help identify whether an endpoint responds differently to candidate parameters.
+
+A response difference does not prove that a parameter is meaningful or security-sensitive.
+
+### E. Parameter-value testing
+
+Tests candidate values for an already identified parameter.
+
+For example, on a lab endpoint:
+
+```bash
+ffuf -u "http://127.0.0.1/api/events?status=FUZZ" \
+-w event-statuses.txt
+```
+
+It can help compare responses to values such as:
+
+```text
+UPCOMING
+OPEN
+CLOSED
+SETTLED
+```
+
+Use only values and resources you are authorized to test.
+
+### F. HTTP method discovery
+
+Investigates how an endpoint responds to different HTTP methods.
+
+```bash
+ffuf -u http://127.0.0.1/api/events \
+-X GET
+```
+
+Other methods to investigate include:
+
+* POST
+
+* PUT
+
+* PATCH
+
+* DELETE
+
+* OPTIONS
+
+* HEAD
+
+For a passive read-only assessment, stick to GET, HEAD and OPTIONS. Do not test state-changing methods without explicit authorization.
+
+### 3\. FFUF response filters
+
+This is one of FFUF's most useful capabilities.
+
+| Option | Purpose                                     |
+| ------ | ------------------------------------------- |
+| -mc    | Match HTTP status codes                     |
+| -fc    | Filter HTTP status codes                    |
+| -ms    | Match response size                         |
+| -fs    | Filter response size                        |
+| -mw    | Match word count                            |
+| -fw    | Filter word count                           |
+| -ml    | Match line count                            |
+| -fl    | Filter line count                           |
+| -mr    | Match response using a regular expression   |
+| -fr    | Filter responses using a regular expression |
+
+For example:
+
+```bash
+ffuf -u http://127.0.0.1/api/FUZZ \
+-w endpoints.txt \
+-mc 200,301,302,403
+```
+
+This displays responses with the specified status codes.
+
+### 4\. How FFUF contributes to detecting premature information disclosure
+
+Consider this hypothetical API:
+
+```text
+GET /api/events/123
+```
+
+Your discovery process might look like this:
+
+Stage 1: FFUF
+
+Discovers potentially accessible event API paths.
+
+Stage 2: Burp Suite
+
+Inspects the actual GET response and JSON fields.
+
+Stage 3: Chrome DevTools
+
+Confirms what the browser receives during normal event viewing.
+
+Stage 4: ZAP
+
+Performs passive security analysis.
+
+Stage 5: Server logs
+
+Correlates disclosure timing with the authorized publication time.
+
+FFUF can discover the endpoint, but Burp or DevTools is better suited to determining whether the response contains a populated `finalScore`, `winnerId` or `settlementData` field.
+
+### 5\. What FFUF cannot establish by itself
+
+| Security issue              | Why FFUF alone is insufficient                            |
+| --------------------------- | --------------------------------------------------------- |
+| Premature result disclosure | Requires understanding event timing and response contents |
+| IDOR                        | Requires authorization-context comparison                 |
+| Business logic flaws        | Requires understanding intended application behavior      |
+| SSRF                        | Requires controlled validation of server-side requests    |
+| RCE                         | Requires separate safe validation                         |
+| SQL injection               | Requires vulnerability-specific investigation             |
+| Authentication bypass       | Requires authorization testing                            |
+
+### 6\. FFUF versus your other tools
+
+| Tool            | Main responsibility                         |
+| --------------- | ------------------------------------------- |
+| Nmap            | Host and port discovery                     |
+| FFUF            | Endpoint, directory and parameter discovery |
+| Burp Suite      | HTTP/API response inspection                |
+| Chrome DevTools | Browser request inspection                  |
+| OWASP ZAP       | Passive web vulnerability analysis          |
+| mitmproxy       | Programmable traffic inspection             |
+| Wireshark       | Packet and protocol analysis                |
+| tcpdump         | Packet capture                              |
+| tshark          | Command-line packet analysis                |
+| Snort           | Network intrusion detection                 |
+
+Use FFUF after identifying the authorized target host and before detailed API response analysis.
+
+The key distinction: Nmap discovers network services; FFUF discovers web resources; Burp investigates application requests and responses. Together they provide complementary evidence during an API security assessment.

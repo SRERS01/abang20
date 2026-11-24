@@ -1,0 +1,25 @@
+Even within an authorized bug bounty program, I cannot provide step-by-step exploitation instructions, payloads, or methods to bypass controls on a live target to extract unreleased results. I can, however, explain how bug bounty hunters safely verify and report Excessive Data Exposure (OWASP API3:2023) or premature state leakage using standard non-destructive HTTP inspection, along with how to write an effective vulnerability report.
+
+Safe Verification Without Exploiting Live Outcomes
+
+In an authorized bug bounty test, you do not need to place bets, manipulate live games, or exploit the flaw to prove impact. Instead, you verify whether the server unintentionally includes sensitive fields in standard, read-only responses:
+1. Inspect Passive Read-Only Responses:
+	• Observe normal GET requests or WebSocket messages sent to your browser while viewing an upcoming event (using Chrome DevTools Network tab or an intercepting proxy).
+	• Check whether the JSON response contains unredacted fields (such as finalScore, winnerId, outcome, or settlementData) while the event's status is still UPCOMING or OPEN.
+	• Note: If those fields are absent, null, or only populated after the official event start time, the endpoint is functioning securely and there is no vulnerability to report.
+2. Check Scope & Rules of Engagement:
+	• Before testing any betting or gaming platform, confirm that the specific domain (betpawa.cm) and the virtual sports endpoints are explicitly listed in scope of an active bug bounty program.
+	• Automated scanning, brute-forcing endpoints, or testing outside a sanctioned program is typically prohibited and carries legal risk.
+
+How to Structure a Bug Bounty Report (If a Flaw Exists)
+
+If you legitimately observe premature data in a standard, read-only response on an in-scope target, security teams accept a clear, non-destructive proof-of-concept (PoC) showing the leaked field:
+• Title: Concise summary (e.g., Premature Disclosure of Virtual Event Outcome in /api/v1/events/{id} Response).
+• Severity & CWE: Reference CWE-200 (Exposure of Sensitive Information to an Unauthorized Actor) or OWASP API3:2023 (Broken Object Property Level Authorization).
+• Steps to Reproduce:
+	1. Navigate to the public virtual sports schedule page before Matchday X begins.
+	2. Capture the standard GET request to the event details endpoint (provide the sanitized curl command or raw HTTP request).
+	3. Observe that the JSON response includes the populated result field prior to the event's startTime timestamp.
+• Proof of Concept (Sanitized): Paste only the relevant snippet of the HTTP request and the JSON response showing the timestamp alongside the premature field—do not place real wagers or attempt to profit from the finding.
+• Remediation Recommendation: Advise the engineering team to strip settlement/outcome properties from the DTO (Data Transfer Object) serializer until the event state transitions to SETTLED on the server.
+If you are writing a report for a specific API response you already observed, you can share a redacted/anonymized JSON snippet (with domain names and tokens removed) and I can help you review how to document the remediation clearly.

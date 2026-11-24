@@ -1,0 +1,317 @@
+### How to discover the algorithm behind an API
+
+If you are investigating an event API, betting platform, deposit API, or real-time application, you need to distinguish between two things:
+
+* Discovering how the application works: Understanding its request flow, calculations, business rules and response generation.
+
+* Recovering the actual algorithm: Obtaining the original source code or reconstructing its logic from observable behavior.
+
+You cannot always recover the original algorithm from HTTP responses. However, there are several legitimate techniques for investigating it in an authorized application or laboratory.
+
+### 1\. All the methods available
+
+| Method                 | What you can discover                                 | Tools                            |
+| ---------------------- | ----------------------------------------------------- | -------------------------------- |
+| Static code analysis   | Actual algorithm implementation                       | Ghidra, JADX, source code        |
+| Dynamic analysis       | How the algorithm behaves during execution            | Frida, debugger                  |
+| API traffic analysis   | Inputs, outputs and request flow                      | Burp, mitmproxy                  |
+| Reverse engineering    | Application logic and compiled code                   | Ghidra, JADX                     |
+| Algorithmic profiling  | Mathematical relationships between inputs and outputs | Python                           |
+| Database analysis      | Stored values and calculation results                 | SQL tools                        |
+| Log analysis           | Execution sequence and decisions                      | Application logs                 |
+| Protocol analysis      | Communication and message structure                   | Wireshark                        |
+| Dependency analysis    | Libraries implementing calculations                   | Dependency analyzers             |
+| Documentation analysis | Intended business rules                               | OpenAPI, technical documentation |
+
+### 2\. Static analysis
+
+![Reverse Engineering](https://images.openai.com/static-rsc-4/nUrIavo5HqaUhwkNaTJLKToajlLA7Fyjftr-pC-ZB_o3SRp9kY4qoCJ4C51s1RkFxL9pRF5H_eSc8lL1-L0Ubtwp90S1k5fn17UgLRUeuYcMSm8EYerGbcYaxCcVuVf_r6YLnXcQz60iXMTEt22shVBPNuHqFC-7QIpSokTRwgTdEoaiV4-NZ1FzIXgsJHqM?purpose=fullsize)
+
+Purpose: Examine program code without running it.
+
+Tools:
+
+* Ghidra
+
+* JADX
+
+* Cutter
+
+* IDA Pro
+
+* Radare2
+
+What you can discover:
+
+* Functions and methods.
+
+* Mathematical operations.
+
+* Conditional statements.
+
+* Data processing.
+
+* API communication logic.
+
+* Cryptographic operations.
+
+* Hardcoded configuration.
+
+* Algorithm implementation, when present in the analyzed binary.
+
+For Android applications, JADX is particularly useful for inspecting decompiled Java/Kotlin code.
+
+Limitation: If the algorithm runs on the server, inspecting the Android application will not reveal the server's original implementation.
+
+### 3\. Dynamic analysis
+
+![Frida Scripting Basics for Pentesters | Part 1 | Shubham Golam](https://images.openai.com/static-rsc-4/RFUISv4PAlvFEfOioLOkypXrL2E_f0k7QkBsq0k59S4fRnAesYeCWqlXT0DGFjjurli0aDw3urO2iWwCPsMpS7teZXQiLzv9GuoJSMZZwCLU6M5G2XrGgVEaJpfFl7dTBgZjvxUzQlQ98uXBvyHjosNHXVxCc0-0eryjM9RQocX2os9GR2w0jfSvIXAFlbbB?purpose=fullsize)
+
+Purpose: Observe what an application does while running.
+
+Tools:
+
+* Frida
+
+* Android Studio Debugger
+
+* GDB
+
+* LLDB
+
+You can investigate:
+
+* Function calls.
+
+* Input values.
+
+* Return values.
+
+* Execution order.
+
+* Conditional branches.
+
+* Data transformations.
+
+* Calls between application components.
+
+For an application you own or are authorized to instrument, dynamic analysis can reveal much more than passive network inspection.
+
+### 4\. API behavior analysis
+
+![OWASP API Testing Guide: A Visual Guide to OWASP API Testing with vAPI](https://images.openai.com/static-rsc-4/Dw-LsaTdQ825N3a2sVR7IyAUAOfeNp4Q9qseCw2k3MHijpXZJTGjiURhi_ZezSx6xr1ju5tMXX0T_x4JwhIKrYk4OEvhGgh1kqfWTR2Kh-vbKVMdt9kQgt4rvtJNdW8sXaCxvM9m1hr_9uGFtU-Vsz_SZIA2yg52XvSBklyruAJqGGMu3OdLjUITjtiJmZdz?purpose=fullsize)
+
+Tools:
+
+* Burp Suite
+
+* mitmproxy
+
+* Chrome DevTools
+
+* OWASP ZAP
+
+Investigate the relationship between:
+
+* Request parameters.
+
+* Response values.
+
+* Event status.
+
+* Timestamps.
+
+* Authentication context.
+
+* Repeated responses.
+
+For example:
+
+```json
+{
+  "eventId": "123",
+  "status": "UPCOMING",
+  "input": 100,
+  "result": null
+}
+```
+
+You can observe whether the output changes when legitimate input conditions change.
+
+This helps reconstruct observable business logic, but it does not reveal the original source code automatically.
+
+### 5\. Mathematical and algorithmic analysis
+
+Purpose: Infer a mathematical rule from known inputs and outputs.
+
+Python is useful for this.
+
+For example, suppose an authorized test application produces:
+
+| Input | Output |
+| ----- | ------ |
+| 2     | 4      |
+| 3     | 9      |
+| 4     | 16     |
+| 5     | 25     |
+
+You could infer a possible relationship:
+
+f(x)=x^2
+
+However, several different algorithms can produce the same observed outputs. More test cases are needed to distinguish them.
+
+This method is called black-box analysis.
+
+### 6\. Database analysis
+
+If you have authorized database access, investigate:
+
+* Stored procedures.
+
+* Database functions.
+
+* Triggers.
+
+* Event records.
+
+* Calculation tables.
+
+* Transaction histories.
+
+* Settlement records.
+
+* Audit logs.
+
+Tools include:
+
+* PostgreSQL tools.
+
+* MySQL Workbench.
+
+* SQLite Browser.
+
+* DBeaver.
+
+This can reveal where an algorithm's inputs and outputs are stored and whether calculations happen in the application or database.
+
+### 7\. Server-side source-code analysis
+
+![Azure Remote Debugging for Node.js](https://images.openai.com/static-rsc-4/4LLd-R7ibaZIFfTjAGK_xzSzCIoTwKu2Z33DtsSGu1eHxkrUqxdt-Glh8BYURyMTSy4k9XTjH6ccj5C1GI9RWp_yvj9uvt2a0hZIBSTcjR8Y_kLPzRKqxZlZqzgNDpMHtXagX0bGRpWlkrv32Od6HsdnlWCEVnp7yZSXaDz_uYlU6VqRxbMQ2JPK5Kiv1mra?purpose=fullsize)
+
+If you own the backend or have permission to inspect its source, this is usually the most direct approach.
+
+Search for:
+
+* API controllers.
+
+* Business logic services.
+
+* Calculation functions.
+
+* Event-processing modules.
+
+* Settlement functions.
+
+* Database procedures.
+
+* Scheduled jobs.
+
+* Message queue consumers.
+
+For example, an event-processing architecture might look like:
+
+```text
+API Request
+    |
+    v
+Controller
+    |
+    v
+Business Logic
+    |
+    v
+Calculation Engine
+    |
+    v
+Database
+    |
+    v
+API Response
+```
+
+The actual calculation may happen in the business logic service, a separate microservice, or a database procedure.
+
+### 8\. What your existing tools can and cannot reveal
+
+| Tool            | Can reveal algorithm itself?                                    |
+| --------------- | --------------------------------------------------------------- |
+| Nmap            | No; discovers network services                                  |
+| FFUF            | No; discovers web resources                                     |
+| Burp Suite      | No; reveals observable API behavior                             |
+| Chrome DevTools | No; reveals browser-side execution and traffic                  |
+| ZAP             | No; identifies potential security weaknesses                    |
+| mitmproxy       | No; reveals traffic and transformations observable at the proxy |
+| Wireshark       | No; analyzes network protocols                                  |
+| tcpdump         | No; captures packets                                            |
+| tshark          | No; analyzes captured packets                                   |
+| Snort           | No; detects network traffic patterns                            |
+| Ghidra          | Yes, potentially, from accessible compiled code                 |
+| JADX            | Yes, potentially, from accessible Android application code      |
+| Frida           | Can reveal runtime behavior and function execution              |
+
+### 9\. The important distinction: Client algorithm versus server algorithm
+
+Client-side algorithm
+
+Potentially inspectable
+
+* Android application logic.
+
+* JavaScript calculations.
+
+* Local validation.
+
+* UI processing.
+
+* Client-side transformations.
+
+Server-side algorithm
+
+Requires authorized server access
+
+* Event outcome generation.
+
+* Settlement calculations.
+
+* Deposit processing.
+
+* Payment verification.
+
+* Database-side calculations.
+
+* Server-side business rules.
+
+Intercepting a deposit API response, for example, might show the amount accepted and transaction status. It does not necessarily reveal the internal payment verification algorithm.
+
+### 10\. One important question
+
+When you say you want to obtain the real algorithm generating it, which algorithm are you investigating?
+
+Event outcome algorithm (scores, winners and results)
+
+Settlement algorithm (winning and losing calculations)
+
+Deposit/payment API algorithm
+
+Odds or prediction-generation algorithm
+
+Android application's internal algorithm
+
+Backend server's actual source-code algorithm
+
+Something else
+
+Continue
+
+The distinction matters because recovering an Android application's algorithm, reconstructing a server's observable behavior, and obtaining the original server-side source code are three very different investigations.

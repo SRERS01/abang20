@@ -1,0 +1,120 @@
+Yes. Those are some of the most important clues for reconstructing an algorithm through dynamic analysis.
+
+You have understood the central idea: instead of guessing how an application generates a result, you observe its execution and use the evidence to understand its internal logic.
+
+However, there is one important distinction: observing these seven things helps you reconstruct an algorithm, but does not necessarily reveal the complete original algorithm.
+
+### How each observation helps you deduce an algorithm
+
+| What you observe     | What it tells you                               |
+| -------------------- | ----------------------------------------------- |
+| Function calls       | Which operations are performed                  |
+| Input values         | What information enters the algorithm           |
+| Return values        | What each function produces                     |
+| Execution order      | Which operations happen first                   |
+| Conditional branches | What determines different outcomes              |
+| Data transformations | How input becomes output                        |
+| Component calls      | How different parts of the application interact |
+
+### Practical example
+
+Imagine an Android application calculating a transaction fee.
+
+You provide:
+
+```text
+Amount = 10,000
+Fee = ?
+```
+
+During authorized runtime analysis, you observe:
+
+Execution flow
+
+* Function 1: Input
+
+    Receives amount = 10,000
+
+* Function 2: Calculation
+
+    Calculates 2% of the amount.
+
+* Function 3: Conditional check
+
+    Checks whether the amount exceeds a specified threshold.
+
+* Function 4: Return
+
+    Returns the calculated fee.
+
+* Function 5: Display
+
+    Sends the result to the user interface.
+
+Observed result
+
+### 200
+
+Illustrative transaction fee
+
+From these observations, you can reconstruct a possible mathematical rule:
+
+f(x)=0.02x
+
+You have moved from observing the application to understanding its calculation.
+
+### Which tool helps with which evidence?
+
+| Tool                    | Main strength                                          |
+| ----------------------- | ------------------------------------------------------ |
+| Frida                   | Runtime function observation and instrumentation       |
+| Android Studio Debugger | Java/Kotlin execution and variable inspection          |
+| GDB                     | Native-code debugging                                  |
+| LLDB                    | Native-code debugging, including Android NDK workflows |
+
+### The complete algorithm-reconstruction process
+
+* Identify the function responsible for the operation.
+
+* Observe its input values.
+
+* Record function calls.
+
+* Observe conditional branches.
+
+* Record intermediate transformations.
+
+* Observe return values.
+
+* Compare results across controlled test inputs.
+
+* Reconstruct the algorithm and validate your hypothesis.
+
+### One limitation you must understand
+
+If an Android application communicates with a remote backend, you may reconstruct the Android-side algorithm while the actual result-generating algorithm remains on the server.
+
+For example:
+
+```text
+Android application
+       |
+       v
+Local function
+       |
+       v
+API request
+       |
+       v
+Remote server algorithm
+       |
+       v
+API response
+       |
+       v
+Android displays result
+```
+
+Frida, GDB and Android Studio can help investigate the local execution. They cannot automatically expose the private source code of a remote server.
+
+My conclusion: Yes, function calls, inputs, outputs, execution order, branches, transformations and component interactions are fundamental evidence for algorithm reconstruction. The next important skill is learning how to correlate all seven observations into one execution trace.

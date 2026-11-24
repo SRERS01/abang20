@@ -1,0 +1,615 @@
+### Complete guide: Using each tool to detect premature API information disclosure
+
+Your objective is to investigate an event API while an event is still `UPCOMING` or `OPEN` and determine whether the application exposes information that should remain confidential.
+
+We will cover these tools:
+
+* Chrome DevTools
+
+* Firefox Network Monitor
+
+* Burp Suite
+
+* OWASP ZAP
+
+* mitmproxy
+
+* Wireshark
+
+* tcpdump
+
+* tshark
+
+* Application logs
+
+* OpenAPI documentation
+
+An important distinction: some tools inspect application-layer JSON, while others inspect network traffic. They do not all discover the same vulnerabilities.
+
+### 1\. Chrome DevTools
+
+![Inspect network activity  |  Chrome DevTools  |  Chrome for Developers](https://images.openai.com/static-rsc-4/cfTdzi0XR4kdA8yuGehO--65WFJGK5XHIlPL2Hg_Cog-qXI7A25Aw8i36Bxs2SfrFWG57dOq5_TeKTPqVxMVCrxlSEN0cTh6i4qXRzb1QeREouDGsHA1l4gNq2ulipxP71Uxh3a82-3j2x5zJSMZGRsYQDcXt_PbTNbBsxgrLMGuZ2mKoBESTgXcz8tBG4_P?purpose=fullsize)
+
+Main purpose: Inspect requests and responses directly from the browser.
+
+### How to use it
+
+* Open your authorized test application.
+
+* Press F12.
+
+* Select Network.
+
+* Select Fetch/XHR.
+
+* Navigate to an upcoming event.
+
+* Identify the GET requests.
+
+* Click each relevant request.
+
+* Examine Headers, Payload, Preview and Response.
+
+### What it can find
+
+| Finding                        | What to investigate                  |
+| ------------------------------ | ------------------------------------ |
+| Premature result disclosure    | finalScore                           |
+| Winner disclosure              | winnerId                             |
+| Settlement exposure            | settlementData                       |
+| Financial information exposure | payout                               |
+| Prediction exposure            | correctPrediction                    |
+| Incorrect event state          | status                               |
+| Sensitive metadata             | Internal IDs and confidential fields |
+
+It can also reveal requests that the frontend does not visibly display.
+
+### 2\. Firefox Network Monitor
+
+![json - Where is the Network Preview Tab in Firefox - Stack Overflow](https://images.openai.com/static-rsc-4/8an_odcmUPUIC7WcG5r11wkn6XSqGE0w3SzkXSYXunhY0p_fAjq6qw3FM1Ii3hhq4GeaEUlWa6KC9g5DTO2ly3MmO4hTaRUTldXk4ZbhMEnOWxvsAbBu_XrhSZdolFKAO-OVgNK4wqma3Yb7Ncn0yeLIamWmnEqMIEa_hoYbeyXgSKoTwC2SxsMoHBQbLg-p?purpose=fullsize)
+
+Main purpose: Browser-level HTTP request and response inspection.
+
+### How to use it
+
+* Open Firefox.
+
+* Press F12.
+
+* Select Network.
+
+* Reload the event page.
+
+* Filter by XHR or Fetch.
+
+* Select the relevant request.
+
+* Inspect the response body.
+
+### What it can find
+
+* Sensitive JSON fields.
+
+* Unexpected response properties.
+
+* Premature result information.
+
+* Incorrect HTTP status codes.
+
+* Unnecessary data returned to the browser.
+
+* Cache-related response headers.
+
+### 3\. Burp Suite
+
+![API Security Testing on crAPI using Burp Suite and Postman | by Aw3s0m3h3d@ | Medium](https://images.openai.com/static-rsc-4/KgjUG6Ml_PLOUdW1xttC7M5ZRmerpRnd65OIqWPIDUcBHXbHqnc5htmdZz8yyuVLyJ85CkVUu83fBeoPYjPtqAUKHSQhwhESIdt8HbG6Oa2SvgZPO-stcesvsCZphK-pBvnunPYoNUZp6z4RMJXOLL6yISyDUZGDavh-Bf2gNVsxwyLwbO4LyjtLlsBukRy1?purpose=fullsize)
+
+Main purpose: Intercept, record and inspect application-layer traffic.
+
+### How to use its components
+
+| Burp component    | How you use it                | What it can find              |
+| ----------------- | ----------------------------- | ----------------------------- |
+| Proxy             | Observe browser traffic       | Exposed response fields       |
+| HTTP history      | Review recorded requests      | Hidden API calls              |
+| HTTP response     | Examine server responses      | Confidential JSON             |
+| WebSocket history | Inspect incoming messages     | Premature real-time results   |
+| Logger            | Review recorded traffic       | Unexpected communications     |
+| Repeater          | Recheck an authorized request | Inconsistent responses        |
+| Comparer          | Compare two responses         | Differences in exposed fields |
+| Decoder           | Decode encoded values         | Encoded data representation   |
+
+For passive inspection, concentrate on Proxy, HTTP history and WebSocket history.
+
+Repeater is useful for controlled validation, but it is an active testing feature.
+
+### 4\. OWASP ZAP
+
+![OWASP ZAP Tutorial - Part 1: Intercepting Traffic](https://images.openai.com/static-rsc-4/wVO8qWU9pOAufRMSMy6Ifq_YgHDawThm5ZeSjYkZQF438kHfR1GB-hfpJDuPAs4FXPV6XKreF84s8uRIpm9queql8iVKiJPeF3UcCrNNiXprJwxpr0VLZA9Pw4JEEN8EUeISK30qazNSX8aqV7ZaTsRQ7fgVPBP2IdUbwRxQS2Fsb7o0rioz7-RT2KGOqXEP?purpose=fullsize)
+
+Main purpose: Intercept and analyze web application traffic and identify potential security weaknesses.
+
+### How to use it
+
+* Open OWASP ZAP.
+
+* Configure your browser to use ZAP as its proxy.
+
+* Open your authorized application.
+
+* Navigate to the upcoming event.
+
+* Open History.
+
+* Select the relevant GET request.
+
+* Inspect the Response tab.
+
+* Check the returned JSON.
+
+* Review passive scan alerts.
+
+### What it can find
+
+* Sensitive information disclosure.
+
+* Missing or weak security headers.
+
+* Insecure cookie configurations.
+
+* Cache-control problems.
+
+* Information leakage through server responses.
+
+* Unexpected API response data.
+
+* Some authentication and session-management weaknesses.
+
+Limitation: A passive scan cannot establish every business-logic vulnerability. A human must determine whether the exposed information is actually confidential.
+
+### 5\. mitmproxy
+
+![mitmproxy抓包工具 - 始識 - 博客园](https://images.openai.com/static-rsc-4/0sHOgvZI7CJ2b-WfBVVMoS0JYPPHc842tec2dVeHOgqlc3i4dy9acAKgR1KzGXXVmT4gCBhoT9eUh66pZsR1pA4yHFw2KQh68ZpPLq7AIPRO1Q8oP12ij00A9yvAxWrC2ZV7gq73Ba6baRFR7DulT1C233D-aSx4rodIyyrO1iG1-5Ev4cvQF1N7YpERMwS9?purpose=fullsize)
+
+Main purpose: Inspect HTTP and HTTPS traffic through a programmable interception proxy.
+
+### How to use it
+
+Start mitmproxy:
+
+```bash
+mitmproxy --listen-port 8080
+```
+
+Configure your authorized test browser to use:
+
+```text
+Proxy host: 127.0.0.1
+Proxy port: 8080
+```
+
+For an Android emulator, the proxy address may be the host machine's reachable IP rather than `127.0.0.1`.
+
+Then:
+
+* Open the application.
+
+* Navigate to an upcoming event.
+
+* Watch the traffic flows.
+
+* Select a GET request.
+
+* Examine the response.
+
+* Inspect JSON fields and WebSocket messages.
+
+### What it can find
+
+| Finding                 | Explanation                                          |
+| ----------------------- | ---------------------------------------------------- |
+| Premature results       | Results returned before publication                  |
+| Hidden response fields  | Data not displayed in the interface                  |
+| WebSocket exposure      | Sensitive real-time messages                         |
+| Token transmission      | Authentication tokens in traffic                     |
+| Excessive response data | Unnecessary information sent to clients              |
+| Cache behavior          | Potentially inappropriate caching                    |
+| Inconsistent responses  | Different responses for the same authorized resource |
+
+You can also save traffic for later analysis:
+
+```bash
+mitmdump -w event-traffic.mitm
+```
+
+This records traffic for subsequent review.
+
+### 6\. Wireshark
+
+![Packet Capture: What is it and What You Need to Know](https://images.openai.com/static-rsc-4/Li8VfmpLb5n2CmuU_lQ99YJBl-RKWeWC8e6GSEqCXc5do1ml2OasBhwQ6xLIzjjKZiM6x19c2uOzw64iAyoiwSWm-J_XKKMhX1Yrs0aIyLIpl6IFO60yY5JBo909KGGihlEIvXu8eKSW0YtSfrdmPr4EEQtS46LsNx_7spaaSWt8bm9Vrtbsfvpefg-0W9mm?purpose=fullsize)
+
+Main purpose: Analyze network packets and communication protocols.
+
+### How to use it
+
+* Open Wireshark.
+
+* Select your authorized test network interface.
+
+* Start capturing.
+
+* Open the application.
+
+* Navigate to the upcoming event.
+
+* Stop capturing.
+
+* Apply display filters.
+
+Useful filters:
+
+```text
+dns
+```
+
+Find DNS traffic.
+
+```text
+tcp
+```
+
+Find TCP traffic.
+
+```text
+tls
+```
+
+Find TLS-encrypted communications.
+
+```text
+http
+```
+
+Find visible HTTP traffic.
+
+```text
+websocket
+```
+
+Find identifiable WebSocket traffic.
+
+```text
+tcp.port == 443
+```
+
+Find traffic using TCP port 443.
+
+### What it can find
+
+* IP addresses communicating with the application.
+
+* Destination ports.
+
+* DNS lookups.
+
+* TCP connection behavior.
+
+* TLS handshake information.
+
+* Connection failures and retransmissions.
+
+* Visible HTTP headers and payloads when traffic is unencrypted or legitimately decrypted.
+
+* Network-level evidence of WebSocket connections.
+
+Important: Wireshark cannot normally read JSON inside HTTPS packets simply by capturing them. Use browser DevTools or Burp for the actual response content.
+
+### 7\. tcpdump
+
+![Cómo utilizar tcpdump para monitorizar nuestra red - Solvetic](https://images.openai.com/static-rsc-4/ML96OcM4KxpMb6S84ttAjcxlk5AaN07zLjTNhndx8rvOQCp16B6vFA_AT6TneSyOidy91Lp9SAVpAIiOYGAL9s5h0PaoOIE8qFGXdpMAiK82j1zy-DPrbIDtqli91ub6LrOpKNfaLQw9WI8afoXQJZtfb6T3V8YCbcHJ9gEN9LnevngYp_qWXCoWmqNow-TY?purpose=fullsize)
+
+Main purpose: Capture packets directly from a network interface through the Linux terminal.
+
+### How to use it
+
+First identify your interfaces:
+
+```bash
+ip addr
+```
+
+Capture traffic on your chosen interface:
+
+```bash
+sudo tcpdump -i any
+```
+
+Capture HTTPS-related traffic:
+
+```bash
+sudo tcpdump -i any 'tcp port 443'
+```
+
+Save captured traffic:
+
+```bash
+sudo tcpdump -i any -w event-test.pcap
+```
+
+Capture traffic involving your authorized test server:
+
+```bash
+sudo tcpdump -i any 'host TEST_SERVER_IP'
+```
+
+Replace `TEST_SERVER_IP` with the actual IP of your authorized test server.
+
+### What it can find
+
+* Source and destination IP addresses.
+
+* Source and destination ports.
+
+* TCP connections.
+
+* DNS communications.
+
+* Retransmissions.
+
+* Packet loss indicators.
+
+* Connection resets.
+
+* Timing and communication patterns.
+
+* Unencrypted application payloads.
+
+It is particularly useful when investigating whether a problem occurs at the network layer rather than the application layer.
+
+### 8\. tshark
+
+![Tshark Examples with Cheat Sheet](https://images.openai.com/static-rsc-4/5cr7SrLT7LLaOFo1SNUWxTWz1xw8yM8uRX0C_M74eOV5mP5O0pG5Pr_EZ-eYzzv-xAbTiuenNFn7YTkGq-N97lCwPQmB7Pgdfbch9XTGUgLXSa5iXyUo_9924N0O-0-RUzeBb9Ft5sY2_XkY6S0tHCg-fYbajQm4Gqk2pDd8KtiuvQlSK1TivhuKdZ8luiEO?purpose=fullsize)
+
+Main purpose: Perform Wireshark-style packet analysis from the terminal.
+
+### How to use it
+
+Capture packets:
+
+```bash
+sudo tshark -i any
+```
+
+Capture HTTPS traffic:
+
+```bash
+sudo tshark -i any -f "tcp port 443"
+```
+
+Read an existing capture:
+
+```bash
+tshark -r event-test.pcap
+```
+
+Show DNS packets:
+
+```bash
+tshark -r event-test.pcap -Y dns
+```
+
+Show TCP resets:
+
+```bash
+tshark -r event-test.pcap -Y "tcp.flags.reset == 1"
+```
+
+Show TLS handshakes:
+
+```bash
+tshark -r event-test.pcap -Y tls.handshake
+```
+
+### What it can find
+
+* DNS resolution behavior.
+
+* TCP connection failures.
+
+* TLS handshake problems.
+
+* Retransmissions.
+
+* Connection resets.
+
+* Packet timing.
+
+* Protocol information.
+
+* Visible application data where available.
+
+tshark is useful when you want to automate packet analysis or extract evidence from large packet captures.
+
+### 9\. Application and server logs
+
+Main purpose: Determine what the server actually processed and returned.
+
+If you control the application or have authorized access to its logs, investigate:
+
+* API request logs.
+
+* API response logs.
+
+* Authentication logs.
+
+* Authorization decisions.
+
+* Database access logs.
+
+* Event publication logs.
+
+* Settlement logs.
+
+* WebSocket server logs.
+
+### What it can find
+
+| Log type           | What it helps identify                     |
+| ------------------ | ------------------------------------------ |
+| API logs           | What endpoint was accessed                 |
+| Authorization logs | Whether access was permitted               |
+| Database logs      | Whether confidential fields were retrieved |
+| Settlement logs    | When results were calculated               |
+| Event logs         | When event status changed                  |
+| WebSocket logs     | When sensitive messages were published     |
+
+For example, compare:
+
+```text
+Event status changed: UPCOMING
+Response generated: 02:10:00
+Settlement completed: 02:30:00
+Result published: 02:35:00
+```
+
+If the response generated at 02:10 already contains the confidential settlement result, that is evidence worth investigating.
+
+Do not enable unrestricted logging of passwords, authentication tokens or personal information.
+
+### 10\. OpenAPI and API documentation
+
+![Languages and frameworks: OpenAPI | JetBrains Rider Documentation](https://images.openai.com/static-rsc-4/NOlyW1B_vrvz1DdwBABly-Rx_kluGWcd-zdQIXb2kuwEQM8-EJW1WAGsabtTzApOSpAp9RvJzwjsyo-HgcwMT97tQWkVfxrz2cd8fxzEW_mDrxYCI3jC_b6-PolSsEXYr0On-WUkhdfVMAx8sJroVViNSeRxAkhmTfoP2CalyLEY_aCXIOfteOBwrUoAYdTo?purpose=fullsize)
+
+Main purpose: Understand the intended API structure and response fields.
+
+### How to use it
+
+* Obtain the authorized OpenAPI specification.
+
+* Open it in Swagger UI or another compatible viewer.
+
+* Find the event endpoint.
+
+* Examine its GET operation.
+
+* Inspect the documented response schema.
+
+* Compare the documented schema with the actual response.
+
+### What it can find
+
+* Undocumented response fields.
+
+* Excessive API response properties.
+
+* Unexpected data types.
+
+* Incorrect response schemas.
+
+* Missing documented security requirements.
+
+* Inconsistencies between documentation and implementation.
+
+An undocumented field is not automatically a vulnerability. Its confidentiality and release timing matter.
+
+### 11\. Comparison: What each tool is best at finding
+
+This is the most important comparison for your research.
+
+| Tool             | Main discovery                       |
+| ---------------- | ------------------------------------ |
+| Chrome DevTools  | Browser-visible API responses        |
+| Firefox Monitor  | Browser HTTP responses               |
+| Burp Suite       | HTTP/API and WebSocket data exposure |
+| OWASP ZAP        | Passive web security weaknesses      |
+| mitmproxy        | HTTP/HTTPS and WebSocket traffic     |
+| Wireshark        | Network and protocol-level problems  |
+| tcpdump          | Raw packet capture                   |
+| tshark           | Automated packet analysis            |
+| Application logs | Server-side processing and access    |
+| OpenAPI          | Unexpected API response fields       |
+
+### 12\. Which tool should you use first?
+
+For your specific investigation, I recommend this order:
+
+* Chrome DevTools
+
+    Discover requests generated when viewing an upcoming event.
+
+* Burp Suite
+
+    Inspect GET responses, JSON fields and WebSocket messages.
+
+* mitmproxy
+
+    Independently inspect and record application traffic.
+
+* OWASP ZAP
+
+    Run passive security analysis.
+
+* Wireshark
+
+    Investigate underlying network communication.
+
+* tcpdump
+
+    Capture packet-level evidence.
+
+* tshark
+
+    Filter and analyze saved packet captures.
+
+* Application logs
+
+    Correlate API responses with server-side events.
+
+* OpenAPI
+
+    Compare actual responses with the intended API contract.
+
+### 13\. Vulnerabilities you can investigate with these tools
+
+| Vulnerability category              | Most useful tools           |
+| ----------------------------------- | --------------------------- |
+| Sensitive information disclosure    | Burp, DevTools, mitmproxy   |
+| Excessive data exposure             | Burp, DevTools, ZAP         |
+| Premature result disclosure         | Burp, DevTools, server logs |
+| WebSocket information leakage       | Burp, mitmproxy             |
+| Insecure transmission               | Wireshark, tcpdump, tshark  |
+| Security misconfiguration           | ZAP, Burp                   |
+| Cache-related information leakage   | Burp, DevTools, ZAP         |
+| Authentication information exposure | Burp, mitmproxy             |
+| Incorrect API response schema       | OpenAPI, Burp               |
+| Network communication failures      | Wireshark, tcpdump, tshark  |
+
+These tools can provide evidence for these vulnerability categories, but they do not automatically prove them.
+
+### 14\. My recommended practical workflow
+
+For an authorized event API assessment:
+
+* Open an upcoming event.
+
+* Use Chrome DevTools to identify its GET requests.
+
+* Use Burp to inspect the complete responses.
+
+* Check WebSocket messages.
+
+* Record event status and timestamps.
+
+* Look for confidential fields.
+
+* Compare the response against the intended API schema.
+
+* Use ZAP for passive security checks.
+
+* Use Wireshark, tcpdump and tshark if you need network-level evidence.
+
+* Correlate findings with server logs if available.
+
+* Document reproducible security findings.
+
+One important lesson: Burp Suite, Chrome DevTools and mitmproxy are your primary tools for discovering premature JSON disclosure. Wireshark, tcpdump and tshark are primarily network investigation tools. They complement each other rather than replacing each other.

@@ -1,0 +1,214 @@
+### Complete ways to inspect passive read-only API responses for premature data exposure
+
+The objective is to determine whether an application exposes sensitive event information before that information is supposed to become publicly available.
+
+For example, an event is marked `UPCOMING`, but its API response already contains the final score, winner, settlement result, or other confidential information.
+
+There are several ways to investigate this using Chrome DevTools, Burp Suite, Wireshark, and command-line tools.
+
+### 1\. Inspect through Chrome DevTools
+
+![Python Dynamic Web Scraping: Faster, Smarter | Olostep Blog](https://images.openai.com/static-rsc-4/ORjw5UiqnGWPhXPmndu2dXl6WsE0RmDl9DhlkFDrvsW978k5kuLG_2pxFaU99R2R17tlf_MAiIYdFOltAqi8BDlH_zjhK6PfXxpQIBpKKZp1hZ04k_E4o0xQeMpO_KG-UMKbbxnaeNG-nuQgjpIdZ24mruFABDCHVcqcxDDSd4sR2ct53R-dbv0Dy1v0vDco?purpose=fullsize)
+
+* Open your authorized test application.
+
+* Press F12 or open Developer Tools.
+
+* Select Network.
+
+* Select Fetch/XHR.
+
+* Navigate to an upcoming event.
+
+* Inspect the requests generated.
+
+* Select individual requests.
+
+* Examine Response and Preview.
+
+* Check whether sensitive fields are present.
+
+* Record the event status and response timestamp.
+
+Look for fields such as:
+
+```json
+{
+  "eventId": "12345",
+  "status": "UPCOMING",
+  "finalScore": null,
+  "winnerId": null,
+  "outcome": null,
+  "settlementData": null
+}
+```
+
+This is an example of a response that does not expose populated results.
+
+### 2\. Inspect through Burp Suite
+
+![API Security Testing on crAPI using Burp Suite and Postman | by Aw3s0m3h3d@ | Medium](https://images.openai.com/static-rsc-4/KgjUG6Ml_PLOUdW1xttC7M5ZRmerpRnd65OIqWPIDUcBHXbHqnc5htmdZz8yyuVLyJ85CkVUu83fBeoPYjPtqAUKHSQhwhESIdt8HbG6Oa2SvgZPO-stcesvsCZphK-pBvnunPYoNUZp6z4RMJXOLL6yISyDUZGDavh-Bf2gNVsxwyLwbO4LyjtLlsBukRy1?purpose=fullsize)
+
+Burp Suite provides several useful inspection methods:
+
+| Feature              | Purpose                                    |
+| -------------------- | ------------------------------------------ |
+| Proxy HTTP history   | Records application requests and responses |
+| HTTP request editor  | Examines request parameters                |
+| HTTP response viewer | Inspects returned JSON                     |
+| WebSocket history    | Inspects WebSocket communications          |
+| Logger               | Tracks application traffic                 |
+| Repeater             | Rechecks an authorized request             |
+| Comparer             | Compares two responses                     |
+
+For passive inspection:
+
+* Configure your browser to use Burp.
+
+* Open the authorized application.
+
+* Visit an upcoming event.
+
+* Open Proxy → HTTP history.
+
+* Identify relevant GET requests.
+
+* Inspect their responses.
+
+* Record whether sensitive fields are populated.
+
+Avoid changing request parameters or attempting unauthorized access when conducting a passive-only assessment.
+
+### 3\. Inspect WebSocket messages
+
+![How to Inject and Modify WebSocket Messages for Testing | HackerNoon](https://images.openai.com/static-rsc-4/LPf4HJdqu93awp7WWCBi1iTF_ThaMZ0WlJlFVeweyRnnT00bFn96Ve1g6JdFBDeLEU6CihtpLroIODYNava7SRvNQ9PI4RVDM03jus5hGvizc5iKaEOy-Ae_b-NKSW0ocEeAN5PXrP15LA85r5hO3fF2WhKe9a-PZw8bIOC4dlnfSU9_6IknlQc1ew7XzXvu?purpose=fullsize)
+
+Some applications use WebSockets instead of repeatedly requesting HTTP endpoints.
+
+Inspect:
+
+* WebSocket connection establishment.
+
+* Incoming messages.
+
+* Event status updates.
+
+* Score updates.
+
+* Winner information.
+
+* Settlement notifications.
+
+* Real-time event data.
+
+Pay attention to messages received while the event remains `UPCOMING` or `OPEN`.
+
+### 4\. Other ways to inspect the same exposure
+
+Here are additional approaches.
+
+| Method                  | What you inspect                            |
+| ----------------------- | ------------------------------------------- |
+| Chrome Network tab      | Browser HTTP requests                       |
+| Firefox Network Monitor | HTTP requests and responses                 |
+| Burp Proxy              | HTTP traffic                                |
+| Burp WebSocket history  | Real-time messages                          |
+| OWASP ZAP               | HTTP traffic and passive alerts             |
+| mitmproxy               | HTTP and WebSocket traffic                  |
+| Wireshark               | Network packet metadata and visible traffic |
+| tcpdump                 | Captured network packets                    |
+| tshark                  | Command-line packet analysis                |
+| Application logs        | Server-side response records                |
+| API documentation       | Intended response schema                    |
+| OpenAPI specification   | Documented response fields                  |
+
+Important: Wireshark and tcpdump generally cannot reveal HTTPS response JSON unless traffic is legitimately decrypted. Burp or browser developer tools are usually more convenient for inspecting application-layer responses.
+
+### 5\. Fields to investigate
+
+| Category         | Example fields                      |
+| ---------------- | ----------------------------------- |
+| Event status     | status, state                       |
+| Score            | finalScore, homeScore, awayScore    |
+| Winner           | winnerId, winningTeam               |
+| Outcome          | outcome, result                     |
+| Settlement       | settlementData, settlementStatus    |
+| Financial result | payout, winningAmount               |
+| Predictions      | correctPrediction, resultPrediction |
+| Event completion | completedAt, settledAt              |
+
+These are examples, not universal API field names.
+
+### 6\. Ways to determine whether there is a genuine vulnerability
+
+Finding a field in a response does not automatically establish a vulnerability.
+
+Investigate these conditions:
+
+* Premature disclosure: Is the information exposed before its authorized release time?
+
+* Confidentiality: Is the information genuinely confidential?
+
+* Authorization: Is the current user allowed to receive it?
+
+* Server-side enforcement: Does the server enforce access restrictions, rather than relying on hiding information in the interface?
+
+* Impact: Could someone use the information to gain an unfair advantage or cause financial harm?
+
+* Reproducibility: Can the exposure be consistently demonstrated?
+
+* Evidence: Can you establish the event status and the actual response timestamp?
+
+### 7\. Classification of findings
+
+| Observation                                           | Classification                             |
+| ----------------------------------------------------- | ------------------------------------------ |
+| Sensitive field absent                                | No evidence of exposure                    |
+| Sensitive field is null                               | No evidence of populated-data exposure     |
+| Field exists but contains harmless metadata           | Not necessarily a vulnerability            |
+| Final result populated before authorized release      | Potential information disclosure           |
+| Confidential settlement information exposed early     | Potential sensitive information disclosure |
+| Information appears only after authorized publication | Generally expected behavior                |
+
+One important distinction: an event's official start time and its authorized information-release time are not necessarily identical.
+
+### 8\. Suggested evidence collection
+
+For each suspected exposure, record:
+
+```text
+Finding:
+Premature Event Information Disclosure
+
+Event ID:
+[Authorized test event]
+
+Endpoint:
+[GET endpoint]
+
+Event status:
+UPCOMING
+
+Observation time:
+[Timestamp]
+
+Sensitive field:
+[Field name]
+
+Observed value:
+[Redacted value]
+
+Expected behavior:
+Sensitive result information should remain unavailable
+until its authorized publication time.
+
+Actual behavior:
+[Describe the observed response]
+
+Impact:
+[Explain the realistic security consequence]
+```
+
+My recommendation: For your API security research, start with Chrome DevTools or Burp Proxy for passive inspection, then use Wireshark or tshark only when you need additional network-level evidence. You do not need to run Nmap against an API path to identify this particular vulnerability.
+
+The key vulnerability category is Sensitive Information Disclosure, specifically premature exposure of confidential event or settlement information.

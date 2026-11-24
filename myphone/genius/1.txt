@@ -1,0 +1,597 @@
+### Complete practical guide: Frida, Android Studio Debugger, GDB and LLDB for upcoming-event API testing
+
+Your objective is to understand how an Android application processes an upcoming event, communicates with its backend, and handles the information returned by the server.
+
+For this investigation, we want to answer:
+
+* Which functions process event information?
+
+* Where do event IDs and statuses enter the application?
+
+* Which functions transform the returned data?
+
+* Where are results calculated?
+
+* Which conditions determine whether results are displayed?
+
+* Does the Android application calculate the result, or does the backend generate it?
+
+* Does the application receive sensitive information before it is supposed to be released?
+
+Important: Use these techniques on your own application, an authorized test build, or an application for which you have explicit permission to perform runtime analysis. The guide focuses on observation and reconstruction, not extracting proprietary algorithms or bypassing another service's protections.
+
+### 1\. Frida
+
+![Frida Scripting Basics for Pentesters | Part 1 | Shubham Golam](https://images.openai.com/static-rsc-4/sQ6BTYvMd2kd1Dopn4kdqYbcV_qazMLJnxgaOZypiVt96ZIdRLdOZO92jW8t269FQNBGbMfauANmJOaRpahFzBWImyjygwge-j5af_lawy1vWcsD87bTHIoJxXWQcsTBDXgB9XE0rz9dvuOSc45DpE6EUnGs1QGGfrehShNgPEQA6PDO2ZxfTIt529jAte3L?purpose=fullsize)
+
+Frida is a dynamic instrumentation toolkit. It allows you to observe application behavior while the application is running.
+
+Its main role: Runtime observation of functions, arguments, return values and execution behavior.
+
+### A. What Frida can investigate
+
+| Investigation        | What you learn                              |
+| -------------------- | ------------------------------------------- |
+| Function calls       | Which functions execute                     |
+| Function arguments   | What data enters a function                 |
+| Return values        | What a function produces                    |
+| Execution sequence   | Which operations execute first              |
+| Java methods         | Android application logic                   |
+| Native functions     | Native library execution                    |
+| Object properties    | How event data is represented               |
+| Data transformations | How application data changes                |
+| API calls            | How the application prepares communications |
+| Exceptions           | Where execution encounters errors           |
+
+### B. How to use Frida in your authorized test application
+
+First check that Frida is installed:
+
+```bash
+frida --version
+```
+
+Check connected Android devices:
+
+```bash
+frida-ls-devices
+```
+
+List running processes:
+
+```bash
+frida-ps -U
+```
+
+Here:
+
+* `-U` means use a connected USB-style Android device connection, including supported emulators.
+
+* `frida-ps` lists processes.
+
+* The process list helps identify your test application.
+
+For a test application you own, you can launch it through Frida:
+
+```bash
+frida -U -f com.example.testapp
+```
+
+Replace the package name with your own test application's package name.
+
+### C. Observe Java method execution
+
+In a debuggable test application, you can use a controlled instrumentation script to observe a method you own:
+
+```javascript
+Java.perform(function () {
+    const EventEngine = Java.use(
+        "com.example.testapp.EventEngine"
+    );
+
+    const calculate = EventEngine.calculate;
+
+    calculate.implementation = function (input) {
+        console.log("Input:", input);
+
+        const result = calculate.call(this, input);
+
+        console.log("Output:", result);
+
+        return result;
+    };
+});
+```
+
+This example assumes your test application contains the indicated class and method.
+
+It demonstrates:
+
+* Locating a Java class.
+
+* Identifying a method.
+
+* Observing its input.
+
+* Calling its original implementation.
+
+* Observing its return value.
+
+### D. What you should record during event testing
+
+For your own event-processing implementation, create a trace like this:
+
+```text
+Function: getEventDetails
+Input: eventId
+Output: Event object
+
+Function: processEvent
+Input: Event object
+Output: Processed event
+
+Function: calculateResult
+Input: Authorized test data
+Output: Calculated result
+
+Function: displayEvent
+Input: Processed event
+Output: UI update
+```
+
+This gives you an execution map.
+
+Important limitation: If the real result-generation algorithm exists exclusively on the remote server, Frida can observe the Android application's calls and received data, but cannot automatically recover the server's internal implementation.
+
+### 2\. Android Studio Debugger
+
+![Debug your app  |  Android Studio  |  Android Developers](https://images.openai.com/static-rsc-4/C8xIat_GtCwJwC1IvR5ZmGMbUWC8m2XHxmY6nmeKiZjDfoQxztdrGFHpSJXFbcWYViOHK7J3iU2TGsh6dawIOO22yyLGfyYUx678_d6fr7xuejIYynwM6AcqN2z78OPWdNFgG5LVn0elTx7D0g2lKVR0QXDPMBYiNx6ai14VXpRbaTtXTFCoYj6xKDHpe3Vg?purpose=fullsize)
+
+Android Studio is particularly useful when the application is written in Java or Kotlin and you have access to its source code or an authorized debuggable build.
+
+Its main role: Step-by-step inspection of application execution.
+
+### A. What it can investigate
+
+| Feature                 | What you discover                  |
+| ----------------------- | ---------------------------------- |
+| Breakpoints             | Where execution pauses             |
+| Variables               | Current values stored in memory    |
+| Watches                 | Values you want to monitor         |
+| Call stack              | Which functions called one another |
+| Step Over               | Executes the current line          |
+| Step Into               | Enters the called function         |
+| Step Out                | Leaves the current function        |
+| Conditional breakpoints | Pauses when a condition is met     |
+| Exception breakpoints   | Identifies where errors occur      |
+
+### B. How to use it
+
+* Open your authorized Android project in Android Studio.
+
+* Open the event-processing source file.
+
+* Find the function responsible for processing event information.
+
+* Click beside a line number to set a breakpoint.
+
+* Run the application in Debug mode.
+
+* Navigate to your test event.
+
+* When execution pauses, inspect the Variables panel.
+
+* Use Step Into to investigate called functions.
+
+* Use Step Over to follow execution.
+
+* Examine the Call Stack.
+
+### C. Example of what you are investigating
+
+Suppose your test application contains:
+
+```java
+public Event processEvent(Event event) {
+    if (event.getStatus().equals("UPCOMING")) {
+        return event;
+    }
+
+    return calculateEventResult(event);
+}
+```
+
+Set a breakpoint on the conditional statement.
+
+You can inspect:
+
+* The current event object.
+
+* The status value.
+
+* Whether the condition evaluates to true.
+
+* Which branch executes.
+
+* Whether the result-calculation function is called.
+
+This is especially useful for discovering whether the client application merely displays results or performs calculations locally.
+
+### 3\. GDB (GNU Debugger)
+
+![GDB: um debugger para programas Linux](https://images.openai.com/static-rsc-4/_AYuxykMPIWMuxtDZX4JZxoaTbjSzbO-x-GwQYtTeaVbb1TrDIJfxf3Rp4NGQGRGizgDmpE58wf6QSTWvOnLB6gYWf9OLejKthpf-vCHn7LZHO1HNke2IfU8my-ulQB3HvigjaciWXpF8HuUToMZpmka8mywFDjPvENgH2X2OHiuEkkzD38-Faf_buFrwyH_?purpose=fullsize)
+
+GDB is a debugger used primarily for native applications written in C and C++.
+
+In Android development, it is useful when application functionality is implemented in native libraries, such as `.so` files.
+
+Its main role: Investigating native-code execution, memory, function calls and program state.
+
+### A. What GDB can investigate
+
+| Investigation        | What you learn                         |
+| -------------------- | -------------------------------------- |
+| Function execution   | Which native functions run             |
+| Function arguments   | Values passed to native functions      |
+| Return values        | Results returned by functions          |
+| Registers            | CPU execution state                    |
+| Stack frames         | Active function execution              |
+| Memory               | Data stored in accessible memory       |
+| Conditional branches | Which execution paths are taken        |
+| Native libraries     | Which compiled components are involved |
+| Crashes              | Where and why execution fails          |
+
+### B. Important GDB commands
+
+These are useful in your own native test program.
+
+Start GDB:
+
+```bash
+gdb ./event_test
+```
+
+Set a breakpoint:
+
+```gdb
+break main
+```
+
+Start execution:
+
+```gdb
+run
+```
+
+Display the call stack:
+
+```gdb
+backtrace
+```
+
+Inspect local variables:
+
+```gdb
+info locals
+```
+
+Inspect arguments:
+
+```gdb
+info args
+```
+
+Display registers:
+
+```gdb
+info registers
+```
+
+Execute the next source line:
+
+```gdb
+next
+```
+
+Enter a called function:
+
+```gdb
+step
+```
+
+Continue execution:
+
+```gdb
+continue
+```
+
+Inspect a function's address:
+
+```gdb
+info address calculate_event
+```
+
+### C. How this applies to your event investigation
+
+Suppose your authorized Android application contains a native calculation library:
+
+```text
+libeventengine.so
+```
+
+GDB can help investigate its execution if you have the appropriate symbols, source code and debugging access.
+
+You can determine:
+
+* Whether the native library performs event calculations.
+
+* Which functions are called.
+
+* What input reaches those functions.
+
+* What values are returned.
+
+* Whether the application performs local calculations.
+
+Limitation: GDB does not automatically recover source code from stripped native libraries. It also cannot directly expose the internal algorithm of a remote backend.
+
+### 4\. LLDB (LLVM Debugger)
+
+![Zero Day Initiative — MindShaRE: Using lldbinit to Enhance the LLDB Debugger](https://images.openai.com/static-rsc-4/PdzhV3-HZ6z6sTvGtvG3W6FDFTb0v6l5mvfn4qzqrN4eIdquCI1CJs81Bok1KZoBTI4cDth3Sy5ZgLKWFNczYmD7otA3wm5A7epPHRUMzKklVnIdFlN8idiabfyIIuqLQxTq0aWBf9Th3DS2QVwhibNFJ4y8PucR667uQV3RtO1W08O3Hzmfja_eqaNAhRkv?purpose=fullsize)
+
+LLDB is another native-code debugger. It is commonly integrated into Android Studio's native debugging workflow.
+
+Its main role: Debugging native C/C++ code and examining execution at the machine-code level.
+
+### A. What LLDB can investigate
+
+| Investigation    | What you learn              |
+| ---------------- | --------------------------- |
+| Function calls   | Native execution sequence   |
+| Arguments        | Inputs to native functions  |
+| Return values    | Function outputs            |
+| Stack frames     | Function call relationships |
+| Registers        | CPU state                   |
+| Memory           | Accessible runtime data     |
+| Breakpoints      | Execution stopping points   |
+| Threads          | Concurrent execution        |
+| Shared libraries | Loaded native components    |
+| Crashes          | Native application failures |
+
+### B. Useful LLDB commands
+
+Start LLDB with an authorized native test program:
+
+```bash
+lldb ./event_test
+```
+
+Set a breakpoint:
+
+```lldb
+breakpoint set --name main
+```
+
+Start execution:
+
+```lldb
+run
+```
+
+Inspect the call stack:
+
+```lldb
+bt
+```
+
+Inspect variables:
+
+```lldb
+frame variable
+```
+
+Inspect arguments:
+
+```lldb
+frame variable input
+```
+
+Display registers:
+
+```lldb
+register read
+```
+
+Move to another stack frame:
+
+```lldb
+frame select 1
+```
+
+Continue execution:
+
+```lldb
+continue
+```
+
+### C. How LLDB helps in your investigation
+
+Suppose your Android application uses C++ to process event information.
+
+You can investigate:
+
+* Whether the calculation is implemented in native code.
+
+* Which native function receives the event data.
+
+* Which functions it calls.
+
+* What intermediate values it produces.
+
+* What result it returns to Java/Kotlin.
+
+### D. GDB versus LLDB
+
+| Feature                    | GDB                        | LLDB               |
+| -------------------------- | -------------------------- | ------------------ |
+| Native C/C++ debugging     | Yes                        | Yes                |
+| Function breakpoints       | Yes                        | Yes                |
+| Stack inspection           | Yes                        | Yes                |
+| Register inspection        | Yes                        | Yes                |
+| Memory inspection          | Yes                        | Yes                |
+| Android NDK integration    | Possible                   | Strong integration |
+| Android Studio integration | Limited compared with LLDB | Native support     |
+
+For Android NDK development, LLDB is generally the more convenient choice.
+
+### 5\. How the four tools work together
+
+The four tools investigate different layers of application execution.
+
+Frida
+
+### Runtime instrumentation
+
+Observe application functions, arguments and return values.
+
+Android Studio Debugger
+
+### Java/Kotlin debugging
+
+Follow application logic, variables and conditional branches.
+
+GDB
+
+### Native debugging
+
+Investigate C/C++ execution and memory.
+
+LLDB
+
+### Native debugging
+
+Investigate native functions, registers and execution paths.
+
+### 6\. What each tool can reveal about the seven algorithm clues
+
+| Evidence               | Frida | Android Studio | GDB     | LLDB    |
+| ---------------------- | ----- | -------------- | ------- | ------- |
+| Function calls         |       | Yes            | Yes     | Yes     |
+| Input values           | Yes   | Yes            | Yes     | Yes     |
+| Return values          | Yes   | Yes            | Yes     | Yes     |
+| Execution order        | Yes   | Yes            | Yes     | Yes     |
+| Conditional branches   | Yes   | Yes            | Yes     | Yes     |
+| Data transformations   | Yes   | Yes            | Yes     | Yes     |
+| Component interactions | Yes   | Yes            | Limited | Limited |
+
+The availability of specific observations depends on the programming language, debugging symbols, application architecture and access permissions.
+
+### 7\. Practical workflow for your upcoming-event investigation
+
+Assume you have an authorized Android test application that displays events.
+
+Investigation sequence
+
+* Start with Android Studio Debugger
+
+    Identify the event-processing functions and follow Java/Kotlin execution.
+
+* Use Frida
+
+    Observe runtime behavior in your authorized test build and compare function inputs and outputs.
+
+* Use LLDB
+
+    Investigate native C/C++ components if the application uses them.
+
+* Use GDB
+
+    Perform additional native debugging where your development environment supports it.
+
+* Correlate with Burp Suite
+
+    Compare local execution with the actual API requests and responses.
+
+* Document the execution trace
+
+    Establish which component generated each value and when.
+
+### 8\. The most important investigation: Where is the result generated?
+
+Consider these three possibilities.
+
+Scenario A: Android generates the result
+
+Client-side calculation
+
+```text
+Event data
+    |
+    v
+Android function
+    |
+    v
+Calculation
+    |
+    v
+Displayed result
+```
+
+Investigate with Android Studio, Frida and potentially LLDB/GDB.
+
+Scenario B: Server generates the result
+
+Server-side calculation
+
+```text
+Android application
+    |
+    v
+API request
+    |
+    v
+Remote backend
+    |
+    v
+Generated result
+    |
+    v
+API response
+```
+
+Investigate the request and response with Burp and the authorized server-side logs/source code.
+
+Scenario C: Both participate
+
+Hybrid calculation
+
+```text
+Android processing
+    |
+    v
+API communication
+    |
+    v
+Server calculation
+    |
+    v
+Android processing
+    |
+    v
+Display
+```
+
+You need both runtime and API analysis.
+
+### 9\. My recommendation: What to learn first
+
+| Priority | Tool                    | Reason                               |
+| -------- | ----------------------- | ------------------------------------ |
+| 1        | Android Studio Debugger | Understand application execution     |
+| 2        | Frida                   | Understand runtime behavior          |
+| 3        | LLDB                    | Understand native Android components |
+| 4        | GDB                     | Understand native debugging          |
+
+One final security distinction: If you discover that an upcoming event's confidential outcome is generated remotely, the correct next step is to examine the backend implementation or obtain server-side test logs through authorized access. Do not assume that observing the Android application's runtime gives you the server's algorithm.
+
+Your strongest skill to develop here is execution tracing: connecting function calls, inputs, conditions, transformations and outputs into one understandable sequence.
