@@ -1,0 +1,41 @@
+You are now at the Network selection stage of adding your USDC wallet on HackenProof.
+
+Your screen shows three available networks:
+
+* Base – USDC on the Base network.
+
+* Ethereum – USDC on the Ethereum network (ERC-20).
+
+* Solana – USDC on the Solana network.
+
+### Which one should you select?
+
+Choose the network that matches the USDC receiving address in your external wallet.
+
+For example:
+
+* Coinbase Wallet: supports Base and Ethereum, among others.
+
+* MetaMask: supports Ethereum and Base.
+
+* Phantom: supports Solana and other networks.
+
+Important: Never select a network simply because it is cheaper. The receiving wallet must support that exact network.
+
+### One question:
+
+Which wallet are you planning to receive your HackenProof rewards into?
+
+* Binance
+
+* Trust Wallet
+
+* MetaMask
+
+* Coinbase Wallet
+
+* Phantom
+
+* Another wallet
+
+I'll guide you through the correct network selection and the next steps.

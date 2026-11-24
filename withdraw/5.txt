@@ -1,0 +1,51 @@
+If you want to use Binance for HackenProof USDC payments, you can use Binance as your receiving platform instead of MetaMask, Trust Wallet or Phantom, provided HackenProof accepts an exchange deposit address.
+
+Binance is an exchange wallet, not a personal self-custody wallet. You must select the correct USDC deposit network.
+
+### Binance support for the three networks
+
+![MoneyBadger](https://images.openai.com/static-rsc-4/7YNmxP-IZewT9i6-mam1fTbx0X0KbY4RQeMuoQHErRAh39NMDA5Hw64pHYbFkzLQdOrLatr4UXuxx5FY140RCLN-CBHowHamfbh25iVNXgkYT72JyoRYY2z-Vze_qV-8z2H502W0WsSw7ofQcqET1UY6lrCTuQpsQS9C0_GmFTrPJkZxiVrPxP3TCsmrAwsn?purpose=fullsize)
+
+1\. Base network
+
+Supported
+
+USDC deposit on Base is supported by Binance. Binance Support
+
+![MoneyBadger](https://images.openai.com/static-rsc-4/7YNmxP-IZewT9i6-mam1fTbx0X0KbY4RQeMuoQHErRAh39NMDA5Hw64pHYbFkzLQdOrLatr4UXuxx5FY140RCLN-CBHowHamfbh25iVNXgkYT72JyoRYY2z-Vze_qV-8z2H502W0WsSw7ofQcqET1UY6lrCTuQpsQS9C0_GmFTrPJkZxiVrPxP3TCsmrAwsn?purpose=fullsize)
+
+2\. Ethereum network (ERC20)
+
+Supported
+
+Binance supports USDC deposits on Ethereum. Binance
+
+![MoneyBadger](https://images.openai.com/static-rsc-4/7YNmxP-IZewT9i6-mam1fTbx0X0KbY4RQeMuoQHErRAh39NMDA5Hw64pHYbFkzLQdOrLatr4UXuxx5FY140RCLN-CBHowHamfbh25iVNXgkYT72JyoRYY2z-Vze_qV-8z2H502W0WsSw7ofQcqET1UY6lrCTuQpsQS9C0_GmFTrPJkZxiVrPxP3TCsmrAwsn?purpose=fullsize)
+
+3\. Solana network (SPL)
+
+Supported
+
+Binance supports USDC deposits on Solana. Binance Support
+
+### How to get your Binance USDC address
+
+* Open Binance.
+
+* Tap Deposit.
+
+* Select Deposit Crypto.
+
+* Search for USDC.
+
+* Select the network HackenProof requires.
+
+* Copy the displayed deposit address.
+
+Official guide: [Binance deposit instructions](https://www.binance.com/en/support/faq/detail/85a1c394ac1d489fb0bfac0ef2fceafd?utm_source=chatgpt.com).
+
+Important: Check that all three networks actually appear in your own Binance USDC deposit screen. Availability can vary by account and region. Never send USDC on a different network from the one selected on HackenProof.
+
+### One question
+
+Are you planning to use Binance as your permanent USDC receiving wallet for HackenProof bug bounty payments?

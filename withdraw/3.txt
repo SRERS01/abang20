@@ -1,0 +1,65 @@
+Here are the wallets that support each USDC network on HackenProof:
+
+### 1\. Base network
+
+My recommendation
+
+![MetaMask for Android - Download the APK from Uptodown](https://images.openai.com/static-rsc-4/gp0S1wan38CUA_N4cKmDfNeWonxU8ActH07hkFpA6kvv2b2ubU4-cuIlMbdJzHSvcDiKxM1jJDVJAhEZDLTZThYZhmJdNB9HzaTrR5ForTUWpQhK0TNmkf_N9GqhPoJT2qzcv8IPo_ErWkKLQQ6WwHwQiUJzRIhePR47DvxMFR9b5ClTSYBl0sXGe10g1AU1?purpose=fullsize)
+
+MetaMask
+
+![Trust Wallet (@TrustWalletApp) on X](https://images.openai.com/static-rsc-4/70vMQDNaAosntphiSDOgYbRaisb6sjlDGGajlitAw8O3AQrKVC8I_EKG6tXSsGTvNvUx4gg3VZrWY4o-gsQ_VKxmwJjlASTGMIo-hRHM1PSD0K5xhEpUnDJnjNw6duuUnJ5ExiCb3ZuYtsASPXQibBOxkCXxohZEEieOIOwP-mSxhdoETrjjydgvortjjpDF?purpose=fullsize)
+
+Trust Wallet
+
+![Download Base - Your home for everything onchain](https://images.openai.com/static-rsc-4/GM_fnVn-tD5wSa74K6B-SJ1sxROhjVdPRAtatvUCXL1GICIV4xjQ5vrRg-7zK72lGLwkzXjTJFocw5P4tll9_75bwAFkGmTH-iZV9UOktXPi3FUJPGdlvI6paxOPwAiTTfB2RHxbfrVLtxQNKdXD05K_sUNm9ouN-Y1nISvtYxkS2GK8qkP4C2ZsxQAsWPc1?purpose=fullsize)
+
+Coinbase Wallet
+
+![WalletScrutiny - Phantom - Trade Markets for iOS](https://images.openai.com/static-rsc-4/jW607mJjl6P10ljBZhgeyoOBTNMc8V4Wy9pkoj9ipqLOFuw3OdOUaUl8yem79wGfuLhUJ10ng0td4uKzGCDuDPX1zPvC0QRreeR1xnQ922KfjpO_qxPUmN9oM8pNusy4v6GyMR0RJr8cIDMFUtjHl1nVDUV_fWggfDobguH9D3kmkumCE5KnPriqCiDXVgnj?purpose=fullsize)
+
+Phantom
+
+### 2\. Ethereum network
+
+![MetaMask for Android - Download the APK from Uptodown](https://images.openai.com/static-rsc-4/gp0S1wan38CUA_N4cKmDfNeWonxU8ActH07hkFpA6kvv2b2ubU4-cuIlMbdJzHSvcDiKxM1jJDVJAhEZDLTZThYZhmJdNB9HzaTrR5ForTUWpQhK0TNmkf_N9GqhPoJT2qzcv8IPo_ErWkKLQQ6WwHwQiUJzRIhePR47DvxMFR9b5ClTSYBl0sXGe10g1AU1?purpose=fullsize)
+
+MetaMask
+
+![Trust Wallet (@TrustWalletApp) on X](https://images.openai.com/static-rsc-4/70vMQDNaAosntphiSDOgYbRaisb6sjlDGGajlitAw8O3AQrKVC8I_EKG6tXSsGTvNvUx4gg3VZrWY4o-gsQ_VKxmwJjlASTGMIo-hRHM1PSD0K5xhEpUnDJnjNw6duuUnJ5ExiCb3ZuYtsASPXQibBOxkCXxohZEEieOIOwP-mSxhdoETrjjydgvortjjpDF?purpose=fullsize)
+
+Trust Wallet
+
+![Binance Gift Card (Global)](https://images.openai.com/static-rsc-4/iBxYBVgEIb-Bqu-xlpouJUWtSfEvFf3hg0XyTDWY_HhGb3ha50i7B26tunyp2w0OiWv1g4x8gMVKZ-L0oOBjcdl-Cm2Y11XP6fX2c_5icDid3tTY1d1CnB2wcmiPm2agrPUJBEQ3tugJM5ZhOaxaQhGHcgYXotbuqgLCDrrS4b0V-KtEMoYjS-nVFhqXOmwf?purpose=fullsize)
+
+Binance
+
+![WalletScrutiny - Phantom - Trade Markets for iOS](https://images.openai.com/static-rsc-4/jW607mJjl6P10ljBZhgeyoOBTNMc8V4Wy9pkoj9ipqLOFuw3OdOUaUl8yem79wGfuLhUJ10ng0td4uKzGCDuDPX1zPvC0QRreeR1xnQ922KfjpO_qxPUmN9oM8pNusy4v6GyMR0RJr8cIDMFUtjHl1nVDUV_fWggfDobguH9D3kmkumCE5KnPriqCiDXVgnj?purpose=fullsize)
+
+Phantom
+
+### 3\. Solana network
+
+![WalletScrutiny - Phantom - Trade Markets for iOS](https://images.openai.com/static-rsc-4/jW607mJjl6P10ljBZhgeyoOBTNMc8V4Wy9pkoj9ipqLOFuw3OdOUaUl8yem79wGfuLhUJ10ng0td4uKzGCDuDPX1zPvC0QRreeR1xnQ922KfjpO_qxPUmN9oM8pNusy4v6GyMR0RJr8cIDMFUtjHl1nVDUV_fWggfDobguH9D3kmkumCE5KnPriqCiDXVgnj?purpose=fullsize)
+
+Phantom
+
+![Trust Wallet (@TrustWalletApp) on X](https://images.openai.com/static-rsc-4/70vMQDNaAosntphiSDOgYbRaisb6sjlDGGajlitAw8O3AQrKVC8I_EKG6tXSsGTvNvUx4gg3VZrWY4o-gsQ_VKxmwJjlASTGMIo-hRHM1PSD0K5xhEpUnDJnjNw6duuUnJ5ExiCb3ZuYtsASPXQibBOxkCXxohZEEieOIOwP-mSxhdoETrjjydgvortjjpDF?purpose=fullsize)
+
+Trust Wallet
+
+![Solflare's Careers Page - Open Remote Jobs, March 2026](https://images.openai.com/static-rsc-4/Pp9TWiC6VH9WNUhKo1I4zsk7Q4HIpyq7kC22ZuSHPAtwF7RmBdmVDCWrIWQ6OHx3e-NdQRgGYh5ap9VnVKiFrp96NN5pRJt3skAkBQlc_-u0f6wI5cRn58i2qYM1QgHpw8xO7lKJrllKdCZsJni2lKWv0_8Bvnu7jvMOXPRcUaxoYXOrS6GmEiLa7Qn5OY5M?purpose=fullsize)
+
+Solflare
+
+![MetaMask for Android - Download the APK from Uptodown](https://images.openai.com/static-rsc-4/gp0S1wan38CUA_N4cKmDfNeWonxU8ActH07hkFpA6kvv2b2ubU4-cuIlMbdJzHSvcDiKxM1jJDVJAhEZDLTZThYZhmJdNB9HzaTrR5ForTUWpQhK0TNmkf_N9GqhPoJT2qzcv8IPo_ErWkKLQQ6WwHwQiUJzRIhePR47DvxMFR9b5ClTSYBl0sXGe10g1AU1?purpose=fullsize)
+
+MetaMask
+
+### My overall choice
+
+Trust Wallet or MetaMask for Base and Ethereum; Phantom for Solana.
+
+Before saving your HackenProof wallet, verify that the exact USDC network is supported for receiving, not just that the wallet supports the blockchain. Trust Wallet +3
+
+Never share your recovery phrase or private key with anyone.

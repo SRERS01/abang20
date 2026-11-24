@@ -1,0 +1,41 @@
+Here is my recommendation for each USDC network on HackenProof:
+
+![Base Engineering Blog](https://images.openai.com/static-rsc-4/-VQMHM9Nxkh5ZFnArBdrIY3jRld6kqdqgJ-AYga6CgKxpGnJNk2O2rVsfV1QbShGlbdY76OAHHGqBGMgyGEOUrw5ek1BIWHolcAO8Y7Byap0IuhgCiZaQkS75seld7JISl8Gq8GRaOPwaMRk-N9gk9DwBc5wRCtYfCt-KvFuEgDkBDPxIf9vqIwGsA6SywHD?purpose=fullsize)
+
+1\. Base
+
+Best for low fees
+
+* Fast transactions.
+
+* Generally low transaction fees.
+
+* Good for frequent transfers.
+
+![Ethereum Logo SVG and PNG Icons for Your Projects](https://images.openai.com/static-rsc-4/SBLlsemg84irvTL48tChARF7Pvkfz46J6EG3r-psgqP7cA0-RjXJcX2EnIf9D2mM664i_nZSNReZqoYCOGOBo1j4AeLYT5CquCQnkysHR78cwf0Ao_6BTU2akCUl4GZLtysiq_nXm1P_1gj92thwE0tfS8NOxm_2rmY2zr30aZARF5C_E051h6bJGyekd16S?purpose=fullsize)
+
+2\. Ethereum
+
+Best for broad compatibility
+
+* Widely supported.
+
+* Established ecosystem.
+
+* Usually higher transaction fees.
+
+![Jobs | Solana Network Opportunities Job Board](https://images.openai.com/static-rsc-4/5TsNe9NUVtaL2LdftGSvNFW1x6E109NHI7_zlflH5E2dItVxVibs1ViUfqwreIkoBAcUq5KrSYBOe3yEDH7GNXK91wUrSZ1OBgLLO7VupVtgtCkdfXu_4MhqS5OAX5qT6X-h8h9tD6oM1zol5YYDAWkc2wTl8F0enQOqJmX5q0zruxIqtTkOalRslfMAE7Ml?purpose=fullsize)
+
+3\. Solana
+
+Best for speed and low fees
+
+* Very fast transfers.
+
+* Generally inexpensive.
+
+* Requires a Solana-compatible wallet.
+
+My overall recommendation: Base, if your receiving wallet supports USDC on Base.
+
+Remember: the network you select on HackenProof must exactly match the network used by your receiving wallet.
