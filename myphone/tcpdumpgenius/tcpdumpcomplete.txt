@@ -1,0 +1,855 @@
+Worked for 15s
+
+### Complete TCPdump guide for web bug bounty hunting
+
+`tcpdump` is a command-line packet analyser used to capture, filter and inspect network traffic.
+
+In web bug bounty, its main purpose is to help you understand what is happening at the network level when your browser or testing application communicates with a target server.
+
+It complements Burp Suite, Wireshark, Tshark, Nmap and Snort.
+
+### 1\. What you can discover with TCPdump
+
+| Investigation       | What you may discover                              |
+| ------------------- | -------------------------------------------------- |
+| DNS traffic         | Domain-to-IP resolution                            |
+| TCP connections     | Source and destination ports                       |
+| TCP handshakes      | SYN, SYN-ACK and ACK                               |
+| TLS connections     | TLS handshakes and certificate-related metadata    |
+| HTTP traffic        | Plaintext HTTP requests and responses              |
+| Connection failures | Resets, retransmissions and timeouts               |
+| Network routing     | Which network interfaces and endpoints communicate |
+| Packet sizes        | Unusually large or small packets                   |
+| Timing              | Delays and connection behaviour                    |
+| Data transfer       | Traffic volume and direction                       |
+
+Important limitation: HTTPS encrypts HTTP headers, cookies, tokens, request bodies and responses. TCPdump normally cannot reveal those contents. Use Burp Suite to inspect HTTP messages where you have an authorized proxy setup.
+
+### 2\. Prepare TCPdump on Ubuntu
+
+### Step 1: Check installation
+
+```bash
+tcpdump --version
+```
+
+If not installed:
+
+```bash
+sudo apt update
+sudo apt install tcpdump -y
+```
+
+### Step 2: Identify your network interfaces
+
+```bash
+ip addr
+```
+
+Or:
+
+```bash
+ip link show
+```
+
+List interfaces available to TCPdump:
+
+```bash
+sudo tcpdump -D
+```
+
+Possible interfaces include:
+
+* `wlan0` – wireless interface.
+
+* `eth0` – Ethernet interface.
+
+* `lo` – loopback interface.
+
+* `tun0` – VPN interface.
+
+* `any` – all supported interfaces.
+
+### Step 3: Capture traffic
+
+```bash
+sudo tcpdump -i any
+```
+
+Why: Observe packets passing through your available network interfaces.
+
+What you find: Source IP, destination IP, protocols, ports, timestamps and packet information.
+
+For a cleaner output:
+
+```bash
+sudo tcpdump -i any -nn
+```
+
+Useful options:
+
+| Option | Function                                  |
+| ------ | ----------------------------------------- |
+| -i     | Select interface                          |
+| -n     | Disable hostname resolution               |
+| -nn    | Disable hostname and port-name resolution |
+| -v     | More packet details                       |
+| -vv    | Greater detail                            |
+| -vvv   | Maximum verbosity                         |
+| -c 100 | Stop after 100 packets                    |
+| -q     | Shorter output                            |
+| -e     | Show link-layer headers                   |
+| -tttt  | Human-readable date and time              |
+| -s 0   | Capture full packet length                |
+
+### 3\. DNS investigation
+
+DNS is important when investigating how your browser resolves a target domain.
+
+### Capture all DNS traffic
+
+```bash
+sudo tcpdump -i any -nn port 53
+```
+
+### Capture DNS queries only
+
+```bash
+sudo tcpdump -i any -nn 'udp dst port 53'
+```
+
+### Capture DNS responses
+
+```bash
+sudo tcpdump -i any -nn 'udp src port 53'
+```
+
+### Capture TCP and UDP DNS
+
+```bash
+sudo tcpdump -i any -nn 'port 53'
+```
+
+### Capture DNS traffic involving a particular resolver
+
+```bash
+sudo tcpdump -i any -nn 'host 8.8.8.8 and port 53'
+```
+
+### What you investigate
+
+* Which DNS resolver your device contacts.
+
+* Which domains your device requests.
+
+* Whether DNS responses arrive.
+
+* DNS timeouts.
+
+* DNS traffic over TCP or UDP.
+
+* Unexpected DNS requests from your own testing device.
+
+Bug bounty relevance: DNS observations can help investigate DNS configuration and resolution problems. They do not independently prove a DNS vulnerability.
+
+### 4\. Target IP investigation
+
+Suppose your authorized test target is `example.com`.
+
+First, resolve the domain:
+
+```bash
+dig example.com
+```
+
+Assume the returned IP is `203.0.113.10` (illustrative documentation address).
+
+### Capture all traffic to and from the IP
+
+```bash
+sudo tcpdump -i any -nn 'host 203.0.113.10'
+```
+
+### Capture traffic originating from the IP
+
+```bash
+sudo tcpdump -i any -nn 'src host 203.0.113.10'
+```
+
+### Capture traffic going to the IP
+
+```bash
+sudo tcpdump -i any -nn 'dst host 203.0.113.10'
+```
+
+### Capture traffic between two hosts
+
+```bash
+sudo tcpdump -i any -nn 'host 192.0.2.10 and host 192.0.2.20'
+```
+
+### Capture an authorized subnet
+
+```bash
+sudo tcpdump -i any -nn 'net 192.168.1.0/24'
+```
+
+Why: Isolate communication with a particular server or your own lab network.
+
+What you find:
+
+* Remote IP addresses.
+
+* Local IP addresses.
+
+* Connection attempts.
+
+* Traffic direction.
+
+* Protocols and ports.
+
+* Communication patterns.
+
+Remember that a domain can resolve to multiple IP addresses, and CDNs or load balancers can change the destination.
+
+### 5\. HTTP and HTTPS investigation
+
+This is one of the most important areas for web bug bounty.
+
+### A. Capture HTTP
+
+```bash
+sudo tcpdump -i any -nn 'tcp port 80'
+```
+
+HTTP commonly uses port 80.
+
+To display readable ASCII payloads:
+
+```bash
+sudo tcpdump -i any -nn -A 'tcp port 80'
+```
+
+To display hexadecimal and ASCII:
+
+```bash
+sudo tcpdump -i any -nn -X 'tcp port 80'
+```
+
+What you may find:
+
+* HTTP request lines.
+
+* Host headers.
+
+* URLs and paths.
+
+* User-Agent headers.
+
+* Plaintext cookies.
+
+* Plaintext authorization data.
+
+* Server responses.
+
+Only inspect traffic generated by your own authorized test session. Plaintext authentication data should be treated as sensitive.
+
+### B. Capture HTTPS
+
+```bash
+sudo tcpdump -i any -nn 'tcp port 443'
+```
+
+To save HTTPS packets:
+
+```bash
+sudo tcpdump -i any -nn -s 0 -w https.pcap 'tcp port 443'
+```
+
+What you can find:
+
+* Client and server IP addresses.
+
+* TLS handshake packets.
+
+* Packet sizes.
+
+* Connection timing.
+
+* TCP ports.
+
+* Connection termination.
+
+* Some TLS metadata, depending on the protocol and encryption features.
+
+Important
+
+You cannot normally read HTTPS request headers, cookies, authorization tokens, JSON payloads or server responses using ordinary TCPdump capture.
+
+Use Burp Suite for authorized HTTP-level inspection.
+
+### C. Capture QUIC / HTTP/3
+
+```bash
+sudo tcpdump -i any -nn 'udp port 443'
+```
+
+Why? HTTP/3 commonly uses QUIC over UDP.
+
+What you may find:
+
+* QUIC communication.
+
+* UDP packet direction.
+
+* Connection timing.
+
+* Packet sizes.
+
+* QUIC connection behaviour.
+
+This helps when your browser communicates using HTTP/3 rather than conventional TCP-based HTTPS.
+
+### 6\. TCP handshake investigation
+
+TCP handshake analysis helps you understand how a connection is established.
+
+Normal TCP three-way handshake
+
+1\. SYN
+
+Client requests a connection
+
+2\. SYN-ACK
+
+Server acknowledges and responds
+
+3\. ACK
+
+Client acknowledges; connection established
+
+### Commands
+
+1\. Capture SYN packets
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-syn != 0'
+```
+
+Find: Connection initiation attempts.
+
+2\. Capture SYN without ACK
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack == 0'
+```
+
+Find: Initial connection requests.
+
+3\. Capture SYN-ACK
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & (tcp-syn|tcp-ack) == (tcp-syn|tcp-ack)'
+```
+
+Find: Server responses to connection requests.
+
+4\. Capture ACK packets
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-ack != 0'
+```
+
+Find: TCP acknowledgements.
+
+5\. Capture FIN packets
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-fin != 0'
+```
+
+Find: Graceful TCP connection termination.
+
+6\. Capture RST packets
+
+```bash
+sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-rst != 0'
+```
+
+Find: Abrupt TCP connection resets.
+
+### What can these findings tell you?
+
+| Observation             | Possible explanation                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| SYN without response    | Packet loss, filtering, routing issue or unavailable service |
+| SYN followed by RST     | Connection refused or actively reset                         |
+| SYN followed by SYN-ACK | Server accepted the connection attempt                       |
+| Repeated SYN            | Possible connection retries                                  |
+| FIN                     | Normal or initiated connection closure                       |
+| RST                     | Abrupt connection termination                                |
+
+A RST does not automatically mean a security vulnerability.
+
+### 7\. Port investigation
+
+### Capture HTTP and HTTPS
+
+```bash
+sudo tcpdump -i any -nn 'tcp port 80 or tcp port 443'
+```
+
+### Capture a specific port
+
+```bash
+sudo tcpdump -i any -nn 'port 8080'
+```
+
+### Capture multiple ports
+
+```bash
+sudo tcpdump -i any -nn 'port 80 or port 443 or port 8080'
+```
+
+### Capture a port range
+
+```bash
+sudo tcpdump -i any -nn 'portrange 8000-9000'
+```
+
+### Capture destination port
+
+```bash
+sudo tcpdump -i any -nn 'dst port 443'
+```
+
+### Capture source port
+
+```bash
+sudo tcpdump -i any -nn 'src port 443'
+```
+
+What you find:
+
+* Which ports your device communicates with.
+
+* Whether a connection is outgoing or incoming.
+
+* Whether your application uses alternative service ports.
+
+* Which protocols are involved.
+
+Remember: TCPdump observes traffic; Nmap is the more appropriate tool for authorized port discovery.
+
+### 8\. Connection failure and network troubleshooting
+
+### Capture ICMP traffic
+
+```bash
+sudo tcpdump -i any -nn icmp
+```
+
+Find:
+
+* Ping requests.
+
+* Ping responses.
+
+* Destination unreachable messages.
+
+* Time exceeded messages.
+
+### Capture IPv4 traffic
+
+```bash
+sudo tcpdump -i any -nn ip
+```
+
+### Capture IPv6 traffic
+
+```bash
+sudo tcpdump -i any -nn ip6
+```
+
+### Capture UDP traffic
+
+```bash
+sudo tcpdump -i any -nn udp
+```
+
+### Capture ARP traffic
+
+```bash
+sudo tcpdump -i any -nn arp
+```
+
+Find:
+
+* Local IP-to-MAC address resolution.
+
+* ARP requests.
+
+* ARP responses.
+
+### Capture traffic excluding SSH
+
+```bash
+sudo tcpdump -i any -nn 'not port 22'
+```
+
+Useful when your own SSH session would otherwise create unnecessary noise.
+
+### 9\. Packet size and timing investigation
+
+### Capture packets larger than 1,000 bytes
+
+```bash
+sudo tcpdump -i any -nn 'greater 1000'
+```
+
+### Capture packets smaller than 100 bytes
+
+```bash
+sudo tcpdump -i any -nn 'less 100'
+```
+
+### Capture packets with timestamps
+
+```bash
+sudo tcpdump -i any -nn -tttt
+```
+
+### Capture only outgoing traffic
+
+```bash
+sudo tcpdump -i any -Q out -nn
+```
+
+### Capture only incoming traffic
+
+```bash
+sudo tcpdump -i any -Q in -nn
+```
+
+`-Q` direction support depends on the operating system and interface.
+
+What you investigate:
+
+* Large data transfers.
+
+* Small control packets.
+
+* Timing differences.
+
+* Traffic direction.
+
+* Possible packet fragmentation.
+
+* Unusual communication patterns.
+
+Packet size alone does not establish that sensitive data was disclosed.
+
+### 10\. Save captures for later analysis
+
+This is particularly useful when you want to compare a normal transaction with an unusual transaction.
+
+### Save all HTTP traffic
+
+```bash
+sudo tcpdump -i any -nn -s 0 -w http.pcap 'tcp port 80'
+```
+
+### Save HTTPS traffic
+
+```bash
+sudo tcpdump -i any -nn -s 0 -w https.pcap 'tcp port 443'
+```
+
+### Save DNS traffic
+
+```bash
+sudo tcpdump -i any -nn -s 0 -w dns.pcap 'port 53'
+```
+
+### Save traffic to a particular host
+
+```bash
+sudo tcpdump -i any -nn -s 0 -w target.pcap 'host 203.0.113.10'
+```
+
+### Read a saved capture
+
+```bash
+sudo tcpdump -nn -r target.pcap
+```
+
+### Read with more details
+
+```bash
+sudo tcpdump -nn -vvv -r target.pcap
+```
+
+### Read packet content
+
+```bash
+sudo tcpdump -nn -X -r target.pcap
+```
+
+### Count captured packets
+
+```bash
+tcpdump -nn -r target.pcap --count
+```
+
+### Display only the first 100 packets
+
+```bash
+tcpdump -nn -c 100 -r target.pcap
+```
+
+Be careful: PCAP files can contain cookies, authentication information and other private data. Store them securely and remove sensitive data before sharing.
+
+### 11\. Advanced capture techniques
+
+### A. Capture traffic for a particular host and port
+
+```bash
+sudo tcpdump -i any -nn 'host 203.0.113.10 and tcp port 443'
+```
+
+### B. Capture traffic to either of two authorized hosts
+
+```bash
+sudo tcpdump -i any -nn 'host 203.0.113.10 or host 203.0.113.20'
+```
+
+### C. Capture TCP traffic but exclude port 22
+
+```bash
+sudo tcpdump -i any -nn 'tcp and not port 22'
+```
+
+### D. Capture traffic involving a specific destination network
+
+```bash
+sudo tcpdump -i any -nn 'dst net 192.168.1.0/24'
+```
+
+### E. Capture packets with TCP payload
+
+```bash
+sudo tcpdump -i any -nn 'tcp and greater 100'
+```
+
+This is only a rough packet-size filter, not a reliable TCP-payload-only filter.
+
+### F. Capture with hexadecimal and ASCII output
+
+```bash
+sudo tcpdump -i any -nn -XX
+```
+
+This shows packet data along with link-layer headers.
+
+### G. Capture a limited number of packets
+
+```bash
+sudo tcpdump -i any -nn -c 500
+```
+
+### H. Rotate capture files
+
+```bash
+sudo tcpdump -i any -nn -s 0 -G 300 -W 5 -w 'capture-%Y%m%d-%H%M%S.pcap'
+```
+
+This creates rotating five-minute capture files, retaining up to five files.
+
+### I. Increase capture buffer
+
+```bash
+sudo tcpdump -i any -B 4096 -nn
+```
+
+This increases the capture buffer to 4096 KiB.
+
+### J. Display packets while saving them
+
+```bash
+sudo tcpdump -i any -nn -w capture.pcap --print
+```
+
+The `--print` option displays decoded packet summaries while saving the capture.
+
+### 12\. How to use TCPdump during an actual bug bounty test
+
+Suppose you have permission to test an application with a deposit endpoint.
+
+For example:
+
+```text
+https://example.com/api/deposit
+```
+
+You want to observe what happens when you initiate a deposit using your own authorized test account.
+
+Follow this sequence:
+
+* Identify your interface
+
+    ```bash
+    sudo tcpdump -D
+    ```
+
+    Determine which interface carries your application traffic.
+
+* Start a DNS capture
+
+    ```bash
+    sudo tcpdump -i any -nn port 53
+    ```
+
+    Observe domain-resolution activity.
+
+* Start a TCP/HTTPS capture
+
+    ```bash
+    sudo tcpdump -i any -nn 'tcp port 443'
+    ```
+
+    Observe connections established by your testing device.
+
+* Perform your authorized deposit test
+
+    Use Burp Repeater to send a normal test request, then observe the corresponding network traffic.
+
+* Investigate connection behaviour
+
+    ```bash
+    sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-rst != 0'
+    ```
+
+    Check whether connections are being reset.
+
+* Save the evidence
+
+    ```bash
+    sudo tcpdump -i any -nn -s 0 -w deposit-test.pcap 'tcp port 443 or udp port 443'
+    ```
+
+* Analyze the capture
+
+    ```bash
+    wireshark deposit-test.pcap
+    ```
+
+    Investigate TLS, TCP retransmissions, timing, connection resets and packet sequences.
+
+### 13\. Which bug bounty vulnerabilities can TCPdump help investigate?
+
+TCPdump is not a vulnerability scanner. It provides network evidence that can help investigate potential security problems.
+
+| Security issue                 | TCPdump's contribution                                      |
+| ------------------------------ | ----------------------------------------------------------- |
+| Cleartext HTTP transmission    | Can expose sensitive data transmitted over unencrypted HTTP |
+| Sensitive information exposure | Can reveal information carried in unencrypted packets       |
+| Insecure transport             | Can show whether traffic uses HTTP or HTTPS                 |
+| DNS configuration issues       | Can reveal DNS queries and unexpected responses             |
+| Connection manipulation        | Can show resets and connection behaviour                    |
+| Network availability issues    | Can reveal timeouts and packet loss indicators              |
+| TLS configuration issues       | Can provide handshake and protocol metadata                 |
+| Unusual data transfers         | Can reveal unexpected traffic patterns                      |
+
+What TCPdump cannot independently prove:
+
+* IDOR vulnerabilities.
+
+* Broken access control.
+
+* SQL injection.
+
+* Business logic vulnerabilities.
+
+* Authentication bypass.
+
+* Payment manipulation.
+
+* Race conditions.
+
+* Server-side request forgery.
+
+For these, you need application-level testing and other appropriate tools.
+
+### 14\. How TCPdump works with your other five tools
+
+| Tool       | Main responsibility                                |
+| ---------- | -------------------------------------------------- |
+| Nmap       | Discover authorized hosts, ports and services      |
+| TCPdump    | Capture network packets                            |
+| Wireshark  | Graphically analyze captured packets               |
+| Tshark     | Analyze packets from the terminal                  |
+| Snort      | Detect suspicious network traffic                  |
+| Burp Suite | Inspect and manipulate HTTP requests and responses |
+
+A useful workflow:
+
+Nmap
+
+Authorized host and port discovery
+
+Burp Suite
+
+Application requests, headers, parameters and responses
+
+TCPdump
+
+Observe network-level communication
+
+Wireshark
+
+Visual analysis
+
+Tshark
+
+Terminal analysis
+
+Snort
+
+Network intrusion detection and alerts
+
+This is a practical workflow, not a mandatory execution order. TCPdump can run alongside Burp Suite.
+
+### 15\. My recommended TCPdump command reference
+
+These are the commands I would prioritize learning first.
+
+| Priority | Command                                           | Main purpose    |
+| -------- | ------------------------------------------------- | --------------- |
+| 1        | tcpdump -D                                        | List interfaces |
+| 2        | tcpdump -i any -nn                                | Observe traffic |
+| 3        | tcpdump -i any -nn port 53                        | DNS             |
+| 4        | tcpdump -i any -nn port 80                        | HTTP            |
+| 5        | tcpdump -i any -nn port 443                       | HTTPS           |
+| 6        | tcpdump -i any -nn udp port 443                   | QUIC            |
+| 7        | tcpdump -i any -nn 'host IP'                      | Host filtering  |
+| 8        | tcpdump -i any -nn 'tcp[tcpflags] & tcp-syn != 0' | SYN packets     |
+| 9        | tcpdump -i any -nn 'tcp[tcpflags] & tcp-rst != 0' | Resets          |
+| 10       | tcpdump -i any -nn -s 0 -w test.pcap              | Save evidence   |
+| 11       | tcpdump -nn -r test.pcap                          | Read evidence   |
+| 12       | tcpdump -i any -nn icmp                           | ICMP            |
+
+For the complete command-line options and filtering syntax, see the [Linux TCPdump manual](https://man7.org/linux/man-pages/man1/tcpdump.1.html?utm_source=chatgpt.com) and [Netgate TCPdump filtering guide](https://docs.netgate.com/pfsense/en/latest/diagnostics/packetcapture/tcpdump.html?utm_source=chatgpt.com).
+
+### 16\. What you should understand before moving to advanced packet analysis
+
+There are three important distinctions:
+
+* TCPdump observes packets. It does not automatically identify vulnerabilities.
+
+* Burp Suite observes application-layer HTTP traffic. It is better suited to investigating API logic.
+
+* Wireshark and Tshark analyze packet captures. They help you interpret what TCPdump collected.
+
+One particularly important point for your deposit-endpoint testing: seeing a successful TCP handshake does not mean the deposit API accepted the transaction. You must inspect the HTTP response in Burp.
+
+My recommendation: Master DNS capture, host filtering, TCP handshakes, TLS metadata, connection resets, packet saving and PCAP analysis before moving into advanced packet investigations.

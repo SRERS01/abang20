@@ -1,0 +1,483 @@
+### Complete guide: Blind vulnerabilities you can investigate using TCPdump
+
+First, understand one important principle:
+
+TCPdump is a network-packet observation tool, not a blind-vulnerability scanner.
+
+It helps you detect network interactions that may occur when an application processes your test input but does not return the result directly.
+
+This is particularly useful in Out-of-Band (OOB) vulnerability testing.
+
+There is no finite list of every blind vulnerability TCPdump can detect. However, there are several important vulnerability classes for which network callbacks can provide evidence.
+
+### 1\. Blind vulnerabilities and TCPdump's role
+
+Here is a comprehensive classification for web bug bounty work.
+
+| No. | Vulnerability                          | What TCPdump may observe                                           |
+| --- | -------------------------------------- | ------------------------------------------------------------------ |
+| 1   | Blind SSRF                             | Server-initiated HTTP, HTTPS or DNS connections                    |
+| 2   | Blind XXE                              | External entity resolution and callbacks                           |
+| 3   | Blind command injection                | Network activity caused by command execution                       |
+| 4   | Blind SQL injection                    | DNS or HTTP interactions caused by database functionality          |
+| 5   | Blind SSTI                             | External callbacks resulting from template evaluation              |
+| 6   | Blind LDAP injection                   | LDAP-related outbound connections, in applicable cases             |
+| 7   | Blind deserialization                  | Unexpected outbound connections during object processing           |
+| 8   | Blind XML injection                    | External XML resource resolution                                   |
+| 9   | Blind stored XSS                       | Browser-generated callbacks when the stored content executes       |
+| 10  | Blind reflected XSS                    | Browser-generated callbacks when reflected content executes        |
+| 11  | Blind file-processing vulnerabilities  | External requests triggered by document or file processing         |
+| 12  | Blind PDF processing vulnerabilities   | External resource requests during PDF generation or rendering      |
+| 13  | Blind image-processing vulnerabilities | External requests during image processing, where supported         |
+| 14  | Blind template-based email injection   | External interactions caused by vulnerable rendering or processing |
+| 15  | Blind webhook-related SSRF             | Unexpected outbound requests from webhook processing               |
+| 16  | Blind URL-fetching vulnerabilities     | Unexpected requests to controlled external destinations            |
+
+Important distinction: Some of these are established vulnerability classes, while others are application-specific ways of producing blind or OOB effects. A network callback alone does not establish the underlying vulnerability.
+
+### 2\. How to verify each vulnerability
+
+For safe testing, use an application you own or an explicitly authorized bug bounty target, together with a callback domain you control.
+
+The verification principle is:
+
+* Generate a unique test identifier.
+
+* Observe the application's normal behaviour.
+
+* Submit one authorized test input.
+
+* Monitor your callback infrastructure.
+
+* Correlate the callback with the test identifier and timestamp.
+
+* Repeat with a harmless control input.
+
+* Establish the vulnerability and its security impact without accessing private systems or data.
+
+### A. Blind SSRF
+
+What happens: The application makes an unexpected server-side network request based on user-controlled input.
+
+Examples of input locations to investigate:
+
+* URL fields.
+
+* Image import fields.
+
+* Webhook configuration.
+
+* Document import.
+
+* Link preview.
+
+* External resource fetching.
+
+TCPdump command on your controlled callback server:
+
+```bash
+sudo tcpdump -i any -nn -s 0 'port 80 or port 443'
+```
+
+For DNS:
+
+```bash
+sudo tcpdump -i any -nn 'port 53'
+```
+
+How to verify:
+
+* Use a unique hostname under your controlled domain.
+
+* Submit it through an authorized URL-fetching feature.
+
+* Look for a corresponding DNS or HTTP interaction.
+
+* Repeat with a different unique hostname.
+
+* Check whether the application initiated the request.
+
+A callback supports an SSRF finding, but you must establish that it originated from the server-side application rather than your own browser.
+
+### B. Blind XXE
+
+What happens: An XML parser processes an external entity and may initiate an external lookup.
+
+TCPdump observation:
+
+* DNS queries.
+
+* HTTP connections.
+
+* Connection timestamps.
+
+* Source and destination addresses.
+
+How to verify:
+
+* Use an authorized XML-processing endpoint.
+
+* Use a controlled external entity reference in a harmless test document.
+
+* Monitor your callback server.
+
+* Compare the result against a document without an external reference.
+
+* Confirm that the parser caused the interaction.
+
+Do not use external entities to retrieve local files or internal resources.
+
+### C. Blind command injection
+
+What happens: An application executes an unintended operating-system command, but its output is not returned in the HTTP response.
+
+TCPdump observation:
+
+* Unexpected outbound DNS requests.
+
+* Unexpected HTTP connections.
+
+* Connection timestamps and destination ports.
+
+How to verify:
+
+* Use a controlled lab application.
+
+* Use a harmless, predefined callback action in that lab.
+
+* Observe whether the application host generates the expected network interaction.
+
+* Compare against a normal input.
+
+* Confirm execution using application logs or process-level instrumentation.
+
+TCPdump alone cannot prove that a shell command executed. An outbound connection could have another cause.
+
+### D. Blind SQL injection
+
+What happens: A database query is manipulated, but the application does not directly reveal the query result.
+
+There are different forms:
+
+* Boolean-based blind SQL injection.
+
+* Time-based blind SQL injection.
+
+* Error-suppressed SQL injection.
+
+* Out-of-band SQL injection.
+
+TCPdump observation:
+
+* DNS callbacks.
+
+* HTTP callbacks.
+
+* Network activity between application and database infrastructure, if visible from the capture point.
+
+How to verify:
+
+* Use a database lab designed for blind SQL injection.
+
+* Compare harmless control inputs with controlled test cases.
+
+* Check database logs for query execution.
+
+* For OOB testing, monitor a callback domain you control.
+
+* Confirm that the callback is caused by the database operation.
+
+Important: Not all databases support OOB interactions, and ordinary time-based blind SQL injection may produce no external network traffic at all.
+
+### E. Blind SSTI
+
+What happens: User-controlled input is evaluated as a server-side template expression.
+
+TCPdump observation:
+
+* External DNS requests.
+
+* HTTP callbacks.
+
+* Unexpected outbound network communication.
+
+How to verify:
+
+* Use a controlled template-processing lab.
+
+* First establish that the application evaluates harmless template expressions.
+
+* Test external interaction only in your authorized environment.
+
+* Correlate the callback with the template-processing event.
+
+* Confirm using application logs.
+
+A callback is evidence of external interaction, not automatic proof of SSTI.
+
+### F. Blind LDAP injection
+
+What happens: Untrusted input alters LDAP filter or directory-query behaviour.
+
+TCPdump observation:
+
+* LDAP communication, commonly TCP port 389.
+
+* LDAPS communication, commonly TCP port 636.
+
+* Unexpected connections to directory services.
+
+How to verify:
+
+* Use a controlled LDAP test environment.
+
+* Compare normal and modified inputs.
+
+* Inspect directory-server logs.
+
+* Correlate any unexpected LDAP activity with your test.
+
+LDAP injection does not necessarily cause a new network connection. It may modify an existing connection.
+
+### G. Blind deserialization
+
+What happens: An application processes untrusted serialized data in an unsafe manner.
+
+TCPdump observation:
+
+* Unexpected DNS requests.
+
+* Unexpected outbound HTTP connections.
+
+* Network activity during deserialization.
+
+How to verify:
+
+* Use a deliberately vulnerable lab application.
+
+* Establish a baseline for normal deserialization.
+
+* Test a harmless controlled object.
+
+* Monitor network callbacks.
+
+* Correlate with application logs and execution traces.
+
+TCPdump cannot identify unsafe deserialization merely by observing ordinary encrypted traffic.
+
+### H. Blind XSS
+
+What happens: Injected content executes in another user's browser, such as an administrator's browser, without displaying an obvious result to the tester.
+
+TCPdump observation:
+
+* HTTP callbacks from the browser.
+
+* DNS requests.
+
+* Connection timestamps.
+
+* Source network information.
+
+How to verify:
+
+* Use an authorized stored-XSS testing environment.
+
+* Use a harmless, unique callback identifier.
+
+* Have the authorized test browser load the affected page.
+
+* Monitor the callback server.
+
+* Confirm execution using browser-side evidence.
+
+For blind XSS, the callback often comes from the victim's browser, not the web application's server.
+
+That distinction is extremely important.
+
+### I. File-processing vulnerabilities
+
+This category includes PDF generation, image processing, XML document processing and document conversion.
+
+What happens: An application processes an uploaded file or document and unexpectedly accesses an external resource.
+
+TCPdump observation:
+
+* DNS lookups.
+
+* HTTP connections.
+
+* HTTPS connections.
+
+* Unexpected destination addresses.
+
+How to verify:
+
+* Use an authorized file-upload or document-processing feature.
+
+* Use a harmless document referencing your controlled external resource.
+
+* Monitor your callback server.
+
+* Compare against a document without the external reference.
+
+* Confirm the processing component caused the callback.
+
+### J. Webhook-related SSRF and URL-fetching vulnerabilities
+
+What happens: A server retrieves a user-supplied URL or sends a webhook to a configured destination.
+
+TCPdump observation:
+
+* Outgoing connections.
+
+* DNS resolution.
+
+* HTTP and HTTPS traffic.
+
+* Connection timing.
+
+How to verify:
+
+* Use an authorized webhook or URL-fetching feature.
+
+* Configure a unique controlled destination.
+
+* Trigger the feature using your test account.
+
+* Monitor incoming connections.
+
+* Check the application's webhook logs and request history.
+
+* Determine whether arbitrary destinations can be controlled.
+
+A legitimate webhook request is not automatically SSRF. You must establish that the feature permits an unsafe server-side request.
+
+### 3\. TCPdump commands to master for OOB testing
+
+These are particularly useful on your controlled callback server.
+
+| Command                                                | What it investigates            |
+| ------------------------------------------------------ | ------------------------------- |
+| sudo tcpdump -D                                        | Available interfaces            |
+| sudo tcpdump -i any -nn                                | All visible traffic             |
+| sudo tcpdump -i any -nn port 53                        | DNS traffic                     |
+| sudo tcpdump -i any -nn tcp port 80                    | HTTP callbacks                  |
+| sudo tcpdump -i any -nn tcp port 443                   | HTTPS connections               |
+| sudo tcpdump -i any -nn udp port 443                   | QUIC traffic                    |
+| sudo tcpdump -i any -nn port 389                       | LDAP traffic                    |
+| sudo tcpdump -i any -nn port 636                       | LDAPS traffic                   |
+| sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-syn != 0' | New TCP connection attempts     |
+| sudo tcpdump -i any -nn 'tcp[tcpflags] & tcp-rst != 0' | TCP resets                      |
+| sudo tcpdump -i any -nn -tttt                          | Timestamped packet observations |
+| sudo tcpdump -i any -nn -s 0 -w oob.pcap               | Save packet evidence            |
+| sudo tcpdump -nn -r oob.pcap                           | Read saved evidence             |
+
+One important limitation: DNS traffic may be handled by a recursive resolver. In that case, your callback infrastructure might see a DNS query from the resolver rather than directly from the application server.
+
+Also, HTTPS callbacks are encrypted. TCPdump can establish that a connection occurred, but cannot normally show the HTTP path or request body.
+
+### 4\. How to distinguish the source of a callback
+
+Three different callback sources
+
+Application server
+
+Common in blind SSRF, XXE, command injection and server-side SSTI investigations.
+
+Database server
+
+Relevant to database-originated OOB interactions, where supported.
+
+Browser
+
+Common in blind stored XSS and reflected XSS investigations.
+
+This distinction helps you avoid reporting the wrong vulnerability.
+
+### 5\. Which tools should verify the findings?
+
+TCPdump should be one part of your verification process.
+
+| Tool              | Verification responsibility                          |
+| ----------------- | ---------------------------------------------------- |
+| Burp Suite        | Inspect the original HTTP request and response       |
+| Burp Collaborator | Detect external interactions                         |
+| Interactsh        | Monitor controlled OOB interactions                  |
+| TCPdump           | Capture packets and connection metadata              |
+| Wireshark         | Examine packet sequences and protocols               |
+| Tshark            | Filter and analyze captures                          |
+| Application logs  | Establish what the application processed             |
+| GDB / LLDB        | Investigate process-level behaviour where applicable |
+
+### 6\. Your practical blind-vulnerability testing workflow
+
+* Discover the application endpoint
+
+    Use Burp Suite to identify inputs that process URLs, XML, files, templates, database queries or webhooks.
+
+* Establish a baseline
+
+    Record the normal response and normal network activity.
+
+* Create a controlled callback identifier
+
+    Use a different unique identifier for every test.
+
+* Monitor network traffic
+
+    Use TCPdump on your controlled callback infrastructure.
+
+* Perform one authorized test
+
+    Use a harmless test input and observe the result.
+
+* Correlate the evidence
+
+    Compare timestamps, identifiers, source information and application logs.
+
+* Confirm the vulnerability
+
+    Establish the root cause and demonstrate security impact without accessing unauthorized data or systems.
+
+* Prepare your report
+
+    Include the affected endpoint, parameter, reproduction steps, callback evidence, impact and remediation.
+
+### 7\. Test your understanding
+
+OOB security assessment
+
+0/4 answered
+
+1. Which tool is designed to record out-of-band interactions?
+
+Nmap
+
+Burp Collaborator
+
+GDB
+
+2. A callback arrives from a browser after a stored test payload is rendered. Which vulnerability should you investigate?
+
+Blind stored XSS
+
+Blind SQL injection
+
+Port scanning
+
+3. Can TCPdump alone prove blind command injection?
+
+Yes
+
+No
+
+4. Can TCPdump normally read HTTPS request bodies?
+
+Yes
+
+No
+
+Check answers
+
+My recommendation: Start with blind SSRF, blind XXE, blind command injection and blind SQL injection. They will teach you the difference between server-side callbacks, database-originated interactions and ordinary HTTP responses.

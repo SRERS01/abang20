@@ -1,0 +1,25 @@
+For web application bug bounty hunting, tcpdump is best used for out-of-band (OOB) interaction detection (verifying blind vulnerabilities like Blind SSRF, Blind XXE, or Blind OS Command Injection) rather than inspecting regular browser traffic, which is encrypted over HTTPS.
+
+1. Detecting Out-of-Band (OOB) Callbacks
+
+When testing if a target web server makes external requests to your infrastructure (e.g., on a VPS with a public IP), filter specifically for incoming callbacks on HTTP or DNS ports:
+• Catch HTTP Callbacks (e.g., testing for Blind SSRF):bash
+sudo tcpdump -i eth0 -n -A 'tcp dst port 80 and (tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x47455420 or tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354)'
+Use code with caution.
+(-A prints the ASCII payload so you can immediately read the incoming GET or POST headers and parameters.)
+• Catch DNS Lookups (useful when strict firewalls block outbound HTTP, allowing only DNS):bash
+sudo tcpdump -i eth0 -n udp port 53
+Use code with caution.
+• Catch ICMP Pings (confirming blind command execution like ping -c 1 <your-ip>):bash
+sudo tcpdump -i eth0 -n icmp
+Use code with caution.
+
+2. Inspecting Your Own Local Web Traffic
+
+Because tcpdump captures raw packets at the network layer, HTTPS traffic on port 443 will appear as unreadable encrypted ciphertext.
+To inspect, modify, and replay HTTP/HTTPS requests between your browser and a target website during bug bounty testing, use an application-layer intercepting proxy instead:
+• Burp Suite (Community or Pro)
+• OWASP ZAP (Zed Attack Proxy)
+• mitmproxy (if you prefer a terminal-based interface)
+(Note: Ensure you are only testing domains and IP ranges explicitly listed within your bug bounty program's scope.)
+Are you trying to verify blind callbacks on a remote VPS, or are you looking to inspect local HTTPS requests from your browser? Let me know so I can tailor the setup to your workflow.
