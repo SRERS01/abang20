@@ -1,0 +1,1 @@
+user@user-Latitude-3380:~/Downloads/APK$ apktool d -f --frame-path ./framework WhiteBIT.apk   -o WhiteBITtodecompiled

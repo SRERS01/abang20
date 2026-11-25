@@ -1,0 +1,1 @@
+user@user-Latitude-3380:~/Downloads/APK$ JAVA_OPTS="-Xmx3G" jadx -j 2 --no-res --deobf --show-bad-code -d MoMo_jadx MoMo.apk
