@@ -1,0 +1,184 @@
+### Complete data types and their potential security vulnerabilities
+
+The table below covers major data types across JavaScript, Python, PHP, Java, C, C++, C#, Go, Rust and SQL, together with the vulnerabilities you should investigate during authorized bug bounty testing.
+
+### 1\. Primitive data types
+
+| Data type  | Potential vulnerabilities to investigate                                          |
+| ---------- | --------------------------------------------------------------------------------- |
+| Integer    | Integer overflow, underflow, IDOR, business-logic manipulation                    |
+| Float      | Precision errors, rounding errors, NaN handling                                   |
+| Double     | Floating-point precision, calculation inconsistencies                             |
+| Boolean    | Authorization bypass, privilege escalation, fail-open logic                       |
+| String     | SQL injection, XSS, command injection, path traversal, authentication logic flaws |
+| Character  | Encoding errors, Unicode confusion, truncation                                    |
+| Byte       | Buffer overflow, integer conversion errors, binary parsing errors                 |
+| Short      | Integer overflow, truncation                                                      |
+| Long       | Overflow, underflow, incorrect range conversion                                   |
+| Decimal    | Precision loss, rounding manipulation, financial calculation errors               |
+| BigInteger | Resource exhaustion, conversion errors, range inconsistencies                     |
+| Complex    | Incorrect numerical validation, serialization errors                              |
+
+### 2\. Special and null-like types
+
+| Data type | Potential vulnerabilities to investigate                            |
+| --------- | ------------------------------------------------------------------- |
+| Null      | Null dereferencing, authorization fail-open, missing-value handling |
+| Undefined | Missing parameter validation, incorrect defaults, logic bypass      |
+| None      | Missing-value handling, incorrect conditional logic                 |
+| Void      | Ignored function results, missing error handling                    |
+| NaN       | Invalid numerical calculations, validation bypass                   |
+| Infinity  | Non-finite value acceptance, resource or calculation errors         |
+| Optional  | Incorrect default values, missing authorization checks              |
+
+### 3\. Collection and container types
+
+| Data type  | Potential vulnerabilities to investigate                                  |
+| ---------- | ------------------------------------------------------------------------- |
+| Array      | Type confusion, parameter pollution, mass assignment, resource exhaustion |
+| List       | Duplicate entries, authorization inconsistencies, excessive allocation    |
+| Tuple      | Field-order confusion, deserialization errors                             |
+| Set        | Membership-check errors, equality and hashing inconsistencies             |
+| FrozenSet  | Incorrect membership assumptions, serialization errors                    |
+| Dictionary | Mass assignment, unsafe property merging, prototype-related flaws         |
+| Map        | Key confusion, authorization mistakes, duplicate-key handling             |
+| HashMap    | Hash collision attacks, resource exhaustion, key confusion                |
+| Stack      | State corruption, resource exhaustion                                     |
+| Queue      | Race conditions, duplicate job processing, ordering errors                |
+| Deque      | Concurrent modification, incorrect processing order                       |
+| Matrix     | Index errors, memory exhaustion, incorrect calculations                   |
+
+### 4\. Object and structured types
+
+| Data type      | Potential vulnerabilities to investigate                            |
+| -------------- | ------------------------------------------------------------------- |
+| Object         | Mass assignment, prototype pollution, unsafe deserialization        |
+| Class          | Insecure initialization, authorization errors, unsafe inheritance   |
+| Struct         | Memory corruption, incorrect field validation, serialization errors |
+| Record         | Field substitution, missing-field validation                        |
+| Enum           | Invalid state transitions, privilege or status manipulation         |
+| Union          | Type confusion, incorrect type discrimination                       |
+| Interface      | Missing runtime validation, unsafe assumptions                      |
+| Abstract class | Incorrect authorization inheritance, unsafe implementation          |
+| Generic        | Type confusion, unsafe casts, serialization mismatches              |
+
+### 5\. Binary and low-level types
+
+| Data type        | Potential vulnerabilities to investigate                          |
+| ---------------- | ----------------------------------------------------------------- |
+| Bit              | Bit manipulation errors, flag confusion                           |
+| Byte             | Buffer overflows, truncation                                      |
+| Signed integer   | Overflow, underflow, sign conversion                              |
+| Unsigned integer | Wraparound, signed/unsigned confusion                             |
+| Int8             | Boundary errors, truncation                                       |
+| UInt8            | Range errors, conversion errors                                   |
+| Int16            | Overflow, underflow                                               |
+| UInt16           | Overflow and truncation                                           |
+| Int32            | Overflow, underflow, arithmetic errors                            |
+| UInt32           | Wraparound, signedness errors                                     |
+| Int64            | Overflow, precision loss during conversion                        |
+| UInt64           | Signedness confusion, conversion errors                           |
+| Float32          | Precision loss, numerical instability                             |
+| Float64          | Precision and rounding errors                                     |
+| Pointer          | Use-after-free, null pointer dereference, arbitrary memory access |
+| Reference        | Dangling references, lifetime errors                              |
+| Buffer           | Buffer overflow, out-of-bounds access                             |
+| Byte array       | Deserialization errors, out-of-bounds access                      |
+
+### 6\. Date, time and identifier types
+
+| Data type   | Potential vulnerabilities to investigate                 |
+| ----------- | -------------------------------------------------------- |
+| Date        | Date-validation bypass, timezone errors                  |
+| Time        | Time-based authorization errors                          |
+| Timestamp   | Replay attacks, expiration-check errors                  |
+| Duration    | Timeout manipulation, negative duration handling         |
+| UUID        | IDOR, broken object-level authorization                  |
+| GUID        | IDOR, identifier substitution                            |
+| Binary UUID | Serialization errors, identifier parsing inconsistencies |
+
+### 7\. Functional and asynchronous types
+
+| Data type | Potential vulnerabilities to investigate                |
+| --------- | ------------------------------------------------------- |
+| Function  | Missing authorization checks, unsafe function execution |
+| Lambda    | Unsafe callbacks, logic errors                          |
+| Callable  | Unexpected execution, unsafe dispatch                   |
+| Generator | Resource exhaustion, incomplete processing              |
+| Iterator  | Authorization errors, incorrect iteration               |
+| Iterable  | Resource exhaustion, unexpected collection behavior     |
+| Promise   | Race conditions, unhandled rejections                   |
+| Future    | Concurrency errors, incorrect completion handling       |
+| Stream    | Resource exhaustion, incomplete processing              |
+| Coroutine | Race conditions, state inconsistencies                  |
+| Channel   | Concurrency errors, unauthorized message handling       |
+
+### 8\. Database-specific data types
+
+| Data type         | Potential vulnerabilities to investigate             |
+| ----------------- | ---------------------------------------------------- |
+| SQL INTEGER       | Overflow, truncation                                 |
+| BIGINT            | Range and conversion errors                          |
+| DECIMAL / NUMERIC | Precision and rounding errors                        |
+| FLOAT / REAL      | Approximation and calculation errors                 |
+| VARCHAR           | SQL injection, length-validation errors              |
+| TEXT              | Injection, excessive input                           |
+| BOOLEAN           | Incorrect authorization logic                        |
+| JSON              | Unsafe deserialization, mass assignment              |
+| JSONB             | Type and structure inconsistencies                   |
+| BLOB              | Unsafe binary processing, resource exhaustion        |
+| DATE              | Date parsing and validation errors                   |
+| TIMESTAMP         | Replay and timezone errors                           |
+| UUID              | IDOR and authorization mistakes                      |
+| ENUM              | Invalid state transitions                            |
+| ARRAY             | Unexpected nested values, validation inconsistencies |
+| XML               | XXE, unsafe XML parsing                              |
+| GEOMETRY          | Incorrect spatial validation, parser errors          |
+
+### 9\. Highest-priority vulnerability combinations
+
+The most interesting findings often involve two or more data types interacting.
+
+| Combination              | Vulnerability to investigate  |
+| ------------------------ | ----------------------------- |
+| String → Integer         | Numeric parser differential   |
+| String → Boolean         | Type coercion errors          |
+| String → Object          | Unsafe deserialization        |
+| String → SQL             | SQL injection                 |
+| Array → Integer          | Unexpected coercion           |
+| Object → Database model  | Mass assignment               |
+| Integer → Float          | Precision loss                |
+| Float → Decimal          | Rounding inconsistency        |
+| Signed → Unsigned        | Sign conversion errors        |
+| Null → Boolean           | Fail-open authorization       |
+| JSON → Object            | Prototype pollution           |
+| Timestamp → Integer      | Expiration and replay errors  |
+| UUID → Database query    | IDOR                          |
+| Promise → Transaction    | Race conditions               |
+| Buffer → Struct          | Memory corruption             |
+| Enum → Transaction state | State-transition manipulation |
+
+### 10\. My recommended hunting priorities
+
+Start here
+
+For your financial-application and Android reverse-engineering research, I would prioritize:
+
+| Rank | Data type | Main investigation              |
+| ---- | --------- | ------------------------------- |
+| 1    | Object    | Mass assignment                 |
+| 2    | Integer   | IDOR and financial calculations |
+| 3    | String    | Input parsing and injection     |
+| 4    | Boolean   | Authorization                   |
+| 5    | Array     | Type confusion                  |
+| 6    | Decimal   | Financial precision             |
+| 7    | Enum      | Transaction states              |
+| 8    | UUID      | Object-level authorization      |
+| 9    | Timestamp | Replay and expiration           |
+| 10   | Promise   | Race conditions                 |
+
+Important: These are potential vulnerability classes, not proof that a data type is vulnerable. A valid bounty requires demonstrating an actual security impact within the program's scope.
+
+The central principle to remember:
+
+Don't just investigate what type a variable accepts. Investigate what happens when that variable is converted, validated, stored, compared and consumed by another function.

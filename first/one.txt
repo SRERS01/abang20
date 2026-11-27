@@ -1,0 +1,708 @@
+### Complete programming-language security map: Every component and the vulnerabilities that can occur
+
+To become effective at advanced bug bounty hunting and reverse engineering, you need to understand more than data types. You need to understand the architecture of a programming language and the security weaknesses that can arise at every stage of program execution.
+
+A program is made up of multiple components: source code, tokens, expressions, variables, functions, memory, execution logic, libraries, runtime systems and external interfaces.
+
+Each component has its own possible vulnerability classes.
+
+I'll build this as a security reference covering the major components of modern programming languages, especially JavaScript, Python, PHP, Java, C, C++, Go and Rust.
+
+### 1\. Complete programming-language architecture
+
+First, understand the relationship between the components.
+
+1\. Source code
+
+Program instructions
+
+2\. Lexical analysis
+
+Characters, tokens, identifiers
+
+3\. Syntax analysis
+
+Grammar, expressions, statements, AST
+
+4\. Semantic analysis
+
+Types, scope, declarations, rules
+
+5\. Compilation / interpretation
+
+Bytecode, machine code, execution
+
+6\. Runtime system
+
+Memory, objects, functions, exceptions
+
+7\. Libraries and system interfaces
+
+APIs, files, network, operating system
+
+8\. Application behavior
+
+Authentication, authorization, financial logic, data storage
+
+A vulnerability can originate at any of these levels, or emerge when two levels interpret the same data differently.
+
+### 2\. Source-code components
+
+These are the first components you encounter when examining a program.
+
+| Component    | Purpose                                  | Potential vulnerabilities                        |
+| ------------ | ---------------------------------------- | ------------------------------------------------ |
+| Source files | Store program instructions               | Hardcoded secrets, insecure configuration        |
+| Comments     | Explain code                             | Exposed credentials, leaked internal information |
+| Identifiers  | Name variables/functions                 | Confusing names, unsafe dynamic lookup           |
+| Keywords     | Define language operations               | Unsafe use of dangerous language features        |
+| Literals     | Represent fixed values                   | Hardcoded passwords, secrets, unsafe defaults    |
+| Operators    | Perform operations                       | Logic errors, precedence mistakes                |
+| Delimiters   | Define code structure                    | Parser confusion, malformed input                |
+| Imports      | Load modules                             | Dependency confusion, malicious modules          |
+| Annotations  | Add metadata                             | Incorrect security assumptions                   |
+| Directives   | Control compiler or interpreter behavior | Unsafe compiler settings                         |
+
+Bug bounty investigation: Search source maps, exposed JavaScript bundles, configuration files and accidentally published source files for secrets and insecure assumptions. Verify whether any discovered secret is live and authorized to test.
+
+### 3\. Lexical analysis components
+
+Lexical analysis transforms source characters into tokens.
+
+| Component          | Function                       | Potential vulnerabilities                |
+| ------------------ | ------------------------------ | ---------------------------------------- |
+| Character encoding | Interprets bytes as characters | Encoding confusion                       |
+| Whitespace         | Separates tokens               | Parsing inconsistencies                  |
+| Identifiers        | Recognizes names               | Unicode identifier confusion             |
+| Keywords           | Recognizes reserved words      | Keyword parsing inconsistencies          |
+| Numeric literals   | Recognizes numbers             | Numeric parsing differences              |
+| String literals    | Recognizes text                | Escape handling errors                   |
+| Comments           | Identifies ignored code        | Comment parsing inconsistencies          |
+| Escape sequences   | Represents special characters  | Injection and interpretation differences |
+| Token boundaries   | Separates language elements    | Lexer/parser differential                |
+
+What to investigate: Whether a compiler, parser, security scanner or application interprets the same characters differently.
+
+### 4\. Syntax and grammar components
+
+The parser checks whether tokens form valid language structures.
+
+| Component                  | Purpose                      | Potential vulnerabilities                |
+| -------------------------- | ---------------------------- | ---------------------------------------- |
+| Grammar rules              | Define valid structures      | Parser inconsistencies                   |
+| Expressions                | Represent calculations       | Expression injection                     |
+| Statements                 | Define instructions          | Logic errors                             |
+| Blocks                     | Group instructions           | Scope mistakes                           |
+| Function declarations      | Define functions             | Unsafe function definitions              |
+| Conditional statements     | Control decisions            | Incorrect branch conditions              |
+| Loops                      | Repeat operations            | Infinite loops, resource exhaustion      |
+| Nested expressions         | Combine operations           | Precedence mistakes                      |
+| Abstract Syntax Tree (AST) | Represents program structure | AST manipulation, unsafe transformations |
+| Parser error recovery      | Handles invalid syntax       | Inconsistent interpretation              |
+
+One important distinction: parser bugs are not automatically exploitable. You need to show how an attacker can reach the parser and produce a security-relevant outcome.
+
+### 5\. Semantic analysis components
+
+Semantic analysis checks whether a syntactically valid program makes sense.
+
+| Component               | Purpose                        | Potential vulnerabilities           |
+| ----------------------- | ------------------------------ | ----------------------------------- |
+| Type checking           | Checks value types             | Type confusion                      |
+| Type conversion         | Converts values                | Coercion vulnerabilities            |
+| Type casting            | Changes representation         | Truncation, unsafe casts            |
+| Type inference          | Determines types               | Incorrect assumptions               |
+| Variable declaration    | Creates variables              | Uninitialized variables             |
+| Variable initialization | Assigns initial values         | Unsafe defaults                     |
+| Constant declaration    | Creates immutable bindings     | Incorrect trust assumptions         |
+| Scope resolution        | Determines variable visibility | Scope confusion                     |
+| Name resolution         | Locates identifiers            | Shadowing-related logic errors      |
+| Symbol tables           | Track declared symbols         | Compiler or tooling inconsistencies |
+| Function signature      | Defines inputs and outputs     | Argument mismatch                   |
+| Return-type checking    | Checks returned values         | Invalid return assumptions          |
+| Access modifiers        | Restrict access                | Broken encapsulation                |
+| Inheritance checking    | Validates class relationships  | Unsafe inheritance                  |
+| Interface checking      | Checks contracts               | Missing runtime enforcement         |
+| Generic constraints     | Restrict generic types         | Unsafe type assumptions             |
+| Nullability checking    | Handles absent values          | Null-related vulnerabilities        |
+| Constant expressions    | Evaluates compile-time values  | Incorrect compile-time assumptions  |
+
+### Important vulnerabilities to understand
+
+* Type confusion.
+
+* Type juggling.
+
+* Unsafe casting.
+
+* Variable shadowing.
+
+* Uninitialized variables.
+
+* Null pointer dereferencing.
+
+* Incorrect access-control assumptions.
+
+Hunting technique: Trace a value from its declaration to every location where its type or meaning changes.
+
+### 6\. Variables and data storage components
+
+Variables are among the most important components to understand.
+
+| Component             | Purpose                          | Potential vulnerabilities              |
+| --------------------- | -------------------------------- | -------------------------------------- |
+| Local variable        | Stores function-level data       | Uninitialized values                   |
+| Global variable       | Shared application data          | State manipulation                     |
+| Static variable       | Retains state                    | Cross-request state leakage            |
+| Instance variable     | Stores object state              | Insecure object state                  |
+| Class variable        | Shared class data                | Shared-state corruption                |
+| Constant              | Fixed binding                    | Incorrect assumptions about mutability |
+| Environment variable  | Stores environment configuration | Secret exposure                        |
+| Thread-local variable | Stores thread-specific state     | Context leakage                        |
+| Temporary variable    | Holds intermediate values        | Sensitive-data exposure                |
+| Register variable     | Represents low-level values      | Incorrect low-level assumptions        |
+| Closure variable      | Captured function state          | Unexpected state modification          |
+| Cached variable       | Retains computed data            | Cache poisoning, stale authorization   |
+
+### What to investigate
+
+* Where does the variable originate?
+
+* Who can modify it?
+
+* How long does it exist?
+
+* Is it shared between users?
+
+* Can it retain data from another request?
+
+* Is sensitive information stored inside it?
+
+* Does the application trust its value without revalidation?
+
+Example:
+
+```javascript
+let isAdmin = false;
+
+function updateRole(value) {
+    isAdmin = value;
+}
+```
+
+The question is not simply whether `isAdmin` exists. Investigate who can call `updateRole`, whether authorization is enforced on the server, and whether the state is shared or user-specific.
+
+### 7\. Operators and expressions
+
+Operators perform operations on values.
+
+| Component | Examples | Potential vulnerabilities | |---|---|---| | Arithmetic operators | `+ - * / %` | Overflow, underflow, precision errors | | Comparison operators | `== != < >` | Incorrect comparisons | | Strict comparison | `=== !==` | Inconsistent equality assumptions | | Logical operators | `&& || !` | Authorization logic errors | | Bitwise operators | `& \| ^ ~` | Incorrect flag checks | | Assignment operators | `= += -=` | Unexpected state changes | | Increment/decrement | `++ --` | Boundary and race errors | | Shift operators | `<< >>` | Integer overflow, truncation | | Nullish operators | `??` | Incorrect defaults | | Optional chaining | `?.` | Missing-value handling errors | | Ternary operator | `condition ? a : b` | Branch-selection errors | | Type operators | `typeof`, `instanceof` | Incorrect type assumptions | | Membership operators | `in`, `contains` | Authorization and membership errors |
+
+### Particularly important: logical operators
+
+Consider:
+
+```javascript
+if (isAuthenticated || isAdmin) {
+    accessResource();
+}
+```
+
+This allows either condition to authorize access.
+
+If the intended policy requires both conditions, the logic is incorrect.
+
+A bug hunter should examine the complete authorization condition rather than testing individual variables in isolation.
+
+### 8\. Control-flow components
+
+Control flow determines which instructions execute and when.
+
+| Component        | Purpose                    | Potential vulnerabilities         |
+| ---------------- | -------------------------- | --------------------------------- |
+| If statement     | Conditional execution      | Authorization bypass              |
+| Else statement   | Alternative execution      | Incorrect fallback                |
+| Switch statement | Multiple branches          | Missing default restrictions      |
+| For loop         | Repeated execution         | Resource exhaustion               |
+| While loop       | Conditional repetition     | Infinite loops                    |
+| Do-while         | Repetition before checking | Unexpected execution              |
+| Break            | Exits loop                 | Incomplete processing             |
+| Continue         | Skips iteration            | Security checks skipped           |
+| Return           | Exits function             | Premature authorization decisions |
+| Goto             | Changes execution position | Complex control-flow errors       |
+| Recursion        | Function calls itself      | Stack exhaustion                  |
+| Exception branch | Handles errors             | Fail-open behavior                |
+| Early exit       | Stops processing           | Validation skipped                |
+
+### Advanced investigation
+
+Pay special attention to the order of operations.
+
+For example:
+
+```javascript
+if (isAuthenticated) {
+    loadAccount();
+}
+
+if (hasPermission) {
+    displaySensitiveData();
+}
+```
+
+Investigate whether `hasPermission` is independently verified and whether `loadAccount()` enforces account ownership.
+
+A security check being present does not prove that it protects the operation.
+
+### 9\. Functions and procedures
+
+Functions are major security boundaries because they accept arguments, process data and return results.
+
+| Component             | Purpose                                 | Potential vulnerabilities    |
+| --------------------- | --------------------------------------- | ---------------------------- |
+| Function declaration  | Defines reusable logic                  | Missing security checks      |
+| Function parameters   | Receive input                           | Parameter validation errors  |
+| Arguments             | Supply values                           | Argument confusion           |
+| Default parameters    | Supply fallback values                  | Unsafe defaults              |
+| Return values         | Return results                          | Ignored validation results   |
+| Overloading           | Multiple signatures                     | Ambiguous function selection |
+| Recursion             | Repeated function calls                 | Stack exhaustion             |
+| Callback              | Passes executable logic                 | Unsafe callback execution    |
+| Closure               | Captures surrounding state              | Unexpected state access      |
+| Higher-order function | Accepts or returns functions            | Unsafe function composition  |
+| Constructor           | Creates objects                         | Insecure initialization      |
+| Destructor            | Releases resources                      | Resource-management errors   |
+| Method                | Function associated with an object      | Missing authorization        |
+| Getter                | Reads a property                        | Information exposure         |
+| Setter                | Changes a property                      | Unauthorized state changes   |
+| Reflection            | Examines or modifies program structures | Unsafe dynamic invocation    |
+| Dynamic dispatch      | Selects implementation at runtime       | Unexpected method execution  |
+
+### What to investigate in each function
+
+* Who can call it?
+
+* What arguments does it accept?
+
+* Are arguments validated?
+
+* What types are expected?
+
+* What external functions does it call?
+
+* What does it return?
+
+* Are errors handled?
+
+* Does it perform authorization?
+
+* Does it change persistent state?
+
+For your JavaScript reverse engineering, this is where function IDs, module factories, imported functions and call relationships become useful.
+
+### 10\. Object-oriented programming components
+
+| Component       | Purpose                          | Potential vulnerabilities               |
+| --------------- | -------------------------------- | --------------------------------------- |
+| Class           | Object blueprint                 | Insecure object design                  |
+| Object          | Runtime instance                 | Unauthorized property changes           |
+| Constructor     | Object initialization            | Trusting attacker-controlled fields     |
+| Inheritance     | Reuses class behavior            | Inherited authorization flaws           |
+| Polymorphism    | Multiple implementations         | Unexpected dispatch                     |
+| Encapsulation   | Restricts internal access        | Broken access assumptions               |
+| Abstraction     | Hides implementation details     | Unsafe abstraction boundaries           |
+| Interface       | Defines a contract               | Missing runtime checks                  |
+| Abstract method | Defines required behavior        | Incomplete security enforcement         |
+| Static method   | Class-level operation            | Missing user-context checks             |
+| Instance method | Object-level operation           | IDOR and ownership errors               |
+| Property        | Object data                      | Mass assignment                         |
+| Getter/setter   | Property access                  | Sensitive-data exposure or modification |
+| Prototype       | JavaScript inheritance mechanism | Prototype pollution                     |
+| Trait/Mixin     | Shares behavior                  | Unexpected inherited functionality      |
+
+### 11\. Memory-management components
+
+This area is particularly important for C, C++, Rust, native Android libraries and security research involving `.so` files.
+
+| Component          | Purpose                          | Potential vulnerabilities       |
+| ------------------ | -------------------------------- | ------------------------------- |
+| Stack memory       | Stores local execution data      | Stack overflow                  |
+| Heap memory        | Dynamic allocation               | Heap overflow                   |
+| Static memory      | Stores persistent program data   | Information leakage             |
+| Dynamic allocation | Requests memory                  | Memory exhaustion               |
+| Deallocation       | Releases memory                  | Use-after-free, double-free     |
+| Buffer             | Stores byte sequences            | Buffer overflow                 |
+| Pointer            | Stores memory addresses          | Invalid memory access           |
+| Reference          | Refers to data                   | Dangling reference              |
+| Array indexing     | Accesses elements                | Out-of-bounds access            |
+| Memory copying     | Copies data                      | Buffer overflow                 |
+| Memory mapping     | Maps files/devices               | Improper access permissions     |
+| Garbage collection | Reclaims unused memory           | Memory retention, timing issues |
+| Object lifetime    | Determines object existence      | Use-after-free                  |
+| Ownership          | Controls resource responsibility | Ownership and lifetime defects  |
+| Bounds checking    | Restricts access                 | Out-of-bounds access            |
+
+High importance for native-code research
+
+Study these vulnerability families:
+
+* Stack buffer overflow.
+
+* Heap buffer overflow.
+
+* Use-after-free.
+
+* Double-free.
+
+* Out-of-bounds read.
+
+* Out-of-bounds write.
+
+* Integer overflow leading to incorrect allocation size.
+
+* Memory disclosure.
+
+* Null pointer dereference.
+
+* Race conditions involving object lifetime.
+
+### 12\. Concurrency and multithreading components
+
+Concurrency allows different tasks to execute or progress at overlapping times.
+
+| Component          | Purpose                           | Potential vulnerabilities       |
+| ------------------ | --------------------------------- | ------------------------------- |
+| Thread             | Independent execution             | Race conditions                 |
+| Process            | Independent execution environment | Privilege and isolation errors  |
+| Mutex              | Protects shared resources         | Deadlocks                       |
+| Semaphore          | Controls concurrent access        | Synchronization errors          |
+| Lock               | Protects shared state             | Locking errors                  |
+| Atomic operation   | Indivisible operation             | Incorrect atomicity assumptions |
+| Condition variable | Coordinates threads               | Lost wakeups                    |
+| Thread pool        | Reuses execution threads          | Resource exhaustion             |
+| Message queue      | Transfers work                    | Duplicate processing            |
+| Scheduler          | Selects execution order           | Timing-dependent behavior       |
+| Async task         | Non-blocking execution            | Race conditions                 |
+| Transaction        | Groups operations                 | Partial updates                 |
+| Critical section   | Protects sensitive operations     | Concurrent state corruption     |
+
+### Financial application example
+
+Suppose a wallet has 1,000 XAF.
+
+Two withdrawal requests of 800 XAF arrive almost simultaneously.
+
+If both read the same initial balance before either debit is committed, both might pass the balance check.
+
+The application needs atomic balance enforcement, not just an individual positive-amount validator.
+
+### 13\. Exception and error-handling components
+
+These determine how a program behaves when something goes wrong.
+
+| Component          | Purpose                  | Potential vulnerabilities          |
+| ------------------ | ------------------------ | ---------------------------------- |
+| Exception          | Represents an error      | Incorrect error handling           |
+| Try block          | Runs monitored code      | Incomplete protected operations    |
+| Catch block        | Handles errors           | Fail-open behavior                 |
+| Finally block      | Performs cleanup         | Incomplete cleanup                 |
+| Throw statement    | Raises errors            | Improper exception propagation     |
+| Assertions         | Check assumptions        | Disabled security checks           |
+| Error codes        | Identify failures        | Incorrect error interpretation     |
+| Error messages     | Explain failures         | Information disclosure             |
+| Logging            | Records events           | Sensitive-data leakage             |
+| Stack traces       | Show execution history   | Internal implementation disclosure |
+| Panic handling     | Handles fatal conditions | Improper recovery                  |
+| Recovery mechanism | Restores execution       | Inconsistent application state     |
+
+Hunting questions:
+
+* Does a failed authorization check stop the operation?
+
+* Does a failed payment verification stop wallet crediting?
+
+* Does an exception leave a partially updated database?
+
+* Does an error response reveal secrets, internal paths or tokens?
+
+* Can a security-sensitive operation continue after a dependency fails?
+
+### 14\. Input/output components
+
+These connect a program to users, devices, files and external systems.
+
+| Component             | Purpose                     | Potential vulnerabilities           |
+| --------------------- | --------------------------- | ----------------------------------- |
+| Standard input        | Receives input              | Untrusted input handling            |
+| Standard output       | Displays output             | Sensitive information exposure      |
+| Standard error        | Displays errors             | Information disclosure              |
+| File input            | Reads files                 | Path traversal                      |
+| File output           | Writes files                | Arbitrary file write                |
+| File permissions      | Controls access             | Insecure permissions                |
+| File paths            | Locates files               | Path traversal                      |
+| File handles          | References open files       | Improper resource handling          |
+| Network sockets       | Communicates over networks  | Network protocol flaws              |
+| HTTP client           | Sends HTTP requests         | SSRF, insecure TLS configuration    |
+| HTTP server           | Receives HTTP requests      | Request parsing inconsistencies     |
+| Environment variables | Provides configuration      | Secret exposure                     |
+| Standard streams      | Connects program streams    | Input/output redirection errors     |
+| Serialization         | Converts data into a format | Unsafe deserialization              |
+| Deserialization       | Reconstructs data           | Object injection                    |
+| Compression           | Reduces data size           | Decompression bombs                 |
+| Encryption            | Protects confidentiality    | Cryptographic implementation errors |
+| Encoding              | Changes data representation | Encoding inconsistencies            |
+
+### 15\. Module, package and dependency components
+
+Modern applications rarely consist of one source file.
+
+| Component          | Purpose                        | Potential vulnerabilities        |
+| ------------------ | ------------------------------ | -------------------------------- |
+| Module             | Organizes code                 | Unsafe module exposure           |
+| Package            | Groups reusable code           | Malicious package dependencies   |
+| Library            | Supplies functionality         | Vulnerable dependencies          |
+| Framework          | Provides application structure | Framework misconfiguration       |
+| Dependency manager | Installs packages              | Dependency confusion             |
+| Package registry   | Hosts packages                 | Supply-chain attacks             |
+| Import system      | Loads modules                  | Unsafe module resolution         |
+| Export system      | Exposes functions              | Sensitive functionality exposure |
+| Plugin system      | Adds extensions                | Untrusted plugin execution       |
+| Dynamic loader     | Loads code at runtime          | Arbitrary library loading        |
+| Version manager    | Selects dependency versions    | Vulnerable version selection     |
+| Lockfile           | Records dependencies           | Dependency integrity problems    |
+
+For Android reverse engineering, this category includes:
+
+* Java/Kotlin libraries.
+
+* Native `.so` libraries.
+
+* Third-party SDKs.
+
+* React Native modules.
+
+* Flutter packages.
+
+* Dynamically loaded DEX files.
+
+* WebView JavaScript resources.
+
+### 16\. Compiler components
+
+A compiler transforms source code into another representation, often machine code or bytecode.
+
+| Component                   | Purpose                     | Potential vulnerabilities          |
+| --------------------------- | --------------------------- | ---------------------------------- |
+| Preprocessor                | Processes directives        | Macro-related errors               |
+| Lexer                       | Creates tokens              | Lexer inconsistencies              |
+| Parser                      | Builds syntax structures    | Parser vulnerabilities             |
+| Semantic analyzer           | Checks meaning              | Type-checking errors               |
+| Intermediate representation | Represents operations       | Unsafe transformations             |
+| Optimizer                   | Improves code               | Optimization-related defects       |
+| Code generator              | Produces executable code    | Incorrect instruction generation   |
+| Linker                      | Combines program components | Symbol resolution errors           |
+| Loader                      | Loads executable components | Unsafe loading                     |
+| Debug symbols               | Support debugging           | Information exposure               |
+| Compiler flags              | Control compilation         | Insecure compilation settings      |
+| JIT compiler                | Compiles during execution   | JIT implementation vulnerabilities |
+| AOT compiler                | Compiles ahead of execution | Code-generation defects            |
+
+### 17\. Runtime and virtual-machine components
+
+The runtime is responsible for executing the program and providing its execution environment.
+
+| Component             | Purpose                    | Potential vulnerabilities    |
+| --------------------- | -------------------------- | ---------------------------- |
+| Runtime engine        | Executes application logic | Runtime implementation flaws |
+| Virtual machine       | Executes bytecode          | VM vulnerabilities           |
+| Interpreter           | Executes instructions      | Unsafe evaluation            |
+| Garbage collector     | Reclaims memory            | Memory-management errors     |
+| Object allocator      | Creates objects            | Allocation errors            |
+| Scheduler             | Manages execution          | Timing vulnerabilities       |
+| Runtime type system   | Checks runtime types       | Type confusion               |
+| Reflection engine     | Inspects runtime objects   | Unsafe dynamic access        |
+| Dynamic evaluator     | Executes generated code    | Code injection               |
+| JIT engine            | Compiles executing code    | JIT-related flaws            |
+| Class loader          | Loads classes              | Unsafe class loading         |
+| Runtime permissions   | Restricts operations       | Privilege boundary errors    |
+| Sandbox               | Isolates execution         | Sandbox escape               |
+| Runtime configuration | Controls behavior          | Insecure settings            |
+
+### 18\. Database and data-access components
+
+A programming language application often uses database interfaces to store persistent information.
+
+| Component            | Purpose                      | Potential vulnerabilities          |
+| -------------------- | ---------------------------- | ---------------------------------- |
+| Database connection  | Connects to database         | Credential exposure                |
+| Query builder        | Constructs queries           | SQL injection                      |
+| ORM                  | Maps objects to tables       | Mass assignment                    |
+| SQL statement        | Executes database operations | Injection                          |
+| Stored procedure     | Executes database logic      | Permission errors                  |
+| Database transaction | Groups operations            | Race conditions                    |
+| Database index       | Speeds up lookup             | Resource exhaustion                |
+| Database constraints | Enforce data rules           | Missing integrity constraints      |
+| Database triggers    | Execute automatic actions    | Unexpected state changes           |
+| Database views       | Expose selected data         | Excessive data access              |
+| Connection pool      | Reuses connections           | Cross-user context leakage         |
+| Cache layer          | Stores frequently used data  | Cache poisoning, stale permissions |
+| Replication          | Copies database state        | Inconsistency                      |
+| Migration system     | Changes schema               | Broken data integrity              |
+
+### 19\. Networking and communication components
+
+These components are important when auditing APIs, web applications and Android applications.
+
+| Component      | Purpose                        | Potential vulnerabilities                        |
+| -------------- | ------------------------------ | ------------------------------------------------ |
+| DNS resolver   | Resolves domain names          | DNS rebinding                                    |
+| TCP socket     | Reliable network communication | Connection handling flaws                        |
+| UDP socket     | Datagram communication         | Spoofing and amplification risks                 |
+| HTTP client    | Sends requests                 | SSRF                                             |
+| HTTP server    | Receives requests              | Request smuggling                                |
+| TLS            | Encrypts communication         | Certificate validation errors                    |
+| WebSocket      | Persistent communication       | Missing authorization                            |
+| RPC            | Remote function calls          | Broken authentication                            |
+| gRPC           | Structured remote calls        | Authorization and message-validation flaws       |
+| REST API       | Resource-based communication   | BOLA, excessive data exposure                    |
+| GraphQL        | Query-based API                | Excessive query complexity, authorization errors |
+| Message broker | Transfers messages             | Unauthorized message access                      |
+| Webhook        | Receives external events       | Signature verification failures                  |
+
+### 20\. Application security and business-logic components
+
+This is where the language's individual components combine into application behavior.
+
+| Component                 | Purpose                       | Potential vulnerabilities             |
+| ------------------------- | ----------------------------- | ------------------------------------- |
+| Authentication            | Identifies users              | Authentication bypass                 |
+| Authorization             | Controls permissions          | Privilege escalation                  |
+| Session manager           | Maintains sessions            | Session fixation, hijacking           |
+| Token manager             | Issues and validates tokens   | Token forgery, incorrect validation   |
+| Password manager          | Handles passwords             | Weak password storage                 |
+| Access-control middleware | Enforces permissions          | Middleware bypass                     |
+| Input validator           | Checks input                  | Validation inconsistencies            |
+| Output encoder            | Protects output contexts      | XSS                                   |
+| Payment processor         | Handles payments              | Payment verification flaws            |
+| Wallet manager            | Manages balances              | Balance manipulation                  |
+| Transaction engine        | Executes transactions         | Race conditions, duplicate processing |
+| Ledger                    | Records financial activity    | Accounting inconsistencies            |
+| Audit logger              | Records security events       | Log tampering                         |
+| Rate limiter              | Restricts request frequency   | Rate-limit bypass                     |
+| Idempotency manager       | Prevents duplicate operations | Replay and duplicate processing       |
+| Notification service      | Sends messages                | Information disclosure                |
+| File-upload handler       | Accepts files                 | Arbitrary file upload                 |
+| Admin panel               | Administrative functions      | Privilege escalation                  |
+| Recovery system           | Restores accounts             | Account takeover                      |
+
+### 21\. The complete vulnerability map by programming layer
+
+Here is a condensed reference showing where to concentrate your security research.
+
+| Programming layer | Major vulnerability families                 |
+| ----------------- | -------------------------------------------- |
+| Source code       | Hardcoded secrets, insecure configuration    |
+| Lexical analysis  | Encoding confusion, tokenization differences |
+| Syntax analysis   | Parser bugs, malformed-input handling        |
+| Semantic analysis | Type confusion, incorrect type assumptions   |
+| Variables         | State manipulation, uninitialized values     |
+| Data types        | Coercion, overflow, precision errors         |
+| Operators         | Logic errors, comparison mistakes            |
+| Control flow      | Authorization bypass, incorrect branches     |
+| Functions         | Missing checks, unsafe callbacks             |
+| OOP               | Mass assignment, prototype pollution         |
+| Memory            | Buffer overflow, use-after-free              |
+| Concurrency       | Race conditions, deadlocks                   |
+| Exceptions        | Fail-open behavior, information disclosure   |
+| I/O               | Path traversal, unsafe file operations       |
+| Serialization     | Unsafe deserialization                       |
+| Dependencies      | Supply-chain attacks                         |
+| Compiler          | Code-generation and parser defects           |
+| Runtime           | Sandbox escape, unsafe evaluation            |
+| Database          | SQL injection, data integrity failures       |
+| Network           | SSRF, request smuggling, protocol flaws      |
+| Authentication    | Account takeover                             |
+| Authorization     | IDOR, privilege escalation                   |
+| Business logic    | Payment, balance and workflow manipulation   |
+
+### 22\. Which components should you study for each vulnerability?
+
+This is a useful way to organize your reverse-engineering research.
+
+| Vulnerability         | Components to trace                                  |
+| --------------------- | ---------------------------------------------------- |
+| SQL injection         | String → query builder → database                    |
+| XSS                   | String → output encoder → browser                    |
+| IDOR                  | Identifier → authorization → database                |
+| Mass assignment       | Object → model binding → database                    |
+| Prototype pollution   | Object → property merge → prototype                  |
+| Integer overflow      | Integer → arithmetic → storage                       |
+| Authentication bypass | Input → authentication function → session            |
+| Authorization bypass  | Boolean/role → permission check → protected function |
+| Race condition        | Shared variable → concurrent functions → transaction |
+| SSRF                  | URL string → HTTP client → network                   |
+| Deserialization       | Binary/JSON → parser → object construction           |
+| Buffer overflow       | Input length → allocation → memory operation         |
+| Payment logic flaw    | Amount → validator → transaction engine → ledger     |
+
+### 23\. Applying this to your Android reverse-engineering environment
+
+Since you have been examining JavaScript bundles, function factories, imported functions and validators, use this order:
+
+Recommended reverse-engineering sequence
+
+* Source and module analysis
+
+    Identify modules, imports, exports and dependencies.
+
+    Tools: JADX, APKTool, Androguard.
+
+* Lexical and syntax analysis
+
+    Identify strings, function declarations, expressions and AST structures.
+
+    Tools: JADX, JavaScript parsers and bundle analysis.
+
+* Semantic and type analysis
+
+    Identify variables, type conversions, validators and data structures.
+
+    Tools: JADX, static analysis, targeted code searches.
+
+* Function and control-flow analysis
+
+    Trace callers, arguments, return values, branches and dependencies.
+
+    Tools: JADX, Ghidra, Frida in an authorized lab.
+
+* Runtime analysis
+
+    Verify how values behave when functions execute.
+
+    Tools: Android debugger, Frida and log inspection.
+
+* Network and backend analysis
+
+    Compare client-side behavior with server-side enforcement.
+
+    Tools: Burp Suite, Wireshark and authorized API testing.
+
+* Business-logic verification
+
+    Examine authentication, authorization, transaction states and ledger consistency.
+
+### 24\. The most important distinction
+
+There are three different levels of security research:
+
+* Language-level vulnerabilities: Weaknesses in language features, parsers, compilers and runtimes.
+
+* Implementation-level vulnerabilities: Mistakes developers make when using those features.
+
+* Application-level vulnerabilities: Security failures resulting from how the complete application works.
+
+For bug bounty, the second and third levels are usually the most productive starting points. The first is important for deeper vulnerability research.
+
+One final principle: Never assume that finding a suspicious function proves a vulnerability. Trace its inputs, transformations, callers, security checks and final effects.
+
+This gives you a systematic way to examine an application rather than randomly searching for payloads.

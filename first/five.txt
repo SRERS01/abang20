@@ -1,0 +1,35 @@
+When processing financial transactions, quantities, or balances, attackers attempt to bypass positive-number checks by exploiting mismatches between how your validation layer and your parsing/database layer interpret numbers.
+Understanding these mechanisms helps you audit your application and ensure negative values cannot slip through:
+
+1. Encoding & Normalization Mismatches (Parser Differentials)
+
+If your input validator checks the raw string before decoding or normalizing it, an encoded minus sign can pass validation and later be parsed as negative:
+• URL / JSON Escape Obfuscation: Sending encoded characters (such as %2D100 in a query/form or \u002d100 in JSON) if the security filter checks raw strings with a regex (e.g., checking if the string starts with -) before the framework parses it into an integer or float.
+• Unicode Normalization (NFKC/NFKD): Sending a fullwidth hyphen (－100) or small hyphen (﹣100). A basic check for ASCII - (U+002D) sees no minus sign, but if a downstream library applies Unicode compatibility normalization before converting the string to a number, it converts － into -.
+• Whitespace / Invisible Character Padding: Placing non-breaking spaces, null bytes, or control characters before the minus sign (e.g., \u00A0-100). If the validator checks input.startsWith("-"), it returns false, while a numeric parser like parseFloat() or Number() strips leading whitespace and reads -100.
+
+2. Alternative Number Formats
+
+Some programming languages and financial parsers accept non-standard negative notations that simple regex filters miss:
+• Accounting Format (Parentheses): In many financial libraries and locales, (100) represents -100. If your validator only blocks the - symbol, an accounting-aware parser may silently convert (100) into a negative number.
+• Trailing Minus Sign: Some legacy systems, mainframe integrations, or localized parsers (like SAP or certain COBOL/SQL formats) interpret 100- (minus at the end) as -100.
+• Scientific / Hexadecimal Notation: Sending values like -1e2 or signed hex strings depending on how loosely typed languages (like JavaScript or PHP) coerce strings into numbers.
+
+3. Integer Overflow & Underflow (Wrap-Around)
+
+Even if the attacker sends a strictly positive number with no minus sign at all, it can become negative inside the backend:
+• Signed Integer Wrap-Around: In languages or databases using fixed-width signed integers (such as a 32-bit signed INT with a maximum value of 2,147,483,647), submitting a positive number like 2147483648 or multiplying two large positive numbers (e.g., quantity * price) can overflow the maximum limit and wrap around into a negative number (e.g., -2147483648).
+
+4. Type Juggling & Parameter Pollution
+
+• JSON / Array Type Confusion: Sending an array or object instead of a string/number (e.g., amount[]=-100 or {"amount": [-100]}). In loosely typed languages (like PHP or older Node.js body parsers), validation checks designed for strings may fail open or behave unexpectedly, while downstream math operations coerce the first element into -100.
+• HTTP Parameter Pollution (HPP): Sending duplicate parameters (e.g., amount=100&amount=-100). The WAF or validation middleware might inspect the first parameter (100), while the backend framework overwrites it with the last parameter (-100).
+
+How to Defend Your System
+
+To eliminate these vulnerabilities completely, validate after parsing, not before:
+1. Parse First, Validate Second: Convert the raw input into its final numeric type (e.g., Decimal, BigInt, or int64) first, and then check the numeric value (amount > 0) right before executing business logic. Never rely on string/regex checks alone to enforce positive numbers.
+2. Enforce Strict Data Types: Use strict schema validation (like Pydantic, Zod, or JSON Schema) to reject arrays, objects, or unexpected strings before processing.
+3. Check for Overflow & Precision: Use arbitrary-precision decimal types (like Decimal in Python/SQL or BigDecimal in Java) for currency, and enforce a realistic upper bound (e.g., 0.01 <= amount <= 1000000) to prevent integer overflow.
+4. Database Constraints: Add a CHECK (amount > 0) constraint directly on your database columns as a final layer of defense.
+If you'd like to share your backend language, framework, or database (e.g., Node.js/Express, Python/Django, PHP/Laravel, PostgreSQL), I can provide exact code examples for strict numeric validation and database constraints.

@@ -1,0 +1,1156 @@
+### Bug bounty hunting guide: How to investigate vulnerabilities in every data type
+
+The most effective way to hunt bugs involving data types is to understand how an application accepts, transforms, validates, stores and uses each value.
+
+A data type is not automatically a vulnerability. Your job as a bug bounty hunter is to discover whether the application handles that type incorrectly and whether the mistake creates a security impact.
+
+We'll approach this from an authorized bug bounty perspective, including website JavaScript, Android APKs, APIs and backend behavior.
+
+### 1\. The master bug-hunting methodology
+
+For every variable you encounter, investigate five things:
+
+* Input
+
+    Where does the value originate? URL, JSON, form, database, device or payment provider?
+
+* Type conversion
+
+    Does the application convert the value into another type?
+
+* Validation
+
+    What values and types does it accept or reject?
+
+* Usage
+
+    Does the value influence authorization, calculations, database queries, file access or transaction states?
+
+* Security impact
+
+    Can incorrect handling cause unauthorized access, data exposure, account takeover or financial loss?
+
+For example:
+
+```text
+API receives amount
+       ↓
+String converted to Number
+       ↓
+Validator checks positivity
+       ↓
+Business logic calculates balance
+       ↓
+Database stores transaction
+```
+
+Your investigation follows the value through this entire chain.
+
+### 2\. How to hunt each data type
+
+### A. Primitive data types
+
+### 1\. Integer
+
+High audit priority
+
+Common locations:
+
+* User IDs
+
+* Transaction IDs
+
+* Quantities
+
+* Betting stakes
+
+* Pagination
+
+* Account balances
+
+What to investigate:
+
+| Investigation      | Potential vulnerability         |
+| ------------------ | ------------------------------- |
+| Integer boundaries | Overflow                        |
+| Negative values    | Incorrect business calculations |
+| Zero values        | Invalid transaction behavior    |
+| Large values       | Resource or calculation errors  |
+| Integer conversion | Truncation                      |
+| ID handling        | IDOR or broken access control   |
+
+Bug bounty objective: Determine whether changing an integer allows access to another user's resources or violates a financial invariant.
+
+Safe test examples in your own account or lab:
+
+```text
+quantity = 0
+quantity = 1
+quantity = -1
+quantity = maximum permitted value
+quantity = maximum + 1
+```
+
+Do not test another user's identifiers without explicit authorization.
+
+### 2\. Float and Double
+
+Common locations:
+
+* Currency calculations
+
+* Exchange rates
+
+* Betting odds
+
+* Percentages
+
+* Discounts
+
+* Fees
+
+Investigate:
+
+* Floating-point precision.
+
+* Rounding differences.
+
+* NaN handling.
+
+* Infinity handling.
+
+* Conversion between float and integer.
+
+* Differences between frontend and backend calculations.
+
+Example:
+
+```javascript
+console.log(0.1 + 0.2);
+```
+
+Expected mathematical result: `0.3`.
+
+Actual JavaScript floating-point result: approximately `0.30000000000000004`.
+
+Potential finding: If precision errors cause an unauthorized financial advantage or incorrect accounting, document the actual impact.
+
+### 3\. Boolean
+
+Common locations:
+
+```json
+{
+  "is_verified": false,
+  "is_admin": false,
+  "is_paid": false,
+  "is_active": true
+}
+```
+
+Investigate:
+
+* Whether the server trusts client-supplied privilege flags.
+
+* Whether verification is enforced server-side.
+
+* Whether changing a boolean affects authorization.
+
+* Whether missing values are treated as true or false.
+
+* Whether strings such as `"false"` are interpreted as booleans.
+
+High-value investigation: Authorization decisions based on untrusted client-controlled boolean properties.
+
+A UI hiding an administrator feature is not proof of security. The server must enforce the permission.
+
+### 4\. String
+
+Strings are among the most important types to investigate because almost every application accepts text.
+
+Common locations:
+
+* Usernames
+
+* Emails
+
+* Passwords
+
+* Search fields
+
+* Transaction references
+
+* Currency codes
+
+* API parameters
+
+Investigate:
+
+| Area           | What to look for               |
+| -------------- | ------------------------------ |
+| Length         | Missing limits                 |
+| Encoding       | Parser disagreements           |
+| Unicode        | Normalization differences      |
+| SQL usage      | Injection vulnerabilities      |
+| HTML rendering | Cross-site scripting           |
+| File paths     | Path traversal                 |
+| Authentication | Incorrect identity comparisons |
+| Case handling  | Inconsistent account matching  |
+
+Safe examples include testing your own profile fields with:
+
+* Empty strings.
+
+* Very long strings within program limits.
+
+* Unicode.
+
+* Leading/trailing whitespace.
+
+* Different capitalization.
+
+* Special characters.
+
+For injection testing, use the program's authorized testing guidance and non-destructive proof cases.
+
+### 5\. Character
+
+Common locations:
+
+* Country codes
+
+* Currency symbols
+
+* Status indicators
+
+* Single-character configuration fields
+
+Investigate:
+
+* ASCII versus Unicode.
+
+* Character encoding.
+
+* Truncation.
+
+* Case sensitivity.
+
+* Character allowlists.
+
+Potential impact includes incorrect parsing or identity comparisons.
+
+### 6\. Byte
+
+Common locations:
+
+* Binary file uploads.
+
+* APK data.
+
+* Network protocols.
+
+* Cryptographic data.
+
+* Serialized application data.
+
+Investigate:
+
+* File signature validation.
+
+* Truncated input.
+
+* Incorrect binary parsing.
+
+* Endianness.
+
+* Signed versus unsigned conversion.
+
+* Buffer boundary handling.
+
+A file extension alone does not establish the actual file type.
+
+### 7\. Decimal and BigInteger
+
+Common locations:
+
+* Wallet balances.
+
+* Deposits.
+
+* Withdrawals.
+
+* Large identifiers.
+
+* Exchange rates.
+
+Investigate:
+
+* Precision.
+
+* Scale.
+
+* Rounding.
+
+* Range limitations.
+
+* Conversion into smaller integer types.
+
+* Inconsistent database and application representations.
+
+For currency, compare the application's calculation against an independent exact-decimal calculation.
+
+### B. Special and null-like types
+
+### 8\. Null
+
+Common locations:
+
+* Missing profile information.
+
+* Optional payment references.
+
+* Database fields.
+
+* API responses.
+
+Investigate:
+
+* Whether null is accepted where a value is mandatory.
+
+* Whether null is converted to zero.
+
+* Whether null removes an existing value during an update.
+
+* Whether null bypasses a required-field check.
+
+* Whether null causes authorization or business-logic checks to fail open.
+
+Potential vulnerability: A profile update unexpectedly clears security-critical information, or a missing value causes an access-control decision to default to permission.
+
+### 9\. Undefined
+
+Mostly relevant to JavaScript.
+
+Investigate:
+
+* Missing JSON properties.
+
+* Optional function arguments.
+
+* Default-value handling.
+
+* Serialization differences.
+
+* Missing security-sensitive parameters.
+
+Example:
+
+```javascript
+const user = {};
+
+console.log(user.role);
+// undefined
+```
+
+A dangerous design is one where an undefined role accidentally receives a privileged default.
+
+### 10\. None, Void and Optional
+
+Common locations:
+
+* API return values.
+
+* Database queries.
+
+* Authentication functions.
+
+* Payment verification.
+
+* Account lookups.
+
+Investigate:
+
+* Whether a failed lookup is confused with a successful empty result.
+
+* Whether a missing authentication result is treated as successful.
+
+* Whether optional values are validated when present.
+
+* Whether a function's return value is ignored.
+
+Objective: Find fail-open behavior, incorrect defaults and missing authorization checks.
+
+### 11\. NaN and Infinity
+
+Investigate:
+
+* Numerical comparison behavior.
+
+* Validation of non-finite values.
+
+* Serialization.
+
+* Mathematical calculations.
+
+* Database conversion.
+
+A particularly useful code-review question:
+
+Does the application check that a number is finite before using it in a financial or security decision?
+
+### C. Collection and container types
+
+These are especially useful when examining APIs and JavaScript bundles.
+
+### 12\. Array
+
+Example:
+
+```json
+{
+  "amount": [100, 200]
+}
+```
+
+Investigate:
+
+* Whether an API expects one value but receives multiple values.
+
+* Whether validation checks the array itself or its elements.
+
+* Whether the application silently selects the first or last element.
+
+* Whether array length limits exist.
+
+* Whether array indices affect authorization.
+
+Potential vulnerabilities:
+
+* Type confusion.
+
+* Parameter pollution.
+
+* Mass assignment.
+
+* Incorrect authorization.
+
+* Resource exhaustion.
+
+### 13\. List
+
+Investigate:
+
+* Duplicate entries.
+
+* Unexpected ordering.
+
+* Missing elements.
+
+* Excessive collection size.
+
+* Incorrect filtering.
+
+Example: A permission list might contain duplicate or conflicting entries. Check whether the backend applies the intended access policy.
+
+### 14\. Tuple
+
+Tuples are particularly relevant to Python and some strongly typed systems.
+
+Investigate:
+
+* Unexpected element counts.
+
+* Incorrect field ordering.
+
+* Type mismatches between positions.
+
+* Deserialization differences.
+
+For example, an application may expect:
+
+```python
+(user_id, role)
+```
+
+But another component may interpret the positions differently.
+
+### 15\. Set
+
+Investigate:
+
+* Duplicate removal.
+
+* Membership checks.
+
+* Case-sensitive comparisons.
+
+* Equality and hashing.
+
+* Authorization based on membership.
+
+Potential issue: Two components disagree about whether two identifiers represent the same entity.
+
+### 16\. Dictionary, Map and HashMap
+
+Example:
+
+```json
+{
+  "user_id": 100,
+  "role": "user",
+  "status": "active"
+}
+```
+
+Investigate:
+
+* Unexpected properties.
+
+* Duplicate keys.
+
+* Unknown keys.
+
+* Sensitive property updates.
+
+* Nested objects.
+
+* Property-name collisions.
+
+* Server-side mass assignment.
+
+Important audit target
+
+Mass assignment is worth particular attention.
+
+Imagine the application intends users to update:
+
+```json
+{
+  "display_name": "Alex"
+}
+```
+
+But the backend automatically binds incoming properties to a database model containing other sensitive fields.
+
+Your investigation should establish whether fields such as account ownership, permissions, verification status or transaction status are improperly writable.
+
+Use your own test account and only test fields permitted by the program.
+
+### 17\. Stack, Queue and Deque
+
+These are less commonly exposed as direct API types, but they can appear in internal application logic.
+
+Investigate:
+
+* Processing order.
+
+* Duplicate job processing.
+
+* Missing jobs.
+
+* Incorrect task ordering.
+
+* Queue authorization.
+
+* Resource limits.
+
+Potential impact: A transaction or verification task is processed more than once or out of order.
+
+### D. Object and structured types
+
+### 18\. Object
+
+Objects are common in JavaScript and JSON APIs.
+
+Investigate:
+
+* Unexpected nested properties.
+
+* Object property inheritance.
+
+* Prototype-related behavior.
+
+* Unsafe object merging.
+
+* Mass assignment.
+
+* Serialization and deserialization.
+
+For JavaScript applications, prototype pollution is a particularly important code-review area.
+
+Look for unsafe merging of attacker-controlled objects into application configuration or other sensitive objects.
+
+### 19\. Class
+
+Investigate:
+
+* Authorization checks in class methods.
+
+* Insecure object initialization.
+
+* Trust placed in client-supplied properties.
+
+* Unsafe inheritance.
+
+* Missing validation in constructors.
+
+### 20\. Struct and Record
+
+Common in Go, Rust, C, C++ and strongly typed application backends.
+
+Investigate:
+
+* Field validation.
+
+* Serialization tags.
+
+* Default field values.
+
+* Unexpected field omission.
+
+* Integer size and representation.
+
+* Unsafe memory operations where applicable.
+
+### 21\. Enum
+
+Enums are particularly interesting in financial applications.
+
+Example:
+
+```javascript
+const Status = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected"
+};
+```
+
+Investigate:
+
+* Whether the backend accepts arbitrary statuses.
+
+* Whether status transitions are enforced.
+
+* Whether users can modify protected states.
+
+* Whether an old status can be reused.
+
+* Whether different services interpret statuses consistently.
+
+A status being accepted by an API does not mean the user is authorized to make that transition.
+
+### 22\. Union and Generic Types
+
+Investigate:
+
+* Whether a field accepts multiple representations.
+
+* Whether type narrowing is performed correctly.
+
+* Whether serialization preserves the intended type.
+
+* Whether different services interpret the same union differently.
+
+Example:
+
+```typescript
+type Amount = number | string;
+```
+
+The application must define how both representations are handled.
+
+### 23\. Interface
+
+Interfaces describe expected object structures.
+
+Investigate:
+
+* Whether runtime validation actually enforces the interface.
+
+* Whether additional fields are accepted.
+
+* Whether nested objects are validated.
+
+* Whether the backend trusts a frontend-only TypeScript interface.
+
+Important: TypeScript interfaces generally disappear during compilation. They do not automatically validate incoming HTTP requests.
+
+### E. Binary and low-level types
+
+### 24\. Bit and Byte
+
+Investigate:
+
+* Bit masks.
+
+* Flag combinations.
+
+* Truncation.
+
+* Unexpected reserved bits.
+
+* Binary protocol parsing.
+
+A security issue may arise when one component ignores a flag that another component interprets as a security-sensitive instruction.
+
+### 25\. Signed and unsigned integers
+
+Investigate:
+
+| Type   | Main investigation         |
+| ------ | -------------------------- |
+| Int8   | Signed boundary            |
+| UInt8  | Unsigned boundary          |
+| Int16  | Signed conversion          |
+| UInt16 | Truncation                 |
+| Int32  | Overflow                   |
+| UInt32 | Signed/unsigned conversion |
+| Int64  | Large-value handling       |
+| UInt64 | Language interoperability  |
+
+Your key question:
+
+Does a value retain the same numerical meaning when it crosses between components using different integer widths or signedness?
+
+### 26\. Pointer and Reference
+
+These are primarily relevant to native applications, compiled libraries and memory handling.
+
+Investigate:
+
+* Null pointer handling.
+
+* Object lifetime.
+
+* Bounds checking.
+
+* Use-after-free.
+
+* Double-free.
+
+* Dangling references.
+
+* Incorrect pointer arithmetic.
+
+These are more relevant to native-code vulnerabilities than ordinary web API testing.
+
+### 27\. Buffer and Byte Array
+
+Common locations:
+
+* File uploads.
+
+* Image processing.
+
+* APK parsers.
+
+* Network packet processing.
+
+* Cryptographic operations.
+
+Investigate:
+
+* Buffer boundaries.
+
+* Length calculations.
+
+* Truncation.
+
+* Unsafe copying.
+
+* Incorrect file parsing.
+
+* Untrusted binary deserialization.
+
+Potential findings include buffer overflows, out-of-bounds reads and denial of service.
+
+### F. Date, time and identifier types
+
+### 28\. Date
+
+Investigate:
+
+* Date parsing.
+
+* Time-zone differences.
+
+* Invalid dates.
+
+* Date boundaries.
+
+* Expiration checks.
+
+* Date comparison logic.
+
+Potential impact: Incorrect access to time-limited resources or invalid transaction eligibility.
+
+### 29\. Time and Timestamp
+
+Investigate:
+
+* UTC versus local time.
+
+* Clock differences.
+
+* Expiration validation.
+
+* Timestamp precision.
+
+* Replay prevention.
+
+* Transaction ordering.
+
+For example, determine whether a payment verification decision uses a trusted provider timestamp or an untrusted client timestamp.
+
+### 30\. Duration
+
+Investigate:
+
+* Negative durations.
+
+* Maximum permitted durations.
+
+* Conversion between seconds and milliseconds.
+
+* Timeout calculations.
+
+* Expiration behavior.
+
+### 31\. UUID and GUID
+
+These often identify:
+
+* Transactions.
+
+* Users.
+
+* Orders.
+
+* Payment records.
+
+* Uploaded files.
+
+Investigate:
+
+* Whether knowing an identifier is sufficient to access a resource.
+
+* Whether authorization is checked independently.
+
+* Whether identifiers are predictable.
+
+* Whether IDs can be substituted across accounts.
+
+This connects directly to IDOR and broken object-level authorization.
+
+A random UUID is not an authorization mechanism.
+
+### G. Functional and asynchronous types
+
+### 32\. Function and Lambda
+
+When reviewing JavaScript bundles, inspect:
+
+* Functions that validate input.
+
+* Functions that convert types.
+
+* Functions that determine user permissions.
+
+* Functions that calculate balances.
+
+* Functions that execute transactions.
+
+Trace where the function is called and whether its result is actually enforced.
+
+A validation function that exists but whose return value is ignored is a possible code defect.
+
+### 33\. Generator and Iterator
+
+Investigate:
+
+* Incomplete iteration.
+
+* Incorrect authorization on individual elements.
+
+* Unexpected iteration termination.
+
+* Resource exhaustion.
+
+* State changes during iteration.
+
+### 34\. Promise and Future
+
+These are especially important in asynchronous JavaScript applications.
+
+Investigate:
+
+* Whether rejected promises are handled.
+
+* Whether security checks complete before sensitive operations.
+
+* Whether transaction requests run in the wrong order.
+
+* Whether stale values are used.
+
+* Whether errors are silently ignored.
+
+Example:
+
+```javascript
+async function processPayment() {
+    await verifyPayment();
+    await updateWallet();
+}
+```
+
+Examine whether `verifyPayment()` actually validates the provider's payment evidence, whether errors stop processing, and whether the wallet update is atomic with the verification decision.
+
+### 35\. Stream and Coroutine
+
+Investigate:
+
+* Partial processing.
+
+* Concurrent operations.
+
+* Missing cancellation checks.
+
+* Authentication context propagation.
+
+* Resource exhaustion.
+
+* Incorrect message ordering.
+
+### 3\. How to hunt these vulnerabilities in Burp Suite
+
+You can use Burp Suite Community Edition to observe and compare how the application handles different representations.
+
+Practical workflow
+
+* Proxy → HTTP history
+
+    Identify requests and parameters.
+
+* Target → Site map
+
+    Identify endpoints and application functionality.
+
+* Send to Repeater
+
+    Create a baseline request using your own test account.
+
+* Modify one variable
+
+    Change its type, range, format or representation.
+
+* Compare responses
+
+    Examine HTTP status, response body, application behavior and errors.
+
+* Verify the result
+
+    Check whether the change affects actual security or business logic, using authorized test resources.
+
+### 4\. Your master testing checklist
+
+Use this checklist when examining an application.
+
+Bug bounty audit tracker
+
+0/50 checked
+
+Primitive types
+
+Integer boundaries
+
+Float and double precision
+
+Boolean authorization
+
+String validation
+
+Character encoding
+
+Byte handling
+
+Decimal precision
+
+BigInteger conversion
+
+Special values
+
+Null handling
+
+Undefined handling
+
+None and optional values
+
+NaN handling
+
+Infinity handling
+
+Collections
+
+Array validation
+
+List duplicates
+
+Tuple structure
+
+Set membership
+
+Dictionary keys
+
+Map and HashMap
+
+Stack and queue processing
+
+Structured objects
+
+Object property validation
+
+Class initialization
+
+Struct field validation
+
+Record validation
+
+Enum restrictions
+
+Union type handling
+
+Interface runtime validation
+
+Generic type handling
+
+Binary and memory
+
+Bit flags
+
+Byte boundaries
+
+Signed integer conversion
+
+Unsigned integer conversion
+
+Pointer safety
+
+Reference lifetime
+
+Buffer boundaries
+
+Byte-array parsing
+
+Date and identifiers
+
+Date validation
+
+Timezone handling
+
+Timestamp verification
+
+Duration limits
+
+UUID authorization
+
+GUID authorization
+
+Functional and asynchronous
+
+Function return validation
+
+Lambda execution
+
+Generator processing
+
+Iterator authorization
+
+Promise rejection handling
+
+Future completion
+
+Stream processing
+
+Coroutine concurrency
+
+Reset checklist
+
+### 5\. Which types should you prioritize for bug bounty?
+
+Not every data type has equal security importance.
+
+For web applications and financial APIs, I recommend this order:
+
+| Priority | Type or category    | Main vulnerability class             |
+| -------- | ------------------- | ------------------------------------ |
+| 1        | Object / Dictionary | Mass assignment                      |
+| 2        | Integer             | IDOR, overflow, business logic       |
+| 3        | String              | Injection, XSS, path traversal       |
+| 4        | Boolean             | Authorization flaws                  |
+| 5        | Array               | Type confusion, parameter pollution  |
+| 6        | Decimal / Float     | Financial calculation errors         |
+| 7        | Enum                | State-transition manipulation        |
+| 8        | UUID                | Broken object-level authorization    |
+| 9        | Date / Timestamp    | Expiration and replay logic          |
+| 10       | Promise / Future    | Asynchronous logic errors            |
+| 11       | Buffer              | Memory safety                        |
+| 12       | Null / Undefined    | Fail-open and missing-value handling |
+
+These are investigation priorities, not guaranteed bounty payouts.
+
+### 6\. The most important resource for your hunting methodology
+
+![OWASP Web Security Testing Guide: как улучшить защищённость web-приложений / Хабр](https://images.openai.com/static-rsc-4/p2pa6tIOG_NefhYrCXIolcs8Dg_VVQ_1q7jfzHFmTxRuQiTBNEV3w5VvYL61iIxET0SgS-qN2-RogGqUuY6tXSPE9ovDwbUR74ORMSAO2zGW92EaXHnpQAIhRJhJW8eiTdubvTDMuUYDgwoT6lmScyyhTDQ5XpqhWUeebYOh1RAqx2wC64FENK8LeE7H3e4w?purpose=fullsize)
+
+OWASP Web Security Testing Guide
+
+Practical testing methodology for web applications and APIs.
+
+[Business Logic Data Validation](https://owasp.github.io/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic/01-Business_Logic_Data_Validation?utm_source=chatgpt.com)
+
+Particularly study:
+
+* WSTG-BUSL-01: Business Logic Data Validation.
+
+* Input Validation Testing.
+
+* HTTP Parameter Pollution.
+
+* Mass Assignment.
+
+* API Testing.
+
+* Payment Functionality.
+
+OWASP specifically recommends examining the type, range, format and allowed values of server-side parameters, including how values behave after being processed. OWASP Foundation +2
+
+### 7\. My recommendation: learn to hunt by data flow, not just data type
+
+One important secret of advanced bug bounty research is that vulnerabilities frequently occur between types rather than inside one type.
+
+For example:
+
+```text
+STRING
+  ↓
+INTEGER
+  ↓
+BOOLEAN DECISION
+  ↓
+OBJECT
+  ↓
+DATABASE
+  ↓
+FINANCIAL TRANSACTION
+```
+
+A string might be converted into an integer, used in a Boolean condition, placed inside an object and eventually used in a database transaction.
+
+The most valuable question is:
+
+At which transition does the application stop preserving the security rules?
+
+That is where I would concentrate your research.
+
+If we continue with your reverse-engineering work, I recommend starting with integer, string, Boolean, object and array handling, tracing each from the JavaScript validator to the function that consumes its result.

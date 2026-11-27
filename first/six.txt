@@ -1,0 +1,291 @@
+To understand how an application can accept a negative amount, you need to examine the entire path an amount follows—from the input field to the server, database, and final transaction.
+
+A negative amount is not automatically a vulnerability. For example, a bank may legitimately use negative values to represent withdrawals, refunds, reversals, or accounting adjustments. It becomes a security vulnerability when an attacker can use an unintended negative value to bypass business rules, alter balances, obtain unauthorized credit, or corrupt financial records.
+
+I'll explain the main technical mechanisms, why they work, what to inspect in code, and how to test them safely in a local application or an explicitly authorized bug-bounty scope.
+
+### 1\. Input and validation weaknesses
+
+These are problems that occur when an application checks an amount incorrectly.
+
+| Technique / weakness             | Technical explanation                                                  | Why it can work                                                       |
+| -------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Missing validation               | No check that the amount is greater than zero                          | The application accepts whatever the next component can process       |
+| Client-side-only validation      | JavaScript checks the amount, but the server does not repeat the check | Client-side controls do not enforce server-side security              |
+| Incorrect minimum check          | The program checks amount != 0 instead of amount > 0                   | Negative numbers are nonzero                                          |
+| Incorrect comparison             | The program uses an inappropriate comparison or condition              | The condition may not represent the intended business rule            |
+| Validation on the wrong variable | It validates the original input but uses a converted value later       | The value used in the transaction may differ from the validated value |
+| Optional validation              | Validation only runs when a field is present                           | Missing or alternative fields may take a different processing path    |
+| Inconsistent validation          | Different endpoints apply different rules                              | One endpoint may enforce a restriction that another omits             |
+| Incomplete range validation      | Only a maximum amount is checked                                       | The lower bound is not enforced                                       |
+
+### Example: incorrect validation
+
+Vulnerable logic:
+
+```javascript
+function validateAmount(amount) {
+    return amount !== 0;
+}
+```
+
+This accepts:
+
+```javascript
+validateAmount(-500); // true
+validateAmount(500);  // true
+```
+
+Correct logic:
+
+```javascript
+function validateAmount(amount) {
+    return Number.isFinite(amount) && amount > 0;
+}
+```
+
+The server must also enforce the applicable minimum and maximum transaction limits.
+
+### 2\. Data-type conversion weaknesses
+
+An amount may change representation as it moves through different components.
+
+| Technique                   | Technical explanation                                      | Why it matters                                                              |
+| --------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------- |
+| String-to-number conversion | A string is converted into a numeric value                 | The validator and transaction processor may interpret the value differently |
+| Integer conversion          | A decimal amount is converted to an integer                | Fractional information may be discarded                                     |
+| Floating-point conversion   | A decimal is represented using binary floating-point       | Precision and rounding differences can affect calculations                  |
+| Signed/unsigned conversion  | A signed integer is interpreted as unsigned, or vice versa | Negative values can have unexpected representations                         |
+| Boolean conversion          | A value is treated as true or false                        | Truthiness checks may not establish that an amount is positive              |
+| Null conversion             | Missing or null values are converted into defaults         | A missing amount may become zero or another unintended value                |
+| BigInt/Number mixing        | Different numeric types are used in calculations           | Type errors or inconsistent conversion paths can occur                      |
+
+### Example: validating one representation and using another
+
+```javascript
+const input = "-500";
+
+const valid = input !== "";
+
+const amount = Number(input);
+
+console.log(valid);  // true
+console.log(amount); // -500
+```
+
+The application only checked that the field was not empty. It never established that the resulting number was positive.
+
+Security lesson: Validate the final numeric representation that will actually be used by the transaction engine.
+
+### 3\. Parsing and numeric representation
+
+Programming languages and frameworks do not always interpret numeric input identically.
+
+Important areas to inspect include:
+
+* Decimal parsing.
+
+* Integer parsing.
+
+* Exponent notation.
+
+* Leading and trailing whitespace.
+
+* Leading signs.
+
+* Locale-specific decimal separators.
+
+* Unicode characters.
+
+* JSON number parsing.
+
+* Database numeric conversion.
+
+For example, these are different textual representations:
+
+```text
+-500
+-500.00
+-5e2
+```
+
+They can represent the same mathematical value, but different parsers and validators may process them differently.
+
+A robust implementation should use one documented numeric grammar and one consistent parsing method throughout the application.
+
+### 4\. Arithmetic and calculation errors
+
+An amount can be valid when received but become negative during calculations.
+
+| Weakness                            | Example                                                     | Why it matters                                             |
+| ----------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Subtraction without a balance check | balance - amount                                            | The resulting balance can become negative                  |
+| Incorrect refund calculation        | refund = original - deduction                               | A calculation error may produce an invalid refund          |
+| Incorrect fee calculation           | amount - fee                                                | A fee larger than the amount can produce a negative result |
+| Integer overflow                    | Numeric value exceeds the supported range                   | The resulting value may be corrupted                       |
+| Integer underflow                   | Arithmetic goes below the supported minimum                 | The result may wrap or behave unexpectedly                 |
+| Floating-point rounding             | Decimal calculations lose precision                         | Small discrepancies can affect transaction limits          |
+| Unit conversion error               | Major currency units are confused with minor units          | Amounts may be incorrectly scaled                          |
+| Sign reversal                       | A withdrawal is represented using the wrong sign convention | A debit may become a credit                                |
+
+### Example: missing balance constraint
+
+```javascript
+let balance = 1000;
+let withdrawal = 1500;
+
+balance = balance - withdrawal;
+
+console.log(balance); // -500
+```
+
+The arithmetic is correct. The business rule is missing.
+
+A secure withdrawal operation needs to verify that the available balance covers the requested withdrawal, and that the check and balance update occur atomically.
+
+### 5\. API and request-processing weaknesses
+
+An application may have multiple routes through which an amount reaches the backend.
+
+| Component                  | What can go wrong                                           | What to investigate                                                  |
+| -------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------- |
+| HTTP request parser        | Different parsing behavior between components               | Whether the backend receives the expected value                      |
+| JSON parser                | Numeric values and strings are treated differently          | Whether the schema enforces the correct type                         |
+| Form parser                | Form fields are converted inconsistently                    | Whether the same validation applies                                  |
+| Query parameters           | Parameters may be parsed differently from body fields       | Whether all accepted input sources use the same rules                |
+| Duplicate parameters       | Different components select different parameter occurrences | Whether the application has one unambiguous value                    |
+| API gateway                | Gateway and application enforce different schemas           | Whether validation is repeated at the service boundary               |
+| Middleware                 | Validation middleware is missing or incorrectly ordered     | Whether the transaction handler receives validated data              |
+| Microservice communication | Services use different amount formats                       | Whether the receiving service independently enforces financial rules |
+
+The central issue is a validation differential: two components interpret the same data differently.
+
+### 6\. Business-logic weaknesses
+
+These are especially important in financial applications.
+
+| Business component | Potential defect                                     | Possible consequence           |
+| ------------------ | ---------------------------------------------------- | ------------------------------ |
+| Deposit            | No positive-amount requirement                       | Invalid deposit record         |
+| Withdrawal         | No sufficient-funds check                            | Unauthorized negative balance  |
+| Transfer           | Debit and credit signs are inconsistent              | Incorrect balance movement     |
+| Refund             | Refund amount is not capped at the original payment  | Excessive refund               |
+| Bonus              | Bonus calculation accepts invalid amounts            | Unauthorized credit            |
+| Betting stake      | Stake and payout calculations use inconsistent signs | Incorrect betting settlement   |
+| Wallet             | Balance changes are not constrained                  | Financial record corruption    |
+| Reversal           | Original transaction is not checked                  | Duplicate or invalid reversal  |
+| Commission         | Negative commission is not handled correctly         | Incorrect financial accounting |
+| Cashback           | Cashback is not capped or validated                  | Excessive credit               |
+
+For example, a legitimate accounting system may represent a debit as a negative ledger entry:
+
+```text
+Opening balance:       10,000
+Withdrawal ledger:     -2,000
+Closing balance:        8,000
+```
+
+That is not a vulnerability.
+
+The critical question is whether the application incorrectly interprets a negative debit as a credit, or permits an operation that violates its financial rules.
+
+### 7\. Database and transaction weaknesses
+
+Even if the application validates an amount, the database and transaction layer need their own protections.
+
+| Weakness                         | Technical explanation                                                   |
+| -------------------------------- | ----------------------------------------------------------------------- |
+| Missing database constraint      | The database does not enforce the permitted amount range                |
+| Incorrect column type            | A column uses an unsuitable numeric representation                      |
+| Unrestricted update              | A database update changes a balance without checking its previous value |
+| Race condition                   | Two transactions use the same outdated balance                          |
+| Non-atomic operation             | Debit and credit operations can partially succeed                       |
+| Incorrect transaction rollback   | A failed operation leaves financial records inconsistent                |
+| Missing ledger reconciliation    | The recorded balance and transaction history disagree                   |
+| Duplicate transaction processing | The same financial operation is processed more than once                |
+
+A useful database constraint for an amount that must always be positive is:
+
+```sql
+CHECK (amount > 0)
+```
+
+This must be adapted for legitimate refunds, reversals, and signed ledger entries. Those may require separate transaction types and constraints.
+
+### 8\. How to investigate these weaknesses in an authorized application
+
+Use this workflow to understand where negative values are accepted without attempting to manipulate real funds.
+
+Investigation workflow
+
+* Find the amount's entry point
+
+    Identify the input field, API request, function parameter, or mobile-app form.
+
+* Trace its transformations
+
+    Follow string parsing, type conversion, rounding, normalization, and unit conversion.
+
+* Find every validator
+
+    Identify minimum, maximum, type, range, and business-rule checks.
+
+* Trace the function calls
+
+    Find which function calculates the amount and which function performs the financial operation.
+
+* Inspect the database operation
+
+    Look for constraints, atomic updates, transaction handling, and ledger consistency.
+
+* Verify safely
+
+    Use a local test application, mock payment provider, and test database. Confirm whether the intended invariant is enforced.
+
+### 9\. Code patterns worth searching for
+
+When reviewing source code or decompiled application logic, look for:
+
+| Pattern                        | What to investigate                                            |
+| ------------------------------ | -------------------------------------------------------------- |
+| amount < 0                     | Whether negative values are explicitly rejected where required |
+| amount <= 0                    | Whether zero and negative values are handled correctly         |
+| amount != 0                    | Whether this is mistakenly used as the entire validation rule  |
+| parseInt()                     | Whether decimal information is lost                            |
+| parseFloat()                   | Whether the resulting value is checked for finiteness          |
+| Number()                       | Whether invalid and unexpected inputs are handled              |
+| Math.abs()                     | Whether an amount's sign is discarded                          |
+| Math.round()                   | Whether rounding changes a transaction's value                 |
+| balance -= amount              | Whether sufficient funds are checked                           |
+| UPDATE ... balance             | Whether the update is constrained and atomic                   |
+| refund, reverse, credit, debit | Whether transaction types and sign conventions are consistent  |
+
+These are investigation clues, not proof of vulnerabilities.
+
+### 10\. The most important security principle: define the amount invariant
+
+For a deposit or withdrawal request, the intended invariant might be:
+
+\\text{Amount} \\in \\mathbb{R}, \\quad
+\\text{finite}, \\quad
+\\text{minimum} \\leq \\text{Amount} \\leq \\text{maximum}
+
+For a positive-only operation:
+
+\\text{Amount} > 0
+
+For a withdrawal:
+
+\\text{Withdrawal} \\leq \\text{AvailableBalance}
+
+For a refund:
+
+0 \\leq \\text{Refund} \\leq \\text{OriginalPayment}
+
+The server should enforce the appropriate invariant immediately before the financial operation, within a transaction that protects against concurrent changes.
+
+### What I recommend we investigate next
+
+Since you have been examining application modules, validators, and numeric conversion functions, the most useful next step is to trace a single amount variable through the complete program.
+
+Would you like to start with JavaScript/Hermes code and learn how to identify every function that can change an amount's sign, type, or value?
