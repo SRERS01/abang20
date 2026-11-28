@@ -1,0 +1,65 @@
+I can see the problem. Your APKTool started successfully and decoded the DEX files, but failed when decoding Android resources.
+
+Error identified
+
+The error is:
+
+```text
+java.nio.file.AccessDeniedException:
+/home/user/.local/share/apktool/framework/1.apk
+```
+
+This means APKTool does not have permission to access its framework file.
+
+### Step 1: Fix the permissions
+
+Run these commands in Ubuntu:
+
+```bash
+sudo chown -R "$USER:$USER" ~/.local/share/apktool
+```
+
+Then:
+
+```bash
+chmod -R u+rwX ~/.local/share/apktool
+```
+
+### Step 2: Clear APKTool's framework cache
+
+```bash
+apktool empty-framework-dir
+```
+
+This removes cached framework files so APKTool can rebuild them.
+
+### Step 3: Decompile MoMo again
+
+```bash
+apktool d MoMo.apk -o MoMo_decompiled
+```
+
+### Step 4: Verify the output
+
+```bash
+ls MoMo_decompiled
+```
+
+You should normally see a structure similar to:
+
+```text
+MoMo_decompiled/
+├── AndroidManifest.xml
+├── apktool.yml
+├── original/
+├── res/
+├── smali/
+├── smali_classes2/
+└── unknown/
+```
+
+The exact folders depend on the APK.
+
+Important: `res` and `smali` are separate directories. `res` is not inside `smali`.
+
+Once this works, we can examine the MoMo APK's manifest, resources, Smali code and application structure separately.

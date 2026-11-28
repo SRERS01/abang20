@@ -1,0 +1,107 @@
+You can decompile all your APK files with Apktool and save each one in its own separate folder.
+
+From your screenshot, you are already inside:
+
+```bash
+~/Downloads/APK
+```
+
+### 1\. Create a folder for all decompiled APKs
+
+Run:
+
+```bash
+mkdir -p ../Decompiled_APKs
+```
+
+This creates a folder named `Decompiled_APKs` inside Downloads.
+
+### 2\. Decompile each APK separately
+
+Copy and execute this entire command:
+
+```bash
+for apk in *.apk; do
+    name="${apk%.apk}"
+    apktool d -f "$apk" -o "../Decompiled_APKs/$name"
+done
+```
+
+Recommended method
+
+This command automatically:
+
+* Finds every `.apk` file in your current directory.
+
+* Takes each APK filename.
+
+* Decompiles it using Apktool.
+
+* Creates a separate folder for its output.
+
+* Moves to the next APK.
+
+### 3\. Your resulting folder structure
+
+You should get something like this:
+
+```text
+Downloads/
+│
+├── APK/
+│   ├── KUB Wallet.apk
+│   ├── MoMo.apk
+│   ├── MyMTN Cameroon.apk
+│   ├── Pointpay.apk
+│   ├── Syfe.apk
+│   ├── Tapbit.apk
+│   ├── Tickets.ua.apk
+│   └── WhiteBIT.apk
+│
+└── Decompiled_APKs/
+    │
+    ├── KUB Wallet/
+    ├── MoMo/
+    ├── MyMTN Cameroon/
+    ├── Pointpay/
+    ├── Syfe/
+    ├── Tapbit/
+    ├── Tickets.ua/
+    └── WhiteBIT/
+```
+
+### 4\. Verify the decompiled folders
+
+Run:
+
+```bash
+ls -lh ../Decompiled_APKs
+```
+
+To inspect one application:
+
+```bash
+cd "../Decompiled_APKs/MoMo"
+ls
+```
+
+### 5\. What will you find inside each folder?
+
+| File/folder         | Purpose                          |
+| ------------------- | -------------------------------- |
+| AndroidManifest.xml | App permissions and components   |
+| res/                | Resources, layouts and XML files |
+| smali/              | Decompiled application bytecode  |
+| assets/             | Application assets               |
+| original/           | Original manifest and metadata   |
+| apktool.yml         | Apktool configuration            |
+
+Important for your Android security research:
+
+* Apktool: Inspect resources, manifest, Smali code and application structure.
+
+* JADX: Examine reconstructed Java code and application logic.
+
+After Apktool finishes, you can open each corresponding APK in JADX to investigate its classes, methods, function calls and possible security weaknesses.
+
+Use these tools only on applications you own or are authorized to assess.

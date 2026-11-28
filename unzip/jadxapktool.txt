@@ -1,0 +1,118 @@
+The main difference is that JADX focuses on reconstructing readable source code, while APKTool focuses on decoding the APK's internal structure and resources.
+
+Both are reverse-engineering tools, but they help you investigate different layers of an Android application.
+
+### 1\. Functional differences
+
+| Function                     | JADX                 | APKTool                     |
+| ---------------------------- | -------------------- | --------------------------- |
+| Decompile APK                | Yes                  | Yes, into Smali/resources   |
+| Read Java-like code          | Yes                  | No, primarily Smali         |
+| Inspect application logic    | Excellent            | Possible, through Smali     |
+| Inspect API endpoints        | Yes                  | Yes, through code/resources |
+| Inspect AndroidManifest.xml  | Yes                  | Yes                         |
+| Inspect permissions          | Yes                  | Yes                         |
+| Inspect XML resources        | Limited              | Excellent                   |
+| Inspect layouts              | Limited              | Excellent                   |
+| Inspect Smali instructions   | No direct focus      | Yes                         |
+| Modify application resources | Not its main purpose | Yes                         |
+| Modify Smali code            | Not its main purpose | Yes                         |
+| Rebuild APK                  | No                   | Yes                         |
+
+### 2\. Example: Investigating an authentication function
+
+Imagine you are testing an Android application that has a login function.
+
+JADX: Understand the logic
+
+Source-code analysis
+
+```java
+public boolean login(String username,
+                     String password) {
+    return authenticate(username, password);
+}
+```
+
+You can investigate:
+
+* How login works.
+
+* How credentials are processed.
+
+* Which functions are called.
+
+* How authentication responses are handled.
+
+APKTool: Understand the underlying instructions
+
+Smali analysis
+
+```smali
+invoke-virtual {p0, p1, p2},
+    Lcom/example/Auth;->authenticate(
+    Ljava/lang/String;
+    Ljava/lang/String;)Z
+```
+
+You can investigate:
+
+* Actual Dalvik instructions.
+
+* Registers and method arguments.
+
+* Conditional branches.
+
+* Return instructions.
+
+* Application resources and configuration.
+
+These are illustrative examples, not extracted from a real application.
+
+### 3\. When should you use each in bug bounty?
+
+| Your objective                       | Tool    |
+| ------------------------------------ | ------- |
+| Understand authentication algorithms | JADX    |
+| Find hardcoded API keys              | JADX    |
+| Understand authorization checks      | JADX    |
+| Trace application functions          | JADX    |
+| Inspect manifest permissions         | APKTool |
+| Inspect XML configurations           | APKTool |
+| Investigate Smali instructions       | APKTool |
+| Modify an application's resources    | APKTool |
+| Rebuild a modified APK               | APKTool |
+
+### 4\. How they complement each other
+
+Original APK
+
+JADX
+
+Readable code and logic
+
+APKTool
+
+Smali and resources
+
+Frida
+
+Observe runtime execution
+
+Burp Suite
+
+Investigate API communication
+
+### 5\. The most important distinction
+
+Think of it this way:
+
+* JADX: What does the application code do?
+
+* APKTool: What are the application's underlying instructions and resources?
+
+* Frida: What happens when the application executes?
+
+* Burp Suite: What happens when the application communicates with its server?
+
+For your Android bug bounty lab, I recommend learning JADX and APKTool together. They provide complementary views of the same APK.

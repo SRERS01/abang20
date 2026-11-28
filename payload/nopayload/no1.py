@@ -1,0 +1,746 @@
+import requests
+import socket
+import ssl
+import csv
+import json
+import time
+import re
+
+import dns.resolver
+
+from urllib.parse import urlparse, urljoin
+from datetime import datetime
+from html.parser import HTMLParser
+
+
+# ==========================================
+# CONFIGURATION
+# ==========================================
+
+TARGET = "https://example.com"
+
+TIMEOUT = 10
+
+MAX_RESOURCE_SIZE = 1_000_000
+
+session = requests.Session()
+
+session.headers.update({
+    "User-Agent": "Authorized-Security-Audit/1.0",
+    "Accept": "text/html,application/json,*/*"
+})
+
+results = []
+
+
+# ==========================================
+# REPORTING
+# ==========================================
+
+def record(category, name, value):
+    item = {
+        "category": category,
+        "check": name,
+        "result": str(value)
+    }
+
+    results.append(item)
+
+    print(f"[{category}] {name}: {value}")
+
+
+# ==========================================
+# HTML ANALYSIS
+# ==========================================
+
+class PageParser(HTMLParser):
+
+    def __init__(self):
+        super().__init__()
+
+        self.title = False
+        self.page_title = ""
+        self.forms = []
+        self.links = []
+        self.scripts = []
+        self.meta = []
+        self.insecure_resources = []
+
+    def handle_starttag(self, tag, attrs):
+
+        attrs = dict(attrs)
+
+        if tag == "title":
+            self.title = True
+
+        if tag == "form":
+            self.forms.append(attrs.get("action", ""))
+
+        if tag == "a":
+            href = attrs.get("href")
+
+            if href:
+                self.links.append(href)
+
+        if tag == "script":
+            src = attrs.get("src")
+
+            if src:
+                self.scripts.append(src)
+
+        if tag == "meta":
+            self.meta.append({
+                "name": attrs.get("name"),
+                "content": attrs.get("content")
+            })
+
+        if tag in ("script", "img", "iframe", "link"):
+            src = attrs.get("src") or attrs.get("href")
+
+            if src and src.startswith("http://"):
+                self.insecure_resources.append(src)
+
+    def handle_endtag(self, tag):
+
+        if tag == "title":
+            self.title = False
+
+    def handle_data(self, data):
+
+        if self.title:
+            self.page_title += data
+
+
+# ==========================================
+# 1. WEBSITE AVAILABILITY
+# ==========================================
+
+def website_availability():
+
+    print("\n=== WEBSITE AVAILABILITY ===")
+
+    start = time.perf_counter()
+
+    try:
+        response = session.get(
+            TARGET,
+            timeout=TIMEOUT,
+            allow_redirects=True,
+            stream=True
+        )
+
+        elapsed = time.perf_counter() - start
+
+        record("Website", "Status code", response.status_code)
+        record("Website", "Final URL", response.url)
+        record("Website", "Response time", round(elapsed, 3))
+        record("Website", "Redirect count", len(response.history))
+
+        response.close()
+
+        return response.status_code, response.url
+
+    except requests.RequestException as error:
+
+        record("Website", "Connection error", error)
+
+        return None, None
+
+
+# ==========================================
+# 2. HTTP RESPONSE HEADERS
+# ==========================================
+
+def header_analysis():
+
+    print("\n=== HTTP HEADERS ===")
+
+    try:
+        response = session.get(
+            TARGET,
+            timeout=TIMEOUT
+        )
+
+        for name, value in response.headers.items():
+
+            record("Headers", name, value)
+
+        record(
+            "Headers",
+            "Content type",
+            response.headers.get("Content-Type")
+        )
+
+        record(
+            "Headers",
+            "Content encoding",
+            response.headers.get("Content-Encoding", "None")
+        )
+
+        record(
+            "Headers",
+            "Cache control",
+            response.headers.get("Cache-Control", "Not specified")
+        )
+
+        record(
+            "Headers",
+            "HTTP version",
+            response.raw.version
+        )
+
+        return response
+
+    except requests.RequestException as error:
+
+        record("Headers", "Error", error)
+
+        return None
+
+
+# ==========================================
+# 3. SECURITY HEADERS
+# ==========================================
+
+def security_headers(response):
+
+    print("\n=== SECURITY HEADERS ===")
+
+    names = [
+        "Strict-Transport-Security",
+        "Content-Security-Policy",
+        "X-Content-Type-Options",
+        "X-Frame-Options",
+        "Referrer-Policy",
+        "Permissions-Policy"
+    ]
+
+    for name in names:
+
+        value = response.headers.get(name)
+
+        record(
+            "Security headers",
+            name,
+            value if value else "Not present"
+        )
+
+
+# ==========================================
+# 4. COOKIE ANALYSIS
+# ==========================================
+
+def cookie_analysis(response):
+
+    print("\n=== COOKIE ANALYSIS ===")
+
+    for cookie in response.cookies:
+
+        record(
+            "Cookies",
+            cookie.name,
+            {
+                "Secure": cookie.secure,
+                "HttpOnly": "HttpOnly" in cookie._rest,
+                "SameSite": cookie._rest.get("SameSite")
+            }
+        )
+
+
+# ==========================================
+# 5. REDIRECT ANALYSIS
+# ==========================================
+
+def redirect_analysis():
+
+    print("\n=== REDIRECT ANALYSIS ===")
+
+    try:
+
+        response = session.get(
+            TARGET,
+            allow_redirects=True,
+            timeout=TIMEOUT
+        )
+
+        for index, item in enumerate(response.history, 1):
+
+            record(
+                "Redirect",
+                f"Step {index}",
+                {
+                    "URL": item.url,
+                    "Status": item.status_code,
+                    "Location": item.headers.get("Location")
+                }
+            )
+
+        record("Redirect", "Final destination", response.url)
+
+    except requests.RequestException as error:
+
+        record("Redirect", "Error", error)
+
+
+# ==========================================
+# 6. HTTP METHODS
+# ==========================================
+
+def http_methods():
+
+    print("\n=== HTTP METHODS ===")
+
+    try:
+
+        response = session.options(
+            TARGET,
+            timeout=TIMEOUT
+        )
+
+        record(
+            "HTTP methods",
+            "OPTIONS status",
+            response.status_code
+        )
+
+        record(
+            "HTTP methods",
+            "Allow header",
+            response.headers.get("Allow", "Not disclosed")
+        )
+
+    except requests.RequestException as error:
+
+        record("HTTP methods", "Error", error)
+
+
+# ==========================================
+# 7. TLS CERTIFICATE
+# ==========================================
+
+def tls_analysis():
+
+    print("\n=== TLS ANALYSIS ===")
+
+    parsed = urlparse(TARGET)
+
+    if parsed.scheme != "https":
+
+        record("TLS", "HTTPS", "Not enabled on supplied URL")
+
+        return
+
+    hostname = parsed.hostname
+    port = parsed.port or 443
+
+    try:
+
+        context = ssl.create_default_context()
+
+        with socket.create_connection(
+            (hostname, port),
+            timeout=TIMEOUT
+        ) as connection:
+
+            with context.wrap_socket(
+                connection,
+                server_hostname=hostname
+            ) as tls:
+
+                cert = tls.getpeercert()
+
+                record("TLS", "Protocol", tls.version())
+                record("TLS", "Cipher", tls.cipher())
+                record("TLS", "Subject", cert.get("subject"))
+                record("TLS", "Issuer", cert.get("issuer"))
+                record("TLS", "Expiry", cert.get("notAfter"))
+
+                record(
+                    "TLS",
+                    "Hostname validation",
+                    "Passed certificate verification"
+                )
+
+    except Exception as error:
+
+        record("TLS", "Error", error)
+
+
+# ==========================================
+# 8. DNS RESOLUTION
+# ==========================================
+
+def dns_analysis():
+
+    print("\n=== DNS ANALYSIS ===")
+
+    hostname = urlparse(TARGET).hostname
+
+    try:
+
+        addresses = socket.getaddrinfo(
+            hostname,
+            None
+        )
+
+        unique_addresses = sorted({
+            item[4][0] for item in addresses
+        })
+
+        record("DNS", "IP addresses", unique_addresses)
+
+    except socket.gaierror as error:
+
+        record("DNS", "Resolution error", error)
+
+    for record_type in ["A", "AAAA", "MX", "NS", "TXT", "CAA"]:
+
+        try:
+
+            answers = dns.resolver.resolve(
+                hostname,
+                record_type,
+                lifetime=5
+            )
+
+            values = [str(answer) for answer in answers]
+
+            record("DNS records", record_type, values)
+
+        except Exception:
+
+            record("DNS records", record_type, "Not available")
+
+
+# ==========================================
+# 9. CORS ANALYSIS
+# ==========================================
+
+def cors_analysis():
+
+    print("\n=== CORS ANALYSIS ===")
+
+    try:
+
+        response = session.options(
+            TARGET,
+            headers={
+                "Origin": "https://audit.invalid",
+                "Access-Control-Request-Method": "GET"
+            },
+            timeout=TIMEOUT
+        )
+
+        names = [
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Methods",
+            "Access-Control-Allow-Headers",
+            "Access-Control-Allow-Credentials",
+            "Vary"
+        ]
+
+        for name in names:
+
+            record(
+                "CORS",
+                name,
+                response.headers.get(name, "Not present")
+            )
+
+    except requests.RequestException as error:
+
+        record("CORS", "Error", error)
+
+
+# ==========================================
+# 10. HTTPS ENFORCEMENT
+# ==========================================
+
+def https_analysis():
+
+    print("\n=== HTTPS ENFORCEMENT ===")
+
+    hostname = urlparse(TARGET).hostname
+
+    http_url = f"http://{hostname}/"
+
+    try:
+
+        response = session.get(
+            http_url,
+            allow_redirects=False,
+            timeout=TIMEOUT
+        )
+
+        record("HTTPS", "HTTP status", response.status_code)
+
+        record(
+            "HTTPS",
+            "Redirect location",
+            response.headers.get("Location", "No redirect")
+        )
+
+    except requests.RequestException as error:
+
+        record("HTTPS", "Error", error)
+
+
+# ==========================================
+# 11. PUBLIC RESOURCE DISCOVERY
+# ==========================================
+
+def public_resources():
+
+    print("\n=== PUBLIC RESOURCES ===")
+
+    paths = [
+        "/robots.txt",
+        "/sitemap.xml",
+        "/.well-known/security.txt"
+    ]
+
+    for path in paths:
+
+        url = urljoin(TARGET, path)
+
+        try:
+
+            response = session.get(
+                url,
+                timeout=TIMEOUT,
+                stream=True
+            )
+
+            record(
+                "Public resources",
+                path,
+                {
+                    "Status": response.status_code,
+                    "Content-Type": response.headers.get("Content-Type")
+                }
+            )
+
+            response.close()
+
+        except requests.RequestException as error:
+
+            record("Public resources", path, error)
+
+
+# ==========================================
+# 12. TECHNOLOGY FINGERPRINTING
+# ==========================================
+
+def technology_analysis(response):
+
+    print("\n=== TECHNOLOGY FINGERPRINTING ===")
+
+    record(
+        "Technology",
+        "Server",
+        response.headers.get("Server", "Not disclosed")
+    )
+
+    record(
+        "Technology",
+        "X-Powered-By",
+        response.headers.get("X-Powered-By", "Not disclosed")
+    )
+
+    content = response.text[:MAX_RESOURCE_SIZE]
+
+    parser = PageParser()
+    parser.feed(content)
+
+    for item in parser.meta:
+
+        if item.get("name", "").lower() == "generator":
+
+            record("Technology", "Generator", item.get("content"))
+
+    record(
+        "Technology",
+        "Page title",
+        parser.page_title.strip()
+    )
+
+
+# ==========================================
+# 13. FORM AND LINK DISCOVERY
+# ==========================================
+
+def html_discovery(response):
+
+    print("\n=== HTML DISCOVERY ===")
+
+    parser = PageParser()
+    parser.feed(response.text[:MAX_RESOURCE_SIZE])
+
+    record("HTML", "Forms discovered", len(parser.forms))
+
+    for form in parser.forms:
+
+        record("HTML", "Form action", form or "Current page")
+
+    record("HTML", "Links discovered", len(parser.links))
+
+    hostname = urlparse(TARGET).hostname
+
+    external = set()
+
+    for link in parser.links:
+
+        absolute = urljoin(TARGET, link)
+
+        domain = urlparse(absolute).hostname
+
+        if domain and domain != hostname:
+
+            external.add(domain)
+
+    record("HTML", "External domains", sorted(external))
+
+    record(
+        "HTML",
+        "Mixed content indicators",
+        parser.insecure_resources
+    )
+
+    api_links = [
+        link for link in parser.links
+        if any(term in link.lower()
+               for term in ["swagger", "openapi", "api-docs"])
+    ]
+
+    record("HTML", "Linked API documentation", api_links)
+
+
+# ==========================================
+# 14. ERROR AND DIRECTORY LISTING INDICATORS
+# ==========================================
+
+def page_indicators(response):
+
+    print("\n=== PAGE INDICATORS ===")
+
+    content = response.text[:MAX_RESOURCE_SIZE].lower()
+
+    indicators = [
+        "index of /",
+        "directory listing for",
+        "traceback",
+        "stack trace",
+        "internal server error"
+    ]
+
+    for indicator in indicators:
+
+        record(
+            "Page indicators",
+            indicator,
+            indicator in content
+        )
+
+
+# ==========================================
+# 15. RESPONSE SIZE AND PERFORMANCE
+# ==========================================
+
+def performance_analysis(response):
+
+    print("\n=== PERFORMANCE ===")
+
+    record(
+        "Performance",
+        "Response bytes",
+        len(response.content)
+    )
+
+    record(
+        "Performance",
+        "Elapsed seconds",
+        response.elapsed.total_seconds()
+    )
+
+    record(
+        "Performance",
+        "Encoding",
+        response.encoding
+    )
+
+
+# ==========================================
+# 16. REPORT GENERATION
+# ==========================================
+
+def save_reports():
+
+    print("\n=== REPORT GENERATION ===")
+
+    with open("audit_report.json", "w") as file:
+
+        json.dump(
+            results,
+            file,
+            indent=4
+        )
+
+    with open(
+        "audit_report.csv",
+        "w",
+        newline=""
+    ) as file:
+
+        writer = csv.DictWriter(
+            file,
+            fieldnames=[
+                "category",
+                "check",
+                "result"
+            ]
+        )
+
+        writer.writeheader()
+        writer.writerows(results)
+
+    print("[+] JSON report saved")
+    print("[+] CSV report saved")
+
+
+# ==========================================
+# MAIN EXECUTION
+# ==========================================
+
+if __name__ == "__main__":
+
+    print("=" * 55)
+    print("PYTHON WEBSITE SECURITY AUDIT")
+    print("Started:", datetime.now())
+    print("=" * 55)
+
+    status, final_url = website_availability()
+
+    if status is not None:
+
+        response = header_analysis()
+
+        if response is not None:
+
+            security_headers(response)
+            cookie_analysis(response)
+            technology_analysis(response)
+            html_discovery(response)
+            page_indicators(response)
+            performance_analysis(response)
+
+        redirect_analysis()
+        http_methods()
+        tls_analysis()
+        dns_analysis()
+        cors_analysis()
+        https_analysis()
+        public_resources()
+
+    save_reports()
+
+    print("\nAudit completed.")
