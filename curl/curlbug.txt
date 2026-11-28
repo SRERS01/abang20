@@ -1,0 +1,347 @@
+Your scope covers several major vulnerability classes. We can turn it into a curl testing checklist, with commands, what each test checks, and what evidence to look for.
+
+One important distinction: `curl` sends HTTP requests; it does not automatically discover every vulnerability. You need to identify the relevant endpoint and interpret the response.
+
+I'll use placeholders so you can apply the tests to an authorized staging environment or a program-approved test account. Because we've previously discussed BetPawa's live payment APIs, payment tests below will avoid initiating real deposits or withdrawals.
+
+### 1\. Prepare your curl environment
+
+In your Ubuntu terminal:
+
+```bash
+export TARGET="https://YOUR-IN-SCOPE-DOMAIN"
+export TOKEN="YOUR_TEST_SESSION_TOKEN"
+```
+
+For authenticated, non-financial test endpoints:
+
+```bash
+curl -i "$TARGET/api/test/profile" \
+-H "Authorization: Bearer $TOKEN"
+```
+
+Do not share actual passwords, cookies, tokens or personal account data.
+
+### 2\. Test each vulnerability in your scope
+
+### A. Business logic vulnerabilities
+
+Goal: Find situations where the application accepts an action that violates its intended rules.
+
+For example, inspect how a test endpoint handles invalid quantities:
+
+```bash
+curl -i -X POST "$TARGET/api/test/order/validate" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"quantity":0}'
+```
+
+Also test a negative quantity:
+
+```bash
+curl -i -X POST "$TARGET/api/test/order/validate" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"quantity":-1}'
+```
+
+Look for incorrect acceptance of invalid values.
+
+### B. Payments manipulation
+
+Goal: Determine whether the server independently validates payment amounts, currencies, payment status and transaction ownership.
+
+Use only a documented sandbox or validation-only endpoint:
+
+```bash
+curl -i -X POST "$TARGET/api/sandbox/payment/validate" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{
+  "amount": 100,
+  "currency": "XAF",
+  "transactionId": "TEST-001"
+}'
+```
+
+Check whether the server validates the supplied amount and transaction details against its own records.
+
+Do not replay, alter or automate real payment or withdrawal requests.
+
+### C. Remote code execution (RCE)
+
+Goal: Identify whether user input reaches a server-side command or code interpreter.
+
+Start by inspecting the relevant endpoint and its input parameters:
+
+```bash
+curl -i "$TARGET/api/test/process"
+```
+
+Inspect error responses and application behavior using ordinary, harmless input:
+
+```bash
+curl -i -G "$TARGET/api/test/process" \
+--data-urlencode "input=hello"
+```
+
+Do not execute operating-system commands through a live application. Confirm RCE only in an isolated environment designed for that test.
+
+### D. SQL injection
+
+Goal: Identify unsafe handling of database input.
+
+Normal request:
+
+```bash
+curl -i -G "$TARGET/api/test/search" \
+--data-urlencode "q=hello"
+```
+
+Harmless quote-handling test:
+
+```bash
+curl -i -G "$TARGET/api/test/search" \
+--data-urlencode "q=test'"
+```
+
+Look for:
+
+* SQL syntax errors.
+
+* Unexpected response changes.
+
+* Database error messages.
+
+* Different behavior for equivalent inputs.
+
+A server error alone does not prove SQL injection.
+
+### E. XML External Entity (XXE)
+
+Goal: Determine whether an XML parser accepts unsafe external entity declarations.
+
+For initial parser identification, send ordinary XML:
+
+```bash
+curl -i -X POST "$TARGET/api/test/xml" \
+-H "Content-Type: application/xml" \
+--data '<root><name>test</name></root>'
+```
+
+Check whether the endpoint accepts XML and how it handles malformed XML.
+
+Do not use external entities to read server files or access internal services on a live target.
+
+### F. Local and Remote File Inclusion (LFI/RFI)
+
+Goal: Identify whether user-controlled parameters select files or remote resources.
+
+First inspect the endpoint's normal behavior:
+
+```bash
+curl -i "$TARGET/api/test/document?name=sample"
+```
+
+Check whether the application has a documented file-preview or template parameter.
+
+Perform file-inclusion verification only with a harmless test file deliberately created for the assessment. Avoid reading operating-system files or including remote executable files.
+
+### G. Access control / IDOR
+
+Goal: Determine whether a user can access another user's resources.
+
+Use two test accounts that you control:
+
+```bash
+curl -i "$TARGET/api/test/users/TEST_USER_2" \
+-H "Authorization: Bearer TEST_ACCOUNT_1_TOKEN"
+```
+
+Compare with the legitimate owner's request:
+
+```bash
+curl -i "$TARGET/api/test/users/TEST_USER_2" \
+-H "Authorization: Bearer TEST_ACCOUNT_2_TOKEN"
+```
+
+Look for unauthorized disclosure or modification of another test account's information.
+
+### H. Privilege escalation
+
+Goal: Check whether ordinary users can obtain privileged permissions.
+
+On a test-only profile endpoint:
+
+```bash
+curl -i -X PATCH "$TARGET/api/test/profile" \
+-H "Authorization: Bearer $TOKEN" \
+-H "Content-Type: application/json" \
+-d '{"role":"admin"}'
+```
+
+A secure application should not grant administrative permissions merely because a client supplies a role field.
+
+### I. Sensitive information leakage
+
+Goal: Identify information exposed through responses and headers.
+
+```bash
+curl -i "$TARGET/"
+```
+
+Check:
+
+* Personal information.
+
+* Session identifiers.
+
+* Internal paths.
+
+* Debug traces.
+
+* API keys.
+
+* Database details.
+
+Check common metadata files:
+
+```bash
+curl -i "$TARGET/robots.txt"
+```
+
+```bash
+curl -i "$TARGET/.well-known/security.txt"
+```
+
+### J. Server-Side Request Forgery (SSRF)
+
+Goal: Check whether the server fetches URLs supplied by a user.
+
+Use a callback URL that you own and control:
+
+```bash
+curl -i -X POST "$TARGET/api/test/url-preview" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"url":"https://YOUR-OWN-CALLBACK-DOMAIN"}'
+```
+
+Check your callback server's logs for an incoming request.
+
+Do not target cloud metadata services, internal IP addresses or third-party systems.
+
+### K. Cross-Site Request Forgery (CSRF)
+
+Goal: Determine whether state-changing browser requests require appropriate CSRF protection.
+
+Inspect the endpoint's expected headers:
+
+```bash
+curl -i "$TARGET/api/test/profile"
+```
+
+Inspect cookie attributes:
+
+```bash
+curl -s -D - -o /dev/null "$TARGET/"
+```
+
+Look for:
+
+* CSRF tokens.
+
+* `SameSite` cookie settings.
+
+* `Origin` validation.
+
+* `Referer` validation.
+
+`curl` cannot reproduce all browser CSRF protections, so this requires a controlled browser test too.
+
+### L. Cross-Site Scripting (XSS)
+
+Goal: Check whether user input is reflected without proper encoding.
+
+```bash
+curl -iG "$TARGET/api/test/search" \
+--data-urlencode "q=xss-test-123"
+```
+
+Inspect the response for the marker.
+
+If you are testing a local XSS lab, you can then use a harmless HTML test string:
+
+```bash
+curl -iG "$TARGET/api/test/search" \
+--data-urlencode 'q=<b>xss-test</b>'
+```
+
+Check whether the application returns encoded HTML or renders untrusted content as markup. Reflection alone does not establish XSS.
+
+### M. Directory traversal
+
+Goal: Check whether file paths are restricted to an intended directory.
+
+First establish the normal response:
+
+```bash
+curl -i "$TARGET/api/test/download?file=sample.txt"
+```
+
+For a local lab, create a harmless canary file outside the intended download directory and test whether the application can improperly access it.
+
+Do not attempt to retrieve sensitive production files.
+
+### 3\. Other useful checks
+
+| Test             | Curl command                                                    |
+| ---------------- | --------------------------------------------------------------- |
+| HTTP headers     | curl -i "$TARGET"                                               |
+| HTTP methods     | curl -i -X OPTIONS "$TARGET"                                    |
+| Error disclosure | curl -i "$TARGET/nonexistent"                                   |
+| TLS certificate  | curl -Iv "$TARGET"                                              |
+| CORS             | curl -i "$TARGET/api/test" -H "Origin: https://example.invalid" |
+| Rate limiting    | Repeated requests to an approved test endpoint                  |
+| Cookie security  | curl -s -D - -o /dev/null "$TARGET"                             |
+
+### 4\. Organize your assessment
+
+I recommend recording findings in this order:
+
+| Priority | Vulnerability         | Evidence to collect                       |
+| -------- | --------------------- | ----------------------------------------- |
+| 1        | IDOR / access control | Unauthorized access to test account data  |
+| 2        | Payment manipulation  | Server-side validation failure in sandbox |
+| 3        | Business logic        | Invalid operation accepted                |
+| 4        | SQL injection         | Confirmed database input manipulation     |
+| 5        | RCE                   | Confirmed controlled code execution       |
+| 6        | SSRF                  | Verified callback from the server         |
+| 7        | XXE / file inclusion  | Confirmed unsafe file or entity handling  |
+| 8        | XSS / CSRF            | Confirmed browser-side security impact    |
+| 9        | Information leakage   | Sensitive data exposure                   |
+
+These are investigation priorities, not severity rankings.
+
+### 5\. Let's apply this to your actual scope
+
+Before generating a complete endpoint-by-endpoint test plan, I need the authorized target domain.
+
+Assessment details
+
+1\. In-scope domain
+
+2\. Testing environment
+
+Bug bounty production scope
+
+Authorized staging environment
+
+Local Ubuntu lab
+
+3\. Program restrictions (optional)
+
+Build my testing plan
+
+With the domain and program restrictions, we can map the endpoints and choose the appropriate tests rather than sending random curl requests.
