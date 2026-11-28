@@ -1,0 +1,211 @@
+I'll give you a complete race-condition test using `curl` and Bash on your Ubuntu machine.
+
+We'll use the local withdrawal simulator at `127.0.0.1:8000`, not BetPawa's live payment endpoint. The test will synchronize concurrent requests, record HTTP responses, measure timing and identify whether the simulated balance rules are violated.
+
+### 1\. Prepare the local withdrawal server
+
+Open a second terminal:
+
+```bash
+cd ~/edf/withdrawal_lab
+nano server.py
+```
+
+Find:
+
+```python
+balance = 5000
+```
+
+Change it to:
+
+```python
+balance = 1000
+```
+
+Save and restart the server:
+
+```bash
+python3 server.py
+```
+
+Your local server should be running at:
+
+```text
+http://127.0.0.1:8000
+```
+
+### 2\. Log in using curl
+
+Open another terminal:
+
+```bash
+cd ~/edf/withdrawal_lab
+```
+
+Run:
+
+```bash
+curl -i -c cookies.txt \
+-X POST http://127.0.0.1:8000/login \
+-H "Content-Type: application/json" \
+-d '{"username":"testuser","password":"testpass"}'
+```
+
+This creates the session cookie file.
+
+### 3\. Confirm the initial balance
+
+```bash
+curl -i -b cookies.txt \
+http://127.0.0.1:8000/profile
+```
+
+Expected:
+
+```json
+{
+  "username": "testuser",
+  "balance": 1000
+}
+```
+
+### 4\. Run the concurrent curl test
+
+We'll send five requests, each attempting to withdraw 800 simulated units.
+
+Since the available balance is only 1,000, no more than one request should succeed.
+
+Copy this entire Bash script:
+
+```bash
+#!/bin/bash
+
+URL="http://127.0.0.1:8000/withdrawal/validate"
+COOKIE="cookies.txt"
+DIR="race-results"
+
+mkdir -p "$DIR"
+rm -f "$DIR"/*
+
+echo "=================================="
+echo " LOCAL RACE CONDITION TEST"
+echo "=================================="
+
+echo "Launching 5 concurrent requests..."
+echo
+
+for i in $(seq 1 5); do
+    (
+        curl -sS \
+            -b "$COOKIE" \
+            -o "$DIR/body-$i.json" \
+            -w "$i,%{http_code},%{time_total}\n" \
+            -X POST "$URL" \
+            -H "Content-Type: application/json" \
+            -d "{\"amount\":800,\"transactionId\":\"RACE-$i\"}" \
+            > "$DIR/meta-$i.txt"
+    ) &
+done
+
+wait
+
+echo "========== HTTP RESULTS =========="
+
+for i in $(seq 1 5); do
+    cat "$DIR/meta-$i.txt"
+done
+
+echo
+echo "========== RESPONSE BODIES =========="
+
+for i in $(seq 1 5); do
+    echo "Request $i:"
+    cat "$DIR/body-$i.json"
+    echo
+done
+
+echo "========== FINAL BALANCE =========="
+
+curl -sS -b "$COOKIE" \
+http://127.0.0.1:8000/profile
+
+echo
+echo "Evidence saved in: $DIR/"
+```
+
+Save it as:
+
+```bash
+nano race_test.sh
+```
+
+Make it executable:
+
+```bash
+chmod +x race_test.sh
+```
+
+Execute:
+
+```bash
+./race_test.sh
+```
+
+### 5\. Understand the expected results
+
+Expected secure result
+
+| Request | Amount | Expected response |
+| ------- | ------ | ----------------- |
+| 1       | 800    | 200               |
+| 2       | 800    | 400               |
+| 3       | 800    | 400               |
+| 4       | 800    | 400               |
+| 5       | 800    | 400               |
+
+The order of accepted and rejected requests can vary.
+
+Expected final balance:
+
+### 200
+
+Simulated balance remaining
+
+The server's lock ensures that the balance check and deduction happen together.
+
+### 6\. How to identify a possible race condition
+
+Compare the following:
+
+| Observation                             | Interpretation                                   |
+| --------------------------------------- | ------------------------------------------------ |
+| Exactly one successful withdrawal       | Expected secure behavior                         |
+| More than one successful withdrawal     | Investigate possible race condition              |
+| Final balance below zero                | Strong evidence of a balance-enforcement failure |
+| Duplicate transaction accepted twice    | Possible idempotency vulnerability               |
+| Different results between repeated runs | Requires further investigation                   |
+
+A single run is not enough to establish a vulnerability.
+
+### 7\. Examine your saved evidence
+
+```bash
+ls -l race-results/
+```
+
+View all response codes and timings:
+
+```bash
+cat race-results/meta-*.txt
+```
+
+View an individual response:
+
+```bash
+cat race-results/body-1.json
+```
+
+Important: This is a controlled concurrency test of your local simulator. Its locking mechanism is deliberately secure, so you should expect one successful request, not a vulnerability. Do not point this script at BetPawa's live withdrawal endpoint.
+
+The next useful exercise is comparing this synchronized test against a deliberately vulnerable local implementation to understand exactly how a race condition occurs.
