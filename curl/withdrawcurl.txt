@@ -1,0 +1,53 @@
+To test a withdrawal using `curl`, you need to understand the withdrawal API request and its server-side validation.
+
+Since we've been examining BetPawa's live withdrawal endpoint, we should distinguish between:
+
+* Withdrawal workflow testing: checking whether the API validates authentication, required fields, permissions and transaction status.
+
+* Withdrawal execution: submitting an actual payout request that could move real money.
+
+I can help with the first, using a sandbox or local test account, but not automate or manipulate live payouts.
+
+### 1\. Example sandbox withdrawal request
+
+```bash
+curl -i -X POST \
+"http://127.0.0.1:8000/api/test/withdrawal/validate" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer TEST_TOKEN" \
+-d '{
+  "amount": 1000,
+  "payoutType": "TEST_MTN",
+  "transactionId": "TEST-001"
+}'
+```
+
+### 2\. What to test
+
+| Test                          | Expected secure behavior     |
+| ----------------------------- | ---------------------------- |
+| Missing authentication        | Reject with 401              |
+| Invalid amount                | Reject with 400              |
+| Zero amount                   | Reject                       |
+| Negative amount               | Reject                       |
+| Insufficient test balance     | Reject                       |
+| Unauthorized account          | Reject with 403              |
+| Duplicate transaction ID      | Prevent duplicate processing |
+| Invalid payout method         | Reject                       |
+| Concurrent duplicate requests | Process at most once         |
+
+### 3\. Important HTTP responses
+
+* `200`: Request processed; inspect the body to determine the result.
+
+* `400`: Invalid request.
+
+* `401`: Authentication missing or invalid.
+
+* `403`: Permission denied.
+
+* `409`: Transaction conflict or duplicate.
+
+* `429`: Rate limit reached.
+
+One question: Are you trying to test whether the withdrawal API can be manipulated to approve a payout without the proper balance or confirmation, or simply verify that its validation works correctly?
