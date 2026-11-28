@@ -1,0 +1,233 @@
+Certainly. Let's break it down from the beginning using your local withdrawal lab so you understand what cookies are, why `curl` needs them, and the difference between `-c` and `-b`.
+
+### 1\. First, what is a cookie?
+
+A cookie is a small piece of information that a website asks your browser or HTTP client to store.
+
+For example, when you log in to your local Flask application, the server may send this response header:
+
+```http
+HTTP/1.1 200 OK
+Set-Cookie: session=abc123xyz; HttpOnly; Path=/
+Content-Type: application/json
+```
+
+The important part is:
+
+```http
+Set-Cookie: session=abc123xyz
+```
+
+This tells your client:
+
+* The server has issued a session cookie.
+
+* The cookie contains a session identifier or session-related data.
+
+* Your client should store it and send it back on subsequent requests when applicable.
+
+Think of it as a temporary identification card that allows the server to recognize your logged-in session.
+
+### 2\. What happens when you log in using curl?
+
+Consider this command:
+
+```bash
+curl -i -c cookies.txt -X POST http://127.0.0.1:8000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"testpass"}'
+```
+
+Let's understand every part.
+
+| Command                     | Purpose                                |
+| --------------------------- | -------------------------------------- |
+| curl                        | Sends an HTTP request                  |
+| -i                          | Displays response headers and body     |
+| -c cookies.txt              | Saves cookies received from the server |
+| -X POST                     | Uses the POST method                   |
+| http://127.0.0.1:8000/login | Login endpoint                         |
+| -H                          | Adds an HTTP header                    |
+| -d                          | Sends the login data                   |
+
+The request sent to your local server looks approximately like this:
+
+```http
+POST /login HTTP/1.1
+Host: 127.0.0.1:8000
+Content-Type: application/json
+
+{"username":"testuser","password":"testpass"}
+```
+
+If the credentials are accepted, your Flask application creates a session and sends a cookie.
+
+`curl` receives that cookie and saves it in:
+
+```text
+cookies.txt
+```
+
+Important: `-c` does not create your login session by itself. The server creates the session; `-c` simply saves the cookie the server sends back.
+
+### 3\. What does cookies.txt contain?
+
+You can inspect the file using:
+
+```bash
+cat cookies.txt
+```
+
+It may contain something similar to:
+
+```text
+# Netscape HTTP Cookie File
+127.0.0.1 FALSE / FALSE 0 session abc123xyz
+```
+
+The actual value depends on your Flask application's session configuration.
+
+Treat this file as sensitive. Someone who obtains a valid session cookie may be able to use it to access the session, depending on the application's security design.
+
+### 4\. Why do we need `-b`?
+
+Now imagine you want to access your withdrawal endpoint.
+
+You send:
+
+```bash
+curl -i -b cookies.txt -X POST \
+  http://127.0.0.1:8000/withdrawal/validate \
+  -H "Content-Type: application/json" \
+  -d '{"amount":100,"transaction_id":"TEST-001"}'
+```
+
+Here is what happens:
+
+* `curl` reads the cookie stored in `cookies.txt`.
+
+* It adds the appropriate cookie to the outgoing HTTP request.
+
+* Your Flask server receives the cookie.
+
+* Flask checks whether the session is valid.
+
+* If authenticated and the other checks pass, the application processes the request.
+
+The outgoing request looks approximately like this:
+
+```http
+POST /withdrawal/validate HTTP/1.1
+Host: 127.0.0.1:8000
+Content-Type: application/json
+Cookie: session=abc123xyz
+
+{"amount":100,"transaction_id":"TEST-001"}
+```
+
+The key line is:
+
+```http
+Cookie: session=abc123xyz
+```
+
+That is how the client presents its session cookie to the server.
+
+### 5\. Difference between `-c` and `-b`
+
+`-c` — Cookie jar output
+
+Server sends cookies → curl saves them to cookies.txt
+
+`-b` — Cookie input
+
+curl reads cookies.txt → sends cookies to the server
+
+| Option              | Direction             | Function               |
+| ------------------- | --------------------- | ---------------------- |
+| -c cookies.txt      | Server → file         | Save received cookies  |
+| -b cookies.txt      | File → server         | Send stored cookies    |
+| -b "session=abc123" | Direct value → server | Send a cookie manually |
+
+### 6\. Why use `-b` and `-c` together?
+
+Consider:
+
+```bash
+curl -i -b cookies.txt -c cookies.txt \
+  http://127.0.0.1:8000/profile
+```
+
+This does two things:
+
+* `-b cookies.txt`: sends the cookies already stored in the file.
+
+* `-c cookies.txt`: saves any updated cookies received in the response back to the file.
+
+This is useful when a server refreshes or updates session cookies.
+
+### 7\. Try this practical exercise
+
+Use your local port 8000 application.
+
+Step 1 — Check your current authentication without sending a cookie:
+
+```bash
+curl -i http://127.0.0.1:8000/profile
+```
+
+If the endpoint requires authentication, you should receive an unauthorized response.
+
+Step 2 — Log in and save the cookie:
+
+```bash
+curl -i -c cookies.txt -X POST \
+  http://127.0.0.1:8000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"testpass"}'
+```
+
+Step 3 — Access your profile with the cookie:
+
+```bash
+curl -i -b cookies.txt \
+  http://127.0.0.1:8000/profile
+```
+
+Step 4 — Access your profile while saving any updated cookies:
+
+```bash
+curl -i -b cookies.txt -c cookies.txt \
+  http://127.0.0.1:8000/profile
+```
+
+You should be able to compare the unauthenticated and authenticated responses.
+
+### 8\. One important distinction: cookies versus tokens
+
+Cookies and authentication tokens are related, but they are not the same thing.
+
+| Cookie-based session                                     | Bearer-token authentication        |
+| -------------------------------------------------------- | ---------------------------------- |
+| Commonly sent using Cookie:                              | Sent using Authorization:          |
+| Often stores a session identifier or signed session data | Usually sends an access token      |
+| Can be stored using -c                                   | Usually supplied using -H          |
+| Can be sent using -b                                     | Sent using an authorization header |
+
+For example, a bearer-token request might contain:
+
+```http
+Authorization: Bearer YOUR_TEST_TOKEN
+```
+
+You would normally use:
+
+```bash
+-H "Authorization: Bearer YOUR_TEST_TOKEN"
+```
+
+rather than assuming `-c` is needed.
+
+The main lesson: You do not automatically need `-c` for every deposit or withdrawal request. You need the authentication mechanism required by that particular application. A request might use cookies, bearer tokens, both, or another mechanism.
+
+For now, practise with your local simulator rather than sending financial transactions to a live service.
