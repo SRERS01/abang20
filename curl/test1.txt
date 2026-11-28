@@ -1,0 +1,359 @@
+These five checks are fundamental to understanding how a server decides whether to accept or reject an API request.
+
+Let's examine each one, using practical examples from a banking or withdrawal application and your local Python API laboratory.
+
+### 1\. Authentication — Who are you?
+
+Authentication is the process of verifying the identity of the person or system making a request.
+
+The server needs to establish that you are who you claim to be.
+
+### What does the system check?
+
+* Username or phone number.
+
+* Password.
+
+* Session cookie.
+
+* Authentication token.
+
+* OTP (one-time password).
+
+* Token expiration.
+
+* Account authentication status.
+
+### Example
+
+You send a login request:
+
+```http
+POST /login
+Content-Type: application/json
+```
+
+```json
+{
+  "username": "testuser",
+  "password": "testpass"
+}
+```
+
+The server checks whether the credentials match.
+
+| Condition                     | Result                  |
+| ----------------------------- | ----------------------- |
+| Correct username and password | Authentication succeeds |
+| Incorrect password            | Authentication fails    |
+| Expired session               | Authentication fails    |
+| Missing required token        | Authentication may fail |
+
+Important: Authentication establishes identity. It does not automatically grant permission to perform every action.
+
+### 2\. Authorization — What are you allowed to do?
+
+Authorization determines whether an authenticated user has permission to perform a particular action on a particular resource.
+
+### What does the system check?
+
+* User role.
+
+* Account ownership.
+
+* Assigned permissions.
+
+* Access privileges.
+
+* Account restrictions.
+
+* Resource-specific access rights.
+
+### Example
+
+Imagine a system with three users:
+
+| User          | Permission                               |
+| ------------- | ---------------------------------------- |
+| Customer      | View own account and request withdrawals |
+| Cashier       | Process permitted transactions           |
+| Administrator | Manage authorized system functions       |
+
+A customer attempts to access another customer's account.
+
+Even if the customer is correctly authenticated, the server should reject the request because the customer does not have permission to access that account.
+
+### Authentication versus authorization
+
+* Authentication: Who are you?
+
+* Authorization: What are you allowed to do?
+
+### 3\. Validation — Is the submitted data acceptable?
+
+Validation checks whether the information submitted in a request has the correct format, type, structure and acceptable values.
+
+### What does the system check?
+
+* Required fields.
+
+* Data types.
+
+* Missing values.
+
+* Input length.
+
+* Numeric ranges.
+
+* String formats.
+
+* Valid identifiers.
+
+* Invalid characters.
+
+* Unexpected fields.
+
+* Data consistency.
+
+### Example
+
+Suppose the withdrawal endpoint expects:
+
+```json
+{
+  "amount": 3000
+}
+```
+
+The server may apply these validation rules:
+
+| Submitted amount | Validation result            |
+| ---------------- | ---------------------------- |
+| 3000             | Valid                        |
+| -3000            | Invalid                      |
+| 0                | Invalid                      |
+| "hello"          | Invalid                      |
+| Missing amount   | Invalid                      |
+| 3000000000       | Depends on configured limits |
+
+Notice that validation does not necessarily mean the user has sufficient money.
+
+An amount of 3,000 can be correctly formatted but still be unaffordable.
+
+### 4\. Business rules — Does the request comply with the application's policies?
+
+Business rules are the conditions that define what an application is allowed to do within its particular business operations.
+
+They are different from basic input validation.
+
+### What does the system check?
+
+Depending on the application:
+
+* Minimum transaction amount.
+
+* Maximum transaction amount.
+
+* Daily withdrawal limits.
+
+* Account status.
+
+* Transaction eligibility.
+
+* Payment method restrictions.
+
+* Required verification level.
+
+* Transaction frequency.
+
+* Whether a transaction is already completed.
+
+* Whether the requested state transition is permitted.
+
+### Example
+
+Suppose a withdrawal application has these policies:
+
+* Minimum withdrawal: 1,000 FCFA.
+
+* Maximum withdrawal: 100,000 FCFA.
+
+* Daily withdrawal limit: 200,000 FCFA.
+
+* Account must be active.
+
+A user requests 150,000 FCFA.
+
+The amount might pass basic validation, but the application could reject it if the user's remaining daily limit is only 100,000 FCFA.
+
+This is a business-rule rejection.
+
+### 5\. Resource availability — Does the required resource exist and have sufficient capacity?
+
+Resource availability checks whether the system has the necessary resource to fulfil a request at the time it is processed.
+
+### What does the system check?
+
+* Available account balance.
+
+* Available inventory.
+
+* Available server capacity.
+
+* Available appointment slots.
+
+* Available database connections.
+
+* Available funds.
+
+* Available storage.
+
+* Resource status.
+
+* Resource reservation status.
+
+### Example
+
+An account has 5,000 FCFA.
+
+A user requests 3,000 FCFA.
+
+The system checks:
+
+5000 \\geq 3000
+
+The account has sufficient funds.
+
+But if the user requests 7,000 FCFA:
+
+5000 < 7000
+
+The request cannot be fulfilled under this balance condition.
+
+### 6\. How the five checks work together
+
+Let's put them into one request-processing sequence.
+
+Incoming API request
+
+POST /withdrawal
+
+1
+
+Authentication
+
+Verify the user's identity
+
+2
+
+Authorization
+
+Check permission to withdraw
+
+3
+
+Validation
+
+Check the submitted amount and fields
+
+4
+
+Business rules
+
+Check limits and account policies
+
+5
+
+Resource availability
+
+Check available funds
+
+Checks passed
+
+Proceed to transaction processing
+
+Any failed check can result in rejection. The exact order depends on the application's design.
+
+### 7\. How this connects to race conditions
+
+This is particularly important for your API security research.
+
+Imagine two withdrawal requests arrive at nearly the same time.
+
+Both requests might:
+
+* Pass authentication.
+
+* Pass authorization.
+
+* Pass input validation.
+
+* Pass business-rule checks.
+
+* Read the same available balance.
+
+The problem is that the account balance could change between the resource-availability check and the actual deduction.
+
+This is why the final balance check and deduction must be protected by an atomic database operation or transaction.
+
+Passing all five checks does not guarantee that the operation will remain valid until it is completed.
+
+### 8\. Test your understanding
+
+Knowledge check
+
+0/5 answered
+
+1. A user enters the wrong password. Which check fails?
+
+Authentication
+
+Authorization
+
+Validation
+
+Resource availability
+
+2. A logged-in customer tries to access another customer's account. Which check fails?
+
+Authentication
+
+Authorization
+
+Business rules
+
+Validation
+
+3. A withdrawal amount is submitted as the text 'hello'. Which check fails?
+
+Business rules
+
+Resource availability
+
+Validation
+
+Authentication
+
+4. A withdrawal exceeds the user's daily withdrawal limit. Which check fails?
+
+Authentication
+
+Business rules
+
+Resource availability
+
+Authorization
+
+5. The account has insufficient money for the withdrawal. Which check fails?
+
+Validation
+
+Authentication
+
+Resource availability
+
+Authorization
+
+Check my answers
+
+My recommendation is to master these five checks before moving deeper into API vulnerabilities. They help you understand why a server accepts, rejects or processes a request.
