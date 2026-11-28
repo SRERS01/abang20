@@ -14,18 +14,21 @@ from datetime import datetime, timezone
 session = requests.Session()
 
 url = "http://www.betpawa.cm/api/payment/v2/withdrawal/request/process"
-
-AUTH_TOKEN = "YOUR_LOCAL_TEST_TOKEN"
-
 headers = {
-    "User-Agent": "Mozilla/5.0",
+    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:158.0) Gecko/20100101 Firefox/158.0",
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
     "Content-Type": "application/json",
-    "Accept": "application/json",
-    "Authorization": f"Bearer {AUTH_TOKEN}",
+    "Referer": "https://www.betpawa.cm/withdraw",
+    "Traceid": "ad0a42dd-301c-4b87-9be7-31dca47d7c71",
+    "Devicetype": "web",
+    "X-Device-Fingerprint": "479b374b0a5ee757545f89e4a833e248",
+    "X-Device-Client-Env": "screen=1366x768;viewport=1259x651;dpr=1",
     "X-Pawa-Brand": "betpawa-cameroon",
-    "X-Pawa-Language": "en"
+    "X-Pawa-Language": "en",
+    "Origin": "https://www.betpawa.cm",
+    "Cookie": "bp_country=CM; bp_tracking_allowed=true; x-pawa-token=10442c55ff9aa226-76c16bd4e5595204"
 }
-
 payload = {
     "amount": 100,
     "BankAccountNumber": "",
